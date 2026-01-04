@@ -85,6 +85,7 @@
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
       margin-bottom: 3rem;
+      align-items: start;
     }
     
     .doc-card {
@@ -104,6 +105,7 @@
     .doc-card.hub {
       border-color: var(--primary);
       background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+      grid-column: 1 / -1;
     }
     
     .doc-card.build { border-color: var(--success); }
@@ -280,6 +282,7 @@
       .hero h1 { font-size: 2rem; }
       .documents-grid { grid-template-columns: 1fr; }
       .flow-diagram { font-size: 0.6rem; }
+      .parts-grid { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -313,7 +316,7 @@
       <span class="icon">📘</span>
       <h2>AI SaaS Handbook v3.0 <span class="badge badge-hub">HUB</span></h2>
       <p>The strategic hub containing methodology, Build Contract, development environment setup, and quality standards. Now split into 3 parts for easier editing and navigation.</p>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
+      <div class="parts-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
         <div style="background: #dbeafe; padding: 1rem; border-radius: 8px;">
           <strong>Part 1: Strategy & Design</strong>
           <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem;">Parts I-III: Research, Business, Design</p>
