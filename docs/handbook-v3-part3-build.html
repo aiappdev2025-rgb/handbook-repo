@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SaaS Handbook v3.0 - Part 3: Build & Launch</title>
+  <style>
+    :root {
+      --primary: #1a365d;
+      --secondary: #2c5282;
+      --accent: #2d3748;
+      --text: #1a202c;
+      --muted: #718096;
+      --bg: #ffffff;
+      --surface: #f7fafc;
+      --border: #e2e8f0;
+      --code-bg: #1e1e1e;
+      --code-text: #d4d4d4;
+      --prompt-bg: #fffbeb;
+      --prompt-border: #d69e2e;
+      --success: #48bb78;
+      --success-bg: #c6f6d5;
+      --warning: #ed8936;
+      --warning-bg: #feebc8;
+      --error: #f56565;
+      --error-bg: #fee2e2;
+      --info: #4299e1;
+      --info-bg: #bee3f8;
+      --moai: #7c3aed;
+      --moai-bg: #f3e8ff;
+      --moai-border: #9f7aea;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: var(--bg);
+    }
+
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      margin: -2rem -2rem 2rem -2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .nav-bar a { color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.2s; }
+    .nav-bar a:hover { background: rgba(255,255,255,0.1); }
+    .nav-bar a.active { background: rgba(255,255,255,0.2); font-weight: 600; }
+    .nav-home { font-weight: 700; font-size: 1.1rem; }
+    .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    @media (max-width: 768px) { .nav-bar { flex-direction: column; gap: 1rem; } .nav-links { flex-wrap: wrap; justify-content: center; } }
+
+    h1 { color: var(--primary); font-size: 2rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; margin-top: 3rem; }
+    h2 { color: var(--secondary); font-size: 1.5rem; margin-top: 2rem; }
+    h3 { color: var(--accent); font-size: 1.25rem; margin-top: 1.5rem; }
+    h4 { color: var(--accent); font-size: 1.1rem; margin-top: 1rem; }
+    h5 { color: var(--accent); font-size: 1rem; margin-top: 1rem; }
+    h6 { color: var(--accent); font-size: 0.9rem; margin-top: 0.75rem; }
+    p { margin: 1rem 0; }
+    ul, ol { margin: 1rem 0; padding-left: 2rem; }
+    li { margin: 0.5rem 0; }
+
+    .title-page { text-align: center; padding: 4rem 0; border-bottom: 2px solid var(--border); margin-bottom: 3rem; }
+    .title-page h1 { font-size: 3rem; border: none; margin: 0; }
+    .subtitle { font-size: 1.5rem; color: var(--secondary); margin: 1rem 0; }
+    .version { font-size: 1.25rem; font-weight: bold; margin-top: 2rem; }
+    .date { color: var(--muted); }
+
+    .part-header { text-align: center; padding: 3rem 0; margin: 3rem 0; background: var(--surface); border-radius: 8px; }
+    .part-header h2 { font-size: 2rem; color: var(--primary); margin: 0; }
+    .part-header.moai { background: var(--moai-bg); }
+    .part-header.moai h2 { color: var(--moai); }
+
+    .toc { background: var(--surface); padding: 2rem; border-radius: 8px; margin: 2rem 0; }
+    .toc h2 { margin-top: 0; }
+    .toc-section { margin: 1rem 0; }
+    .toc-section strong { color: var(--primary); }
+    .toc-items { margin-left: 1.5rem; color: var(--muted); }
+
+    .prompt-block { background: var(--prompt-bg); border-left: 4px solid var(--prompt-border); padding: 1rem 1.5rem; margin: 1.5rem 0; font-family: 'Consolas', monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; }
+    .code-block { background: var(--code-bg); color: var(--code-text); padding: 1rem; margin: 1rem 0; font-family: 'Consolas', monospace; font-size: 0.85rem; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+    .file-structure { background: var(--code-bg); color: var(--code-text); padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.4; overflow-x: auto; white-space: pre; }
+
+    .checklist { background: var(--surface); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+    .checklist h4 { margin-top: 0; }
+    .warning { background: var(--warning-bg); border-left: 4px solid var(--warning); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+    .note { background: var(--info-bg); border-left: 4px solid var(--info); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+    .success { background: var(--success-bg); border-left: 4px solid var(--success); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+
+    .moai-box { background: var(--moai-bg); border: 2px solid var(--moai-border); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; }
+    .moai-box h4 { color: var(--moai); margin-top: 0; }
+    .moai-box h5 { color: var(--moai); }
+
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; vertical-align: top; }
+    .comparison-table th { background: var(--surface); font-weight: 600; }
+    .comparison-table tr:nth-child(even) { background: #fafafa; }
+
+    .new-badge { display: inline-block; background: var(--moai); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 0.5rem; vertical-align: middle; }
+    .tool-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-right: 0.5rem; }
+    .badge-chat { background: #e9d8fd; color: #553c9a; }
+    .badge-code { background: #c6f6d5; color: #276749; }
+
+    .divider { border: none; border-top: 2px solid var(--border); margin: 3rem 0; }
+
+    .part-nav { display: flex; justify-content: space-between; margin: 3rem 0; padding: 1.5rem; background: var(--surface); border-radius: 8px; }
+    .part-nav a { color: var(--secondary); text-decoration: none; font-weight: 600; }
+    .part-nav a:hover { text-decoration: underline; }
+
+    @media print { body { max-width: none; } .part-header { break-before: page; } h1 { break-before: page; } .nav-bar { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION BAR -->
+<nav class="nav-bar">
+  <a href="index.html" class="nav-home">&larr; Handbook Home</a>
+  <div class="nav-links">
+    <a href="handbook-v3-part1-strategy.html">1: Strategy</a>
+    <a href="handbook-v3-part2-setup.html">2: Setup</a>
+    <a href="handbook-v3-part3-build.html" class="active">3: Build</a>
+    <a href="build-guide-v3.html">Build Guide</a>
+    <a href="workflow-guide-v1.html">Workflow</a>
+  </div>
+</nav>
+
+<!-- TITLE PAGE -->
+<div class="title-page">
+  <h1>AI SaaS Handbook</h1>
+  <p class="subtitle">Part 3: Build & Launch</p>
+  <p class="version">Version 3.0 - MOAI Integration Edition</p>
+  <p class="date">January 2026</p>
+
+  <div style="margin-top: 2rem;">
+    <p style="color: var(--muted);">
+      This part covers: Build Phase with MOAI, TDD Workflow, Tech Debt, Launch, File Control, and Appendices<br>
+      <strong>Tool:</strong> <span class="tool-badge badge-code">Claude Code</span>
+    </p>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc" id="toc">
+  <h2>Part 3 Contents</h2>
+
+  <div class="toc-section">
+    <strong>Part V: Build Phase with MOAI <span class="new-badge">ENHANCED</span></strong>
+    <div class="toc-items">
+      <a href="#chapter-24">24. MOAI-ADK Overview</a> |
+      <a href="#chapter-25">25. SPEC-First Development</a> |
+      <a href="#chapter-26">26. TDD Workflow</a> |
+      <a href="#chapter-27">27. Technical Debt Scoring Framework</a> |
+      <a href="#chapter-28">28. Build Milestones</a>
+    </div>
+  </div>
+
+  <div class="toc-section">
+    <strong>Part VI: Launch</strong>
+    <div class="toc-items">
+      <a href="#chapter-30">30. QA and Launch Checklist</a>
+    </div>
+  </div>
+
+  <div class="toc-section">
+    <strong>Part VII: File Control System <span class="new-badge">NEW</span></strong>
+    <div class="toc-items">
+      <a href="#chapter-32">32. Project File Structure</a>
+    </div>
+  </div>
+
+  <div class="toc-section">
+    <strong>Appendices</strong>
+    <div class="toc-items">
+      <a href="#appendix-b">B. SPEC Template</a> |
+      <a href="#appendix-c">C. Quality Gate Checklists</a>
+    </div>
+  </div>
+
+  <div class="toc-section" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+    <strong>Other Parts</strong>
+    <div class="toc-items">
+      <a href="handbook-v3-part1-strategy.html">Part 1: Strategy & Design</a> (Parts I, II, III) |
+      <a href="handbook-v3-part2-setup.html">Part 2: Architecture & Setup</a> (Parts IV, IV-B, IV-C)
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PART V: BUILD PHASE WITH MOAI -->
+<div class="part-header moai" id="part-5">
+  <h2>PART V: BUILD PHASE WITH MOAI <span class="new-badge">ENHANCED</span></h2>
+  <p style="color: var(--muted); margin-top: 0.5rem;">SPEC-First Development with TDD Enforcement</p>
+</div>
+
+<h1 id="chapter-24">Chapter 24: MOAI-ADK Overview</h1>
+
+<p>MOAI-ADK (Methodology for Organized AI-Driven Development Kit) structures AI-assisted implementation through SPEC-First Development, EARS Requirements, TDD Workflow, and Documentation Sync.</p>
+
+<div class="file-structure">
+HANDBOOK + MOAI INTEGRATION
+===========================
+
+Design Brief      ----+
+UX Package        ----|---> Build Contract ---> SPEC ---> TDD Cycle
+UI System         ----|                              |
+Architecture      ----+                              v
+                                              Tested Code + Docs
+</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <ol>
+    <li><strong>Create the Build Contract</strong> &mdash; Use the Build Contract prompt (<a href="handbook-v3-part2-setup.html#chapter-22">Chapter 22</a>) to synthesize your design artifacts into a single reference document</li>
+    <li><strong>Set up SPEC folder structure</strong> &mdash; Create <code>docs/specs/</code> in your project root</li>
+    <li><strong>Configure testing framework</strong> &mdash; Install Jest and React Testing Library:
+      <div class="code-block">npm install -D jest @testing-library/react @testing-library/jest-dom</div>
+    </li>
+    <li><strong>Create CLAUDE.md</strong> &mdash; Set up your AI context file following <a href="handbook-v3-part2-setup.html#chapter-23-3">Chapter 23.3</a></li>
+  </ol>
+</div>
+
+<h1 id="chapter-25">Chapter 25: SPEC-First Development</h1>
+
+<h2>25.1 EARS Requirements Format</h2>
+
+<table class="comparison-table">
+  <tr><th>Type</th><th>Pattern</th><th>Example</th></tr>
+  <tr><td>Ubiquitous</td><td>The [system] shall [action]</td><td>The upload zone shall accept JPEG, PNG, and HEIC formats.</td></tr>
+  <tr><td>State-Driven</td><td>While [state], the [system] shall [action]</td><td>While uploading, the system shall display progress.</td></tr>
+  <tr><td>Event-Driven</td><td>When [event], the [system] shall [action]</td><td>When user clicks generate, the system shall call the AI API.</td></tr>
+  <tr><td>Optional</td><td>Where [condition], the [system] shall [action]</td><td>Where user is Pro tier, the system shall enable all styles.</td></tr>
+  <tr><td>Unwanted</td><td>The [system] shall not [action]</td><td>The system shall not store raw API keys.</td></tr>
+</table>
+
+<h2>25.2 Test Case Format</h2>
+
+<div class="code-block">### TC-PHOTO-001: Valid image upload
+
+**GIVEN** a user is on the create listing page
+  AND the user has selected a valid JPEG image
+**WHEN** the user drops the image on the upload zone
+**THEN** the system displays an upload progress indicator
+  AND the image appears in the preview grid after upload completes</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <ol>
+    <li><strong>Write SPECs before coding</strong> &mdash; For each feature, create a SPEC document in <code>docs/specs/</code> using the template in <a href="#appendix-b">Appendix B</a></li>
+    <li><strong>Use EARS format for requirements</strong> &mdash; Every requirement must follow one of the five EARS patterns above</li>
+    <li><strong>Create test cases for each requirement</strong> &mdash; At minimum, one test case per requirement; complex requirements may need multiple</li>
+    <li><strong>Reference Build Contract sections</strong> &mdash; Each SPEC must cite the relevant Build Contract sections it implements</li>
+  </ol>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create a new SPEC file
+touch docs/specs/SPEC-AUTH-001.md
+
+# Copy the template from Appendix B and customize
+# Ensure all [PLACEHOLDER] values are replaced</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Create SPEC-AUTH-001 for user login using the template in docs/specs/
+Reference Build Contract section 2.3 for authentication requirements"</div>
+</div>
+
+<h1 id="chapter-26">Chapter 26: TDD Workflow</h1>
+
+<div class="file-structure">
+TDD CYCLE: RED --> GREEN --> REFACTOR --> DONE
+
+RED:      Write failing tests from SPEC test cases
+GREEN:    Write minimum code to pass tests
+REFACTOR: Improve code quality, tests still pass
+DONE:     All tests pass, quality gate passed
+</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <p>For each feature, follow the TDD cycle strictly:</p>
+
+  <h5>RED Phase (Write Failing Tests)</h5>
+  <ol>
+    <li>Take test cases from your SPEC document</li>
+    <li>Create test file in <code>src/__tests__/</code> following naming convention: <code>[feature].test.ts</code></li>
+    <li>Write tests that describe expected behavior</li>
+    <li>Run tests &mdash; they should FAIL (this confirms you're testing the right thing)</li>
+  </ol>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create test file
+touch src/__tests__/auth.test.ts
+
+# Write tests based on SPEC test cases
+# Run tests to confirm failure
+npm test</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Write failing tests for SPEC-AUTH-001. Create src/__tests__/auth.test.ts
+Use the test cases defined in the SPEC. Do not write implementation yet."</div>
+
+  <h5>GREEN Phase (Make Tests Pass)</h5>
+  <ol>
+    <li>Write the minimum code needed to pass each test</li>
+    <li>Do not over-engineer &mdash; just make the test pass</li>
+    <li>Run tests after each change to verify progress</li>
+  </ol>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Implement the minimum code to make auth.test.ts pass.
+Follow the requirements in SPEC-AUTH-001."</div>
+
+  <h5>REFACTOR Phase (Improve Code Quality)</h5>
+  <ol>
+    <li>Clean up code while keeping tests green</li>
+    <li>Extract reusable functions, improve naming, add types</li>
+    <li>Run tests after each refactor to ensure nothing breaks</li>
+  </ol>
+
+  <p><strong>Quality Gate Check:</strong></p>
+  <div class="code-block"># All tests must pass
+npm test
+
+# No TypeScript errors
+npm run build
+
+# No linting errors
+npm run lint</div>
+</div>
+
+<div class="note">
+<strong>Detailed TDD prompts and milestone guides are in the Build Phase Guide v3.</strong>
+</div>
+
+<h1 id="chapter-27">Chapter 27: Technical Debt Scoring Framework <span class="new-badge">NEW</span></h1>
+
+<p>Technical debt is inevitable during rapid development. The difference between successful projects and troubled ones is not the absence of debt &mdash; it's the <strong>awareness and management</strong> of that debt. This framework provides objective measurement so you can make informed decisions about when to incur debt, when to pay it down, and when to stop and remediate.</p>
+
+<h2>27.1 Why Measure Technical Debt</h2>
+
+<p>Without measurement, debt accumulates invisibly until it blocks progress. Common symptoms of unmanaged debt:</p>
+
+<ul>
+  <li>Simple changes require touching many files</li>
+  <li>New developers take weeks to understand the codebase</li>
+  <li>Bugs keep appearing in the same areas</li>
+  <li>Fear of refactoring because "it might break something"</li>
+  <li>Test suite takes too long or provides false confidence</li>
+</ul>
+
+<p>The scoring framework makes debt visible and actionable. Run it at every checkpoint to catch problems early.</p>
+
+<h2>27.2 The Six Debt Categories</h2>
+
+<table class="comparison-table">
+  <tr>
+    <th>Category</th>
+    <th>Weight</th>
+    <th>What It Measures</th>
+    <th>Automated?</th>
+  </tr>
+  <tr>
+    <td><strong>Code Complexity</strong></td>
+    <td>25%</td>
+    <td>Function length, nesting depth, cyclomatic complexity</td>
+    <td>Yes (ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Error Handling</strong></td>
+    <td>20%</td>
+    <td>No empty catches, consistent patterns, explicit handling</td>
+    <td>Yes (ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Type Safety</strong></td>
+    <td>20%</td>
+    <td>Zero <code>any</code> types, strict mode, explicit returns</td>
+    <td>Yes (TypeScript + ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Test Coverage</strong></td>
+    <td>20%</td>
+    <td>Line coverage percentage for business logic</td>
+    <td>Yes (Jest/Vitest)</td>
+  </tr>
+  <tr>
+    <td><strong>Documentation Sync</strong></td>
+    <td>10%</td>
+    <td>CLAUDE.md current, SPECs match implementation</td>
+    <td>No (Manual review)</td>
+  </tr>
+  <tr>
+    <td><strong>Dependency Health</strong></td>
+    <td>5%</td>
+    <td>npm audit clean, dependencies up to date</td>
+    <td>Yes (npm audit)</td>
+  </tr>
+</table>
+
+<h2>27.3 Scoring Each Category (1-10 Scale)</h2>
+
+<h3>Code Complexity Score</h3>
+<div class="code-block"># Run ESLint with complexity rules
+npm run lint
+
+# Scoring:
+# 10: Zero complexity violations
+# 8-9: Only warnings, no errors
+# 6-7: 1-5 complexity errors
+# 4-5: 6-15 complexity errors
+# 1-3: 16+ complexity errors or ignored rules</div>
+
+<p><strong>What triggers complexity violations:</strong></p>
+<ul>
+  <li>Functions exceeding 30 lines</li>
+  <li>Files exceeding 200 lines</li>
+  <li>Nesting depth greater than 3</li>
+  <li>Cyclomatic complexity greater than 10</li>
+  <li>More than 4 function parameters</li>
+</ul>
+
+<h3>Error Handling Score</h3>
+<div class="code-block"># Check for empty catch blocks
+grep -r "catch.*{.*}" src/ --include="*.ts" --include="*.tsx" | grep -v "// handled"
+
+# Scoring:
+# 10: All errors explicitly handled, consistent patterns
+# 8-9: Minor inconsistencies
+# 6-7: Some empty catches with comments
+# 4-5: Multiple empty catches, inconsistent patterns
+# 1-3: Errors swallowed or ignored systematically</div>
+
+<h3>Type Safety Score</h3>
+<div class="code-block"># Check for any types
+grep -r ": any" src/ --include="*.ts" --include="*.tsx" | wc -l
+
+# Check TypeScript strict mode
+grep "strict" tsconfig.json
+
+# Scoring:
+# 10: Zero any types, strict mode enabled
+# 8-9: 1-3 any types with justification
+# 6-7: 4-10 any types
+# 4-5: 11-25 any types or strict mode disabled
+# 1-3: 26+ any types or no TypeScript</div>
+
+<h3>Test Coverage Score</h3>
+<div class="code-block"># Run tests with coverage
+npm test -- --coverage
+
+# Scoring:
+# 10: 90%+ coverage
+# 9: 80-89% coverage
+# 8: 70-79% coverage
+# 7: 60-69% coverage
+# 6: 50-59% coverage
+# 1-5: Below 50% coverage</div>
+
+<h3>Documentation Sync Score</h3>
+<p>Manual checklist (run at checkpoints):</p>
+<div class="checklist">
+  <ul>
+    <li>CLAUDE.md reflects current project state</li>
+    <li>All completed SPECs marked as "Done"</li>
+    <li>Build Contract matches implementation</li>
+    <li>No orphaned TODO comments older than 1 week</li>
+    <li>README has accurate setup instructions</li>
+  </ul>
+</div>
+<p><strong>Scoring:</strong> 2 points per item checked (max 10)</p>
+
+<h3>Dependency Health Score</h3>
+<div class="code-block"># Check for vulnerabilities
+npm audit
+
+# Check for outdated packages
+npm outdated
+
+# Scoring:
+# 10: Zero vulnerabilities, all deps current
+# 8-9: Zero high/critical, minor outdated deps
+# 6-7: 1-2 high vulnerabilities
+# 4-5: 3-5 high vulnerabilities or 1 critical
+# 1-3: Multiple critical vulnerabilities</div>
+
+<h2>27.4 Calculating the Overall Score</h2>
+
+<div class="code-block">Overall Score = (Complexity x 0.25) + (ErrorHandling x 0.20) +
+               (TypeSafety x 0.20) + (TestCoverage x 0.20) +
+               (DocSync x 0.10) + (Dependencies x 0.05)
+
+Example:
+  Complexity:    8 x 0.25 = 2.00
+  ErrorHandling: 7 x 0.20 = 1.40
+  TypeSafety:    9 x 0.20 = 1.80
+  TestCoverage:  8 x 0.20 = 1.60
+  DocSync:       6 x 0.10 = 0.60
+  Dependencies: 10 x 0.05 = 0.50
+  ----------------------------
+  Overall Score:         7.90</div>
+
+<h2>27.5 Score Thresholds and Actions</h2>
+
+<table class="comparison-table">
+  <tr>
+    <th>Score</th>
+    <th>Rating</th>
+    <th>Action</th>
+  </tr>
+  <tr style="background: #d1fae5;">
+    <td><strong>&gt;= 8.0</strong></td>
+    <td>Excellent</td>
+    <td>Proceed confidently. Debt is well-managed.</td>
+  </tr>
+  <tr style="background: #dbeafe;">
+    <td><strong>7.0 - 7.9</strong></td>
+    <td>Good</td>
+    <td>Minor debt exists. Document in TECH-DEBT.md and proceed.</td>
+  </tr>
+  <tr style="background: #fef3c7;">
+    <td><strong>6.0 - 6.9</strong></td>
+    <td>Acceptable</td>
+    <td>Create remediation plan. Proceed with awareness. Address before next checkpoint.</td>
+  </tr>
+  <tr style="background: #fed7aa;">
+    <td><strong>5.0 - 5.9</strong></td>
+    <td>Concerning</td>
+    <td>Address high-priority items before proceeding. Allocate time in next milestone.</td>
+  </tr>
+  <tr style="background: #fecaca;">
+    <td><strong>&lt; 5.0</strong></td>
+    <td>Critical</td>
+    <td><strong>STOP.</strong> Do not proceed until score reaches 6.0+. Remediation is now the priority.</td>
+  </tr>
+</table>
+
+<div class="warning">
+  <strong>Checkpoint Gate:</strong> At Checkpoint A and B, a score below 6.0 is a hard stop. Do not proceed to the next milestone until debt is remediated to at least 6.0.
+</div>
+
+<h2>27.6 Tracking Debt Over Time</h2>
+
+<p>Create a <code>TECH-DEBT.md</code> file in your project root to track debt items. Update it at every checkpoint.</p>
+
+<div class="code-block"># TECH-DEBT.md structure
+project-root/
++-- TECH-DEBT.md          # Debt registry
++-- CLAUDE.md             # AI context
++-- docs/
+|   +-- build-contract.md
+|   +-- specs/
++-- src/</div>
+
+<p>Each debt item should include:</p>
+<ul>
+  <li><strong>Location:</strong> File and line number</li>
+  <li><strong>Category:</strong> Which of the 6 categories</li>
+  <li><strong>Severity:</strong> Critical, High, Medium, Low</li>
+  <li><strong>Reason for deferral:</strong> Why not fix now</li>
+  <li><strong>Remediation estimate:</strong> Hours or T-shirt size</li>
+  <li><strong>Revisit date:</strong> When to address</li>
+</ul>
+
+<div class="moai-box">
+  <h4>Automated Debt Tracking</h4>
+  <p>Configure your project to run debt checks automatically:</p>
+  <ol>
+    <li><strong>ESLint rules</strong> for complexity detection (see Build Guide Appendix)</li>
+    <li><strong>GitHub Action</strong> to run checks on every PR</li>
+    <li><strong>Pre-commit hook</strong> to catch issues before they're committed</li>
+  </ol>
+  <p>Templates for all automation are provided in the Build Phase Guide v3.</p>
+</div>
+
+<h1 id="chapter-28">Chapter 28: Build Milestones</h1>
+
+<table class="comparison-table">
+  <tr><th>Milestone</th><th>Focus</th><th>Deliverables</th></tr>
+  <tr><td>M1-M4</td><td>Setup, Design System, Database, Layouts</td><td>Foundation ready</td></tr>
+  <tr><td>M5</td><td>Authentication</td><td>Sign up, login, sessions</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="3"><strong>CHECKPOINT A</strong> - Code Audit</td></tr>
+  <tr><td>M6</td><td>Core Feature</td><td>Primary value delivery</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="3"><strong>CHECKPOINT B</strong> - Feature Complete</td></tr>
+  <tr><td>M7-M11</td><td>Admin, Edge Cases, Billing, Performance, Launch</td><td>Production ready</td></tr>
+</table>
+
+<div class="moai-box">
+  <h4>How to Execute Each Milestone</h4>
+
+  <p><strong>Before Starting Any Milestone:</strong></p>
+  <ol>
+    <li>Review the milestone's requirements in Build Phase Guide v3</li>
+    <li>Create SPEC documents for each feature in the milestone</li>
+    <li>Verify previous milestone is complete and committed</li>
+  </ol>
+
+  <p><strong>During Each Milestone:</strong></p>
+  <ol>
+    <li>Follow TDD workflow for each feature (RED &rarr; GREEN &rarr; REFACTOR)</li>
+    <li>Run quality checks after each feature completion</li>
+    <li>Commit working code frequently with descriptive messages</li>
+  </ol>
+
+  <p><strong>At Checkpoints (A, B, C):</strong></p>
+  <ol>
+    <li>Run the Refactoring Audit prompt from Build Phase Guide v3, Part V</li>
+    <li>Address all critical issues before proceeding</li>
+    <li>Run full test suite and verify 100% pass rate</li>
+    <li>Create a git tag for the checkpoint: <code>git tag -a checkpoint-a -m "Checkpoint A complete"</code></li>
+  </ol>
+
+  <p><strong>Manual Verification:</strong></p>
+  <div class="code-block"># Run all quality checks
+npm run build && npm run lint && npm test
+
+# Check test coverage (aim for >= 80%)
+npm test -- --coverage
+
+# Tag checkpoint
+git tag -a checkpoint-a -m "Checkpoint A: Foundation complete"</div>
+</div>
+
+<hr class="divider">
+
+<!-- PART VI: LAUNCH -->
+<div class="part-header" id="part-6">
+  <h2>PART VI: LAUNCH</h2>
+  <p style="color: var(--muted); margin-top: 0.5rem;">Production Readiness and Go-Live</p>
+</div>
+
+<h1 id="chapter-30">Chapter 30: QA and Launch Checklist</h1>
+
+<h2>30.1 Why the Launch Phase Matters</h2>
+
+<p>The Launch phase ensures your application is production-ready. Skipping these checks leads to embarrassing bugs in front of real users, security vulnerabilities, and poor performance that drives users away. This phase connects all previous work &mdash; your design, architecture, and implementation &mdash; into a verified, deployable product.</p>
+
+<h2>30.2 How Launch Supports the Process</h2>
+
+<p>Launch is not just "pushing to production." It's the final quality gate that validates:</p>
+<ul>
+  <li><strong>Design intentions are realized</strong> &mdash; UX flows work as specified</li>
+  <li><strong>Architecture is sound</strong> &mdash; Performance meets requirements</li>
+  <li><strong>Implementation is complete</strong> &mdash; All features work, all tests pass</li>
+  <li><strong>Security is enforced</strong> &mdash; RLS policies, auth, and data protection verified</li>
+</ul>
+
+<h2>30.3 Pre-Launch Workflow</h2>
+
+<div class="checklist">
+  <h4>Pre-Launch Checklist</h4>
+  <ul>
+    <li>All tests passing, no TypeScript errors, no linting errors</li>
+    <li>Environment variables secured, RLS policies tested</li>
+    <li>Lighthouse score >= 90, Core Web Vitals passing</li>
+    <li>All user flows tested, mobile responsive verified</li>
+    <li>Error monitoring configured, analytics configured</li>
+    <li>Database backups enabled, domain configured</li>
+  </ul>
+</div>
+
+<h3>Step-by-Step Verification</h3>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+
+  <h5>1. Code Quality Verification</h5>
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Run full test suite
+npm test
+
+# Check for TypeScript errors
+npm run build
+
+# Check for linting issues
+npm run lint
+
+# Verify no console.log statements in production code
+grep -r "console.log" src/ --include="*.ts" --include="*.tsx"</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Run the Code Review prompt from Build Phase Guide v3 on all src/ files.
+Flag any issues that would affect production."</div>
+
+  <h5>2. Security Verification (OWASP-Based)</h5>
+
+  <p>Security must be verified systematically. Use this checklist based on OWASP Top 10 vulnerabilities:</p>
+
+  <div class="warning">
+    <strong>Critical:</strong> Do not skip security verification. A single vulnerability can compromise all user data and destroy trust.
+  </div>
+
+  <h6>2.1 Authentication &amp; Session Management</h6>
+  <div class="code-block"># Verify password policies (Supabase Auth settings)
+# Dashboard -> Authentication -> Policies
+# - Minimum 8 characters
+# - Require mix of letters/numbers recommended
+
+# Test session expiry
+# 1. Log in, note the session
+# 2. Wait for token expiry (or manually expire in Supabase)
+# 3. Verify user is prompted to re-authenticate
+
+# Verify secure cookie settings (check browser DevTools)
+# - HttpOnly: true
+# - Secure: true (HTTPS only)
+# - SameSite: Lax or Strict</div>
+
+  <h6>2.2 Authorization &amp; Access Control</h6>
+  <div class="code-block"># Test RLS policies by attempting unauthorized access
+# In Supabase SQL Editor, run as different roles:
+SET LOCAL ROLE anon;
+SELECT * FROM profiles; -- Should return empty or error
+
+SET LOCAL ROLE authenticated;
+SELECT * FROM profiles; -- Should only return own profile
+
+# Test horizontal privilege escalation
+# 1. Log in as User A
+# 2. Try to access User B's data via direct URL/API
+# 3. Should be denied by RLS
+
+# Test vertical privilege escalation
+# 1. Log in as regular user
+# 2. Try to access /admin routes
+# 3. Should be redirected or denied</div>
+
+  <h6>2.3 Input Validation &amp; Injection Prevention</h6>
+  <div class="code-block"># Test for SQL injection (should be prevented by Supabase client)
+# Try entering in form fields:
+# ' OR '1'='1
+# '; DROP TABLE users; --
+
+# Test for XSS (Cross-Site Scripting)
+# Try entering in any text field that displays user content:
+# &lt;script&gt;alert('XSS')&lt;/script&gt;
+# &lt;img src=x onerror=alert('XSS')&gt;
+# Verify scripts do NOT execute (content should be escaped)
+
+# Verify Zod validation on all API routes
+grep -r "z\." src/app/api/ --include="*.ts"
+# All API routes should have input validation</div>
+
+  <h6>2.4 Secrets &amp; Configuration</h6>
+  <div class="code-block"># Check for exposed secrets in client code
+grep -r "SUPABASE_SERVICE_ROLE" src/
+grep -r "secret" src/ --include="*.ts" --include="*.tsx" | grep -v node_modules
+grep -r "password" src/ --include="*.ts" --include="*.tsx" | grep -v node_modules
+# Should return NO hardcoded secrets
+
+# Verify .env files are gitignored
+cat .gitignore | grep -E "\.env"
+
+# Check no secrets in git history
+git log --all --full-history -- "*.env"
+# Should return nothing (env files never committed)</div>
+
+  <h6>2.5 Security Headers</h6>
+  <p><strong>Add to next.config.js:</strong></p>
+  <div class="code-block">// next.config.js
+const securityHeaders = [
+  { key: 'X-DNS-Prefetch-Control', value: 'on' },
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+];
+
+module.exports = {
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
+  },
+};</div>
+
+  <p><strong>Verify headers are applied:</strong></p>
+  <div class="code-block"># Check security headers
+curl -I https://your-domain.com | grep -E "Strict-Transport|X-Frame|X-Content"</div>
+
+  <h6>2.6 Dependency Security</h6>
+  <div class="code-block"># Run npm security audit
+npm audit
+
+# Fix vulnerabilities (review changes first)
+npm audit fix
+
+# For production, ensure no high/critical vulnerabilities
+npm audit --audit-level=high
+# Should return "found 0 vulnerabilities"</div>
+
+  <h6>2.7 Rate Limiting (API Protection)</h6>
+  <p><strong>Add rate limiting to critical endpoints:</strong></p>
+  <div class="code-block"># Install rate limiting package
+npm install @upstash/ratelimit @upstash/redis
+
+# Or use Vercel's built-in rate limiting (vercel.json):
+{
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 10
+    }
+  }
+}</div>
+
+  <p><strong>Critical endpoints to rate limit:</strong></p>
+  <ul>
+    <li>Login/signup endpoints</li>
+    <li>Password reset</li>
+    <li>Any endpoint that sends emails</li>
+    <li>Payment/checkout endpoints</li>
+    <li>AI/expensive API calls</li>
+  </ul>
+
+  <h6>2.8 CSRF Protection</h6>
+  <div class="code-block"># Next.js Server Actions have built-in CSRF protection
+# For custom API routes, verify:
+# 1. Use POST/PUT/DELETE for state-changing operations (not GET)
+# 2. Validate Origin header matches your domain
+# 3. Use SameSite cookies (Supabase does this by default)</div>
+
+  <h5>3. Performance Verification</h5>
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Run Lighthouse audit
+npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html
+
+# Check bundle size
+npm run build
+# Review .next/analyze/ if bundle analyzer is configured
+
+# Verify Core Web Vitals in Chrome DevTools
+# Performance tab -> Largest Contentful Paint < 2.5s
+# First Input Delay < 100ms
+# Cumulative Layout Shift < 0.1</div>
+
+  <h5>4. User Flow Testing</h5>
+  <p><strong>Manual Steps:</strong></p>
+  <ol>
+    <li>Sign up with a new email &rarr; verify email flow works</li>
+    <li>Log in with credentials &rarr; redirects to dashboard</li>
+    <li>Complete core feature flow &rarr; data persists correctly</li>
+    <li>Test on mobile device or Chrome DevTools mobile view</li>
+    <li>Test error states (wrong password, network offline, etc.)</li>
+  </ol>
+
+  <h5>5. Monitoring Setup</h5>
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Verify error tracking (e.g., Sentry)
+# Trigger a test error and confirm it appears in dashboard
+
+# Verify analytics (e.g., Vercel Analytics, PostHog)
+# Perform test actions and confirm events are tracked
+
+# Set up uptime monitoring
+# Configure alerts for downtime (e.g., Better Uptime, UptimeRobot)</div>
+
+  <h5>6. Database and Backups</h5>
+  <p><strong>Manual Steps:</strong></p>
+  <ol>
+    <li>In Supabase Dashboard: Settings &rarr; Database &rarr; Backups</li>
+    <li>Verify Point-in-Time Recovery is enabled (Pro plan)</li>
+    <li>Or configure scheduled pg_dump for Free tier</li>
+    <li>Test restore process in a separate project before launch</li>
+  </ol>
+</div>
+
+<h2>30.4 Launch Day Actions</h2>
+
+<div class="checklist">
+  <h4>Launch Day Checklist</h4>
+  <ul>
+    <li>DNS configured and propagated (can take up to 48 hours)</li>
+    <li>SSL certificate active and verified</li>
+    <li>Production environment variables set in Vercel/hosting</li>
+    <li>Stripe webhooks configured for production URL</li>
+    <li>All team members have access to monitoring dashboards</li>
+    <li>Support channels ready (email, chat, etc.)</li>
+  </ul>
+</div>
+
+<div class="note">
+  <strong>Post-Launch Monitoring:</strong> Monitor error rates and user behavior closely for the first 48 hours. Be prepared to roll back if critical issues emerge.
+</div>
+
+<hr class="divider">
+
+<!-- PART VII: FILE CONTROL SYSTEM -->
+<div class="part-header moai" id="part-7">
+  <h2>PART VII: FILE CONTROL SYSTEM <span class="new-badge">NEW</span></h2>
+  <p style="color: var(--muted); margin-top: 0.5rem;">Artifact Organization for AI-Assisted Development</p>
+</div>
+
+<h1 id="chapter-32">Chapter 32: Project File Structure</h1>
+
+<h2>32.1 Why File Control Matters</h2>
+
+<p>The File Control System enables MOAI workflow by establishing clear locations for every artifact. When Claude Code or any AI assistant needs to reference your design decisions, architecture, or requirements, it knows exactly where to look. Without this structure:</p>
+
+<ul>
+  <li>AI assistants can't find your design documents to reference them</li>
+  <li>SPECs reference non-existent Build Contract locations</li>
+  <li>CLAUDE.md can't accurately describe your project structure</li>
+  <li>Test files get scattered, making coverage reports inaccurate</li>
+</ul>
+
+<h2>32.2 The Standard Structure</h2>
+
+<div class="file-structure">
+project-root/
+|-- docs/                    # Design artifacts
+|   |-- build-contract.md    # Bridge document
+|   +-- specs/               # SPEC documents
+|-- src/                     # Application code
+|   |-- app/                 # Next.js app router
+|   |-- components/          # React components
+|   +-- lib/                 # Utilities
+|-- src/__tests__/           # Test files
+|-- supabase/                # Database config
+|-- CLAUDE.md                # AI context file
+|-- TECH-DEBT.md             # Technical debt register
++-- README.md
+</div>
+
+<h2>32.3 What's Required from You</h2>
+
+<div class="moai-box">
+  <h4>Initial Setup Actions</h4>
+
+  <h5>1. Create Documentation Folder</h5>
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create the docs structure
+mkdir -p docs/specs
+
+# Create placeholder Build Contract
+touch docs/build-contract.md</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Create docs/ folder structure for MOAI workflow with build-contract.md placeholder"</div>
+
+  <h5>2. Set Up CLAUDE.md</h5>
+  <p>Create CLAUDE.md in project root following the template in <a href="handbook-v3-part2-setup.html#chapter-23-3">Chapter 23.3</a>. This file is critical &mdash; it tells Claude about your project conventions, current focus, and quality standards.</p>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create CLAUDE.md from template
+touch CLAUDE.md
+
+# Copy template from Chapter 23.3 of this handbook
+# Customize for your project</div>
+
+  <h5>3. Set Up TECH-DEBT.md</h5>
+  <p>Create TECH-DEBT.md in project root for tracking technical debt. Use the template from Chapter 27 or templates/TECH-DEBT.md.</p>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create TECH-DEBT.md from template
+touch TECH-DEBT.md
+
+# Copy template from templates/TECH-DEBT.md
+# Initialize with empty debt register</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Create TECH-DEBT.md for tracking technical debt with empty register, score thresholds reference, and checkpoint history sections"</div>
+
+  <h5>4. Organize Test Files</h5>
+  <p>All test files go in <code>src/__tests__/</code> with naming convention <code>[feature].test.ts</code>.</p>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create tests folder
+mkdir -p src/__tests__
+
+# Move any existing test files
+mv src/**/*.test.ts src/__tests__/</div>
+</div>
+
+<h2>32.4 File Naming Conventions</h2>
+
+<table class="comparison-table">
+  <tr><th>File Type</th><th>Location</th><th>Naming Pattern</th><th>Example</th></tr>
+  <tr><td>SPEC documents</td><td>docs/specs/</td><td>SPEC-[PREFIX]-[NNN].md</td><td>SPEC-AUTH-001.md</td></tr>
+  <tr><td>Build Contract</td><td>docs/</td><td>build-contract.md</td><td>build-contract.md</td></tr>
+  <tr><td>Test files</td><td>src/__tests__/</td><td>[feature].test.ts</td><td>auth.test.ts</td></tr>
+  <tr><td>React components</td><td>src/components/</td><td>[component-name].tsx</td><td>user-card.tsx</td></tr>
+  <tr><td>Utilities</td><td>src/lib/</td><td>[utility].ts</td><td>validation.ts</td></tr>
+  <tr><td>Types</td><td>src/types/</td><td>[domain].ts</td><td>user.ts</td></tr>
+  <tr><td>Debt tracking</td><td>project root</td><td>TECH-DEBT.md</td><td>TECH-DEBT.md</td></tr>
+</table>
+
+<h2>32.5 When to Update Files</h2>
+
+<div class="checklist">
+  <h4>File Maintenance Triggers</h4>
+  <ul>
+    <li><strong>CLAUDE.md</strong> &mdash; Update when: starting new milestone, changing patterns, adding conventions</li>
+    <li><strong>TECH-DEBT.md</strong> &mdash; Update when: at each checkpoint, after debt review, when debt items resolved</li>
+    <li><strong>Build Contract</strong> &mdash; Update when: design decisions change, new features added to scope</li>
+    <li><strong>SPEC files</strong> &mdash; Update when: requirements clarified, test cases added, status changes</li>
+    <li><strong>README.md</strong> &mdash; Update when: setup steps change, new dependencies added</li>
+  </ul>
+</div>
+
+<div class="note">
+  <strong>Keep Documentation in Sync:</strong> Outdated documentation is worse than no documentation. When you make significant changes, update the relevant files immediately. Add this to your commit checklist.
+</div>
+
+<hr class="divider">
+
+<!-- APPENDICES -->
+<div class="part-header">
+  <h2>APPENDICES</h2>
+</div>
+
+<h1 id="appendix-b">Appendix B: SPEC Template</h1>
+
+<div class="code-block"># SPEC-[PREFIX]-[NNN]: [Feature Name]
+
+**Status**: [Draft | Ready | In Progress | Review | Done]
+**Milestone**: [Number and Name]
+
+## Overview
+**Problem**: [What problem does this solve?]
+**Solution**: [How does this feature solve it?]
+
+## Source References
+- Build Contract Section [X.X]: [Name]
+
+## Requirements
+**REQ-001** [EARS-format requirement]
+
+## Test Cases
+### TC-[PREFIX]-001: [Name]
+**GIVEN** [precondition]
+**WHEN** [action]
+**THEN** [outcome]
+
+## Acceptance Criteria
+- [ ] All test cases pass
+- [ ] Code meets quality standards</div>
+
+<h1 id="appendix-c">Appendix C: Quality Gate Checklists</h1>
+
+<div class="checklist">
+  <h4>SPEC Ready</h4>
+  <ul>
+    <li>Overview complete, Build Contract references included</li>
+    <li>At least one requirement (EARS format)</li>
+    <li>At least one test case per requirement</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Implementation Done</h4>
+  <ul>
+    <li>All tests pass, Coverage >= 80%</li>
+    <li>Functions <= 30 lines, Files <= 200 lines, Nesting <= 3</li>
+    <li>No TypeScript errors, Linting passes</li>
+  </ul>
+</div>
+
+<hr class="divider">
+
+<!-- PART NAVIGATION -->
+<div class="part-nav">
+  <a href="handbook-v3-part2-setup.html">&larr; Part 2: Architecture & Setup</a>
+  <span style="color: var(--muted);">This is Part 3 (Final)</span>
+</div>
+
+<!-- FOOTER -->
+<div style="text-align: center; color: var(--muted); margin-top: 3rem; padding: 2rem 0; border-top: 1px solid var(--border);">
+  <p>
+    <strong>AI SaaS Handbook v3.0 - Part 3: Build & Launch</strong><br>
+    Parts V, VI, VII: Build Phase, Launch, File Control, Appendices
+  </p>
+  <p style="margin-top: 1rem;">
+    <a href="handbook-v3-part1-strategy.html" style="color: var(--secondary);">Part 1: Strategy & Design</a> |
+    <a href="handbook-v3-part2-setup.html" style="color: var(--secondary);">Part 2: Architecture & Setup</a> |
+    <a href="index.html" style="color: var(--secondary);">Documentation Home</a>
+  </p>
+</div>
+
+</body>
+</html>

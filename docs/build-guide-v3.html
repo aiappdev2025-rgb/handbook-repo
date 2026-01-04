@@ -219,7 +219,7 @@
     }
     
     .checkpoint h3::before {
-      content: "Ã°Å¸â€Â";
+      content: "\2713";
     }
     
     .quality-gate {
@@ -239,7 +239,7 @@
     }
     
     .quality-gate h3::before {
-      content: "Ã¢Å“â€œ";
+      content: "\2713";
       background: var(--success);
       color: white;
       width: 1.5rem;
@@ -268,7 +268,7 @@
     }
     
     .security-check h3::before {
-      content: "Ã°Å¸â€â€™";
+      content: "\26A0";
     }
     
     .warning-box {
@@ -434,12 +434,13 @@
 <body>
 <!-- NAVIGATION BAR -->
 <nav class="nav-bar">
-  <a href="index.html" class="nav-home">Handbook Home</a>
+  <a href="index.html" class="nav-home">&larr; Handbook Home</a>
   <div class="nav-links">
-    <a href="handbook-v3.html">Main Handbook</a>
+    <a href="handbook-v3-part1-strategy.html">1: Strategy</a>
+    <a href="handbook-v3-part2-setup.html">2: Setup</a>
+    <a href="handbook-v3-part3-build.html">3: Build</a>
     <a href="build-guide-v3.html" class="active">Build Guide</a>
-    <a href="workflow-guide-v1.html">Workflow Guide</a>
-    <a href="navigation-guide.html">Navigation</a>
+    <a href="workflow-guide-v1.html">Workflow</a>
   </div>
 </nav>
 <style>
@@ -462,34 +463,34 @@
 
 <!-- PREREQUISITES BOX -->
 <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
-  <h2 style="color: #92400e; margin-top: 0; border: none;">Ã¢Å¡Â Ã¯Â¸Â Prerequisites: Complete Before Starting Build Phase</h2>
+  <h2 style="color: #92400e; margin-top: 0; border: none;">&#9888; Prerequisites: Complete Before Starting Build Phase</h2>
   
   <p style="margin-bottom: 1rem;">Before using this guide, ensure you have completed the following from the <strong>AI SaaS Handbook v2.2</strong>:</p>
   
   <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
     <h4 style="margin-top: 0; color: #92400e;">Part II: Documentation Stages</h4>
     <ul style="margin-bottom: 0;">
-      <li>Ã¢Å“â€œ Stage 0.1: Research and Opportunity Assessment</li>
-      <li>Ã¢Å“â€œ Stage 1.0: Business One-Pager</li>
-      <li>Ã¢Å“â€œ Stage 2.0: Shared Design Brief</li>
+      <li>&#10003; Stage 0.1: Research and Opportunity Assessment</li>
+      <li>&#10003; Stage 1.0: Business One-Pager</li>
+      <li>&#10003; Stage 2.0: Shared Design Brief</li>
     </ul>
   </div>
   
   <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
     <h4 style="margin-top: 0; color: #92400e;">Part III: Design Excellence</h4>
     <ul style="margin-bottom: 0;">
-      <li>Ã¢Å“â€œ Stage 3.0: UX Package</li>
-      <li>Ã¢Å“â€œ Stage 3.1: UX Critic and Validation</li>
-      <li>Ã¢Å“â€œ Stage 4.0: UI System</li>
+      <li>&#10003; Stage 3.0: UX Package</li>
+      <li>&#10003; Stage 3.1: UX Critic and Validation</li>
+      <li>&#10003; Stage 4.0: UI System</li>
     </ul>
   </div>
   
   <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
     <h4 style="margin-top: 0; color: #92400e;">Part IV: Technical Foundation (CRITICAL)</h4>
     <ul style="margin-bottom: 0;">
-      <li>Ã¢Å“â€œ Stage 5.0: Solution Architecture</li>
-      <li>Ã¢Å“â€œ Chapter 16-18: Infrastructure Setup (GitHub, Supabase, Vercel)</li>
-      <li>Ã¢Å“â€œ <strong>Chapter 19: Multi-Environment Configuration</strong> Ã¢â‚¬â€ Local, Preview, and Production environments must be configured before any build work begins</li>
+      <li>&#10003; Stage 5.0: Solution Architecture</li>
+      <li>&#10003; Chapter 16-18: Infrastructure Setup (GitHub, Supabase, Vercel)</li>
+      <li>&#10003; <strong>Chapter 19: Multi-Environment Configuration</strong>  -  Local, Preview, and Production environments must be configured before any build work begins</li>
     </ul>
   </div>
   
@@ -580,6 +581,94 @@
 
 <p><strong>DELIVERABLES & VERIFICATION</strong> specifies exactly what files should be produced and how to confirm the work is complete. This creates accountability and makes it easy to know when you're done.</p>
 
+<h2>How to Edit and Customize Prompts</h2>
+
+<p>Every prompt in this guide contains placeholders that you must customize for your specific project. Understanding what to change and what to keep is essential for getting good results.</p>
+
+<h3>Understanding Placeholders</h3>
+
+<p>Placeholders appear in two formats throughout the prompts:</p>
+
+<ul>
+  <li><strong>[BRACKET PLACEHOLDERS]</strong> - Replace the entire bracket with your specific value. Example: <code>[PRODUCT NAME]</code> becomes <code>PhotoListPro</code></li>
+  <li><strong>{{DOUBLE BRACE PLACEHOLDERS}}</strong> - Indicates where to paste actual content like code files. Example: <code>{{paste your schema here}}</code></li>
+</ul>
+
+<h3>What to Customize</h3>
+
+<div class="note-box">
+  <strong>Always Replace:</strong>
+  <ul style="margin-bottom: 0;">
+    <li><code>[PRODUCT NAME]</code> - Your actual product name</li>
+    <li><code>[YOUR BUSINESS LOGIC]</code> - Specific features and rules for your app</li>
+    <li><code>[TABLE NAMES]</code> - Your actual database table names from your schema</li>
+    <li><code>[YOUR ENTITY]</code> - The main object your app works with (listings, invoices, projects, etc.)</li>
+    <li><code>{{paste code here}}</code> - Actual code from your project</li>
+  </ul>
+</div>
+
+<h3>What to Keep Unchanged</h3>
+
+<div class="warning-box">
+  <strong>Do Not Modify:</strong>
+  <ul style="margin-bottom: 0;">
+    <li><strong>QUALITY STANDARDS section</strong> - These enforce code quality and prevent vibe coding</li>
+    <li><strong>ROLE definitions</strong> - These set the right expertise level</li>
+    <li><strong>Security requirements</strong> - RLS policies, input validation, auth checks</li>
+    <li><strong>File structure conventions</strong> - Consistent organization aids maintainability</li>
+  </ul>
+</div>
+
+<h3>Example: Customizing a Prompt</h3>
+
+<p><strong>Original prompt text:</strong></p>
+<div class="code-block">CONTEXT
+This is [PRODUCT NAME], a [DESCRIPTION].
+The core entity is [YOUR ENTITY] stored in the [TABLE NAME] table.</div>
+
+<p><strong>Customized for a real estate listing app:</strong></p>
+<div class="code-block">CONTEXT
+This is PhotoListPro, a real estate listing description generator.
+The core entity is "listing" stored in the listings table.</div>
+
+<h3>When to Split Prompts</h3>
+
+<p>If a prompt becomes too long or complex after customization (over ~2000 words), split it into multiple focused prompts. Complete and verify each part before moving on.</p>
+
+<h3>Manual vs Claude Code Execution</h3>
+
+<p>Most prompts in this guide can be executed two ways:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>When to Use</th>
+      <th>How</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Claude Code CLI</strong></td>
+      <td>You have Claude Code installed and configured with CLAUDE.md</td>
+      <td>Copy prompt, run <code>claude</code> in terminal, paste prompt</td>
+    </tr>
+    <tr>
+      <td><strong>Manual Execution</strong></td>
+      <td>No Claude Code, or prefer manual control</td>
+      <td>Copy prompt to Claude Chat, manually create files from the output</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For manual execution, after Claude generates code, you'll need to:</p>
+<ol>
+  <li>Create the specified files in your project</li>
+  <li>Copy the generated code into each file</li>
+  <li>Run the verification steps yourself (npm run build, npm test, etc.)</li>
+  <li>Fix any issues Claude identifies before proceeding</li>
+</ol>
+
 <h2>Build Phase Overview</h2>
 
 <h3>The Eleven Milestones</h3>
@@ -667,21 +756,54 @@
 
 <h3>Major Checkpoints</h3>
 
-<p>In addition to per-milestone quality gates, there are three major checkpoints where you pause for deeper review.</p>
+<p>In addition to per-milestone quality gates, there are three major checkpoints where you pause for deeper review. <strong>Each checkpoint includes mandatory security verification.</strong></p>
 
 <div class="checkpoint">
   <h3>Checkpoint A: After Milestone 3 (Database)</h3>
   <p>Before building features, verify the data foundation is solid. Review schema design. Confirm all RLS policies are in place. Test that policies actually work by attempting unauthorized access. This includes the admin tables if you're building the admin console.</p>
+
+  <h4>Security Requirements for Checkpoint A:</h4>
+  <ul>
+    <li>&#10003; RLS enabled on ALL tables (no exceptions)</li>
+    <li>&#10003; Every table has SELECT policy restricting to owner or admin</li>
+    <li>&#10003; INSERT/UPDATE/DELETE policies verify user owns the record</li>
+    <li>&#10003; Test as anon role: <code>SET LOCAL ROLE anon; SELECT * FROM [table];</code> &mdash; should fail</li>
+    <li>&#10003; Test as wrong user: Verify User A cannot access User B's data</li>
+    <li>&#10003; No service_role key in any client-side code</li>
+  </ul>
 </div>
 
 <div class="checkpoint">
   <h3>Checkpoint B: After Milestone 7 (Admin Console)</h3>
   <p>The admin console provides your operational visibility. Verify you can find and view any user, see subscription statuses, and access error logs. Test admin role restrictions to ensure non-admins cannot access admin routes. This is your last checkpoint before building additional user-facing features.</p>
+
+  <h4>Security Requirements for Checkpoint B:</h4>
+  <ul>
+    <li>&#10003; Run the <strong>Security Audit Prompt</strong> (Part V of this guide)</li>
+    <li>&#10003; Non-admin users redirected from /admin routes (test in browser)</li>
+    <li>&#10003; Admin actions logged to admin_audit_logs table</li>
+    <li>&#10003; All API routes have Zod input validation</li>
+    <li>&#10003; All forms validate input client-side AND server-side</li>
+    <li>&#10003; No hardcoded secrets in codebase: <code>grep -r "secret\|password\|key" src/</code></li>
+    <li>&#10003; XSS test: Enter <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> in text fields &mdash; must be escaped</li>
+    <li>&#10003; npm audit shows no high/critical vulnerabilities</li>
+  </ul>
 </div>
 
 <div class="checkpoint">
   <h3>Checkpoint C: After Milestone 10 (Polish)</h3>
   <p>Before final testing, ensure the codebase is clean. Run the full refactoring audit. Address all accumulated technical debt. Verify error handling is comprehensive. Confirm all states are handled in the UI.</p>
+
+  <h4>Security Requirements for Checkpoint C:</h4>
+  <ul>
+    <li>&#10003; Run the <strong>Security Audit Prompt</strong> again (final verification)</li>
+    <li>&#10003; Security headers configured in next.config.js (HSTS, X-Frame-Options, etc.)</li>
+    <li>&#10003; Error messages don't expose sensitive information</li>
+    <li>&#10003; Rate limiting on login, signup, password reset, and payment endpoints</li>
+    <li>&#10003; All environment variables documented in .env.example (without values)</li>
+    <li>&#10003; .gitignore includes .env, .env.local, .env.*.local</li>
+    <li>&#10003; No console.log statements with sensitive data: <code>grep -r "console.log" src/ | grep -i "password\|token\|secret"</code></li>
+  </ul>
 </div>
 
 <hr class="divider">
@@ -694,10 +816,10 @@
 <div class="note-box">
 <strong>Environment Ready?</strong> Before starting Milestone 1, confirm your multi-environment setup is complete (Handbook v2.2 Chapter 19):
 <ul style="margin-bottom: 0;">
-  <li>Ã¢Å“â€œ Local Supabase running OR dev project linked</li>
-  <li>Ã¢Å“â€œ .env.local configured with Supabase credentials</li>
-  <li>Ã¢Å“â€œ GitHub repository created with branch protection</li>
-  <li>Ã¢Å“â€œ Vercel project connected with environment variables</li>
+  <li>&#10003; Local Supabase running OR dev project linked</li>
+  <li>&#10003; .env.local configured with Supabase credentials</li>
+  <li>&#10003; GitHub repository created with branch protection</li>
+  <li>&#10003; Vercel project connected with environment variables</li>
 </ul>
 </div>
 
@@ -823,9 +945,9 @@
 <div class="milestone-header admin">
   <h2>Milestone 7: Admin Console</h2>
   <div class="milestone-meta">
-    <span>Ã¢ÂÂ±Ã¯Â¸Â Time: 6-10 hours</span>
-    <span>Ã°Å¸â€Â§ Tool: Claude Code CLI</span>
-    <span>Ã°Å¸â€œâ€¹ 5 Prompts</span>
+    <span>&#9201; Time: 6-10 hours</span>
+    <span>&#128295; Tool: Claude Code CLI</span>
+    <span>&#128196; 5 Prompts</span>
   </div>
 </div>
 
@@ -907,8 +1029,8 @@
 <span class="instruction">4. Updated src/middleware.ts</span>
 
 <span class="section-header">VERIFICATION</span>
-<span class="instruction">1. As regular user: Visit /admin Ã¢â€ â€™ redirected to /dashboard</span>
-<span class="instruction">2. As admin user: Visit /admin Ã¢â€ â€™ allowed (404 ok, route doesn't exist yet)</span>
+<span class="instruction">1. As regular user: Visit /admin &rarr; redirected to /dashboard</span>
+<span class="instruction">2. As admin user: Visit /admin &rarr; allowed (404 ok, route doesn't exist yet)</span>
 <span class="instruction">3. Test requireAdmin() throws for non-admin</span>
 <span class="instruction">4. Test audit logging creates record in admin_audit_logs</span></div>
 </div>
@@ -979,7 +1101,7 @@
 <span class="instruction">5. src/lib/constants/admin-navigation.ts</span>
 
 <span class="section-header">VERIFICATION</span>
-<span class="instruction">1. Visit /admin as admin Ã¢â€ â€™ dashboard renders</span>
+<span class="instruction">1. Visit /admin as admin &rarr; dashboard renders</span>
 <span class="instruction">2. Navigation shows all sections</span>
 <span class="instruction">3. Mobile: hamburger menu works</span>
 <span class="instruction">4. "Back to App" returns to /dashboard</span>
@@ -1061,10 +1183,10 @@
 <span class="instruction">1. User list loads with pagination</span>
 <span class="instruction">2. Search finds user by email</span>
 <span class="instruction">3. Filters narrow results correctly</span>
-<span class="instruction">4. Click user Ã¢â€ â€™ detail page shows</span>
-<span class="instruction">5. Add admin note Ã¢â€ â€™ appears in list</span>
-<span class="instruction">6. Password reset Ã¢â€ â€™ email sent (check Supabase logs)</span>
-<span class="instruction">7. Disable user Ã¢â€ â€™ status changes, audit log created</span></div>
+<span class="instruction">4. Click user &rarr; detail page shows</span>
+<span class="instruction">5. Add admin note &rarr; appears in list</span>
+<span class="instruction">6. Password reset &rarr; email sent (check Supabase logs)</span>
+<span class="instruction">7. Disable user &rarr; status changes, audit log created</span></div>
 </div>
 
 <h3>Prompt 7.4: Subscription Viewing</h3>
@@ -1437,6 +1559,307 @@
 <span class="instruction"><span class="placeholder">{{paste code files here}}</span></span></div>
 </div>
 
+<h2>Security Audit Prompt</h2>
+
+<p>Run this security audit at Checkpoint B (after core features) and before launch. This prompt checks for OWASP Top 10 vulnerabilities and common security issues.</p>
+
+<div class="prompt-container">
+  <div class="prompt-header" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+    <span>Security Audit Request</span>
+    <span class="copy-hint">Use at Checkpoints &amp; Pre-Launch</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Security Engineer conducting an OWASP-aligned security audit.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Project: <span class="placeholder">{{productName}}</span></span>
+<span class="instruction">Stack: Next.js 14+, Supabase, TypeScript</span>
+<span class="instruction">Audit scope: Full application security review</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Identify security vulnerabilities, misconfigurations, and deviations from security best practices. Prioritize findings by severity.</span>
+
+<span class="section-header">AUDIT CHECKLIST</span>
+
+<span class="instruction">1. AUTHENTICATION (Critical)</span>
+<span class="sub-instruction">- Using Supabase Auth (not custom auth)?</span>
+<span class="sub-instruction">- Password policies enforced?</span>
+<span class="sub-instruction">- Session tokens handled securely (HttpOnly, Secure, SameSite)?</span>
+<span class="sub-instruction">- Token refresh implemented correctly?</span>
+<span class="sub-instruction">- Logout clears all session data?</span>
+
+<span class="instruction">2. AUTHORIZATION (Critical)</span>
+<span class="sub-instruction">- RLS enabled on ALL tables?</span>
+<span class="sub-instruction">- RLS policies test both authenticated and anon roles?</span>
+<span class="sub-instruction">- No SELECT * without WHERE user_id = auth.uid()?</span>
+<span class="sub-instruction">- Admin routes protected in middleware AND RLS?</span>
+<span class="sub-instruction">- API routes verify user permissions before actions?</span>
+
+<span class="instruction">3. INJECTION PREVENTION (Critical)</span>
+<span class="sub-instruction">- All database queries use Supabase client (parameterized)?</span>
+<span class="sub-instruction">- No string concatenation in queries?</span>
+<span class="sub-instruction">- User input never used in raw SQL?</span>
+<span class="sub-instruction">- No eval() or Function() with user input?</span>
+
+<span class="instruction">4. XSS PREVENTION (High)</span>
+<span class="sub-instruction">- No dangerouslySetInnerHTML with user content?</span>
+<span class="sub-instruction">- User-generated content properly escaped?</span>
+<span class="sub-instruction">- URLs validated before rendering as links?</span>
+<span class="sub-instruction">- No inline event handlers with user data?</span>
+
+<span class="instruction">5. INPUT VALIDATION (High)</span>
+<span class="sub-instruction">- Zod schemas on ALL API routes?</span>
+<span class="sub-instruction">- Zod schemas on ALL Server Actions?</span>
+<span class="sub-instruction">- File uploads validate type, size, content?</span>
+<span class="sub-instruction">- Email/URL formats validated before use?</span>
+
+<span class="instruction">6. SECRETS MANAGEMENT (Critical)</span>
+<span class="sub-instruction">- No hardcoded secrets in code?</span>
+<span class="sub-instruction">- SUPABASE_SERVICE_ROLE never in client code?</span>
+<span class="sub-instruction">- .env files in .gitignore?</span>
+<span class="sub-instruction">- API keys not exposed in client bundles?</span>
+
+<span class="instruction">7. SECURITY HEADERS (Medium)</span>
+<span class="sub-instruction">- Strict-Transport-Security configured?</span>
+<span class="sub-instruction">- X-Frame-Options set to DENY or SAMEORIGIN?</span>
+<span class="sub-instruction">- X-Content-Type-Options set to nosniff?</span>
+<span class="sub-instruction">- Content-Security-Policy defined?</span>
+
+<span class="instruction">8. ERROR HANDLING (Medium)</span>
+<span class="sub-instruction">- Errors don't expose stack traces to users?</span>
+<span class="sub-instruction">- Errors don't reveal database structure?</span>
+<span class="sub-instruction">- Generic error messages for auth failures?</span>
+<span class="sub-instruction">- Sensitive data not logged?</span>
+
+<span class="instruction">9. RATE LIMITING (Medium)</span>
+<span class="sub-instruction">- Login/signup endpoints rate limited?</span>
+<span class="sub-instruction">- Password reset rate limited?</span>
+<span class="sub-instruction">- Expensive operations (AI, email) rate limited?</span>
+
+<span class="instruction">10. DEPENDENCY SECURITY (Medium)</span>
+<span class="sub-instruction">- npm audit shows no high/critical vulnerabilities?</span>
+<span class="sub-instruction">- Dependencies up to date?</span>
+<span class="sub-instruction">- No abandoned packages with known issues?</span>
+
+<span class="section-header">OUTPUT FORMAT</span>
+
+<span class="instruction">EXECUTIVE SUMMARY</span>
+<span class="sub-instruction">Overall security posture (Critical/High/Medium/Low risk)</span>
+<span class="sub-instruction">Key findings count by severity</span>
+
+<span class="instruction">CRITICAL FINDINGS (Fix immediately)</span>
+<span class="sub-instruction">- Finding description</span>
+<span class="sub-instruction">- Location (file:line)</span>
+<span class="sub-instruction">- Attack vector</span>
+<span class="sub-instruction">- Remediation with code example</span>
+
+<span class="instruction">HIGH FINDINGS (Fix before launch)</span>
+<span class="sub-instruction">[Same format as Critical]</span>
+
+<span class="instruction">MEDIUM FINDINGS (Fix soon after launch)</span>
+<span class="sub-instruction">[Same format]</span>
+
+<span class="instruction">LOW FINDINGS (Address when convenient)</span>
+<span class="sub-instruction">[Same format]</span>
+
+<span class="instruction">PASSED CHECKS</span>
+<span class="sub-instruction">List security controls that are correctly implemented</span>
+
+<span class="section-header">FILES TO AUDIT</span>
+<span class="instruction"><span class="placeholder">{{paste files here - prioritize: middleware.ts, API routes, auth code, RLS policies}}</span></span></div>
+</div>
+
+<div class="security-check">
+  <h3>When to Run Security Audit</h3>
+  <ul>
+    <li><strong>Checkpoint B</strong> (after Milestone 7) &mdash; Before building additional features on the foundation</li>
+    <li><strong>Pre-Launch</strong> (after Milestone 11) &mdash; Final security verification before go-live</li>
+    <li><strong>After major features</strong> &mdash; Any feature involving auth, payments, or user data</li>
+    <li><strong>After dependency updates</strong> &mdash; Verify no new vulnerabilities introduced</li>
+  </ul>
+</div>
+
+<h2>Technical Debt Review Prompt</h2>
+
+<p>Run this debt analysis at each checkpoint to identify and score technical debt. Use alongside the debt scoring framework in the handbook (Chapter 27).</p>
+
+<div class="prompt-container">
+  <div class="prompt-header" style="background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);">
+    <span>Technical Debt Analysis</span>
+    <span class="copy-hint">Use at All Checkpoints</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Technical Debt Analyst performing a comprehensive code quality audit.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Project: <span class="placeholder">{{productName}}</span></span>
+<span class="instruction">Checkpoint: <span class="placeholder">{{A/B/C}}</span></span>
+<span class="instruction">Current debt score: <span class="placeholder">{{current score or "initial assessment"}}</span></span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Identify, categorize, and score technical debt. Calculate the debt score using the weighted framework. Provide actionable remediation recommendations.</span>
+
+<span class="section-header">DEBT CATEGORIES TO ANALYZE</span>
+
+<span class="instruction">1. COMPLEXITY DEBT (25% weight)</span>
+<span class="sub-instruction">- Functions exceeding 30 lines</span>
+<span class="sub-instruction">- Files exceeding 200 lines</span>
+<span class="sub-instruction">- Nesting depth greater than 3</span>
+<span class="sub-instruction">- Cyclomatic complexity over 10</span>
+<span class="sub-instruction">- Functions with more than 4 parameters</span>
+
+<span class="instruction">2. ERROR HANDLING DEBT (20% weight)</span>
+<span class="sub-instruction">- Empty catch blocks</span>
+<span class="sub-instruction">- Missing try/catch around async operations</span>
+<span class="sub-instruction">- Unhandled promise rejections</span>
+<span class="sub-instruction">- Generic error messages hiding root cause</span>
+<span class="sub-instruction">- Missing error boundaries in React</span>
+
+<span class="instruction">3. TYPE SAFETY DEBT (20% weight)</span>
+<span class="sub-instruction">- Uses of 'any' type</span>
+<span class="sub-instruction">- Missing function return types</span>
+<span class="sub-instruction">- Type assertions without validation</span>
+<span class="sub-instruction">- Inconsistent null handling</span>
+<span class="sub-instruction">- Missing Zod schema validations</span>
+
+<span class="instruction">4. TEST COVERAGE DEBT (20% weight)</span>
+<span class="sub-instruction">- Critical paths without tests</span>
+<span class="sub-instruction">- Skipped tests without tickets</span>
+<span class="sub-instruction">- Tests without assertions</span>
+<span class="sub-instruction">- Missing edge case coverage</span>
+<span class="sub-instruction">- Overall coverage percentage</span>
+
+<span class="instruction">5. DOCUMENTATION SYNC DEBT (10% weight)</span>
+<span class="sub-instruction">- CLAUDE.md out of sync with codebase</span>
+<span class="sub-instruction">- Stale code comments</span>
+<span class="sub-instruction">- Missing API documentation</span>
+<span class="sub-instruction">- Outdated README instructions</span>
+<span class="sub-instruction">- SPEC documents not matching implementation</span>
+
+<span class="instruction">6. DEPENDENCY DEBT (5% weight)</span>
+<span class="sub-instruction">- Outdated packages (npm outdated)</span>
+<span class="sub-instruction">- Security vulnerabilities (npm audit)</span>
+<span class="sub-instruction">- Unused dependencies</span>
+<span class="sub-instruction">- Missing lock file updates</span>
+
+<span class="section-header">OUTPUT FORMAT</span>
+
+<span class="instruction">EXECUTIVE SUMMARY</span>
+<span class="sub-instruction">- Overall debt score (X.X/10)</span>
+<span class="sub-instruction">- Score status (Excellent/Good/Acceptable/Concerning/Critical)</span>
+<span class="sub-instruction">- Gate decision (Pass/Blocked)</span>
+
+<span class="instruction">CATEGORY BREAKDOWN</span>
+<span class="sub-instruction">| Category | Raw Score | Weight | Weighted |</span>
+<span class="sub-instruction">For each category, show violations found</span>
+
+<span class="instruction">TOP DEBT ITEMS (Prioritized)</span>
+<span class="sub-instruction">For each item:</span>
+<span class="sub-instruction">- ID: D-XXX</span>
+<span class="sub-instruction">- Category: [COMPLEXITY/ERROR-HANDLING/etc.]</span>
+<span class="sub-instruction">- Location: file:line</span>
+<span class="sub-instruction">- Description: What the debt is</span>
+<span class="sub-instruction">- Impact: Why it matters</span>
+<span class="sub-instruction">- Remediation: Specific fix</span>
+<span class="sub-instruction">- Effort: S/M/L</span>
+
+<span class="instruction">QUICK WINS</span>
+<span class="sub-instruction">Low-effort items that improve score significantly</span>
+
+<span class="instruction">TECH-DEBT.md UPDATE</span>
+<span class="sub-instruction">Formatted entries to copy into TECH-DEBT.md</span>
+
+<span class="section-header">CODE TO ANALYZE</span>
+<span class="instruction"><span class="placeholder">{{paste code files here}}</span></span></div>
+</div>
+
+<h2>Debt Remediation Prompt</h2>
+
+<p>Use this prompt when you're ready to fix specific technical debt items identified in the audit.</p>
+
+<div class="prompt-container">
+  <div class="prompt-header" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+    <span>Technical Debt Remediation</span>
+    <span class="copy-hint">Use After Debt Analysis</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Senior developer specializing in code quality and refactoring.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Debt item to fix: <span class="placeholder">{{D-XXX: brief description}}</span></span>
+<span class="instruction">Category: <span class="placeholder">{{COMPLEXITY/ERROR-HANDLING/TYPE-SAFETY/etc.}}</span></span>
+<span class="instruction">Current debt score impact: <span class="placeholder">{{how much this affects overall score}}</span></span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Fix the identified debt while:</span>
+<span class="sub-instruction">- Maintaining all existing functionality</span>
+<span class="sub-instruction">- Not introducing new debt</span>
+<span class="sub-instruction">- Keeping changes minimal and focused</span>
+<span class="sub-instruction">- Ensuring tests still pass</span>
+
+<span class="section-header">REMEDIATION GUIDELINES BY CATEGORY</span>
+
+<span class="instruction">COMPLEXITY Fixes:</span>
+<span class="sub-instruction">- Extract helper functions for repeated logic</span>
+<span class="sub-instruction">- Split large files into modules by responsibility</span>
+<span class="sub-instruction">- Replace nested conditionals with early returns</span>
+<span class="sub-instruction">- Use configuration objects instead of many parameters</span>
+
+<span class="instruction">ERROR HANDLING Fixes:</span>
+<span class="sub-instruction">- Add try/catch with specific error types</span>
+<span class="sub-instruction">- Log errors with context before re-throwing</span>
+<span class="sub-instruction">- Create user-friendly error messages</span>
+<span class="sub-instruction">- Add error boundaries at component level</span>
+
+<span class="instruction">TYPE SAFETY Fixes:</span>
+<span class="sub-instruction">- Replace 'any' with proper interfaces</span>
+<span class="sub-instruction">- Add return type annotations</span>
+<span class="sub-instruction">- Add Zod schemas for runtime validation</span>
+<span class="sub-instruction">- Use discriminated unions for state</span>
+
+<span class="instruction">TEST COVERAGE Fixes:</span>
+<span class="sub-instruction">- Add missing unit tests for utilities</span>
+<span class="sub-instruction">- Add integration tests for critical paths</span>
+<span class="sub-instruction">- Remove skipped tests or add tracking tickets</span>
+<span class="sub-instruction">- Add edge case tests</span>
+
+<span class="instruction">DOC SYNC Fixes:</span>
+<span class="sub-instruction">- Update CLAUDE.md architecture section</span>
+<span class="sub-instruction">- Remove or update stale comments</span>
+<span class="sub-instruction">- Sync SPEC with implementation</span>
+
+<span class="section-header">OUTPUT FORMAT</span>
+
+<span class="instruction">CHANGES MADE</span>
+<span class="sub-instruction">List each file modified with before/after summary</span>
+
+<span class="instruction">TESTS AFFECTED</span>
+<span class="sub-instruction">New or modified tests to verify the fix</span>
+
+<span class="instruction">VERIFICATION</span>
+<span class="sub-instruction">Commands to run to confirm fix doesn't break anything:</span>
+<span class="sub-instruction">- npm run lint</span>
+<span class="sub-instruction">- npm test</span>
+<span class="sub-instruction">- npm run build</span>
+
+<span class="instruction">SCORE IMPACT</span>
+<span class="sub-instruction">Estimated new category score after this fix</span>
+
+<span class="section-header">CURRENT CODE</span>
+<span class="instruction"><span class="placeholder">{{paste the code that needs fixing}}</span></span></div>
+</div>
+
+<div class="security-check">
+  <h3>When to Run Debt Analysis</h3>
+  <ul>
+    <li><strong>Checkpoint A</strong> (after Milestone 3) &mdash; Foundation debt assessment</li>
+    <li><strong>Checkpoint B</strong> (after Milestone 7) &mdash; Feature implementation debt review</li>
+    <li><strong>Checkpoint C</strong> (after Milestone 11) &mdash; Pre-launch debt audit</li>
+    <li><strong>Before PRs</strong> &mdash; Run GitHub Action debt check on every PR</li>
+    <li><strong>Weekly reviews</strong> &mdash; Track debt score trends over time</li>
+  </ul>
+</div>
+
 <hr class="divider">
 
 <!-- APPENDIX A -->
@@ -1772,6 +2195,162 @@ CREATE POLICY "Admins can view settings"
 CREATE POLICY "Super admins can update settings"
   ON public.system_settings FOR UPDATE
   USING (public.is_super_admin());</div>
+
+<hr class="divider">
+
+<!-- APPENDIX C -->
+<div class="phase-header">
+  <h2>APPENDIX C: HOW TO USE THE PROMPTS</h2>
+</div>
+
+<p>This appendix provides a complete workflow for using the prompts in this guide, from copying to execution to verification.</p>
+
+<h2>Prompt Usage Workflow</h2>
+
+<h3>Step 1: Select the Right Prompt</h3>
+
+<p>Each milestone has one or more prompts. Work through them in order. Do not skip ahead &mdash; later prompts assume earlier work is complete.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Prompt Type</th>
+      <th>Tool</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Design Prompts (Parts I-IV of Handbook)</td>
+      <td>Claude Chat (web)</td>
+      <td>Research, planning, design documents</td>
+    </tr>
+    <tr>
+      <td>Implementation Prompts (This Guide)</td>
+      <td>Claude Code CLI</td>
+      <td>Writing actual code files</td>
+    </tr>
+    <tr>
+      <td>Review Prompts (Audit, Code Review)</td>
+      <td>Either tool</td>
+      <td>Quality verification</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Step 2: Prepare Your Context</h3>
+
+<p>Before running any implementation prompt:</p>
+
+<ol>
+  <li><strong>Check prerequisites</strong> &mdash; The prompt header lists what must be complete</li>
+  <li><strong>Gather referenced files</strong> &mdash; If the prompt references Build Contract or SPEC files, have them ready</li>
+  <li><strong>Review current state</strong> &mdash; Run <code>git status</code> to confirm your working directory is clean</li>
+</ol>
+
+<h3>Step 3: Copy and Customize the Prompt</h3>
+
+<ol>
+  <li>Copy the entire prompt from the yellow prompt box</li>
+  <li>Replace all <code>[PLACEHOLDER]</code> values with your project-specific information</li>
+  <li>Paste any required code into <code>{{double brace}}</code> sections</li>
+  <li>Review the customized prompt before sending</li>
+</ol>
+
+<h3>Step 4: Execute the Prompt</h3>
+
+<div class="note-box">
+  <strong>With Claude Code CLI (Recommended):</strong>
+  <ol style="margin-bottom: 0;">
+    <li>Open terminal in your project root</li>
+    <li>Run <code>claude</code> to start interactive mode</li>
+    <li>Paste the customized prompt</li>
+    <li>Claude Code will create/modify files directly in your project</li>
+    <li>Review changes with <code>git diff</code></li>
+  </ol>
+</div>
+
+<div class="note-box">
+  <strong>Manual Execution (Without Claude Code):</strong>
+  <ol style="margin-bottom: 0;">
+    <li>Open <a href="https://claude.ai">claude.ai</a></li>
+    <li>Paste the customized prompt</li>
+    <li>For each file in Claude's response:
+      <ul>
+        <li>Create the file at the specified path: <code>touch src/path/to/file.ts</code></li>
+        <li>Copy the code content into the file</li>
+      </ul>
+    </li>
+    <li>If Claude shows terminal commands, run them manually</li>
+  </ol>
+</div>
+
+<h3>Step 5: Run Verification Steps</h3>
+
+<p>Every prompt includes a VERIFICATION section. Complete all verification steps before moving on:</p>
+
+<div class="code-block"># Common verification commands
+npm run build          # Ensure no TypeScript errors
+npm run lint           # Ensure no linting errors
+npm test               # Run test suite
+npm run dev            # Visual verification in browser</div>
+
+<h3>Step 6: Commit Your Work</h3>
+
+<p>After verification passes, commit with a descriptive message:</p>
+
+<div class="code-block">git add .
+git commit -m "Complete Milestone X: [Brief description]"</div>
+
+<h2>Prompt Categories Reference</h2>
+
+<h3>Foundation Prompts (Milestones 1-4)</h3>
+<p>These set up project structure, design system, database, and layouts. They produce configuration files and base components. Errors here cascade to everything else, so verify thoroughly.</p>
+
+<h3>Feature Prompts (Milestones 5-9)</h3>
+<p>These build actual functionality. Each prompt should produce working, tested features. Run the application after each to verify behavior.</p>
+
+<h3>Quality Prompts (Milestones 10-11, Audit Tools)</h3>
+<p>These polish and verify. Use the Refactoring Audit before major checkpoints. Use Code Review before merging feature branches.</p>
+
+<h2>Common Mistakes to Avoid</h2>
+
+<div class="warning-box">
+  <strong>Mistake 1: Skipping Verification</strong><br>
+  Every prompt includes verification steps. Skipping them creates invisible problems that compound later. If a verification step fails, fix it before proceeding.
+</div>
+
+<div class="warning-box">
+  <strong>Mistake 2: Modifying Quality Standards</strong><br>
+  The QUALITY STANDARDS section in each prompt exists to prevent vibe coding. Weakening or removing these requirements produces code that looks complete but fails in production.
+</div>
+
+<div class="warning-box">
+  <strong>Mistake 3: Running Prompts Out of Order</strong><br>
+  Prompts are designed to build on each other. Running Milestone 6 before Milestone 5 will fail because authentication doesn't exist yet. Always work sequentially.
+</div>
+
+<div class="warning-box">
+  <strong>Mistake 4: Incomplete Placeholders</strong><br>
+  If you see <code>[PRODUCT NAME]</code> in your output, you forgot to replace a placeholder. Review output for any remaining brackets before accepting code.
+</div>
+
+<div class="warning-box">
+  <strong>Mistake 5: Ignoring CONTEXT Section</strong><br>
+  The CONTEXT section tells Claude what already exists. If you skip previous milestones, update CONTEXT to reflect reality &mdash; otherwise Claude will reference files that don't exist.
+</div>
+
+<h2>When to Restart or Retry</h2>
+
+<p>Sometimes Claude produces output that doesn't match requirements. When this happens:</p>
+
+<ol>
+  <li><strong>Minor issues:</strong> Ask Claude to fix the specific problem ("The UserCard component is missing the status badge")</li>
+  <li><strong>Structure issues:</strong> Clarify the requirement and ask for a revised version</li>
+  <li><strong>Major misunderstanding:</strong> Start a fresh conversation with a clearer prompt</li>
+</ol>
+
+<p>If you find yourself fixing the same type of issue repeatedly, add it to your CLAUDE.md file as a project convention so future prompts account for it.</p>
 
 <hr class="divider">
 

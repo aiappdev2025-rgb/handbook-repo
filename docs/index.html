@@ -296,12 +296,12 @@
   <div class="whats-new">
     <h2>What's New in v3.0</h2>
     <ul>
-      <li><strong>MOAI-ADK Integration</strong> - SPEC-first development with TDD enforcement</li>
+      <li><strong>Development Environment Setup</strong> - Explicit Part IV-C with CLAUDE.md template and folder structure</li>
       <li><strong>Build Contract</strong> - Bridge artifact between Design and Implementation</li>
-      <li><strong>File Control System</strong> - Structured approach to artifact management</li>
-      <li><strong>Quality Gate Automation</strong> - Automated checks at every milestone</li>
+      <li><strong>MOAI-ADK Integration</strong> - SPEC-first development with TDD enforcement</li>
+      <li><strong>Tool Transition Guide</strong> - Clear guidance on when to use Claude Chat vs Claude Code</li>
       <li><strong>EARS Requirements</strong> - Structured requirement syntax for clarity</li>
-      <li><strong>Workflow Guide</strong> - Context management and Claude Code patterns</li>
+      <li><strong>Workflow Guide</strong> - Reference for context management and session patterns</li>
     </ul>
   </div>
   
@@ -312,19 +312,24 @@
     <div class="doc-card hub">
       <span class="icon">📘</span>
       <h2>AI SaaS Handbook v3.0 <span class="badge badge-hub">HUB</span></h2>
-      <p>The strategic hub containing methodology, Build Contract, MOAI integration, quality standards, infrastructure setup, and navigation to companion guides.</p>
-      <ul>
-        <li>Research and Opportunity Assessment</li>
-        <li>Business Planning and Design Brief</li>
-        <li>UX/UI Design Excellence</li>
-        <li>Solution Architecture</li>
-        <li>Build Contract (Design → Implementation)</li>
-        <li>Infrastructure Setup (GitHub, Supabase, Vercel)</li>
-        <li>Multi-Environment Configuration</li>
-        <li>MOAI-ADK Integration Overview</li>
-        <li>QA and Launch Checklist</li>
-      </ul>
-      <a href="handbook-v3.html" class="doc-link">Open Handbook →</a>
+      <p>The strategic hub containing methodology, Build Contract, development environment setup, and quality standards. Now split into 3 parts for easier editing and navigation.</p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
+        <div style="background: #dbeafe; padding: 1rem; border-radius: 8px;">
+          <strong>Part 1: Strategy & Design</strong>
+          <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem;">Parts I-III: Research, Business, Design</p>
+          <a href="handbook-v3-part1-strategy.html" class="doc-link" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">Open Part 1 →</a>
+        </div>
+        <div style="background: #dcfce7; padding: 1rem; border-radius: 8px;">
+          <strong>Part 2: Architecture & Setup</strong>
+          <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem;">Parts IV, IV-B, IV-C: Tech Setup</p>
+          <a href="handbook-v3-part2-setup.html" class="doc-link" style="font-size: 0.85rem; padding: 0.4rem 0.8rem; background: #059669;">Open Part 2 →</a>
+        </div>
+        <div style="background: #f3e8ff; padding: 1rem; border-radius: 8px;">
+          <strong>Part 3: Build & Launch</strong>
+          <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem;">Parts V-VII: MOAI, Launch, Files</p>
+          <a href="handbook-v3-part3-build.html" class="doc-link" style="font-size: 0.85rem; padding: 0.4rem 0.8rem; background: #7c3aed;">Open Part 3 →</a>
+        </div>
+      </div>
     </div>
     
     <div class="doc-card build">
@@ -344,15 +349,15 @@
     
     <div class="doc-card workflow">
       <span class="icon">🔄</span>
-      <h2>Workflow Guide v1 <span class="badge badge-new">NEW</span></h2>
-      <p>Context management, agentic patterns, and efficient development with Claude Code. How to manage large projects across multiple sessions.</p>
+      <h2>Workflow Guide v1 <span class="badge badge-new">REFERENCE</span></h2>
+      <p>Deep-dive reference for context management, session patterns, and advanced Claude Code techniques. Consult when you need efficiency patterns during the Build Phase.</p>
       <ul>
         <li>Context Window Mental Model</li>
-        <li>CLAUDE.md and Documentation Structure</li>
-        <li>Task Decomposition Methodology</li>
-        <li>Session Rhythm and /clear Tactics</li>
-        <li>MCP Tools and Memory Persistence</li>
-        <li>Git Workflow and Milestone Integration</li>
+        <li>CLAUDE.md Deep-Dive (beyond the basics)</li>
+        <li>When and How to Use /clear</li>
+        <li>Session Rhythm for Long Projects</li>
+        <li>Multi-Session Continuity Patterns</li>
+        <li>Troubleshooting Context Issues</li>
       </ul>
       <a href="workflow-guide-v1.html" class="doc-link" style="background: #7c3aed;">Open Workflow Guide →</a>
     </div>
@@ -371,41 +376,57 @@
       <a href="navigation-guide.html" class="doc-link" style="background: #6366f1;">Open Navigation Guide →</a>
     </div>
     
+    <div class="doc-card" style="border-color: #f59e0b;">
+      <span class="icon">⏱️</span>
+      <h2>Claude Code Integration <span class="badge" style="background: #f59e0b;">TIMING</span></h2>
+      <p>When exactly to set up CLAUDE.md, docs/ folder, and execute workflow steps. Maps Workflow Guide activities to the main methodology timeline.</p>
+      <ul>
+        <li>Phase-by-Phase Claude Code Setup</li>
+        <li>The Critical Setup Moment</li>
+        <li>When to Use Chat vs Code</li>
+        <li>Session Timing for Each Milestone</li>
+        <li>Common Timing Mistakes</li>
+      </ul>
+      <a href="claude-code-integration.html" class="doc-link" style="background: #f59e0b;">Open Timeline →</a>
+    </div>
+    
   </div>
   
   <div class="flow-section">
-    <h2 class="section-title">Project Lifecycle with MOAI Integration</h2>
+    <h2 class="section-title">Project Lifecycle with Tool Transitions</h2>
     <div class="flow-diagram">
 <pre>
 +--------------------------------------------------------------------------------------+
 |                           PROJECT LIFECYCLE v3.0                                      |
 +--------------------------------------------------------------------------------------+
 |                                                                                       |
-|  PHASE 1: PLANNING & DESIGN                              [HANDBOOK v3.0]              |
-|  |-- Research & Opportunity Assessment                   |                            |
-|  |-- Business One-Pager                                  |  Parts I-III               |
-|  |-- Design Brief                                        |                            |
-|  |-- UX Package & Validation                             |                            |
-|  +-- UI System                                           |                            |
-|                                                          v                            |
-|  PHASE 2: TECHNICAL FOUNDATION                           [HANDBOOK v3.0]              |
-|  |-- Solution Architecture                               |                            |
-|  |-- Infrastructure Setup (GitHub, Supabase, Vercel)     |  Part IV                   |
-|  +-- Multi-Environment Configuration                     |                            |
-|                                                          v                            |
-|  PHASE 2B: BUILD CONTRACT  [NEW IN v3.0]                 [HANDBOOK v3.0]              |
-|  +-- Generate Build Contract from Design Artifacts       |  Part IV-B                 |
-|                                                          v                            |
-|  PHASE 3: BUILD WITH MOAI                                [BUILD GUIDE v3]             |
-|  |-- SPEC-First Development                              |  + [WORKFLOW GUIDE]        |
-|  |-- TDD Cycle (RED-GREEN-REFACTOR)                      |                            |
-|  |-- Milestones 1-6 (Setup --> Core Feature)             |  Follow SPEC               |
-|  |-- Milestone 7 (Admin Console)                         |  by SPEC                   |
-|  |-- Milestones 8-11 (Features --> Testing)              |                            |
-|  +-- Quality Gates & Checkpoints                         |                            |
-|                                                          v                            |
-|  PHASE 4: MARKETING & LAUNCH                             [HANDBOOK v3.0]              |
-|  +-- QA Checklist & Launch                               |  Part VI                   |
+|  ╔═══════════════════════════════════════════════════════════════════════════════╗   |
+|  ║  CLAUDE CHAT PHASE (Web Interface - Exploration & Documents)                  ║   |
+|  ╠═══════════════════════════════════════════════════════════════════════════════╣   |
+|  ║                                                                               ║   |
+|  ║  Parts I-III: Research, Business Planning, Design Brief, UX, UI              ║   |
+|  ║  Part IV: Solution Architecture, Infrastructure Planning                      ║   |
+|  ║  Part IV-B: Generate Build Contract                                          ║   |
+|  ║                                                                               ║   |
+|  ╚═══════════════════════════════════════════════════════════════════════════════╝   |
+|                                        │                                              |
+|                                        ▼                                              |
+|  ╔═══════════════════════════════════════════════════════════════════════════════╗   |
+|  ║  PART IV-C: DEVELOPMENT ENVIRONMENT SETUP (Terminal + Claude Code)  [NEW]    ║   |
+|  ║  • Create project repository  • Set up CLAUDE.md  • Configure docs/ folder   ║   |
+|  ╚═══════════════════════════════════════════════════════════════════════════════╝   |
+|                                        │                                              |
+|                                        ▼                                              |
+|  ╔═══════════════════════════════════════════════════════════════════════════════╗   |
+|  ║  CLAUDE CODE PHASE (CLI - Implementation)                                     ║   |
+|  ╠═══════════════════════════════════════════════════════════════════════════════╣   |
+|  ║                                                                               ║   |
+|  ║  Part V: Build Phase with MOAI → Use BUILD GUIDE v3 for tactical prompts     ║   |
+|  ║  • SPEC-First Development  • TDD Cycle  • Milestones 1-11  • Quality Gates   ║   |
+|  ║                                                                               ║   |
+|  ║  Part VI: QA and Launch                                                       ║   |
+|  ║                                                                               ║   |
+|  ╚═══════════════════════════════════════════════════════════════════════════════╝   |
 |                                                                                       |
 +--------------------------------------------------------------------------------------+
 </pre>
@@ -417,23 +438,27 @@
     <div class="quick-ref">
       <div class="quick-ref-item">
         <strong>Understand the methodology</strong>
-        <a href="handbook-v3.html#part-1">Handbook Part I →</a>
+        <a href="handbook-v3-part1-strategy.html#part-1">Handbook Part I →</a>
       </div>
       <div class="quick-ref-item">
         <strong>Create a design brief</strong>
-        <a href="handbook-v3.html#stage-2">Handbook Stage 2.0 →</a>
+        <a href="handbook-v3-part1-strategy.html#stage-2">Handbook Stage 2.0 →</a>
       </div>
       <div class="quick-ref-item">
         <strong>Design the UX flows</strong>
-        <a href="handbook-v3.html#stage-3">Handbook Stage 3.0 →</a>
+        <a href="handbook-v3-part1-strategy.html#stage-3">Handbook Stage 3.0 →</a>
       </div>
       <div class="quick-ref-item">
         <strong>Generate a Build Contract</strong>
-        <a href="handbook-v3.html#build-contract">Handbook Part IV-B →</a>
+        <a href="handbook-v3-part2-setup.html#build-contract">Handbook Part IV-B →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Set up dev environment (CLAUDE.md)</strong>
+        <a href="handbook-v3-part2-setup.html#dev-setup">Handbook Part IV-C →</a>
       </div>
       <div class="quick-ref-item">
         <strong>Set up environments</strong>
-        <a href="handbook-v3.html#chapter-19">Handbook Ch 19 →</a>
+        <a href="handbook-v3-part2-setup.html#chapter-19">Handbook Ch 19 →</a>
       </div>
       <div class="quick-ref-item">
         <strong>Write a SPEC document</strong>
@@ -461,7 +486,7 @@
       </div>
       <div class="quick-ref-item">
         <strong>Prepare for launch</strong>
-        <a href="handbook-v3.html#chapter-23">Handbook Ch 23 →</a>
+        <a href="handbook-v3-part2-setup.html#chapter-23">Handbook Ch 23 →</a>
       </div>
     </div>
   </div>

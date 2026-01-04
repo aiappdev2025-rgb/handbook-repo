@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI SaaS Handbook v3.0 - MOAI Integration Edition</title>
+  <title>AI SaaS Handbook v3.0 - Part 1: Strategy & Design</title>
   <style>
     :root {
       --primary: #1a365d;
@@ -30,9 +30,9 @@
       --moai-bg: #f3e8ff;
       --moai-border: #9f7aea;
     }
-    
+
     * { box-sizing: border-box; }
-    
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.7;
@@ -42,7 +42,7 @@
       padding: 2rem;
       background: var(--bg);
     }
-    
+
     /* Navigation Bar */
     .nav-bar {
       position: sticky;
@@ -60,9 +60,9 @@
     .nav-bar a:hover { background: rgba(255,255,255,0.1); }
     .nav-bar a.active { background: rgba(255,255,255,0.2); font-weight: 600; }
     .nav-home { font-weight: 700; font-size: 1.1rem; }
-    .nav-links { display: flex; gap: 0.5rem; }
+    .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     @media (max-width: 768px) { .nav-bar { flex-direction: column; gap: 1rem; } .nav-links { flex-wrap: wrap; justify-content: center; } }
-    
+
     h1 { color: var(--primary); font-size: 2rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; margin-top: 3rem; }
     h2 { color: var(--secondary); font-size: 1.5rem; margin-top: 2rem; }
     h3 { color: var(--accent); font-size: 1.25rem; margin-top: 1.5rem; }
@@ -70,56 +70,56 @@
     p { margin: 1rem 0; }
     ul, ol { margin: 1rem 0; padding-left: 2rem; }
     li { margin: 0.5rem 0; }
-    
+
     .title-page { text-align: center; padding: 4rem 0; border-bottom: 2px solid var(--border); margin-bottom: 3rem; }
     .title-page h1 { font-size: 3rem; border: none; margin: 0; }
     .subtitle { font-size: 1.5rem; color: var(--secondary); margin: 1rem 0; }
     .version { font-size: 1.25rem; font-weight: bold; margin-top: 2rem; }
     .date { color: var(--muted); }
-    
+
     .part-header { text-align: center; padding: 3rem 0; margin: 3rem 0; background: var(--surface); border-radius: 8px; }
     .part-header h2 { font-size: 2rem; color: var(--primary); margin: 0; }
     .part-header.moai { background: var(--moai-bg); }
     .part-header.moai h2 { color: var(--moai); }
-    
+
     .toc { background: var(--surface); padding: 2rem; border-radius: 8px; margin: 2rem 0; }
     .toc h2 { margin-top: 0; }
     .toc-section { margin: 1rem 0; }
     .toc-section strong { color: var(--primary); }
     .toc-items { margin-left: 1.5rem; color: var(--muted); }
-    
+
     .prompt-block { background: var(--prompt-bg); border-left: 4px solid var(--prompt-border); padding: 1rem 1.5rem; margin: 1.5rem 0; font-family: 'Consolas', monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; }
     .code-block { background: var(--code-bg); color: var(--code-text); padding: 1rem; margin: 1rem 0; font-family: 'Consolas', monospace; font-size: 0.85rem; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
     .file-structure { background: var(--code-bg); color: var(--code-text); padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.4; overflow-x: auto; white-space: pre; }
-    
+
     .checklist { background: var(--surface); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
     .checklist h4 { margin-top: 0; }
     .warning { background: var(--warning-bg); border-left: 4px solid var(--warning); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
     .note { background: var(--info-bg); border-left: 4px solid var(--info); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
     .success { background: var(--success-bg); border-left: 4px solid var(--success); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
-    
+
     .moai-box { background: var(--moai-bg); border: 2px solid var(--moai-border); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; }
     .moai-box h4 { color: var(--moai); margin-top: 0; }
-    
+
     .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
     .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; vertical-align: top; }
     .comparison-table th { background: var(--surface); font-weight: 600; }
     .comparison-table tr:nth-child(even) { background: #fafafa; }
-    
+
     .new-badge { display: inline-block; background: var(--moai); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 0.5rem; vertical-align: middle; }
     .tool-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-right: 0.5rem; }
     .badge-chat { background: #e9d8fd; color: #553c9a; }
     .badge-code { background: #c6f6d5; color: #276749; }
-    
+
     .checkpoint-box { background: #ede9fe; border: 2px solid #8b5cf6; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
     .checkpoint-box h4 { color: #5b21b6; margin-top: 0; }
-    
+
     .divider { border: none; border-top: 2px solid var(--border); margin: 3rem 0; }
-    
-    .doc-system { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #0284c7; border-radius: 12px; padding: 2rem; margin: 2rem 0; }
-    .doc-system h2 { color: #0369a1; margin-top: 0; border: none; }
-    .doc-system h3 { color: #0369a1; font-size: 1.1rem; }
-    
+
+    .part-nav { display: flex; justify-content: space-between; margin: 3rem 0; padding: 1.5rem; background: var(--surface); border-radius: 8px; }
+    .part-nav a { color: var(--secondary); text-decoration: none; font-weight: 600; }
+    .part-nav a:hover { text-decoration: underline; }
+
     @media print { body { max-width: none; } .part-header { break-before: page; } h1 { break-before: page; } .nav-bar { display: none; } }
   </style>
 </head>
@@ -127,186 +127,67 @@
 
 <!-- NAVIGATION BAR -->
 <nav class="nav-bar">
-  <a href="index.html" class="nav-home">← Handbook Home</a>
+  <a href="index.html" class="nav-home">&larr; Handbook Home</a>
   <div class="nav-links">
-    <a href="handbook-v3.html" class="active">Main Handbook</a>
+    <a href="handbook-v3-part1-strategy.html" class="active">1: Strategy</a>
+    <a href="handbook-v3-part2-setup.html">2: Setup</a>
+    <a href="handbook-v3-part3-build.html">3: Build</a>
     <a href="build-guide-v3.html">Build Guide</a>
-    <a href="workflow-guide-v1.html">Workflow Guide</a>
-    <a href="navigation-guide.html">Navigation</a>
+    <a href="workflow-guide-v1.html">Workflow</a>
   </div>
 </nav>
 
 <!-- TITLE PAGE -->
 <div class="title-page">
   <h1>AI SaaS Handbook</h1>
-  <p class="subtitle">A Complete Methodology for Building Production-Quality SaaS Products<br>with AI-Assisted Development</p>
+  <p class="subtitle">Part 1: Strategy & Design</p>
   <p class="version">Version 3.0 - MOAI Integration Edition</p>
   <p class="date">January 2026</p>
-  
-  <div style="margin-top: 3rem; text-align: left; max-width: 700px; margin-left: auto; margin-right: auto;">
-    <strong>Version 3.0 Major Updates:</strong>
-    <ul>
-      <li><strong style="color: var(--moai);">NEW: MOAI-ADK Integration</strong> - SPEC-first development with TDD enforcement</li>
-      <li><strong style="color: var(--moai);">NEW: Build Contract</strong> - Bridge artifact between Design and Implementation</li>
-      <li><strong style="color: var(--moai);">NEW: File Control System</strong> - Structured approach to artifact and code management</li>
-      <li><strong style="color: var(--moai);">NEW: Workflow Guide</strong> - Context management and Claude Code patterns</li>
-      <li>All v2.2 content preserved: Multi-Environment Config, Infrastructure Setup, Design Excellence</li>
-      <li>Fixed all special character encoding issues</li>
-      <li>Enhanced Build Phase with explicit TDD workflow</li>
-    </ul>
-    
-    <div class="moai-box" style="margin-top: 2rem;">
-      <h4>What is MOAI-ADK?</h4>
-      <p><strong>MOAI-ADK</strong> (Methodology for Organized AI-Driven Development Kit) is a SPEC-first, test-driven development framework that ensures AI-assisted implementation produces production-quality code through structured requirements, automated testing, and documentation synchronization.</p>
-    </div>
-  </div>
-</div>
 
-<!-- DOCUMENT SYSTEM OVERVIEW -->
-<div class="doc-system" id="doc-system">
-  <h2>📚 Document System Overview</h2>
-  
-  <p>The AI SaaS Handbook v3.0 is the <strong>central hub</strong> of a modular documentation system. This version integrates MOAI-ADK methodology throughout the Build Phase while maintaining all strategic guidance from previous versions.</p>
-  
-  <h3>The Complete Document Set</h3>
-  
-  <table class="comparison-table" style="margin: 1rem 0;">
-    <tr>
-      <th>Document</th>
-      <th>Purpose</th>
-      <th>When to Use</th>
-    </tr>
-    <tr style="background: #dbeafe;">
-      <td><strong>AI SaaS Handbook v3.0</strong><br><em>(This Document)</em></td>
-      <td>Strategic hub: methodology, Build Contract, MOAI integration, quality standards</td>
-      <td>Start here. Reference throughout project.</td>
-    </tr>
-    <tr>
-      <td><strong>Build Phase Guide v3</strong></td>
-      <td>Tactical execution: SPEC templates, TDD prompts, milestone checklists</td>
-      <td>During Part V (Build Phase) - follow SPEC by SPEC</td>
-    </tr>
-    <tr>
-      <td><strong>Workflow Guide v1</strong> <span class="new-badge">NEW</span></td>
-      <td>Context management, CLAUDE.md structure, session rhythm</td>
-      <td>Throughout development - efficiency patterns</td>
-    </tr>
-    <tr>
-      <td><strong>Navigation Guide</strong></td>
-      <td>Quick reference for finding information</td>
-      <td>When you need to find something specific</td>
-    </tr>
-  </table>
-  
-  <h3>Project Lifecycle with MOAI Integration</h3>
-  
-  <div class="file-structure">
-PROJECT LIFECYCLE FLOW (v3.0)
-=============================
-
-+------------------------------------------------------------------+
-|                    AI SAAS HANDBOOK v3.0                         |
-|  ================================================================|
-|                                                                  |
-|  Part I: Foundation                                              |
-|    - Philosophy, Quality Framework, Claude Tools Guide           |
-|                                                                  |
-|  Part II: Documentation Stages                                   |
-|    - Research, Business One-Pager, Design Brief                  |
-|                                                                  |
-|  Part III: Design Excellence                                     |
-|    - UX Package, UX Critic, UI System                           |
-|                                                                  |
-|  Part IV: Technical Foundation                                   |
-|    - Architecture, Infrastructure, Multi-Environment             |
-|                                                                  |
-|  Part IV-B: Build Contract  [NEW IN v3.0]                       |
-|    - Bridge artifact: Design -> Implementation                   |
-|    - Vocabulary, User Model, Screen Inventory, Data Model        |
-|    - API Surface, Quality Standards, Security Requirements       |
-|                                                                  |
-|  Part V: Build Phase with MOAI  [ENHANCED IN v3.0]              |
-|    - SPEC-first development                                      |
-|    - TDD enforcement (RED-GREEN-REFACTOR)                       |
-|    - Reference-based implementation                              |
-|    - Quality gate automation                                     |
-|         |                                                        |
-|         +-----> BUILD PHASE GUIDE v3 (Companion)                |
-|                 - SPEC templates                                 |
-|                 - Milestone prompts                              |
-|                 - TDD execution guides                           |
-|                                                                  |
-|  Part VI: QA and Launch                                          |
-|    - Testing, deployment, monitoring                             |
-|                                                                  |
-+------------------------------------------------------------------+
+  <div style="margin-top: 2rem;">
+    <p style="color: var(--muted);">
+      This part covers: Philosophy, Quality Framework, Documentation Stages, and Design Excellence<br>
+      <strong>Tool:</strong> <span class="tool-badge badge-chat">Claude Chat</span>
+    </p>
   </div>
 </div>
 
 <!-- TABLE OF CONTENTS -->
 <div class="toc" id="toc">
-  <h2>Table of Contents</h2>
-  
+  <h2>Part 1 Contents</h2>
+
   <div class="toc-section">
     <strong>Part I: Foundation</strong>
     <div class="toc-items">
-      1. Introduction and Philosophy | 2. The Code Quality Crisis | 3. The Quality Framework: Five Pillars | 4. Claude Tools Guide: Chat vs Code CLI
+      <a href="#chapter-1">1. Introduction and Philosophy</a> |
+      <a href="#chapter-2">2. The Code Quality Crisis</a> |
+      <a href="#chapter-3">3. The Quality Framework: Five Pillars</a> |
+      <a href="#chapter-4">4. Claude Tools Guide: Chat vs Code CLI</a>
     </div>
   </div>
-  
+
   <div class="toc-section">
     <strong>Part II: Documentation Stages</strong>
     <div class="toc-items">
-      5. Stage 0.1: Research and Opportunity Assessment | 6. Stage 1.0: Business One-Pager | 7. Stage 2.0: Shared Design Brief
+      <a href="#stage-0">5. Stage 0.1: Research and Opportunity Assessment</a> |
+      <a href="#stage-1">6. Stage 1.0: Business One-Pager</a> |
+      <a href="#stage-2">7. Stage 2.0: Shared Design Brief</a>
     </div>
   </div>
-  
+
   <div class="toc-section">
     <strong>Part III: Design Excellence</strong>
     <div class="toc-items">
-      8. Design Philosophy | 9. Stage 3.0: UX Package | 10. Stage 3.1: UX Critic | 11. Stage 4.0: UI System | 12. Visual Direction | 13. Design QA
+      <a href="#stage-3">8-10. UX Package and Validation</a> |
+      <a href="#stage-4">11-13. UI System</a>
     </div>
   </div>
-  
-  <div class="toc-section">
-    <strong>Part IV: Technical Foundation</strong>
+
+  <div class="toc-section" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+    <strong>Other Parts</strong>
     <div class="toc-items">
-      14. Stage 5.0: Solution Architecture | 15. Security and Testing | 16-18. Infrastructure Setup | 19. Multi-Environment Config
-    </div>
-  </div>
-  
-  <div class="toc-section">
-    <strong>Part IV-B: Build Contract <span class="new-badge">NEW</span></strong>
-    <div class="toc-items">
-      20. Build Contract Introduction | 21. Build Contract Structure | 22. Generating Build Contract | 23. Maintenance
-    </div>
-  </div>
-  
-  <div class="toc-section">
-    <strong>Part V: Build Phase with MOAI <span class="new-badge">ENHANCED</span></strong>
-    <div class="toc-items">
-      24. MOAI-ADK Overview | 25. SPEC-First Development | 26. TDD Workflow | 27. Milestones with Quality Gates | 28. Checkpoints | 29. Code Review
-    </div>
-  </div>
-  
-  <div class="toc-section">
-    <strong>Part VI: Launch</strong>
-    <div class="toc-items">
-      30. QA and Launch Checklist | 31. Post-Launch Monitoring
-    </div>
-  </div>
-  
-  <div class="toc-section">
-    <strong>Part VII: File Control System <span class="new-badge">NEW</span></strong>
-    <div class="toc-items">
-      32. Project File Structure | 33. Naming Conventions | 34. SPEC Organization
-    </div>
-  </div>
-  
-  <div class="toc-section">
-    <strong>Appendices</strong>
-    <div class="toc-items">
-      A. Build Contract Template | B. SPEC Template | C. Quality Gate Checklists | D. Environment Reference | E. EARS Syntax Guide
+      <a href="handbook-v3-part2-setup.html">Part 2: Architecture & Setup</a> (Parts IV, IV-B, IV-C) |
+      <a href="handbook-v3-part3-build.html">Part 3: Build & Launch</a> (Parts V, VI, VII)
     </div>
   </div>
 </div>
@@ -452,15 +333,38 @@ PROJECT LIFECYCLE FLOW (v3.0)
 </ul>
 
 <h2>3.3 Safety</h2>
-<p>Safety encompasses security and correctness.</p>
+<p>Safety encompasses security and correctness. Security is not an afterthought &mdash; it must be built into every layer from the start.</p>
 
 <h3>Key Principles</h3>
 <ul>
-  <li><strong>Input Validation at Boundaries:</strong> All external data validated once, at entry.</li>
-  <li><strong>Defense in Depth:</strong> Multiple layers of security checks. API routes AND RLS.</li>
-  <li><strong>Fail Securely:</strong> Errors should not expose sensitive information.</li>
-  <li><strong>Explicit Error Handling:</strong> Every operation that can fail should have explicit handling.</li>
+  <li><strong>Input Validation at Boundaries:</strong> All external data validated once, at entry. Use Zod schemas for type-safe validation.</li>
+  <li><strong>Defense in Depth:</strong> Multiple layers of security checks. API routes validate AND RLS enforces. Never rely on a single layer.</li>
+  <li><strong>Fail Securely:</strong> Errors should not expose sensitive information. Log details server-side, show generic messages client-side.</li>
+  <li><strong>Explicit Error Handling:</strong> Every operation that can fail should have explicit handling. No silent failures.</li>
 </ul>
+
+<h3>Security Requirements (OWASP-Aligned)</h3>
+<ul>
+  <li><strong>Authentication:</strong> Use Supabase Auth. Never roll custom auth. Enforce password policies.</li>
+  <li><strong>Authorization:</strong> RLS on every table. Check permissions in API routes AND database. Test with different user roles.</li>
+  <li><strong>Injection Prevention:</strong> Use parameterized queries (Supabase client does this). Never concatenate user input into queries.</li>
+  <li><strong>XSS Prevention:</strong> React escapes by default. Never use <code>dangerouslySetInnerHTML</code> with user content. Sanitize if you must render HTML.</li>
+  <li><strong>CSRF Protection:</strong> Use Server Actions (built-in protection) or validate Origin headers on API routes.</li>
+  <li><strong>Secrets Management:</strong> Environment variables only. Never commit secrets. Never expose server keys to client.</li>
+  <li><strong>Security Headers:</strong> Configure HSTS, X-Frame-Options, CSP in next.config.js.</li>
+  <li><strong>Dependency Security:</strong> Run <code>npm audit</code> before every release. No high/critical vulnerabilities in production.</li>
+</ul>
+
+<h3>Security Checklist for Every Feature</h3>
+<div class="checklist">
+  <ul>
+    <li>Does this feature accept user input? &rarr; Validate with Zod</li>
+    <li>Does this feature display user content? &rarr; Ensure proper escaping</li>
+    <li>Does this feature access data? &rarr; RLS policy in place and tested</li>
+    <li>Does this feature have admin-only actions? &rarr; Role check in code AND RLS</li>
+    <li>Does this feature handle sensitive data? &rarr; Never log, never expose in errors</li>
+  </ul>
+</div>
 
 <h2>3.4 Speed</h2>
 <p>Speed is about performance and efficiency.</p>
@@ -540,7 +444,7 @@ PROJECT LIFECYCLE FLOW (v3.0)
   <tr>
     <td><strong>Iteration</strong></td>
     <td>Back-and-forth discussion</td>
-    <td>Execute → verify → adjust</td>
+    <td>Execute &rarr; verify &rarr; adjust</td>
   </tr>
 </table>
 
@@ -552,15 +456,15 @@ HANDOFF PATTERN
 
 Claude Chat                          Claude Code CLI
 -----------                          ---------------
-                                     
-1. Create Design Artifacts    --->   
-2. Create Architecture Doc    --->   
-3. Generate Build Contract    --->   
+
+1. Create Design Artifacts    --->
+2. Create Architecture Doc    --->
+3. Generate Build Contract    --->
 4. Create SPEC Document       --->   5. Implement SPEC (TDD)
                                         - Write failing tests
                                         - Implement to pass
                                         - Refactor
-6. Review Implementation      <---   
+6. Review Implementation      <---
 7. Create Next SPEC           --->   8. Implement Next SPEC
 </div>
 
@@ -889,7 +793,7 @@ Components needed:
 <div class="prompt-block">Present 3 distinct visual directions for [PRODUCT NAME]:
 
 **Direction A**: [Description - e.g., "Minimal and Professional"]
-**Direction B**: [Description - e.g., "Bold and Modern"]  
+**Direction B**: [Description - e.g., "Bold and Modern"]
 **Direction C**: [Description - e.g., "Warm and Approachable"]
 
 For each direction, provide:
@@ -901,280 +805,22 @@ For each direction, provide:
 
 <hr class="divider">
 
-<!-- PART IV: TECHNICAL FOUNDATION -->
-<div class="part-header" id="part-4">
-  <h2>PART IV: TECHNICAL FOUNDATION</h2>
-  <p style="color: var(--muted); margin-top: 0.5rem;">Architecture, Infrastructure, and Multi-Environment Configuration</p>
+<!-- PART NAVIGATION -->
+<div class="part-nav">
+  <span style="color: var(--muted);">This is Part 1</span>
+  <a href="handbook-v3-part2-setup.html">Next: Part 2 - Architecture & Setup &rarr;</a>
 </div>
 
-<h1 id="chapter-14">Chapter 14: Stage 5.0 - Solution Architecture</h1>
-
-<h2>14.1 Purpose</h2>
-<p>The Solution Architecture document defines the technical approach: technology choices, system components, data model, and integration patterns. It provides the blueprint for implementation.</p>
-
-<h2>14.2 Architecture Prompt</h2>
-
-<div class="prompt-block">Create a Solution Architecture document for [PRODUCT NAME].
-
-Technology Stack (recommended for AI SaaS):
-- Frontend: Next.js 14+ with App Router
-- Styling: Tailwind CSS
-- Database: Supabase (PostgreSQL + Auth + Storage)
-- AI: Claude API (Anthropic)
-- Payments: Stripe
-- Hosting: Vercel
-
-The Architecture document should include:
-1. System Overview (architecture diagram, component responsibilities)
-2. Database Schema (tables, columns, constraints, RLS policies)
-3. API Design (routes, methods, request/response schemas)
-4. Authentication and Authorization
-5. AI Integration (prompts, error handling, cost management)
-6. Third-Party Integrations
-7. Security Considerations</div>
-
-<h1 id="chapter-19">Chapter 19: Multi-Environment Configuration</h1>
-
-<table class="comparison-table">
-  <tr><th>Environment</th><th>Purpose</th><th>Supabase</th><th>Stripe</th></tr>
-  <tr><td><strong>Local</strong></td><td>Development</td><td>Local (Docker)</td><td>Test mode</td></tr>
-  <tr><td><strong>Preview</strong></td><td>PR testing</td><td>Dev project</td><td>Test mode</td></tr>
-  <tr><td><strong>Production</strong></td><td>Live users</td><td>Prod project</td><td>Live mode</td></tr>
-</table>
-
-<!-- PART IV-B: BUILD CONTRACT -->
-<div class="part-header moai" id="build-contract">
-  <h2>PART IV-B: BUILD CONTRACT <span class="new-badge">NEW IN v3.0</span></h2>
-  <p style="color: var(--muted); margin-top: 0.5rem;">Bridging Design to Implementation</p>
-</div>
-
-<h1 id="chapter-20">Chapter 20: Build Contract Introduction</h1>
-
-<p>The Build Contract is a bridge document that compresses your design artifacts (Design Brief, UX Package, UI System, Architecture) into a structured reference optimized for implementation.</p>
-
-<div class="moai-box">
-  <h4>Why Build Contract?</h4>
-  <p>Design artifacts are optimized for exploration. But during implementation, you need quick reference to decisions made. The Build Contract extracts the "what" and organizes it for implementation lookup. SPECs reference Build Contract sections rather than hunting through multiple design documents.</p>
-</div>
-
-<table class="comparison-table">
-  <tr><th>Without Build Contract</th><th>With Build Contract</th></tr>
-  <tr><td>SPECs reference multiple documents</td><td>SPECs reference single source</td></tr>
-  <tr><td>~15-20K tokens for design context</td><td>~2-5K tokens for relevant sections</td></tr>
-  <tr><td>Inconsistent terminology possible</td><td>Single canonical vocabulary</td></tr>
-</table>
-
-<h1 id="chapter-21">Chapter 21: Build Contract Structure</h1>
-
-<p>Every Build Contract contains seven standard sections:</p>
-<ol>
-  <li><strong>Vocabulary</strong>: Canonical terms used throughout the product</li>
-  <li><strong>User Model</strong>: User types, permissions, authentication, core flows</li>
-  <li><strong>Screen Inventory</strong>: Complete list of screens with routes</li>
-  <li><strong>Component Specifications</strong>: Key component behaviors and states</li>
-  <li><strong>Data Model</strong>: Database entities, columns, types, constraints</li>
-  <li><strong>API Surface</strong>: All API routes with methods and auth requirements</li>
-  <li><strong>Quality Standards</strong>: Code structure, security, testing requirements</li>
-</ol>
-
-<h1 id="chapter-22">Chapter 22: Generating the Build Contract</h1>
-
-<div class="prompt-block">I need you to generate a Build Contract from my design artifacts.
-
-Please analyze the attached design artifacts and create a Build Contract with these sections:
-
-1. **Vocabulary**: Extract all canonical terms from the Design Brief.
-   Format as table: | Term | Definition | Usage Context |
-
-2. **User Model**: Extract user types, auth, and flows from UX Package.
-
-3. **Screen Inventory**: Extract all screens with routes from UI System.
-   Format as table: | Screen | Route | Purpose | Key Components |
-
-4. **Component Specifications**: Extract key component behaviors from UI System.
-
-5. **Data Model**: Extract entities and relationships from Architecture.
-   Format as table: | Table | Columns | Constraints | RLS Policy |
-
-6. **API Surface**: Extract all API routes from Architecture.
-   Format as table: | Route | Method | Purpose | Auth Required |
-
-7. **Quality Standards**: Compile standards from all documents.
-
-[Attach: Design Brief, UX Package, UI System, Architecture Document]</div>
-
-<!-- PART V: BUILD PHASE WITH MOAI -->
-<div class="part-header moai" id="part-5">
-  <h2>PART V: BUILD PHASE WITH MOAI <span class="new-badge">ENHANCED</span></h2>
-  <p style="color: var(--muted); margin-top: 0.5rem;">SPEC-First Development with TDD Enforcement</p>
-</div>
-
-<h1 id="chapter-24">Chapter 24: MOAI-ADK Overview</h1>
-
-<p>MOAI-ADK (Methodology for Organized AI-Driven Development Kit) structures AI-assisted implementation through SPEC-First Development, EARS Requirements, TDD Workflow, and Documentation Sync.</p>
-
-<div class="file-structure">
-HANDBOOK + MOAI INTEGRATION
-===========================
-
-Design Brief      ----+
-UX Package        ----|---> Build Contract ---> SPEC ---> TDD Cycle
-UI System         ----|                              |
-Architecture      ----+                              v
-                                              Tested Code + Docs
-</div>
-
-<h1 id="chapter-25">Chapter 25: SPEC-First Development</h1>
-
-<h2>25.1 EARS Requirements Format</h2>
-
-<table class="comparison-table">
-  <tr><th>Type</th><th>Pattern</th><th>Example</th></tr>
-  <tr><td>Ubiquitous</td><td>The [system] shall [action]</td><td>The upload zone shall accept JPEG, PNG, and HEIC formats.</td></tr>
-  <tr><td>State-Driven</td><td>While [state], the [system] shall [action]</td><td>While uploading, the system shall display progress.</td></tr>
-  <tr><td>Event-Driven</td><td>When [event], the [system] shall [action]</td><td>When user clicks generate, the system shall call the AI API.</td></tr>
-  <tr><td>Optional</td><td>Where [condition], the [system] shall [action]</td><td>Where user is Pro tier, the system shall enable all styles.</td></tr>
-  <tr><td>Unwanted</td><td>The [system] shall not [action]</td><td>The system shall not store raw API keys.</td></tr>
-</table>
-
-<h2>25.2 Test Case Format</h2>
-
-<div class="code-block">### TC-PHOTO-001: Valid image upload
-
-**GIVEN** a user is on the create listing page
-  AND the user has selected a valid JPEG image
-**WHEN** the user drops the image on the upload zone
-**THEN** the system displays an upload progress indicator
-  AND the image appears in the preview grid after upload completes</div>
-
-<h1 id="chapter-26">Chapter 26: TDD Workflow</h1>
-
-<div class="file-structure">
-TDD CYCLE: RED --> GREEN --> REFACTOR --> DONE
-
-RED:      Write failing tests from SPEC test cases
-GREEN:    Write minimum code to pass tests
-REFACTOR: Improve code quality, tests still pass
-DONE:     All tests pass, quality gate passed
-</div>
-
-<div class="note">
-<strong>Detailed TDD prompts and milestone guides are in the Build Phase Guide v3.</strong>
-</div>
-
-<h1 id="chapter-27">Chapter 27: Build Milestones</h1>
-
-<table class="comparison-table">
-  <tr><th>Milestone</th><th>Focus</th><th>Deliverables</th></tr>
-  <tr><td>M1-M4</td><td>Setup, Design System, Database, Layouts</td><td>Foundation ready</td></tr>
-  <tr><td>M5</td><td>Authentication</td><td>Sign up, login, sessions</td></tr>
-  <tr style="background: #ede9fe;"><td colspan="3"><strong>CHECKPOINT A</strong> - Code Audit</td></tr>
-  <tr><td>M6</td><td>Core Feature</td><td>Primary value delivery</td></tr>
-  <tr style="background: #ede9fe;"><td colspan="3"><strong>CHECKPOINT B</strong> - Feature Complete</td></tr>
-  <tr><td>M7-M11</td><td>Admin, Edge Cases, Billing, Performance, Launch</td><td>Production ready</td></tr>
-</table>
-
-<!-- PART VI: LAUNCH -->
-<div class="part-header" id="part-6">
-  <h2>PART VI: LAUNCH</h2>
-</div>
-
-<h1 id="chapter-30">Chapter 30: QA and Launch Checklist</h1>
-
-<div class="checklist">
-  <h4>Pre-Launch Checklist</h4>
-  <ul>
-    <li>All tests passing, no TypeScript errors, no linting errors</li>
-    <li>Environment variables secured, RLS policies tested</li>
-    <li>Lighthouse score >= 90, Core Web Vitals passing</li>
-    <li>All user flows tested, mobile responsive verified</li>
-    <li>Error monitoring configured, analytics configured</li>
-    <li>Database backups enabled, domain configured</li>
-  </ul>
-</div>
-
-<!-- PART VII: FILE CONTROL SYSTEM -->
-<div class="part-header moai" id="part-7">
-  <h2>PART VII: FILE CONTROL SYSTEM <span class="new-badge">NEW</span></h2>
-</div>
-
-<h1 id="chapter-32">Chapter 32: Project File Structure</h1>
-
-<div class="file-structure">
-project-root/
-|-- docs/                    # Design artifacts
-|   |-- build-contract.md    # Bridge document
-|   +-- specs/               # SPEC documents
-|-- src/                     # Application code
-|   |-- app/                 # Next.js app router
-|   |-- components/          # React components
-|   +-- lib/                 # Utilities
-|-- src/__tests__/           # Test files
-|-- supabase/                # Database config
-|-- CLAUDE.md                # AI context file
-+-- README.md
-</div>
-
-<!-- APPENDICES -->
-<div class="part-header">
-  <h2>APPENDICES</h2>
-</div>
-
-<h1 id="appendix-b">Appendix B: SPEC Template</h1>
-
-<div class="code-block"># SPEC-[PREFIX]-[NNN]: [Feature Name]
-
-**Status**: [Draft | Ready | In Progress | Review | Done]
-**Milestone**: [Number and Name]
-
-## Overview
-**Problem**: [What problem does this solve?]
-**Solution**: [How does this feature solve it?]
-
-## Source References
-- Build Contract Section [X.X]: [Name]
-
-## Requirements
-**REQ-001** [EARS-format requirement]
-
-## Test Cases
-### TC-[PREFIX]-001: [Name]
-**GIVEN** [precondition]
-**WHEN** [action]
-**THEN** [outcome]
-
-## Acceptance Criteria
-- [ ] All test cases pass
-- [ ] Code meets quality standards</div>
-
-<h1 id="appendix-c">Appendix C: Quality Gate Checklists</h1>
-
-<div class="checklist">
-  <h4>SPEC Ready</h4>
-  <ul>
-    <li>Overview complete, Build Contract references included</li>
-    <li>At least one requirement (EARS format)</li>
-    <li>At least one test case per requirement</li>
-  </ul>
-</div>
-
-<div class="checklist">
-  <h4>Implementation Done</h4>
-  <ul>
-    <li>All tests pass, Coverage >= 80%</li>
-    <li>Functions <= 30 lines, Files <= 200 lines, Nesting <= 3</li>
-    <li>No TypeScript errors, Linting passes</li>
-  </ul>
-</div>
-
-<div style="text-align: center; color: var(--muted); margin-top: 3rem; padding: 2rem 0;">
+<!-- FOOTER -->
+<div style="text-align: center; color: var(--muted); margin-top: 3rem; padding: 2rem 0; border-top: 1px solid var(--border);">
   <p>
-    <strong>AI SaaS Handbook v3.0 - MOAI Integration Edition</strong><br>
-    A Complete Methodology for Building Production-Quality SaaS Products<br>
-    January 2026
+    <strong>AI SaaS Handbook v3.0 - Part 1: Strategy & Design</strong><br>
+    Parts I, II, III: Foundation, Documentation Stages, Design Excellence
   </p>
   <p style="margin-top: 1rem;">
-    <a href="index.html" style="color: var(--secondary);">Back to Documentation Home</a>
+    <a href="handbook-v3-part2-setup.html" style="color: var(--secondary);">Part 2: Architecture & Setup</a> |
+    <a href="handbook-v3-part3-build.html" style="color: var(--secondary);">Part 3: Build & Launch</a> |
+    <a href="index.html" style="color: var(--secondary);">Documentation Home</a>
   </p>
 </div>
 

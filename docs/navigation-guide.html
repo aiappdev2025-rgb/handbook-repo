@@ -217,11 +217,12 @@
 
 <!-- NAVIGATION BAR -->
 <nav class="nav-bar">
-  <a href="index.html" class="nav-home">← Handbook Home</a>
+  <a href="index.html" class="nav-home">&larr; Handbook Home</a>
   <div class="nav-links">
-    <a href="handbook-v3.html">Main Handbook</a>
+    <a href="handbook-v3-part1-strategy.html">1: Strategy</a>
+    <a href="handbook-v3-part2-setup.html">2: Setup</a>
+    <a href="handbook-v3-part3-build.html">3: Build</a>
     <a href="build-guide-v3.html">Build Guide</a>
-    <a href="workflow-guide-v1.html">Workflow Guide</a>
     <a href="navigation-guide.html" class="active">Navigation</a>
   </div>
 </nav>
@@ -234,17 +235,17 @@
 
 <div class="document-card hub">
   <h3>📘 AI SaaS Handbook v3.0 <span class="badge badge-hub">HUB</span></h3>
-  <p><strong>Purpose:</strong> Strategic hub containing methodology, Build Contract, MOAI integration overview, quality standards, infrastructure setup, and navigation to companion guides.</p>
-  <p><strong>Contains:</strong> Research → Business Planning → Design Brief → UX/UI → Architecture → Build Contract → Infrastructure Setup → Multi-Environment Config → Build Overview → QA &amp; Launch</p>
+  <p><strong>Purpose:</strong> Strategic hub containing methodology, Build Contract, development environment setup, quality standards, and navigation to companion guides.</p>
+  <p><strong>Contains:</strong> Research → Business Planning → Design Brief → UX/UI → Architecture → Build Contract → <strong>Dev Environment Setup (CLAUDE.md)</strong> → Build Overview → QA &amp; Launch</p>
   <div class="use-when">
     <h4>📖 Use This When...</h4>
     <ul>
-      <li>Starting a new project (read cover-to-cover first time)</li>
+      <li>Starting a new project (follow Parts I through IV-C sequentially)</li>
       <li>Need to understand the methodology and "why" behind decisions</li>
       <li>Generating a Build Contract from design artifacts</li>
-      <li>Setting up infrastructure (GitHub, Supabase, Vercel, environments)</li>
+      <li><strong>Setting up your development environment (Part IV-C)</strong></li>
+      <li>Creating your CLAUDE.md file and docs/ folder structure</li>
       <li>Checking quality standards and verification criteria</li>
-      <li>Looking up which companion guide to use next</li>
     </ul>
   </div>
 </div>
@@ -256,7 +257,7 @@
   <div class="use-when">
     <h4>📖 Use This When...</h4>
     <ul>
-      <li>Ready to start coding (after Build Contract is generated)</li>
+      <li>Ready to start coding (after completing Part IV-C setup)</li>
       <li>Writing SPEC documents for features</li>
       <li>Following TDD cycle (RED-GREEN-REFACTOR)</li>
       <li>Need the exact prompt to paste into Claude Code CLI</li>
@@ -267,18 +268,18 @@
 </div>
 
 <div class="document-card moai">
-  <h3>🔄 Workflow Guide v1 <span class="badge badge-new">NEW</span></h3>
-  <p><strong>Purpose:</strong> Context management, agentic patterns, and efficient development with Claude Code. Essential for managing large projects across multiple sessions.</p>
-  <p><strong>Contains:</strong> Context Window Mental Model → CLAUDE.md Structure → Task Decomposition → Session Rhythm → MCP Tools → Git Workflow</p>
+  <h3>🔄 Workflow Guide v1 <span class="badge badge-new">REFERENCE</span></h3>
+  <p><strong>Purpose:</strong> Deep-dive reference for context management and advanced Claude Code patterns. Consult when you need efficiency optimizations during the Build Phase.</p>
+  <p><strong>Contains:</strong> Context Window Mental Model → Advanced CLAUDE.md Patterns → Task Decomposition → Session Rhythm → /clear Tactics → Multi-Session Continuity</p>
   <div class="use-when">
     <h4>📖 Use This When...</h4>
     <ul>
-      <li>Setting up a new project's CLAUDE.md file</li>
-      <li>Managing context across long development sessions</li>
-      <li>Breaking down large features into manageable tasks</li>
-      <li>Establishing session rhythm with /clear tactics</li>
-      <li>Integrating MCP tools for memory persistence</li>
-      <li>Optimizing Claude Code CLI efficiency</li>
+      <li>Context window is filling up and you need /clear tactics</li>
+      <li>Working on a large milestone that spans multiple sessions</li>
+      <li>Breaking down complex features into manageable tasks</li>
+      <li>Troubleshooting context-related issues</li>
+      <li>Want to understand the "why" behind context management</li>
+      <li>Optimizing Claude Code CLI efficiency beyond the basics</li>
     </ul>
   </div>
 </div>
@@ -292,28 +293,35 @@
 │                           PROJECT LIFECYCLE v3.0                                     │
 ├─────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                      │
+│  ══════════════════════ CLAUDE CHAT PHASE ══════════════════════                    │
+│                                                                                      │
 │  PHASE 1: PLANNING & DESIGN                         📘 HANDBOOK v3.0                │
-│  ├── Research & Opportunity Assessment              │                               │
-│  ├── Business One-Pager                             │  Parts I-III                  │
-│  ├── Design Brief                                   │                               │
-│  ├── UX Package & Validation                        │                               │
-│  └── UI System                                      │                               │
+│  ├── Research & Opportunity Assessment              │  Parts I-III                  │
+│  ├── Business One-Pager, Design Brief               │                               │
+│  └── UX Package, UI System                          │                               │
 │                                                     ▼                               │
 │  PHASE 2: TECHNICAL FOUNDATION                      📘 HANDBOOK v3.0                │
-│  ├── Solution Architecture                          │                               │
-│  ├── Infrastructure Setup                           │  Part IV                      │
+│  ├── Solution Architecture                          │  Part IV                      │
 │  └── Multi-Environment Configuration                │                               │
 │                                                     ▼                               │
-│  PHASE 2B: BUILD CONTRACT  ★NEW                     📘 HANDBOOK v3.0                │
+│  PHASE 2B: BUILD CONTRACT                           📘 HANDBOOK v3.0                │
 │  └── Generate Build Contract from Artifacts         │  Part IV-B                    │
+│                                                                                      │
+│  ════════════════════ TOOL TRANSITION ══════════════════════════                    │
+│                                                                                      │
+│  PHASE 2C: DEV ENVIRONMENT SETUP  ★NEW              📘 HANDBOOK v3.0                │
+│  ├── Create project repository                      │  Part IV-C                    │
+│  ├── Set up CLAUDE.md file                          │                               │
+│  ├── Configure docs/ folder structure               │                               │
+│  └── Verify environment ready                       │                               │
+│                                                                                      │
+│  ══════════════════════ CLAUDE CODE PHASE ══════════════════════                    │
 │                                                     ▼                               │
 │  PHASE 3: BUILD WITH MOAI                           🔧 BUILD GUIDE v3               │
-│  ├── Write SPEC Documents                           │  + 🔄 WORKFLOW GUIDE          │
-│  ├── TDD Cycle (RED-GREEN-REFACTOR)                │                               │
-│  ├── Milestones 1-6 (Setup → Core Feature)         │  Follow SPEC                  │
-│  ├── Milestone 7 (Admin Console)                    │  by SPEC                      │
-│  ├── Milestones 8-11 (Features → Testing)          │                               │
-│  └── Quality Gates & Checkpoints                    │                               │
+│  ├── Write SPEC Documents                           │                               │
+│  ├── TDD Cycle (RED-GREEN-REFACTOR)                │  (🔄 WORKFLOW GUIDE            │
+│  ├── Milestones 1-11                                │   for advanced context        │
+│  └── Quality Gates & Checkpoints                    │   management)                 │
 │                                                     ▼                               │
 │  PHASE 4: QA & LAUNCH                               📘 HANDBOOK v3.0                │
 │  └── QA Checklist & Launch                          │  Part VI                      │
@@ -343,8 +351,8 @@
     <p><span class="arrow">→</span> Handbook v3.0, Part IV-B</p>
   </div>
   <div class="quick-ref-item">
-    <h4>Set up environment variables</h4>
-    <p><span class="arrow">→</span> Handbook v3.0, Chapter 19</p>
+    <h4>Set up dev environment (CLAUDE.md)</h4>
+    <p><span class="arrow">→</span> Handbook v3.0, Part IV-C</p>
   </div>
   <div class="quick-ref-item">
     <h4>Write a SPEC document</h4>
@@ -363,16 +371,16 @@
     <p><span class="arrow">→</span> Build Guide v3, Milestone 9</p>
   </div>
   <div class="quick-ref-item">
-    <h4>Manage context efficiently</h4>
+    <h4>Context filling up / need /clear</h4>
     <p><span class="arrow">→</span> Workflow Guide v1, Context Management</p>
   </div>
   <div class="quick-ref-item">
-    <h4>Set up CLAUDE.md</h4>
-    <p><span class="arrow">→</span> Workflow Guide v1, Appendix A</p>
+    <h4>Multi-session project continuity</h4>
+    <p><span class="arrow">→</span> Workflow Guide v1, Session Patterns</p>
   </div>
   <div class="quick-ref-item">
     <h4>Prepare for launch</h4>
-    <p><span class="arrow">→</span> Handbook v3.0, Chapter 23</p>
+    <p><span class="arrow">→</span> Handbook v3.0, Part VI</p>
   </div>
 </div>
 

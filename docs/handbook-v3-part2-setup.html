@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SaaS Handbook v3.0 - Part 2: Architecture & Setup</title>
+  <style>
+    :root {
+      --primary: #1a365d;
+      --secondary: #2c5282;
+      --accent: #2d3748;
+      --text: #1a202c;
+      --muted: #718096;
+      --bg: #ffffff;
+      --surface: #f7fafc;
+      --border: #e2e8f0;
+      --code-bg: #1e1e1e;
+      --code-text: #d4d4d4;
+      --prompt-bg: #fffbeb;
+      --prompt-border: #d69e2e;
+      --success: #48bb78;
+      --success-bg: #c6f6d5;
+      --warning: #ed8936;
+      --warning-bg: #feebc8;
+      --error: #f56565;
+      --error-bg: #fee2e2;
+      --info: #4299e1;
+      --info-bg: #bee3f8;
+      --moai: #7c3aed;
+      --moai-bg: #f3e8ff;
+      --moai-border: #9f7aea;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: var(--bg);
+    }
+
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      margin: -2rem -2rem 2rem -2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .nav-bar a { color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.2s; }
+    .nav-bar a:hover { background: rgba(255,255,255,0.1); }
+    .nav-bar a.active { background: rgba(255,255,255,0.2); font-weight: 600; }
+    .nav-home { font-weight: 700; font-size: 1.1rem; }
+    .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    @media (max-width: 768px) { .nav-bar { flex-direction: column; gap: 1rem; } .nav-links { flex-wrap: wrap; justify-content: center; } }
+
+    h1 { color: var(--primary); font-size: 2rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; margin-top: 3rem; }
+    h2 { color: var(--secondary); font-size: 1.5rem; margin-top: 2rem; }
+    h3 { color: var(--accent); font-size: 1.25rem; margin-top: 1.5rem; }
+    h4 { color: var(--accent); font-size: 1.1rem; margin-top: 1rem; }
+    p { margin: 1rem 0; }
+    ul, ol { margin: 1rem 0; padding-left: 2rem; }
+    li { margin: 0.5rem 0; }
+
+    .title-page { text-align: center; padding: 4rem 0; border-bottom: 2px solid var(--border); margin-bottom: 3rem; }
+    .title-page h1 { font-size: 3rem; border: none; margin: 0; }
+    .subtitle { font-size: 1.5rem; color: var(--secondary); margin: 1rem 0; }
+    .version { font-size: 1.25rem; font-weight: bold; margin-top: 2rem; }
+    .date { color: var(--muted); }
+
+    .part-header { text-align: center; padding: 3rem 0; margin: 3rem 0; background: var(--surface); border-radius: 8px; }
+    .part-header h2 { font-size: 2rem; color: var(--primary); margin: 0; }
+    .part-header.moai { background: var(--moai-bg); }
+    .part-header.moai h2 { color: var(--moai); }
+
+    .toc { background: var(--surface); padding: 2rem; border-radius: 8px; margin: 2rem 0; }
+    .toc h2 { margin-top: 0; }
+    .toc-section { margin: 1rem 0; }
+    .toc-section strong { color: var(--primary); }
+    .toc-items { margin-left: 1.5rem; color: var(--muted); }
+
+    .prompt-block { background: var(--prompt-bg); border-left: 4px solid var(--prompt-border); padding: 1rem 1.5rem; margin: 1.5rem 0; font-family: 'Consolas', monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; }
+    .code-block { background: var(--code-bg); color: var(--code-text); padding: 1rem; margin: 1rem 0; font-family: 'Consolas', monospace; font-size: 0.85rem; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+    .file-structure { background: var(--code-bg); color: var(--code-text); padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.4; overflow-x: auto; white-space: pre; }
+
+    .checklist { background: var(--surface); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+    .checklist h4 { margin-top: 0; }
+    .warning { background: var(--warning-bg); border-left: 4px solid var(--warning); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+    .note { background: var(--info-bg); border-left: 4px solid var(--info); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+    .success { background: var(--success-bg); border-left: 4px solid var(--success); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+
+    .moai-box { background: var(--moai-bg); border: 2px solid var(--moai-border); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; }
+    .moai-box h4 { color: var(--moai); margin-top: 0; }
+
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; vertical-align: top; }
+    .comparison-table th { background: var(--surface); font-weight: 600; }
+    .comparison-table tr:nth-child(even) { background: #fafafa; }
+
+    .new-badge { display: inline-block; background: var(--moai); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 0.5rem; vertical-align: middle; }
+    .tool-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-right: 0.5rem; }
+    .badge-chat { background: #e9d8fd; color: #553c9a; }
+    .badge-code { background: #c6f6d5; color: #276749; }
+
+    .divider { border: none; border-top: 2px solid var(--border); margin: 3rem 0; }
+
+    .part-nav { display: flex; justify-content: space-between; margin: 3rem 0; padding: 1.5rem; background: var(--surface); border-radius: 8px; }
+    .part-nav a { color: var(--secondary); text-decoration: none; font-weight: 600; }
+    .part-nav a:hover { text-decoration: underline; }
+
+    @media print { body { max-width: none; } .part-header { break-before: page; } h1 { break-before: page; } .nav-bar { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION BAR -->
+<nav class="nav-bar">
+  <a href="index.html" class="nav-home">&larr; Handbook Home</a>
+  <div class="nav-links">
+    <a href="handbook-v3-part1-strategy.html">1: Strategy</a>
+    <a href="handbook-v3-part2-setup.html" class="active">2: Setup</a>
+    <a href="handbook-v3-part3-build.html">3: Build</a>
+    <a href="build-guide-v3.html">Build Guide</a>
+    <a href="workflow-guide-v1.html">Workflow</a>
+  </div>
+</nav>
+
+<!-- TITLE PAGE -->
+<div class="title-page">
+  <h1>AI SaaS Handbook</h1>
+  <p class="subtitle">Part 2: Architecture & Setup</p>
+  <p class="version">Version 3.0 - MOAI Integration Edition</p>
+  <p class="date">January 2026</p>
+
+  <div style="margin-top: 2rem;">
+    <p style="color: var(--muted);">
+      This part covers: Technical Foundation, Multi-Environment Config, Build Contract, and Dev Environment Setup<br>
+      <strong>Tool:</strong> <span class="tool-badge badge-chat">Claude Chat</span> &rarr; <span class="tool-badge badge-code">Claude Code</span>
+    </p>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc" id="toc">
+  <h2>Part 2 Contents</h2>
+
+  <div class="toc-section">
+    <strong>Part IV: Technical Foundation</strong>
+    <div class="toc-items">
+      <a href="#chapter-14">14. Solution Architecture</a> |
+      <a href="#chapter-19">19. Multi-Environment Configuration</a>
+      (<a href="#section-19-1">19.1</a> | <a href="#section-19-2">19.2</a> | <a href="#section-19-3">19.3</a> | <a href="#section-19-4">19.4</a> | <a href="#section-19-5">19.5</a> | <a href="#section-19-6">19.6</a> | <a href="#section-19-7">19.7</a> | <a href="#section-19-8">19.8</a> | <a href="#section-19-9">19.9</a>)
+    </div>
+  </div>
+
+  <div class="toc-section">
+    <strong>Part IV-B: Build Contract <span class="new-badge">NEW</span></strong>
+    <div class="toc-items">
+      <a href="#chapter-20">20. Build Contract Introduction</a> |
+      <a href="#chapter-21">21. Build Contract Structure</a> |
+      <a href="#chapter-22">22. Generating Build Contract</a>
+    </div>
+  </div>
+
+  <div class="toc-section">
+    <strong>Part IV-C: Development Environment Setup <span class="new-badge">NEW</span></strong>
+    <div class="toc-items">
+      <a href="#chapter-23">23. The Critical Transition</a> |
+      <a href="#chapter-23-2">23.2 Project Repository Setup</a> |
+      <a href="#chapter-23-3">23.3 The CLAUDE.md File</a> |
+      <a href="#chapter-23-4">23.4 Documentation Folder Structure</a> |
+      <a href="#chapter-23-5">23.5 Initial Commit</a> |
+      <a href="#chapter-23-6">23.6 Claude Code Configuration</a> |
+      <a href="#chapter-23-7">23.7 Verification Checklist</a>
+    </div>
+  </div>
+
+  <div class="toc-section" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+    <strong>Other Parts</strong>
+    <div class="toc-items">
+      <a href="handbook-v3-part1-strategy.html">Part 1: Strategy & Design</a> (Parts I, II, III) |
+      <a href="handbook-v3-part3-build.html">Part 3: Build & Launch</a> (Parts V, VI, VII)
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PART IV: TECHNICAL FOUNDATION -->
+<div class="part-header" id="part-4">
+  <h2>PART IV: TECHNICAL FOUNDATION</h2>
+  <p style="color: var(--muted); margin-top: 0.5rem;">Architecture, Infrastructure, and Multi-Environment Configuration</p>
+</div>
+
+<h1 id="chapter-14">Chapter 14: Stage 5.0 - Solution Architecture</h1>
+
+<h2>14.1 Purpose</h2>
+<p>The Solution Architecture document defines the technical approach: technology choices, system components, data model, and integration patterns. It provides the blueprint for implementation.</p>
+
+<h2>14.2 Architecture Prompt</h2>
+
+<div class="prompt-block">Create a Solution Architecture document for [PRODUCT NAME].
+
+Technology Stack (recommended for AI SaaS):
+- Frontend: Next.js 14+ with App Router
+- Styling: Tailwind CSS
+- Database: Supabase (PostgreSQL + Auth + Storage)
+- AI: Claude API (Anthropic)
+- Payments: Stripe
+- Hosting: Vercel
+
+The Architecture document should include:
+1. System Overview (architecture diagram, component responsibilities)
+2. Database Schema (tables, columns, constraints, RLS policies)
+3. API Design (routes, methods, request/response schemas)
+4. Authentication and Authorization
+5. AI Integration (prompts, error handling, cost management)
+6. Third-Party Integrations
+7. Security Considerations</div>
+
+<h1 id="chapter-19">Chapter 19: Multi-Environment Configuration</h1>
+
+<p>A proper multi-environment setup is essential for professional SaaS development. This chapter provides a complete guide to configuring three isolated environments: Development, Staging (Preview), and Production.</p>
+
+<h2 id="section-19-1">19.1 Environment Strategy Overview</h2>
+
+<p>The three-environment model provides isolation between development work, testing/review, and production users. Each environment connects to its own Supabase project and uses the appropriate Stripe mode.</p>
+
+<h3>The Three Environments</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Environment</th>
+    <th>Purpose</th>
+    <th>Next.js</th>
+    <th>Supabase</th>
+    <th>Stripe</th>
+  </tr>
+  <tr>
+    <td><strong>Local Development</strong></td>
+    <td>Your daily development work</td>
+    <td>Dev server (localhost:3000)</td>
+    <td>Development project (cloud)</td>
+    <td>Test mode</td>
+  </tr>
+  <tr>
+    <td><strong>Preview/Staging</strong></td>
+    <td>PR testing, external feedback</td>
+    <td>Vercel preview deploys</td>
+    <td>Staging project (cloud)</td>
+    <td>Test mode</td>
+  </tr>
+  <tr>
+    <td><strong>Production</strong></td>
+    <td>Live users, real payments</td>
+    <td>Vercel production</td>
+    <td>Production project (cloud)</td>
+    <td>Live mode</td>
+  </tr>
+</table>
+
+<h3>Architecture Diagram</h3>
+
+<div class="file-structure">
+Developer Machine          Vercel Preview           Vercel Production
+      |                         |                         |
+      v                         v                         v
+[Next.js Dev Server]    [Preview Deploy]          [Production Deploy]
+      |                         |                         |
+      v                         v                         v
+[Supabase DEV]          [Supabase STAGING]        [Supabase PROD]
+      |                         |                         |
+      v                         v                         v
+[Stripe TEST mode]      [Stripe TEST mode]        [Stripe LIVE mode]
+</div>
+
+<h3>Cost Breakdown</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Service</th>
+    <th>Free Tier</th>
+    <th>Recommended Setup</th>
+    <th>Cost</th>
+  </tr>
+  <tr>
+    <td><strong>Supabase</strong></td>
+    <td>2 projects free</td>
+    <td>Dev + Staging on Free, Production on Pro</td>
+    <td>$25/mo for Prod (at launch)</td>
+  </tr>
+  <tr>
+    <td><strong>Vercel</strong></td>
+    <td>Hobby tier (personal)</td>
+    <td>Hobby for solo, Pro for teams</td>
+    <td>$0-20/mo</td>
+  </tr>
+  <tr>
+    <td><strong>Stripe</strong></td>
+    <td>No monthly fee</td>
+    <td>Pay per transaction only</td>
+    <td>2.9% + 30c per transaction</td>
+  </tr>
+</table>
+
+<div class="note">
+  <h4>Why Three Separate Projects?</h4>
+  <p>Three Supabase projects provides complete data isolation. Preview testers don't pollute your development data. Production data is completely separate from test data. This isolation is worth the minor cost increase and prevents data contamination issues that are painful to debug.</p>
+</div>
+
+<h2 id="section-19-2">19.2 Supabase Project Setup</h2>
+
+<p>Create three separate Supabase projects to ensure complete environment isolation.</p>
+
+<h3>Step 1: Create Development Project</h3>
+
+<ol>
+  <li>Go to <a href="https://supabase.com">supabase.com</a> and sign in</li>
+  <li>Click "New Project"</li>
+  <li>Name: <code>[project-name]-dev</code></li>
+  <li>Database password: Generate a strong password and save it securely</li>
+  <li>Region: Choose closest to your location (for faster development)</li>
+  <li>Wait for project to provision (~2 minutes)</li>
+</ol>
+
+<h3>Step 2: Create Staging Project</h3>
+
+<ol>
+  <li>Click "New Project" again</li>
+  <li>Name: <code>[project-name]-staging</code></li>
+  <li>Database password: Generate a different strong password</li>
+  <li>Region: Same as your production target region (to match behavior)</li>
+</ol>
+
+<h3>Step 3: Create Production Project</h3>
+
+<ol>
+  <li>Click "New Project"</li>
+  <li>Name: <code>[project-name]-prod</code></li>
+  <li>Database password: Generate a different strong password</li>
+  <li>Region: Choose based on your target users (e.g., us-east-1 for US users)</li>
+</ol>
+
+<h3>Step 4: Configure Auth Settings</h3>
+
+<p>Repeat for each project. Go to <strong>Authentication &rarr; URL Configuration</strong>:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Site URL</th>
+    <th>Redirect URLs</th>
+  </tr>
+  <tr>
+    <td><strong>Dev</strong></td>
+    <td><code>http://localhost:3000</code></td>
+    <td><code>http://localhost:3000/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Staging</strong></td>
+    <td><code>https://[project]-*-[username].vercel.app</code></td>
+    <td><code>https://*-[username].vercel.app/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Prod</strong></td>
+    <td><code>https://[your-domain].com</code></td>
+    <td><code>https://[your-domain].com/**</code></td>
+  </tr>
+</table>
+
+<p>For each project, go to <strong>Authentication &rarr; Providers</strong> and enable your chosen auth methods (Email, OAuth providers, etc.).</p>
+
+<h3>Step 5: Enable Row Level Security</h3>
+
+<div class="warning">
+  <h4>Critical Security Requirement</h4>
+  <p>RLS must be enabled on ALL tables in ALL environments. Never disable RLS in production. This is your primary data access control layer.</p>
+</div>
+
+<div class="code-block">-- Run this for each table you create
+ALTER TABLE your_table_name ENABLE ROW LEVEL SECURITY;
+
+-- Example: Enable RLS on user_profiles
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;</div>
+
+<h3>Step 6: Record Your Credentials</h3>
+
+<p>From each project's Settings &rarr; API, record these values:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Project URL</th>
+    <th>Anon Key</th>
+    <th>Service Role Key</th>
+    <th>DB Password</th>
+  </tr>
+  <tr>
+    <td><strong>Dev</strong></td>
+    <td><code>https://[ref].supabase.co</code></td>
+    <td><code>eyJ...</code></td>
+    <td><code>eyJ...</code></td>
+    <td>(saved securely)</td>
+  </tr>
+  <tr>
+    <td><strong>Staging</strong></td>
+    <td><code>https://[ref].supabase.co</code></td>
+    <td><code>eyJ...</code></td>
+    <td><code>eyJ...</code></td>
+    <td>(saved securely)</td>
+  </tr>
+  <tr>
+    <td><strong>Prod</strong></td>
+    <td><code>https://[ref].supabase.co</code></td>
+    <td><code>eyJ...</code></td>
+    <td><code>eyJ...</code></td>
+    <td>(saved securely)</td>
+  </tr>
+</table>
+
+<div class="warning">
+  <h4>Never Commit Credentials</h4>
+  <p>These values go in Vercel environment variables only. Never commit them to your repository. Add <code>.env.local</code> to your <code>.gitignore</code> file.</p>
+</div>
+
+<h2 id="section-19-3">19.3 Local Development Setup</h2>
+
+<p>Your local development environment connects to the cloud Development Supabase project. This approach is simpler than running Supabase locally via Docker and requires no additional infrastructure.</p>
+
+<h3>Prerequisites</h3>
+
+<ul>
+  <li>Node.js 20+ installed</li>
+  <li>npm or pnpm package manager</li>
+  <li>Supabase CLI: <code>npm install -g supabase</code></li>
+  <li>Vercel CLI: <code>npm install -g vercel</code></li>
+  <li>Git configured with your credentials</li>
+</ul>
+
+<h3>Step 1: Clone and Install</h3>
+
+<div class="code-block">git clone [your-repo-url]
+cd [project-name]
+npm install</div>
+
+<h3>Step 2: Link to Vercel Project</h3>
+
+<div class="code-block">vercel link
+# Follow prompts to connect to your Vercel project
+# Select your team/account and project when prompted</div>
+
+<h3>Step 3: Pull Environment Variables</h3>
+
+<div class="code-block">vercel env pull .env.local
+# This creates .env.local with Development environment variables</div>
+
+<h3>Step 4: Verify Connection</h3>
+
+<div class="code-block">npm run dev
+# Open http://localhost:3000
+# Verify auth and database connections work</div>
+
+<h3>Step 5: Link Supabase CLI (for migrations)</h3>
+
+<div class="code-block">supabase login
+supabase link --project-ref [your-dev-project-ref]
+# Project ref is in your Supabase project URL:
+# supabase.com/dashboard/project/[ref]</div>
+
+<div class="note">
+  <h4>Shared Development Database</h4>
+  <p>Your local development connects to the cloud Development Supabase project. Changes to the database (via the app or migrations) affect this shared environment. If working with a team, coordinate database changes to avoid conflicts.</p>
+</div>
+
+<h3>Local Environment File Template</h3>
+
+<p>Your <code>.env.local</code> file (pulled from Vercel) should contain:</p>
+
+<div class="code-block"># .env.local - DO NOT COMMIT THIS FILE
+
+# Supabase (Development)
+NEXT_PUBLIC_SUPABASE_URL=https://[ref].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+
+# Stripe (Test Mode)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Claude API (if using AI features)
+ANTHROPIC_API_KEY=sk-ant-...</div>
+
+<h3>Local Setup Verification Checklist</h3>
+
+<div class="checklist">
+  <h4>Verify Your Local Environment</h4>
+  <ul>
+    <li><code>npm run dev</code> starts without errors</li>
+    <li>Can sign up / sign in via the app</li>
+    <li>Database queries return data (check browser console)</li>
+    <li>Stripe checkout opens in test mode</li>
+    <li>AI features work (if applicable)</li>
+  </ul>
+</div>
+
+<h2 id="section-19-4">19.4 Vercel Project Configuration</h2>
+
+<p>Vercel hosts your Next.js application and manages environment variables across all three environment scopes.</p>
+
+<h3>Step 1: Import Project</h3>
+
+<ol>
+  <li>Go to <a href="https://vercel.com">vercel.com</a> and sign in</li>
+  <li>Click "Add New Project"</li>
+  <li>Import from your GitHub repository</li>
+  <li>Framework Preset: Next.js (auto-detected)</li>
+  <li>Root Directory: <code>./</code> (unless using monorepo)</li>
+  <li>Build Command: <code>npm run build</code> (default)</li>
+  <li>Output Directory: <code>.next</code> (default for Next.js)</li>
+</ol>
+
+<h3>Step 2: Understand Environment Scopes</h3>
+
+<p>Vercel has three environment variable scopes that map to your environments:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Scope</th>
+    <th>When Used</th>
+    <th>Supabase Project</th>
+    <th>Stripe Mode</th>
+  </tr>
+  <tr>
+    <td><strong>Development</strong></td>
+    <td><code>vercel dev</code> and <code>vercel env pull</code></td>
+    <td>Dev</td>
+    <td>Test</td>
+  </tr>
+  <tr>
+    <td><strong>Preview</strong></td>
+    <td>All preview deployments (PRs, branches)</td>
+    <td>Staging</td>
+    <td>Test</td>
+  </tr>
+  <tr>
+    <td><strong>Production</strong></td>
+    <td>Production deployment only</td>
+    <td>Prod</td>
+    <td>Live</td>
+  </tr>
+</table>
+
+<h3>Step 3: Add Environment Variables</h3>
+
+<p>Go to Project Settings &rarr; Environment Variables. Add each variable with the appropriate scope:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Variable</th>
+    <th>Development</th>
+    <th>Preview</th>
+    <th>Production</th>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_URL</code></td>
+    <td>Dev project URL</td>
+    <td>Staging project URL</td>
+    <td>Prod project URL</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td>
+    <td>Dev anon key</td>
+    <td>Staging anon key</td>
+    <td>Prod anon key</td>
+  </tr>
+  <tr>
+    <td><code>SUPABASE_SERVICE_ROLE_KEY</code></td>
+    <td>Dev service key</td>
+    <td>Staging service key</td>
+    <td>Prod service key</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td>
+    <td><code>pk_test_...</code></td>
+    <td><code>pk_test_...</code></td>
+    <td><code>pk_live_...</code></td>
+  </tr>
+  <tr>
+    <td><code>STRIPE_SECRET_KEY</code></td>
+    <td><code>sk_test_...</code></td>
+    <td><code>sk_test_...</code></td>
+    <td><code>sk_live_...</code></td>
+  </tr>
+  <tr>
+    <td><code>STRIPE_WEBHOOK_SECRET</code></td>
+    <td>Local webhook secret</td>
+    <td>Staging webhook secret</td>
+    <td>Prod webhook secret</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_APP_URL</code></td>
+    <td><code>http://localhost:3000</code></td>
+    <td>(use VERCEL_URL)</td>
+    <td><code>https://yourdomain.com</code></td>
+  </tr>
+  <tr>
+    <td><code>ANTHROPIC_API_KEY</code></td>
+    <td><code>sk-ant-...</code></td>
+    <td><code>sk-ant-...</code></td>
+    <td><code>sk-ant-...</code></td>
+  </tr>
+</table>
+
+<h3>Handling Dynamic Preview URLs</h3>
+
+<p>Preview deployments have dynamic URLs. Handle this in your code:</p>
+
+<div class="code-block">// lib/config.ts
+export const getAppUrl = () => {
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return 'http://localhost:3000';
+};</div>
+
+<h3>Step 4: Configure Custom Domain (Production)</h3>
+
+<ol>
+  <li>Go to Project Settings &rarr; Domains</li>
+  <li>Add your custom domain (e.g., <code>yourdomain.com</code>)</li>
+  <li>Follow DNS configuration instructions (add CNAME or A record)</li>
+  <li>HTTPS is enabled automatically</li>
+</ol>
+
+<h2 id="section-19-5">19.5 Preview Deployments with Password Protection</h2>
+
+<p>Vercel automatically creates preview deployments for every push. These are useful for PR review and external tester feedback.</p>
+
+<h3>How Preview Deployments Work</h3>
+
+<ol>
+  <li>Push a branch or open a PR</li>
+  <li>Vercel automatically creates a preview deployment</li>
+  <li>URL format: <code>[project]-[branch]-[username].vercel.app</code> or <code>[project]-[hash].vercel.app</code></li>
+  <li>Preview uses environment variables scoped to "Preview"</li>
+  <li>Each push updates the same preview URL for that branch</li>
+</ol>
+
+<h3>Enable Password Protection</h3>
+
+<p>Password protection requires Vercel Pro ($20/mo) or Team plan.</p>
+
+<ol>
+  <li>Go to Project Settings &rarr; Deployment Protection</li>
+  <li>Enable "Password Protection" for Preview deployments</li>
+  <li>Set a password to share with testers</li>
+  <li>Optionally enable "Vercel Authentication" for team members</li>
+</ol>
+
+<div class="note">
+  <h4>When to Use Password Protection</h4>
+  <p>Password protection adds friction but ensures only intended testers access your preview. For development previews you don't share externally, you can skip this. Enable it when you need to share with clients, stakeholders, or external testers.</p>
+</div>
+
+<h3>Sharing Previews with Testers</h3>
+
+<div class="checklist">
+  <h4>Preview Sharing Workflow</h4>
+  <ul>
+    <li>Push your changes to a branch</li>
+    <li>Wait for Vercel deployment to complete (check GitHub status or Vercel dashboard)</li>
+    <li>Copy the preview URL from Vercel dashboard or GitHub PR comment</li>
+    <li>Share URL and password with tester</li>
+    <li>Direct tester to specific flows to test</li>
+    <li>Collect feedback (GitHub PR comments, Slack, email, etc.)</li>
+  </ul>
+</div>
+
+<h3>Preview Environment Data</h3>
+
+<div class="warning">
+  <h4>Preview Data Persists in Staging</h4>
+  <p>Preview deployments connect to your Staging Supabase project. Any data created during testing persists in Staging. Periodically reset Staging data if it becomes cluttered:</p>
+</div>
+
+<div class="code-block">-- Reset staging data (run in Supabase SQL Editor for Staging project ONLY)
+-- WARNING: Only run this on STAGING, never on production!
+
+TRUNCATE TABLE user_profiles CASCADE;
+TRUNCATE TABLE subscriptions CASCADE;
+-- Add other tables as needed</div>
+
+<h2 id="section-19-6">19.6 Stripe Environment Configuration</h2>
+
+<p>Stripe provides separate Test and Live modes. Use Test mode for development and staging; Live mode for production only.</p>
+
+<h3>Understanding Stripe Modes</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Mode</th>
+    <th>API Keys</th>
+    <th>When to Use</th>
+    <th>Real Charges?</th>
+  </tr>
+  <tr>
+    <td><strong>Test</strong></td>
+    <td><code>pk_test_*</code>, <code>sk_test_*</code></td>
+    <td>Local development, Preview/Staging</td>
+    <td>No (use test cards)</td>
+  </tr>
+  <tr>
+    <td><strong>Live</strong></td>
+    <td><code>pk_live_*</code>, <code>sk_live_*</code></td>
+    <td>Production only</td>
+    <td>Yes (real money)</td>
+  </tr>
+</table>
+
+<h3>Step 1: Configure Test Mode</h3>
+
+<ol>
+  <li>Go to Stripe Dashboard &rarr; Developers &rarr; API keys</li>
+  <li>Ensure you're in "Test mode" (toggle in top-right)</li>
+  <li>Copy Publishable key (<code>pk_test_...</code>)</li>
+  <li>Copy Secret key (<code>sk_test_...</code>)</li>
+</ol>
+
+<h3>Step 2: Create Test Products and Prices</h3>
+
+<p>In Stripe Test mode, create your subscription products:</p>
+
+<div class="file-structure">
+Product: [Your Product Name]
++-- Price: Monthly ($X/mo) -> price_1ABC...
++-- Price: Yearly ($Y/yr)  -> price_1XYZ...
+</div>
+
+<div class="note">
+  <h4>Test vs Live Products</h4>
+  <p>Test products are separate from Live products. You'll recreate them in Live mode before launch, or use Stripe's "Copy to live mode" feature.</p>
+</div>
+
+<h3>Step 3: Configure Webhooks</h3>
+
+<p>You need separate webhook endpoints for each environment:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Environment</th>
+    <th>Endpoint URL</th>
+    <th>How to Configure</th>
+  </tr>
+  <tr>
+    <td><strong>Local</strong></td>
+    <td>Via Stripe CLI forwarding</td>
+    <td>See command below</td>
+  </tr>
+  <tr>
+    <td><strong>Staging</strong></td>
+    <td><code>https://[staging-url]/api/webhooks/stripe</code></td>
+    <td>Stripe Dashboard (Test mode)</td>
+  </tr>
+  <tr>
+    <td><strong>Production</strong></td>
+    <td><code>https://[your-domain]/api/webhooks/stripe</code></td>
+    <td>Stripe Dashboard (Live mode)</td>
+  </tr>
+</table>
+
+<h4>Local Webhook Testing with Stripe CLI</h4>
+
+<div class="code-block"># Install Stripe CLI (macOS)
+brew install stripe/stripe-cli/stripe
+
+# Login to Stripe
+stripe login
+
+# Forward webhooks to local server
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+
+# This outputs a webhook signing secret (whsec_...)
+# Use this value for STRIPE_WEBHOOK_SECRET in .env.local</div>
+
+<h4>Creating Webhook Endpoints in Stripe Dashboard</h4>
+
+<p><strong>For Staging (Test mode):</strong></p>
+<ol>
+  <li>Go to Developers &rarr; Webhooks &rarr; Add endpoint</li>
+  <li>URL: Your Vercel preview URL + <code>/api/webhooks/stripe</code></li>
+  <li>Select events: <code>checkout.session.completed</code>, <code>customer.subscription.created</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code>, <code>invoice.payment_failed</code></li>
+  <li>Copy the signing secret &rarr; Add to Vercel Preview env as <code>STRIPE_WEBHOOK_SECRET</code></li>
+</ol>
+
+<p><strong>For Production (Live mode):</strong></p>
+<ol>
+  <li>Switch to Live mode in Stripe Dashboard</li>
+  <li>Go to Developers &rarr; Webhooks &rarr; Add endpoint</li>
+  <li>URL: Your production domain + <code>/api/webhooks/stripe</code></li>
+  <li>Select the same events as staging</li>
+  <li>Copy the signing secret &rarr; Add to Vercel Production env as <code>STRIPE_WEBHOOK_SECRET</code></li>
+</ol>
+
+<h3>Step 4: Launch Checklist for Stripe</h3>
+
+<div class="checklist">
+  <h4>Before Going Live with Payments</h4>
+  <ul>
+    <li>Create products/prices in Live mode (or copy from Test)</li>
+    <li>Update Production environment variables with live keys</li>
+    <li>Create production webhook endpoint in Live mode</li>
+    <li>Update <code>STRIPE_WEBHOOK_SECRET</code> in Production env</li>
+    <li>Test one real transaction before full launch</li>
+    <li>Configure Stripe Tax if applicable</li>
+    <li>Set up payout schedule and bank account</li>
+  </ul>
+</div>
+
+<h2 id="section-19-7">19.7 Database Migration Workflow</h2>
+
+<p>Migrations are version-controlled SQL files that evolve your database schema. Create migrations in development, test in staging, then apply to production.</p>
+
+<h3>Setting Up Supabase CLI for Migrations</h3>
+
+<div class="code-block"># Initialize Supabase in your project (if not done)
+supabase init
+
+# Link to your Development project
+supabase link --project-ref [your-dev-project-ref]
+# Project ref is found in: supabase.com/dashboard/project/[ref]</div>
+
+<p>This creates a <code>supabase/</code> directory:</p>
+
+<div class="file-structure">
+supabase/
++-- config.toml
++-- migrations/
+|   +-- (migration files go here)
++-- seed.sql (optional)
+</div>
+
+<h3>Creating a New Migration</h3>
+
+<div class="code-block"># Create a new migration file
+supabase migration new add_user_profiles_table
+
+# This creates: supabase/migrations/[timestamp]_add_user_profiles_table.sql</div>
+
+<p>Edit the migration file with your SQL:</p>
+
+<div class="code-block">-- supabase/migrations/20240115120000_add_user_profiles_table.sql
+
+CREATE TABLE user_profiles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  full_name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS (REQUIRED)
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies
+CREATE POLICY "Users can view own profile" ON user_profiles
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own profile" ON user_profiles
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own profile" ON user_profiles
+  FOR INSERT WITH CHECK (auth.uid() = user_id);</div>
+
+<h3>Applying Migrations</h3>
+
+<h4>To Development (remote)</h4>
+
+<div class="code-block">supabase db push
+# Applies all pending migrations to your linked (Dev) project</div>
+
+<h4>To Staging</h4>
+
+<p><strong>Option 1: Link temporarily via CLI</strong></p>
+
+<div class="code-block">supabase link --project-ref [your-staging-project-ref]
+supabase db push
+supabase link --project-ref [your-dev-project-ref]  # Re-link to dev</div>
+
+<p><strong>Option 2: Use Supabase Dashboard</strong></p>
+<ol>
+  <li>Go to Staging project &rarr; SQL Editor</li>
+  <li>Copy migration SQL and run manually</li>
+  <li>Verify tables created correctly</li>
+</ol>
+
+<h4>To Production</h4>
+
+<div class="warning">
+  <h4>Production Migration Safety</h4>
+  <p>Production migrations require extra care. Always create a backup first. Review the migration SQL carefully before applying.</p>
+</div>
+
+<div class="code-block"># Create a backup first (Supabase Pro feature)
+# Go to Project Settings -> Database -> Backups -> Create backup
+
+# Option 1: Via CLI (link temporarily)
+supabase link --project-ref [your-prod-project-ref]
+supabase db push
+supabase link --project-ref [your-dev-project-ref]  # Re-link to dev
+
+# Option 2: Via Dashboard (recommended for production)
+# Copy migration SQL, review carefully, run in SQL Editor</div>
+
+<h3>Migration Best Practices</h3>
+
+<div class="checklist">
+  <h4>Migration Checklist</h4>
+  <ul>
+    <li>Each migration should be atomic (one logical change)</li>
+    <li>Consider rollback strategy for each migration</li>
+    <li>Always enable RLS on new tables</li>
+    <li>Test migration on Dev before Staging</li>
+    <li>Test migration on Staging before Production</li>
+    <li>Create production backup before applying</li>
+    <li>Commit migration files to version control</li>
+  </ul>
+</div>
+
+<h3>Handling Schema Drift</h3>
+
+<p>If someone makes direct changes via Supabase Dashboard:</p>
+
+<div class="code-block"># Pull remote schema changes to local migration
+supabase db pull
+
+# This creates a migration file with the differences
+# Review and commit to version control</div>
+
+<div class="note">
+  <h4>Prefer Migrations Over Dashboard Edits</h4>
+  <p>Direct Dashboard edits create schema drift that's hard to track. Prefer using migrations for all schema changes so they're version controlled and reproducible across environments.</p>
+</div>
+
+<h2 id="section-19-8">19.8 Troubleshooting Common Issues</h2>
+
+<h3>Issue: "Invalid API key" errors</h3>
+<ul>
+  <li><strong>Cause:</strong> Wrong Supabase environment variables</li>
+  <li><strong>Fix:</strong> Verify you're using the correct project's keys for each environment</li>
+  <li><strong>Check:</strong> Ensure <code>NEXT_PUBLIC_SUPABASE_URL</code> matches the expected project</li>
+</ul>
+
+<h3>Issue: Auth redirects to wrong URL</h3>
+<ul>
+  <li><strong>Cause:</strong> Site URL not configured in Supabase Auth settings</li>
+  <li><strong>Fix:</strong> Add the deployment URL to Supabase &rarr; Authentication &rarr; URL Configuration &rarr; Redirect URLs</li>
+  <li><strong>For Preview:</strong> Add wildcard pattern <code>https://*-[your-vercel-username].vercel.app/**</code></li>
+</ul>
+
+<h3>Issue: RLS blocking all queries</h3>
+<ul>
+  <li><strong>Cause:</strong> Missing or incorrect RLS policies</li>
+  <li><strong>Fix:</strong> Check policies in Supabase &rarr; Authentication &rarr; Policies</li>
+  <li><strong>Debug:</strong> Temporarily use service role key (server-side only) to verify data exists</li>
+</ul>
+
+<h3>Issue: Stripe webhooks failing</h3>
+<ul>
+  <li><strong>Cause:</strong> Wrong webhook secret or URL</li>
+  <li><strong>Fix:</strong> Verify <code>STRIPE_WEBHOOK_SECRET</code> matches the endpoint's signing secret</li>
+  <li><strong>Debug:</strong> Check Stripe Dashboard &rarr; Webhooks &rarr; Recent events for error details</li>
+</ul>
+
+<h3>Issue: Environment variables not updating</h3>
+<ul>
+  <li><strong>Cause:</strong> Vercel caches environment variables per deployment</li>
+  <li><strong>Fix:</strong> Trigger a new deployment after changing env vars</li>
+  <li><strong>Quick fix:</strong> Vercel Dashboard &rarr; Deployments &rarr; Redeploy</li>
+</ul>
+
+<h3>Issue: Preview deployment can't connect to Staging Supabase</h3>
+<ul>
+  <li><strong>Cause:</strong> Preview environment variables pointing to wrong project</li>
+  <li><strong>Fix:</strong> Ensure Preview-scoped variables point to Staging Supabase project URL and keys</li>
+</ul>
+
+<h3>Issue: Local development connecting to wrong database</h3>
+<ul>
+  <li><strong>Cause:</strong> Stale <code>.env.local</code> file</li>
+  <li><strong>Fix:</strong> Re-run <code>vercel env pull .env.local</code> to get latest Development variables</li>
+</ul>
+
+<h2 id="section-19-9">19.9 Environment Setup Checklist</h2>
+
+<p>Use this comprehensive checklist to verify your multi-environment setup is complete.</p>
+
+<div class="checklist">
+  <h4>Supabase Setup</h4>
+  <ul>
+    <li>Development project created</li>
+    <li>Staging project created</li>
+    <li>Production project created</li>
+    <li>Auth URL Configuration set for each project</li>
+    <li>Auth providers enabled for each project</li>
+    <li>RLS enabled on all tables in all projects</li>
+    <li>All credentials recorded securely (not in repo)</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Vercel Setup</h4>
+  <ul>
+    <li>Project imported from GitHub</li>
+    <li>Development environment variables added (all required vars)</li>
+    <li>Preview environment variables added (pointing to Staging)</li>
+    <li>Production environment variables added (pointing to Prod)</li>
+    <li>Custom domain configured (production)</li>
+    <li>Password protection enabled for previews (optional)</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Stripe Setup</h4>
+  <ul>
+    <li>Test mode products and prices created</li>
+    <li>Test API keys added to Development and Preview env</li>
+    <li>Stripe CLI installed and working locally</li>
+    <li>Local webhook forwarding working (<code>stripe listen</code>)</li>
+    <li>Staging webhook endpoint created in Stripe Dashboard</li>
+    <li>Production webhook endpoint created (Live mode) - when launching</li>
+    <li>Live API keys added to Production env - when launching</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Local Development</h4>
+  <ul>
+    <li>Repository cloned</li>
+    <li>Dependencies installed (<code>npm install</code>)</li>
+    <li>Vercel CLI linked (<code>vercel link</code>)</li>
+    <li>Environment variables pulled (<code>vercel env pull .env.local</code>)</li>
+    <li>Dev server runs without errors (<code>npm run dev</code>)</li>
+    <li>Can authenticate via the app (sign up/sign in works)</li>
+    <li>Can read/write to database</li>
+    <li>Stripe checkout works in test mode</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Migrations</h4>
+  <ul>
+    <li>Supabase CLI installed</li>
+    <li>Supabase CLI linked to Development project</li>
+    <li><code>supabase/</code> directory initialized</li>
+    <li>Initial migration created and applied to Dev</li>
+    <li>Migration applied to Staging</li>
+    <li>Migration applied to Production - when launching</li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Environment Setup Complete</h4>
+  <p>Once all checklists are complete, your multi-environment setup is ready. You can develop locally against Development, share preview URLs with testers (connecting to Staging), and deploy to Production with confidence.</p>
+</div>
+
+<hr class="divider">
+
+<!-- PART IV-B: BUILD CONTRACT -->
+<div class="part-header moai" id="build-contract">
+  <h2>PART IV-B: BUILD CONTRACT <span class="new-badge">NEW IN v3.0</span></h2>
+  <p style="color: var(--muted); margin-top: 0.5rem;">Bridging Design to Implementation</p>
+</div>
+
+<h1 id="chapter-20">Chapter 20: Build Contract Introduction</h1>
+
+<p>The Build Contract is a bridge document that compresses your design artifacts (Design Brief, UX Package, UI System, Architecture) into a structured reference optimized for implementation.</p>
+
+<div class="moai-box">
+  <h4>Why Build Contract?</h4>
+  <p>Design artifacts are optimized for exploration. But during implementation, you need quick reference to decisions made. The Build Contract extracts the "what" and organizes it for implementation lookup. SPECs reference Build Contract sections rather than hunting through multiple design documents.</p>
+</div>
+
+<table class="comparison-table">
+  <tr><th>Without Build Contract</th><th>With Build Contract</th></tr>
+  <tr><td>SPECs reference multiple documents</td><td>SPECs reference single source</td></tr>
+  <tr><td>~15-20K tokens for design context</td><td>~2-5K tokens for relevant sections</td></tr>
+  <tr><td>Inconsistent terminology possible</td><td>Single canonical vocabulary</td></tr>
+</table>
+
+<h1 id="chapter-21">Chapter 21: Build Contract Structure</h1>
+
+<p>Every Build Contract contains seven standard sections:</p>
+<ol>
+  <li><strong>Vocabulary</strong>: Canonical terms used throughout the product</li>
+  <li><strong>User Model</strong>: User types, permissions, authentication, core flows</li>
+  <li><strong>Screen Inventory</strong>: Complete list of screens with routes</li>
+  <li><strong>Component Specifications</strong>: Key component behaviors and states</li>
+  <li><strong>Data Model</strong>: Database entities, columns, types, constraints</li>
+  <li><strong>API Surface</strong>: All API routes with methods and auth requirements</li>
+  <li><strong>Quality Standards</strong>: Code structure, security, testing requirements</li>
+</ol>
+
+<h1 id="chapter-22">Chapter 22: Generating the Build Contract</h1>
+
+<div class="prompt-block">I need you to generate a Build Contract from my design artifacts.
+
+Please analyze the attached design artifacts and create a Build Contract with these sections:
+
+1. **Vocabulary**: Extract all canonical terms from the Design Brief.
+   Format as table: | Term | Definition | Usage Context |
+
+2. **User Model**: Extract user types, auth, and flows from UX Package.
+
+3. **Screen Inventory**: Extract all screens with routes from UI System.
+   Format as table: | Screen | Route | Purpose | Key Components |
+
+4. **Component Specifications**: Extract key component behaviors from UI System.
+
+5. **Data Model**: Extract entities and relationships from Architecture.
+   Format as table: | Table | Columns | Constraints | RLS Policy |
+
+6. **API Surface**: Extract all API routes from Architecture.
+   Format as table: | Route | Method | Purpose | Auth Required |
+
+7. **Quality Standards**: Compile standards from all documents.
+
+[Attach: Design Brief, UX Package, UI System, Architecture Document]</div>
+
+<hr class="divider">
+
+<!-- PART IV-C: DEVELOPMENT ENVIRONMENT SETUP -->
+<div class="part-header moai" id="dev-setup">
+  <h2>PART IV-C: DEVELOPMENT ENVIRONMENT SETUP <span class="new-badge">NEW IN v3.0</span></h2>
+  <p style="color: var(--muted); margin-top: 0.5rem;">Transitioning from Planning to Implementation</p>
+</div>
+
+<h1 id="chapter-23">Chapter 23: The Critical Transition</h1>
+
+<p>You've completed all planning artifacts: Design Brief, UX Package, UI System, Architecture Document, and Build Contract. <strong>Now you're transitioning from exploration to implementation.</strong> This is the most important setup moment in the entire project.</p>
+
+<div class="warning">
+  <h4>Tool Transition Point</h4>
+  <p>Everything before this point was done in <strong>Claude Chat</strong> (web interface) &mdash; it's optimized for exploration, iteration, and document generation.</p>
+  <p>Everything after this point will be done in <strong>Claude Code</strong> (CLI tool) &mdash; it's optimized for implementation, file editing, and test execution.</p>
+  <p><strong>Do not skip this setup.</strong> Without proper environment configuration, Claude Code won't have the context it needs to implement your design correctly.</p>
+</div>
+
+<div class="note">
+  <strong>See Also:</strong> <a href="claude-code-integration.html">Claude Code Integration Timeline</a> &mdash; A visual guide showing exactly when each Claude Code setup activity happens across all phases of the methodology.
+</div>
+
+<h2>23.1 What You Should Have Ready</h2>
+
+<p>Before proceeding, confirm you have these artifacts from your Claude Chat sessions:</p>
+
+<div class="checklist">
+  <h4>Pre-Implementation Checklist</h4>
+  <ul>
+    <li><strong>Design Brief</strong> with Vocabulary section defining canonical terms</li>
+    <li><strong>UX Package</strong> with user flows and screen descriptions</li>
+    <li><strong>UI System</strong> with component specifications and visual direction</li>
+    <li><strong>Architecture Document</strong> with database schema and API design</li>
+    <li><strong>Build Contract</strong> (generated from the above artifacts)</li>
+  </ul>
+</div>
+
+<p>If any of these are missing or incomplete, go back to the relevant chapter and complete them. The Build Phase assumes all design decisions have been made.</p>
+
+<h1 id="chapter-23-2">Chapter 23.2: Project Repository Setup</h1>
+
+<h2>Step 1: Create the Project</h2>
+
+<p>Open your terminal and create a new Next.js project with the recommended stack:</p>
+
+<div class="code-block">npx create-next-app@latest my-saas-project --typescript --tailwind --eslint --app --src-dir
+cd my-saas-project</div>
+
+<p>When prompted, accept the defaults. This gives you Next.js 14+ with App Router, TypeScript, Tailwind CSS, and ESLint &mdash; the stack recommended throughout this handbook.</p>
+
+<h2>Step 2: Initialize Git</h2>
+
+<div class="code-block">git init
+git add .
+git commit -m "Initial Next.js project setup"</div>
+
+<h1 id="chapter-23-3">Chapter 23.3: The CLAUDE.md File</h1>
+
+<p>The CLAUDE.md file is Claude Code's primary context file. It tells Claude about your project's architecture, conventions, and quality standards. <strong>Without this file, every Claude Code session starts from scratch with no project knowledge.</strong></p>
+
+<h2>Why CLAUDE.md Matters</h2>
+
+<table class="comparison-table">
+  <tr><th>Without CLAUDE.md</th><th>With CLAUDE.md</th></tr>
+  <tr><td>Claude guesses at conventions</td><td>Claude follows your established patterns</td></tr>
+  <tr><td>You repeat context every session</td><td>Context persists across sessions</td></tr>
+  <tr><td>Inconsistent code style</td><td>Consistent with your standards</td></tr>
+  <tr><td>No awareness of your architecture</td><td>Knows your stack, schema, API patterns</td></tr>
+</table>
+
+<h2>CLAUDE.md Template</h2>
+
+<p>Create this file at the root of your project:</p>
+
+<div class="code-block"># CLAUDE.md
+
+## Project Overview
+[PROJECT_NAME] is a [brief description]. Built with Next.js 14+, Supabase, and Claude API.
+
+## Technology Stack
+- **Framework**: Next.js 14+ with App Router
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **Auth**: Supabase Auth
+- **AI**: Claude API (Anthropic)
+- **Payments**: Stripe
+- **Hosting**: Vercel
+
+## Project Structure
+```
+src/
+├── app/                 # Next.js App Router pages
+│   ├── (auth)/         # Auth-required routes
+│   ├── (public)/       # Public routes
+│   └── api/            # API routes
+├── components/         # React components
+│   ├── ui/            # Base UI components
+│   └── features/      # Feature-specific components
+├── lib/               # Utilities and helpers
+│   ├── supabase/     # Supabase client and helpers
+│   ├── stripe/       # Stripe integration
+│   └── utils/        # General utilities
+└── types/            # TypeScript type definitions
+```
+
+## Code Standards
+- Functions: Max 30 lines
+- Files: Max 200 lines
+- Nesting: Max 3 levels deep
+- All functions must have explicit return types
+- Use Zod for runtime validation
+- Handle all errors explicitly (no silent catches)
+
+## Database Conventions
+- Table names: snake_case, plural (e.g., `user_profiles`)
+- Column names: snake_case (e.g., `created_at`)
+- All tables have: `id` (uuid), `created_at`, `updated_at`
+- RLS policies required on all tables
+
+## API Conventions
+- Routes in `src/app/api/`
+- Use route handlers (not pages)
+- Always validate input with Zod
+- Return consistent JSON: `{ data, error }`
+
+## Key Commands
+- `npm run dev` - Start development server
+- `npm run build` - Production build
+- `npm run test` - Run tests
+- `npm run lint` - Run ESLint
+- `npm run type-check` - TypeScript check
+
+## Current Sprint Focus
+[Update this as you progress through milestones]
+- Currently working on: M1 - Project Setup
+- Next milestone: M2 - Design System
+
+## Reference Documents
+- Build Contract: `docs/build-contract.md`
+- Architecture: `docs/architecture.md`
+- SPECs: `docs/specs/`
+</div>
+
+<div class="note">
+  <strong>Keep CLAUDE.md Updated:</strong> As your project evolves, update this file. Add new patterns you establish, document decisions, and update the "Current Sprint Focus" section when you change milestones.
+</div>
+
+<h1 id="chapter-23-4">Chapter 23.4: Documentation Folder Structure</h1>
+
+<p>Create a docs folder to house your design artifacts and SPECs. This keeps implementation-relevant documents where Claude Code can access them:</p>
+
+<div class="code-block">mkdir -p docs/specs</div>
+
+<h2>Place Your Artifacts</h2>
+
+<p>Copy your design artifacts into the docs folder. You can use markdown exports or keep the key sections:</p>
+
+<div class="file-structure">
+docs/
+├── build-contract.md      # The bridge document (REQUIRED)
+├── architecture.md        # Technical architecture reference
+├── design-brief.md        # Vocabulary and product vision (optional)
+├── ux-summary.md          # Key user flows (optional)
+└── specs/                 # SPEC documents go here
+    └── (empty for now)
+
+project-root/
+├── CLAUDE.md              # AI context (REQUIRED)
+├── TECH-DEBT.md           # Technical debt tracking (RECOMMENDED)
+└── ...
+</div>
+
+<div class="note">
+  <strong>TECH-DEBT.md:</strong> Create this file at project root to track technical debt throughout development. Use the template from <a href="handbook-v3-part3-build.html#chapter-27">Chapter 27</a> or the templates/ folder. Update at each checkpoint with debt scores and active debt items.
+</div>
+
+<div class="moai-box">
+  <h4>Why Build Contract in docs/?</h4>
+  <p>SPECs reference the Build Contract: "See Build Contract Section 2.1 for User Model." If the Build Contract isn't in your project filesystem, Claude Code can't look up these references. Place it in docs/ so references work correctly.</p>
+</div>
+
+<h1 id="chapter-23-5">Chapter 23.5: Initial Commit</h1>
+
+<p>With your structure in place, create a foundation commit:</p>
+
+<div class="code-block">git add .
+git commit -m "Add CLAUDE.md, TECH-DEBT.md, and documentation structure
+
+- CLAUDE.md with project context and standards
+- TECH-DEBT.md for technical debt tracking
+- docs/ folder with Build Contract
+- Ready for Milestone 1"</div>
+
+<h1 id="chapter-23-6">Chapter 23.6: Claude Code Configuration</h1>
+
+<p>Before starting implementation, configure Claude Code for optimal development workflow:</p>
+
+<h2>Install Claude Code</h2>
+
+<div class="code-block">npm install -g @anthropic-ai/claude-code</div>
+
+<h2>Verify Installation</h2>
+
+<div class="code-block">claude --version</div>
+
+<h2>Key Configuration Options</h2>
+
+<p>Claude Code reads your CLAUDE.md automatically. For large projects, you may also want to configure:</p>
+
+<table class="comparison-table">
+  <tr><th>Setting</th><th>Purpose</th><th>Recommendation</th></tr>
+  <tr><td>Auto-compact</td><td>Automatically compresses context when full</td><td>Enable for long sessions</td></tr>
+  <tr><td>Token warnings</td><td>Warns when approaching context limits</td><td>Enable</td></tr>
+  <tr><td>File exclusions</td><td>Ignores node_modules, .git, etc.</td><td>Use defaults</td></tr>
+</table>
+
+<h1 id="chapter-23-7">Chapter 23.7: Verification Checklist</h1>
+
+<p>Before starting Milestone 1, verify your environment is ready:</p>
+
+<div class="checklist">
+  <h4>Environment Ready Checklist</h4>
+  <ul>
+    <li><strong>Project created</strong>: Next.js app with TypeScript, Tailwind, App Router</li>
+    <li><strong>Git initialized</strong>: At least one commit with clean working tree</li>
+    <li><strong>CLAUDE.md exists</strong>: At project root with your project details filled in</li>
+    <li><strong>TECH-DEBT.md exists</strong>: At project root for tracking technical debt (see <a href="handbook-v3-part3-build.html#chapter-27">Chapter 27</a>)</li>
+    <li><strong>docs/ folder exists</strong>: Contains build-contract.md at minimum</li>
+    <li><strong>docs/specs/ folder exists</strong>: Empty, ready for SPECs</li>
+    <li><strong>Claude Code installed</strong>: `claude --version` returns version number</li>
+    <li><strong>Test Claude Code</strong>: Run `claude "Read CLAUDE.md and summarize the project"` &mdash; it should correctly describe your project</li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Ready for Build Phase</h4>
+  <p>If all items are checked, you're ready to begin Milestone 1. Open your terminal in the project directory and start Claude Code. Your first task will be writing SPEC-SETUP-001 for project initialization.</p>
+</div>
+
+<h2>Quick Reference: Tool Usage by Phase</h2>
+
+<table class="comparison-table">
+  <tr><th>Phase</th><th>Primary Tool</th><th>What You're Doing</th></tr>
+  <tr><td>Parts I-III (Research, Design)</td><td>Claude Chat</td><td>Exploration, document generation, iteration</td></tr>
+  <tr><td>Part IV (Architecture)</td><td>Claude Chat</td><td>Technical design, schema planning</td></tr>
+  <tr><td>Part IV-B (Build Contract)</td><td>Claude Chat</td><td>Compressing design into implementation reference</td></tr>
+  <tr style="background: var(--warning-bg);"><td><strong>Part IV-C (Environment Setup)</strong></td><td><strong>Terminal + Claude Code</strong></td><td><strong>Repository creation, CLAUDE.md, folder structure</strong></td></tr>
+  <tr><td>Part V (Build Phase)</td><td>Claude Code</td><td>SPEC writing, TDD implementation, coding</td></tr>
+  <tr><td>Part VI (Launch)</td><td>Claude Code + Terminal</td><td>Deployment, monitoring setup</td></tr>
+</table>
+
+<p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.5rem;">For a detailed visual timeline of when each Claude Code activity occurs, see the <a href="claude-code-integration.html">Claude Code Integration Timeline</a>.</p>
+
+<hr class="divider">
+
+<!-- PART NAVIGATION -->
+<div class="part-nav">
+  <a href="handbook-v3-part1-strategy.html">&larr; Part 1: Strategy & Design</a>
+  <a href="handbook-v3-part3-build.html">Part 3: Build & Launch &rarr;</a>
+</div>
+
+<!-- FOOTER -->
+<div style="text-align: center; color: var(--muted); margin-top: 3rem; padding: 2rem 0; border-top: 1px solid var(--border);">
+  <p>
+    <strong>AI SaaS Handbook v3.0 - Part 2: Architecture & Setup</strong><br>
+    Parts IV, IV-B, IV-C: Technical Foundation, Build Contract, Environment Setup
+  </p>
+  <p style="margin-top: 1rem;">
+    <a href="handbook-v3-part1-strategy.html" style="color: var(--secondary);">Part 1: Strategy & Design</a> |
+    <a href="handbook-v3-part3-build.html" style="color: var(--secondary);">Part 3: Build & Launch</a> |
+    <a href="index.html" style="color: var(--secondary);">Documentation Home</a>
+  </p>
+</div>
+
+</body>
+</html>
