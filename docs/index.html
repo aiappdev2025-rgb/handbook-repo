@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SaaS Handbook - Complete Documentation v3.0</title>
+  <style>
+    :root {
+      --primary: #1a365d;
+      --secondary: #2c5282;
+      --accent: #2d3748;
+      --text: #1a202c;
+      --muted: #718096;
+      --bg: #ffffff;
+      --surface: #f7fafc;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --moai: #7c3aed;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      min-height: 100vh;
+    }
+    
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    
+    .hero .subtitle {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+    
+    .hero .version {
+      background: rgba(255,255,255,0.2);
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+    
+    .hero .new-badge {
+      background: var(--moai);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    
+    .section-title {
+      color: var(--primary);
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid var(--primary);
+    }
+    
+    .documents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .doc-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 2px solid transparent;
+    }
+    
+    .doc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    
+    .doc-card.hub {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+    }
+    
+    .doc-card.build { border-color: var(--success); }
+    .doc-card.workflow { border-color: var(--moai); }
+    .doc-card.nav { border-color: #8b5cf6; }
+    
+    .doc-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    
+    .doc-card h2 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+    }
+    
+    .badge {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    
+    .badge-hub { background: var(--primary); color: white; }
+    .badge-companion { background: var(--success); color: white; }
+    .badge-new { background: var(--moai); color: white; }
+    
+    .doc-card p {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    
+    .doc-card ul {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+    
+    .doc-card li {
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+    
+    .doc-card li::before {
+      content: ">";
+      position: absolute;
+      left: 0;
+      color: var(--secondary);
+      font-weight: bold;
+    }
+    
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+      font-size: 0.95rem;
+    }
+    
+    .doc-link:hover { background: var(--secondary); }
+    
+    .flow-section {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .flow-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.75rem;
+      overflow-x: auto;
+      line-height: 1.4;
+    }
+    
+    .flow-diagram pre {
+      margin: 0;
+      white-space: pre;
+    }
+    
+    .quick-ref {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .quick-ref-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .quick-ref-item strong {
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+    
+    .quick-ref-item a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 600;
+      white-space: nowrap;
+      font-size: 0.85rem;
+    }
+    
+    .quick-ref-item a:hover { text-decoration: underline; }
+    
+    .whats-new {
+      background: linear-gradient(135deg, #f3e8ff 0%, #ede9fe 100%);
+      border: 2px solid var(--moai);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .whats-new h2 {
+      color: var(--moai);
+      margin-bottom: 1rem;
+    }
+    
+    .whats-new ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .whats-new li {
+      padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+      position: relative;
+    }
+    
+    .whats-new li::before {
+      content: "★";
+      position: absolute;
+      left: 0;
+      color: var(--moai);
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: white;
+    }
+    
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .documents-grid { grid-template-columns: 1fr; }
+      .flow-diagram { font-size: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>AI SaaS Handbook</h1>
+  <p class="subtitle">A Complete Methodology for Building Production-Quality SaaS Products with AI-Assisted Development</p>
+  <span class="version">Documentation System v3.0 <span class="new-badge">MOAI Integration</span></span>
+</div>
+
+<div class="container">
+  
+  <div class="whats-new">
+    <h2>What's New in v3.0</h2>
+    <ul>
+      <li><strong>MOAI-ADK Integration</strong> - SPEC-first development with TDD enforcement</li>
+      <li><strong>Build Contract</strong> - Bridge artifact between Design and Implementation</li>
+      <li><strong>File Control System</strong> - Structured approach to artifact management</li>
+      <li><strong>Quality Gate Automation</strong> - Automated checks at every milestone</li>
+      <li><strong>EARS Requirements</strong> - Structured requirement syntax for clarity</li>
+      <li><strong>Workflow Guide</strong> - Context management and Claude Code patterns</li>
+    </ul>
+  </div>
+  
+  <h2 class="section-title">Documentation Library</h2>
+  
+  <div class="documents-grid">
+    
+    <div class="doc-card hub">
+      <span class="icon">📘</span>
+      <h2>AI SaaS Handbook v3.0 <span class="badge badge-hub">HUB</span></h2>
+      <p>The strategic hub containing methodology, Build Contract, MOAI integration, quality standards, infrastructure setup, and navigation to companion guides.</p>
+      <ul>
+        <li>Research and Opportunity Assessment</li>
+        <li>Business Planning and Design Brief</li>
+        <li>UX/UI Design Excellence</li>
+        <li>Solution Architecture</li>
+        <li>Build Contract (Design → Implementation)</li>
+        <li>Infrastructure Setup (GitHub, Supabase, Vercel)</li>
+        <li>Multi-Environment Configuration</li>
+        <li>MOAI-ADK Integration Overview</li>
+        <li>QA and Launch Checklist</li>
+      </ul>
+      <a href="handbook-v3.html" class="doc-link">Open Handbook →</a>
+    </div>
+    
+    <div class="doc-card build">
+      <span class="icon">🔧</span>
+      <h2>Build Phase Guide v3 <span class="badge badge-companion">COMPANION</span></h2>
+      <p>Tactical execution guide with SPEC templates, TDD prompts, and copy-paste instructions for every build milestone. Step-by-step for Claude Code CLI.</p>
+      <ul>
+        <li>SPEC Templates and Examples</li>
+        <li>TDD Workflow (RED-GREEN-REFACTOR)</li>
+        <li>11 Build Milestones with Quality Gates</li>
+        <li>Admin Console Implementation</li>
+        <li>Payments Integration (Stripe)</li>
+        <li>Code Review and Refactoring Prompts</li>
+      </ul>
+      <a href="build-guide-v3.html" class="doc-link" style="background: #059669;">Open Build Guide →</a>
+    </div>
+    
+    <div class="doc-card workflow">
+      <span class="icon">🔄</span>
+      <h2>Workflow Guide v1 <span class="badge badge-new">NEW</span></h2>
+      <p>Context management, agentic patterns, and efficient development with Claude Code. How to manage large projects across multiple sessions.</p>
+      <ul>
+        <li>Context Window Mental Model</li>
+        <li>CLAUDE.md and Documentation Structure</li>
+        <li>Task Decomposition Methodology</li>
+        <li>Session Rhythm and /clear Tactics</li>
+        <li>MCP Tools and Memory Persistence</li>
+        <li>Git Workflow and Milestone Integration</li>
+      </ul>
+      <a href="workflow-guide-v1.html" class="doc-link" style="background: #7c3aed;">Open Workflow Guide →</a>
+    </div>
+    
+    <div class="doc-card nav">
+      <span class="icon">🗺️</span>
+      <h2>Navigation Guide <span class="badge badge-companion">REFERENCE</span></h2>
+      <p>Quick reference for navigating the documentation system. Find exactly what you need, when you need it.</p>
+      <ul>
+        <li>Document Overview and Purpose</li>
+        <li>Project Lifecycle Flow</li>
+        <li>"I need to..." Quick Reference</li>
+        <li>Prerequisites by Document</li>
+        <li>Version Information</li>
+      </ul>
+      <a href="navigation-guide.html" class="doc-link" style="background: #6366f1;">Open Navigation Guide →</a>
+    </div>
+    
+  </div>
+  
+  <div class="flow-section">
+    <h2 class="section-title">Project Lifecycle with MOAI Integration</h2>
+    <div class="flow-diagram">
+<pre>
++--------------------------------------------------------------------------------------+
+|                           PROJECT LIFECYCLE v3.0                                      |
++--------------------------------------------------------------------------------------+
+|                                                                                       |
+|  PHASE 1: PLANNING & DESIGN                              [HANDBOOK v3.0]              |
+|  |-- Research & Opportunity Assessment                   |                            |
+|  |-- Business One-Pager                                  |  Parts I-III               |
+|  |-- Design Brief                                        |                            |
+|  |-- UX Package & Validation                             |                            |
+|  +-- UI System                                           |                            |
+|                                                          v                            |
+|  PHASE 2: TECHNICAL FOUNDATION                           [HANDBOOK v3.0]              |
+|  |-- Solution Architecture                               |                            |
+|  |-- Infrastructure Setup (GitHub, Supabase, Vercel)     |  Part IV                   |
+|  +-- Multi-Environment Configuration                     |                            |
+|                                                          v                            |
+|  PHASE 2B: BUILD CONTRACT  [NEW IN v3.0]                 [HANDBOOK v3.0]              |
+|  +-- Generate Build Contract from Design Artifacts       |  Part IV-B                 |
+|                                                          v                            |
+|  PHASE 3: BUILD WITH MOAI                                [BUILD GUIDE v3]             |
+|  |-- SPEC-First Development                              |  + [WORKFLOW GUIDE]        |
+|  |-- TDD Cycle (RED-GREEN-REFACTOR)                      |                            |
+|  |-- Milestones 1-6 (Setup --> Core Feature)             |  Follow SPEC               |
+|  |-- Milestone 7 (Admin Console)                         |  by SPEC                   |
+|  |-- Milestones 8-11 (Features --> Testing)              |                            |
+|  +-- Quality Gates & Checkpoints                         |                            |
+|                                                          v                            |
+|  PHASE 4: MARKETING & LAUNCH                             [HANDBOOK v3.0]              |
+|  +-- QA Checklist & Launch                               |  Part VI                   |
+|                                                                                       |
++--------------------------------------------------------------------------------------+
+</pre>
+    </div>
+  </div>
+  
+  <div class="flow-section">
+    <h2 class="section-title">Quick Reference: "I need to..."</h2>
+    <div class="quick-ref">
+      <div class="quick-ref-item">
+        <strong>Understand the methodology</strong>
+        <a href="handbook-v3.html#part-1">Handbook Part I →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Create a design brief</strong>
+        <a href="handbook-v3.html#stage-2">Handbook Stage 2.0 →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Design the UX flows</strong>
+        <a href="handbook-v3.html#stage-3">Handbook Stage 3.0 →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Generate a Build Contract</strong>
+        <a href="handbook-v3.html#build-contract">Handbook Part IV-B →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Set up environments</strong>
+        <a href="handbook-v3.html#chapter-19">Handbook Ch 19 →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Write a SPEC document</strong>
+        <a href="build-guide-v3.html#spec-template">Build Guide SPECs →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Build authentication</strong>
+        <a href="build-guide-v3.html#milestone-5">Build Guide M5 →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Build the admin console</strong>
+        <a href="build-guide-v3.html#milestone-7">Build Guide M7 →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Integrate Stripe payments</strong>
+        <a href="build-guide-v3.html#milestone-9">Build Guide M9 →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Manage context efficiently</strong>
+        <a href="workflow-guide-v1.html#context">Workflow Guide →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Set up CLAUDE.md</strong>
+        <a href="workflow-guide-v1.html#claude-md">Workflow App A →</a>
+      </div>
+      <div class="quick-ref-item">
+        <strong>Prepare for launch</strong>
+        <a href="handbook-v3.html#chapter-23">Handbook Ch 23 →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>AI SaaS Handbook Documentation System<br>
+  Complete Edition | Version 3.0 with MOAI Integration | January 2026</p>
+</footer>
+
+</body>
+</html>

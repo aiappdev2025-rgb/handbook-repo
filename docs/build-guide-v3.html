@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SaaS Handbook - Build Phase Guide v3</title>
+  <style>
+    :root {
+      --primary: #1a365d;
+      --secondary: #2c5282;
+      --accent: #2d3748;
+      --text: #1a202c;
+      --muted: #718096;
+      --bg: #ffffff;
+      --surface: #f7fafc;
+      --border: #e2e8f0;
+      --code-bg: #1e1e1e;
+      --code-text: #d4d4d4;
+      --prompt-bg: #fefce8;
+      --prompt-border: #facc15;
+      --success: #10b981;
+      --success-bg: #d1fae5;
+      --warning: #f59e0b;
+      --warning-bg: #fef3c7;
+      --error: #ef4444;
+      --error-bg: #fee2e2;
+      --checkpoint-bg: #ede9fe;
+      --checkpoint-border: #8b5cf6;
+      --admin-bg: #fdf4ff;
+      --admin-border: #d946ef;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: var(--bg);
+    }
+    
+    h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 0.5rem;
+      margin-top: 3rem;
+    }
+    
+    h2 {
+      color: var(--secondary);
+      font-size: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    
+    h3 {
+      color: var(--accent);
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    
+    h4 {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    p { margin: 1rem 0; }
+    
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 1.75rem;
+    }
+    
+    li { margin: 0.4rem 0; }
+    
+    .title-section {
+      text-align: center;
+      padding: 3rem 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    .title-section h1 {
+      font-size: 2.5rem;
+      border: none;
+      margin: 0;
+    }
+    
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--secondary);
+      margin-top: 0.5rem;
+    }
+    
+    .milestone-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      border-radius: 8px;
+      margin-top: 3rem;
+    }
+    
+    .milestone-header h2 {
+      color: white;
+      margin: 0;
+      font-size: 1.75rem;
+    }
+    
+    .milestone-header .milestone-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .milestone-header.admin {
+      background: linear-gradient(135deg, #86198f 0%, #c026d3 100%);
+    }
+    
+    .prompt-container {
+      background: var(--prompt-bg);
+      border: 2px solid var(--prompt-border);
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+    
+    .prompt-header {
+      background: var(--prompt-border);
+      color: var(--text);
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .prompt-header .copy-hint {
+      font-size: 0.8rem;
+      font-weight: normal;
+      opacity: 0.8;
+    }
+    
+    .prompt-content {
+      padding: 1.5rem;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    
+    .prompt-content .section-header {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      border-bottom: 1px solid var(--prompt-border);
+      padding-bottom: 0.25rem;
+    }
+    
+    .prompt-content .section-header:first-child {
+      margin-top: 0;
+    }
+    
+    .prompt-content .instruction {
+      display: block;
+      margin: 0.4rem 0;
+      padding-left: 1rem;
+    }
+    
+    .prompt-content .sub-instruction {
+      display: block;
+      margin: 0.25rem 0;
+      padding-left: 2rem;
+      color: var(--muted);
+    }
+    
+    .prompt-content .placeholder {
+      background: #fef08a;
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+    }
+    
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 1.25rem;
+      margin: 1rem 0;
+      border-radius: 6px;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    
+    .checkpoint {
+      background: var(--checkpoint-bg);
+      border: 2px solid var(--checkpoint-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .checkpoint h3 {
+      color: #5b21b6;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .checkpoint h3::before {
+      content: "Ã°Å¸â€Â";
+    }
+    
+    .quality-gate {
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .quality-gate h3 {
+      color: #065f46;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .quality-gate h3::before {
+      content: "Ã¢Å“â€œ";
+      background: var(--success);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    
+    .security-check {
+      background: var(--warning-bg);
+      border: 2px solid var(--warning);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .security-check h3 {
+      color: #92400e;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .security-check h3::before {
+      content: "Ã°Å¸â€â€™";
+    }
+    
+    .warning-box {
+      background: var(--error-bg);
+      border-left: 4px solid var(--error);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .warning-box strong {
+      color: var(--error);
+    }
+    
+    .note-box {
+      background: #e0f2fe;
+      border-left: 4px solid #0284c7;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .success-box {
+      background: var(--success-bg);
+      border-left: 4px solid var(--success);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .admin-box {
+      background: var(--admin-bg);
+      border-left: 4px solid var(--admin-border);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .prerequisites {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    
+    .prerequisites h4 {
+      margin-top: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .deliverables {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    
+    .deliverables h4 {
+      margin-top: 0;
+      color: #166534;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    
+    th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+    
+    .divider {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 3rem 0;
+    }
+    
+    .phase-header {
+      background: var(--surface);
+      text-align: center;
+      padding: 2rem;
+      margin: 3rem 0;
+      border-radius: 8px;
+    }
+    
+    .phase-header h2 {
+      color: var(--primary);
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    
+    .roadmap-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    
+    .roadmap-item h4 {
+      margin-top: 0;
+      color: var(--secondary);
+    }
+    
+    .roadmap-item .priority {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+    
+    .priority-high {
+      background: var(--error-bg);
+      color: var(--error);
+    }
+    
+    .priority-medium {
+      background: var(--warning-bg);
+      color: #b45309;
+    }
+    
+    .priority-low {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+    
+    .schema-table {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85rem;
+    }
+    
+    .schema-table td:first-child {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .schema-table td:nth-child(2) {
+      color: #0891b2;
+    }
+    
+    @media print {
+      body { max-width: none; }
+      .milestone-header { break-before: page; }
+      h1 { break-before: page; }
+    }
+  </style>
+</head>
+<body>
+<!-- NAVIGATION BAR -->
+<nav class="nav-bar">
+  <a href="index.html" class="nav-home">Handbook Home</a>
+  <div class="nav-links">
+    <a href="handbook-v3.html">Main Handbook</a>
+    <a href="build-guide-v3.html" class="active">Build Guide</a>
+    <a href="workflow-guide-v1.html">Workflow Guide</a>
+    <a href="navigation-guide.html">Navigation</a>
+  </div>
+</nav>
+<style>
+.nav-bar { position: sticky; top: 0; background: linear-gradient(135deg, #065f46 0%, #10b981 100%); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 1000; margin: -2rem -2rem 2rem -2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.nav-bar a { color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.2s; }
+.nav-bar a:hover { background: rgba(255,255,255,0.1); }
+.nav-bar a.active { background: rgba(255,255,255,0.2); font-weight: 600; }
+.nav-home { font-weight: 700; font-size: 1.1rem; }
+.nav-links { display: flex; gap: 0.5rem; }
+@media (max-width: 768px) { .nav-bar { flex-direction: column; gap: 1rem; } .nav-links { flex-wrap: wrap; justify-content: center; } }
+</style>
+
+
+<div class="title-section">
+  <h1>Build Phase Guide</h1>
+  <p class="subtitle">Structured Prompts, Quality Gates, and Verification Checkpoints</p>
+  <p style="color: var(--muted); margin-top: 0.5rem;">Version 3 - Aligned with AI SaaS Handbook v2.2</p>
+  <p style="color: var(--muted);">Companion Document to the AI SaaS Handbook</p>
+</div>
+
+<!-- PREREQUISITES BOX -->
+<div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+  <h2 style="color: #92400e; margin-top: 0; border: none;">Ã¢Å¡Â Ã¯Â¸Â Prerequisites: Complete Before Starting Build Phase</h2>
+  
+  <p style="margin-bottom: 1rem;">Before using this guide, ensure you have completed the following from the <strong>AI SaaS Handbook v2.2</strong>:</p>
+  
+  <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+    <h4 style="margin-top: 0; color: #92400e;">Part II: Documentation Stages</h4>
+    <ul style="margin-bottom: 0;">
+      <li>Ã¢Å“â€œ Stage 0.1: Research and Opportunity Assessment</li>
+      <li>Ã¢Å“â€œ Stage 1.0: Business One-Pager</li>
+      <li>Ã¢Å“â€œ Stage 2.0: Shared Design Brief</li>
+    </ul>
+  </div>
+  
+  <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+    <h4 style="margin-top: 0; color: #92400e;">Part III: Design Excellence</h4>
+    <ul style="margin-bottom: 0;">
+      <li>Ã¢Å“â€œ Stage 3.0: UX Package</li>
+      <li>Ã¢Å“â€œ Stage 3.1: UX Critic and Validation</li>
+      <li>Ã¢Å“â€œ Stage 4.0: UI System</li>
+    </ul>
+  </div>
+  
+  <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+    <h4 style="margin-top: 0; color: #92400e;">Part IV: Technical Foundation (CRITICAL)</h4>
+    <ul style="margin-bottom: 0;">
+      <li>Ã¢Å“â€œ Stage 5.0: Solution Architecture</li>
+      <li>Ã¢Å“â€œ Chapter 16-18: Infrastructure Setup (GitHub, Supabase, Vercel)</li>
+      <li>Ã¢Å“â€œ <strong>Chapter 19: Multi-Environment Configuration</strong> Ã¢â‚¬â€ Local, Preview, and Production environments must be configured before any build work begins</li>
+    </ul>
+  </div>
+  
+  <p style="margin-bottom: 0;"><strong>Why this matters:</strong> The prompts in this guide assume your environment is fully configured. Without proper multi-environment setup, you'll face deployment issues, data isolation problems, and CI/CD failures that are much harder to fix later.</p>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<h1>Table of Contents</h1>
+
+<p><strong>Part I: Foundation</strong></p>
+<p style="margin-left: 1.5rem; color: var(--muted);">
+  Introduction: Why Structured Prompts Matter<br>
+  The Prompt Structure Philosophy<br>
+  Build Phase Overview<br>
+  The Eleven Milestones<br>
+  Major Checkpoints
+</p>
+
+<p><strong>Part II: Core Milestones (1-6)</strong></p>
+<p style="margin-left: 1.5rem; color: var(--muted);">
+  Milestone 1: Project Setup<br>
+  Milestone 2: Design System<br>
+  Milestone 3: Database<br>
+  Milestone 4: Layouts<br>
+  Milestone 5: Authentication<br>
+  Milestone 6: Core Feature
+</p>
+
+<p><strong>Part III: Admin Console (Milestone 7)</strong></p>
+<p style="margin-left: 1.5rem; color: var(--muted);">
+  Why Admin Console Matters<br>
+  Admin Database Schema<br>
+  Prompt 7.1: Admin Role and Access Control<br>
+  Prompt 7.2: Admin Layout and Navigation<br>
+  Prompt 7.3: User Management<br>
+  Prompt 7.4: Subscription Viewing<br>
+  Prompt 7.5: Error Log Integration
+</p>
+
+<p><strong>Part IV: Remaining Milestones (8-11)</strong></p>
+<p style="margin-left: 1.5rem; color: var(--muted);">
+  Milestone 8: Supporting Features<br>
+  Milestone 9: Payments<br>
+  Milestone 10: Polish<br>
+  Milestone 11: Testing
+</p>
+
+<p><strong>Part V: Quality Tools</strong></p>
+<p style="margin-left: 1.5rem; color: var(--muted);">
+  Refactoring Audit Prompt<br>
+  Code Review Prompt
+</p>
+
+<p><strong>Appendix A: Post-MVP Admin Roadmap</strong></p>
+<p style="margin-left: 1.5rem; color: var(--muted);">
+  Phase 2: Operational Features<br>
+  Phase 3: Growth Features
+</p>
+
+<p><strong>Appendix B: Admin Database Schema Reference</strong></p>
+
+<hr class="divider">
+
+<!-- PART I: FOUNDATION -->
+<div class="phase-header">
+  <h2>PART I: FOUNDATION</h2>
+</div>
+
+<h1>Introduction: Why Structured Prompts Matter</h1>
+
+<p>Long, dense prompts fail for three predictable reasons. First, when too many requirements compete for attention, the AI loses focus on what matters most. Second, important details get buried in walls of text and get skipped. Third, without clear structure, the AI fills gaps with assumptions that may not match what you actually need.</p>
+
+<p>This guide restructures the Build phase into clear, focused prompts that follow a consistent format. Each prompt is organized into labeled sections that are easy to scan. Each milestone includes explicit checkpoints for code quality, security, and functionality.</p>
+
+<h2>The Prompt Structure Philosophy</h2>
+
+<p>Every prompt in this guide follows the same six-section pattern, making them predictable and easy to work with.</p>
+
+<p><strong>ROLE</strong> establishes who the AI should act as. This grounds the AI in the right mindset before diving into specifics. A "Senior Full-Stack Developer" approaches problems differently than a "Junior Developer learning the ropes."</p>
+
+<p><strong>CONTEXT</strong> describes what exists right now. What files are in place. What has been completed in previous milestones. This prevents the AI from making incorrect assumptions about starting conditions, which is one of the most common sources of errors.</p>
+
+<p><strong>OBJECTIVE</strong> states the specific goal for this prompt. One clear objective per prompt. If you have multiple objectives, split them into multiple prompts. This focus is essential for quality output.</p>
+
+<p><strong>REQUIREMENTS</strong> provides detailed specifications organized by category. Functional requirements, quality requirements, and constraints are all separated so nothing gets lost. Each requirement is a separate line item that can be checked off.</p>
+
+<p><strong>QUALITY STANDARDS</strong> defines what "good" looks like. This is where the anti-vibe-coding safeguards live. Without explicit quality criteria, the AI optimizes for "looks complete" rather than "is maintainable."</p>
+
+<p><strong>DELIVERABLES & VERIFICATION</strong> specifies exactly what files should be produced and how to confirm the work is complete. This creates accountability and makes it easy to know when you're done.</p>
+
+<h2>Build Phase Overview</h2>
+
+<h3>The Eleven Milestones</h3>
+
+<p>The Build phase is divided into eleven milestones, each building on the previous. Complete and verify each milestone before moving to the next. Rushing ahead creates a shaky foundation that causes problems later.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Milestone</th>
+      <th>Focus</th>
+      <th>Checkpoints</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Project Setup</td>
+      <td>Initialize Next.js with tooling</td>
+      <td>Quality</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Design System</td>
+      <td>Tailwind + shadcn configuration</td>
+      <td>Quality, Visual</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Database</td>
+      <td>Schema, migrations, RLS</td>
+      <td>Quality, Security</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Layouts</td>
+      <td>Page shells, navigation</td>
+      <td>Quality, Visual</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Authentication</td>
+      <td>Auth flows, protected routes</td>
+      <td>Quality, Security</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Core Feature</td>
+      <td>Primary user journey</td>
+      <td>Quality, Security, Performance</td>
+    </tr>
+    <tr style="background: #fdf4ff;">
+      <td>7</td>
+      <td><strong>Admin Console</strong></td>
+      <td>User management, monitoring</td>
+      <td>Quality, Security</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Supporting Features</td>
+      <td>Secondary features</td>
+      <td>Quality, Security</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>Payments</td>
+      <td>Stripe integration</td>
+      <td>Quality, Security</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Polish</td>
+      <td>Error handling, edge cases</td>
+      <td>Quality, UX</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Testing</td>
+      <td>Automated tests</td>
+      <td>Coverage</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Major Checkpoints</h3>
+
+<p>In addition to per-milestone quality gates, there are three major checkpoints where you pause for deeper review.</p>
+
+<div class="checkpoint">
+  <h3>Checkpoint A: After Milestone 3 (Database)</h3>
+  <p>Before building features, verify the data foundation is solid. Review schema design. Confirm all RLS policies are in place. Test that policies actually work by attempting unauthorized access. This includes the admin tables if you're building the admin console.</p>
+</div>
+
+<div class="checkpoint">
+  <h3>Checkpoint B: After Milestone 7 (Admin Console)</h3>
+  <p>The admin console provides your operational visibility. Verify you can find and view any user, see subscription statuses, and access error logs. Test admin role restrictions to ensure non-admins cannot access admin routes. This is your last checkpoint before building additional user-facing features.</p>
+</div>
+
+<div class="checkpoint">
+  <h3>Checkpoint C: After Milestone 10 (Polish)</h3>
+  <p>Before final testing, ensure the codebase is clean. Run the full refactoring audit. Address all accumulated technical debt. Verify error handling is comprehensive. Confirm all states are handled in the UI.</p>
+</div>
+
+<hr class="divider">
+
+<!-- PART II: CORE MILESTONES -->
+<div class="phase-header">
+  <h2>PART II: CORE MILESTONES (1-6)</h2>
+</div>
+
+<div class="note-box">
+<strong>Environment Ready?</strong> Before starting Milestone 1, confirm your multi-environment setup is complete (Handbook v2.2 Chapter 19):
+<ul style="margin-bottom: 0;">
+  <li>Ã¢Å“â€œ Local Supabase running OR dev project linked</li>
+  <li>Ã¢Å“â€œ .env.local configured with Supabase credentials</li>
+  <li>Ã¢Å“â€œ GitHub repository created with branch protection</li>
+  <li>Ã¢Å“â€œ Vercel project connected with environment variables</li>
+</ul>
+</div>
+
+<p>The prompts for Milestones 1-6 follow the same structure and content as the original Build Phase Guide. For brevity, this document focuses on the new Milestone 7 (Admin Console) content. Refer to the original guide or use these milestone summaries as reference.</p>
+
+<h2>Milestone 1-6 Summary</h2>
+
+<p><strong>Milestone 1: Project Setup</strong> initializes a Next.js 14+ project with TypeScript strict mode, Tailwind CSS, ESLint, and the folder structure (src/app, src/components, src/lib, src/types, src/hooks). Creates .env.local.example with Supabase variables.</p>
+
+<p><strong>Milestone 2: Design System</strong> configures shadcn/ui with your design tokens. Installs core components (button, card, input, label, form, toast, dropdown-menu, avatar, skeleton). Creates a test page to verify styling.</p>
+
+<p><strong>Milestone 3: Database</strong> creates the core schema with profiles table and your main entities. Enables RLS on every table with appropriate policies. Adds indexes for query patterns. Includes the admin tables (covered in detail in Milestone 7 section).</p>
+
+<p><strong>Milestone 4: Layouts</strong> creates the root layout, marketing layout (public pages), and app layout (authenticated pages). Builds navigation components with responsive behavior.</p>
+
+<p><strong>Milestone 5: Authentication</strong> configures Supabase auth clients (browser and server), creates login and signup pages with validation, implements route protection via middleware, and adds user context provider.</p>
+
+<p><strong>Milestone 6: Core Feature</strong> builds the primary feature through four sub-prompts: Data Layer (queries/mutations), Server Actions (validation/business logic), UI Components (cards, lists, forms), and Page Assembly (wiring everything together).</p>
+
+<hr class="divider">
+
+<!-- PART III: ADMIN CONSOLE -->
+<div class="phase-header">
+  <h2>PART III: ADMIN CONSOLE (MILESTONE 7)</h2>
+</div>
+
+<h1>Why the Admin Console Matters</h1>
+
+<p>The admin console is your control room. Without it, you're flying blind. When a customer reports an issue, you can't investigate their account. When you want to understand your business metrics, you have to write ad-hoc database queries. When something breaks in production, you're scrambling to find logs.</p>
+
+<p>Building the admin console as Milestone 7 (after core feature, before additional features) is intentional. By this point, you have real data structures to manage and real functionality to monitor. Building it now means you have operational visibility while you're still actively developing and debugging.</p>
+
+<div class="admin-box">
+  <strong>Phase 1 Admin Features (This Milestone):</strong> These are the essential features you need from day one. User management (list, search, view), subscription viewing, and error log integration. Everything else can wait until after launch.
+</div>
+
+<h2>Admin Database Schema</h2>
+
+<p>Before building the admin console UI, you need to add admin-specific tables to your database. These should be included in your Milestone 3 database work, but if you're adding admin functionality to an existing project, create a new migration.</p>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Prompt 7.0: Admin Database Tables</span>
+    <span class="copy-hint">Run this during Milestone 3 or as a separate migration</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Database Engineer adding admin functionality tables.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Project: <span class="placeholder">{{productName}}</span></span>
+<span class="instruction">Core tables already exist (profiles, etc.).</span>
+<span class="instruction">Adding tables to support admin console functionality.</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Create migration for admin-related database tables.</span>
+
+<span class="section-header">REQUIREMENTS</span>
+
+<span class="instruction">1. Add role column to profiles table:</span>
+<span class="sub-instruction">- role: text, default 'user'</span>
+<span class="sub-instruction">- Valid values: 'user', 'admin', 'super_admin'</span>
+<span class="sub-instruction">- Add check constraint for valid values</span>
+
+<span class="instruction">2. Create admin_audit_logs table:</span>
+<span class="sub-instruction">- id: uuid primary key</span>
+<span class="sub-instruction">- admin_id: uuid references profiles(id)</span>
+<span class="sub-instruction">- action: text not null (e.g., 'user.view', 'user.disable')</span>
+<span class="sub-instruction">- target_type: text (e.g., 'user', 'subscription')</span>
+<span class="sub-instruction">- target_id: uuid</span>
+<span class="sub-instruction">- details: jsonb (additional context)</span>
+<span class="sub-instruction">- ip_address: text</span>
+<span class="sub-instruction">- created_at: timestamptz default now()</span>
+
+<span class="instruction">3. Create admin_notes table:</span>
+<span class="sub-instruction">- id: uuid primary key</span>
+<span class="sub-instruction">- admin_id: uuid references profiles(id)</span>
+<span class="sub-instruction">- target_user_id: uuid references profiles(id)</span>
+<span class="sub-instruction">- content: text not null</span>
+<span class="sub-instruction">- created_at: timestamptz default now()</span>
+<span class="sub-instruction">- updated_at: timestamptz default now()</span>
+
+<span class="instruction">4. Create system_settings table:</span>
+<span class="sub-instruction">- key: text primary key</span>
+<span class="sub-instruction">- value: text not null</span>
+<span class="sub-instruction">- description: text</span>
+<span class="sub-instruction">- is_sensitive: boolean default false</span>
+<span class="sub-instruction">- updated_at: timestamptz default now()</span>
+<span class="sub-instruction">- updated_by: uuid references profiles(id)</span>
+
+<span class="instruction">5. RLS Policies:</span>
+<span class="sub-instruction">- admin_audit_logs: Only admins can SELECT, only system can INSERT</span>
+<span class="sub-instruction">- admin_notes: Only admins can SELECT/INSERT/UPDATE/DELETE</span>
+<span class="sub-instruction">- system_settings: Only admins can SELECT, only super_admins can UPDATE</span>
+
+<span class="instruction">6. Create helper function to check admin role:</span>
+<span class="sub-instruction">- is_admin(): returns boolean</span>
+<span class="sub-instruction">- Checks if current user has role 'admin' or 'super_admin'</span>
+
+<span class="instruction">7. Update profiles RLS:</span>
+<span class="sub-instruction">- Admins can SELECT all profiles</span>
+<span class="sub-instruction">- Regular users can still only see their own</span>
+
+<span class="section-header">QUALITY STANDARDS</span>
+<span class="instruction">Migration is idempotent</span>
+<span class="instruction">All tables have RLS enabled</span>
+<span class="instruction">Indexes on admin_id and target_id columns</span>
+<span class="instruction">Foreign keys have ON DELETE behavior defined</span>
+
+<span class="section-header">DELIVERABLES</span>
+<span class="instruction">1. supabase/migrations/[timestamp]_create_admin_tables.sql</span>
+<span class="instruction">2. Updated src/types/database.ts with admin types</span>
+
+<span class="section-header">VERIFICATION</span>
+<span class="instruction">1. Run: npx supabase db push</span>
+<span class="instruction">2. Verify tables in Dashboard</span>
+<span class="instruction">3. Test is_admin() function with different user roles</span>
+<span class="instruction">4. Verify non-admin cannot query admin_audit_logs</span></div>
+</div>
+
+<hr class="divider">
+
+<!-- MILESTONE 7 -->
+<div class="milestone-header admin">
+  <h2>Milestone 7: Admin Console</h2>
+  <div class="milestone-meta">
+    <span>Ã¢ÂÂ±Ã¯Â¸Â Time: 6-10 hours</span>
+    <span>Ã°Å¸â€Â§ Tool: Claude Code CLI</span>
+    <span>Ã°Å¸â€œâ€¹ 5 Prompts</span>
+  </div>
+</div>
+
+<h3>Purpose</h3>
+<p>Build the essential admin console features that allow you to operate your SaaS: viewing and managing users, seeing subscription statuses, and accessing error logs. This is Phase 1 of the admin console; additional features are documented in the Post-MVP Roadmap appendix.</p>
+
+<div class="prerequisites">
+  <h4>Prerequisites</h4>
+  <ul>
+    <li>Milestones 1-6 complete and verified</li>
+    <li>Admin database tables created (Prompt 7.0)</li>
+    <li>At least one user account exists with admin role</li>
+    <li>Error tracking service account (Sentry recommended)</li>
+  </ul>
+</div>
+
+<div class="warning-box">
+  <strong>Set up your first admin user manually:</strong> Before building the admin console, you need at least one admin user to test with. In Supabase Dashboard, update your own profile record to set role = 'super_admin'. Never build a public endpoint that grants admin access.
+</div>
+
+<h3>Prompt 7.1: Admin Role and Access Control</h3>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Prompt 7.1: Admin Middleware and Access Control</span>
+    <span class="copy-hint">Copy this entire prompt</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Security-focused Full-Stack Developer implementing admin access control.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Project: <span class="placeholder">{{productName}}</span></span>
+<span class="instruction">Authentication is working (Milestone 5 complete).</span>
+<span class="instruction">Profiles table has role column with values: user, admin, super_admin.</span>
+<span class="instruction">Database has is_admin() helper function.</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Implement server-side admin access control.</span>
+
+<span class="section-header">REQUIREMENTS</span>
+
+<span class="instruction">1. Create admin auth utilities (src/lib/admin/auth.ts):</span>
+<span class="sub-instruction">- getAdminUser(): Fetches current user, returns null if not admin</span>
+<span class="sub-instruction">- requireAdmin(): Throws error if not admin, for use in server actions</span>
+<span class="sub-instruction">- requireSuperAdmin(): Throws error if not super_admin</span>
+<span class="sub-instruction">- isAdmin(role: string): Type guard helper</span>
+<span class="sub-instruction">- isSuperAdmin(role: string): Type guard helper</span>
+
+<span class="instruction">2. Update middleware (src/middleware.ts):</span>
+<span class="sub-instruction">- Add matcher for /admin/* routes</span>
+<span class="sub-instruction">- For admin routes: verify user is authenticated</span>
+<span class="sub-instruction">- For admin routes: verify user has admin or super_admin role</span>
+<span class="sub-instruction">- Redirect non-admins to /dashboard with error message</span>
+<span class="sub-instruction">- Allow admins to continue to admin routes</span>
+
+<span class="instruction">3. Create admin types (src/types/admin.ts):</span>
+<span class="sub-instruction">- AdminUser type extending base User with role</span>
+<span class="sub-instruction">- AdminRole enum: 'user' | 'admin' | 'super_admin'</span>
+<span class="sub-instruction">- AdminAuditLog type</span>
+<span class="sub-instruction">- AdminNote type</span>
+
+<span class="instruction">4. Create audit logging utility (src/lib/admin/audit.ts):</span>
+<span class="sub-instruction">- logAdminAction(action, targetType, targetId, details): Logs to admin_audit_logs</span>
+<span class="sub-instruction">- Uses service role client (bypasses RLS)</span>
+<span class="sub-instruction">- Captures admin_id from session</span>
+<span class="sub-instruction">- Captures IP address from headers if available</span>
+
+<span class="section-header">QUALITY STANDARDS</span>
+<span class="instruction">Role check happens server-side, never trust client</span>
+<span class="instruction">Middleware runs on every admin route request</span>
+<span class="instruction">Audit logging is fire-and-forget (doesn't block response)</span>
+<span class="instruction">No admin role information exposed to non-admins</span>
+<span class="instruction">Error messages don't reveal admin route existence to non-admins</span>
+
+<span class="section-header">DELIVERABLES</span>
+<span class="instruction">1. src/lib/admin/auth.ts</span>
+<span class="instruction">2. src/lib/admin/audit.ts</span>
+<span class="instruction">3. src/types/admin.ts</span>
+<span class="instruction">4. Updated src/middleware.ts</span>
+
+<span class="section-header">VERIFICATION</span>
+<span class="instruction">1. As regular user: Visit /admin Ã¢â€ â€™ redirected to /dashboard</span>
+<span class="instruction">2. As admin user: Visit /admin Ã¢â€ â€™ allowed (404 ok, route doesn't exist yet)</span>
+<span class="instruction">3. Test requireAdmin() throws for non-admin</span>
+<span class="instruction">4. Test audit logging creates record in admin_audit_logs</span></div>
+</div>
+
+<h3>Prompt 7.2: Admin Layout and Navigation</h3>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Prompt 7.2: Admin Layout and Navigation</span>
+    <span class="copy-hint">Copy this entire prompt</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Frontend Developer creating the admin console shell.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Admin access control is implemented (Prompt 7.1 complete).</span>
+<span class="instruction">Design system is available (shadcn components).</span>
+<span class="instruction">Creating the admin-specific layout and navigation.</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Create the admin console layout with sidebar navigation.</span>
+
+<span class="section-header">REQUIREMENTS</span>
+
+<span class="instruction">1. Create admin layout (src/app/admin/layout.tsx):</span>
+<span class="sub-instruction">- Server Component that verifies admin access</span>
+<span class="sub-instruction">- Sidebar navigation on left (collapsible on mobile)</span>
+<span class="sub-instruction">- Header with admin indicator and user menu</span>
+<span class="sub-instruction">- Main content area with max-width container</span>
+<span class="sub-instruction">- Visual distinction from regular app (different accent color)</span>
+
+<span class="instruction">2. Create admin navigation (src/components/admin/admin-nav.tsx):</span>
+<span class="sub-instruction">- Dashboard link (overview/home)</span>
+<span class="sub-instruction">- Users section</span>
+<span class="sub-instruction">- Subscriptions section</span>
+<span class="sub-instruction">- Error Logs section</span>
+<span class="sub-instruction">- Settings section (for super_admin only)</span>
+<span class="sub-instruction">- "Back to App" link at bottom</span>
+<span class="sub-instruction">- Visual indicator for current section</span>
+
+<span class="instruction">3. Create admin header (src/components/admin/admin-header.tsx):</span>
+<span class="sub-instruction">- "Admin Console" title/badge</span>
+<span class="sub-instruction">- Breadcrumb showing current location</span>
+<span class="sub-instruction">- User menu with logout</span>
+<span class="sub-instruction">- Mobile menu toggle</span>
+
+<span class="instruction">4. Create admin dashboard page (src/app/admin/page.tsx):</span>
+<span class="sub-instruction">- Overview stats: Total users, Active subscriptions, MRR, Recent errors</span>
+<span class="sub-instruction">- Quick links to common actions</span>
+<span class="sub-instruction">- Recent activity feed (from audit log)</span>
+
+<span class="instruction">5. Navigation configuration (src/lib/constants/admin-navigation.ts):</span>
+<span class="sub-instruction">- Define nav items with: label, href, icon, requiredRole</span>
+<span class="sub-instruction">- Some items only visible to super_admin</span>
+
+<span class="section-header">QUALITY STANDARDS</span>
+<span class="instruction">Layout clearly distinguishable from regular app</span>
+<span class="instruction">Navigation is responsive (drawer on mobile)</span>
+<span class="instruction">Current section highlighted in nav</span>
+<span class="instruction">Role-based nav items (some only for super_admin)</span>
+<span class="instruction">Components under 100 lines each</span>
+
+<span class="section-header">DELIVERABLES</span>
+<span class="instruction">1. src/app/admin/layout.tsx</span>
+<span class="instruction">2. src/app/admin/page.tsx (dashboard)</span>
+<span class="instruction">3. src/components/admin/admin-nav.tsx</span>
+<span class="instruction">4. src/components/admin/admin-header.tsx</span>
+<span class="instruction">5. src/lib/constants/admin-navigation.ts</span>
+
+<span class="section-header">VERIFICATION</span>
+<span class="instruction">1. Visit /admin as admin Ã¢â€ â€™ dashboard renders</span>
+<span class="instruction">2. Navigation shows all sections</span>
+<span class="instruction">3. Mobile: hamburger menu works</span>
+<span class="instruction">4. "Back to App" returns to /dashboard</span>
+<span class="instruction">5. Super-admin-only items hidden from regular admin</span></div>
+</div>
+
+<h3>Prompt 7.3: User Management</h3>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Prompt 7.3: User Management Features</span>
+    <span class="copy-hint">Copy this entire prompt</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Full-Stack Developer building user management for admin console.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Admin layout is complete (Prompt 7.2).</span>
+<span class="instruction">Need to build the core user management functionality.</span>
+<span class="instruction">This is the most-used part of the admin console.</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Create user list, search, and detail view with basic actions.</span>
+
+<span class="section-header">REQUIREMENTS</span>
+
+<span class="instruction">1. User list page (src/app/admin/users/page.tsx):</span>
+<span class="sub-instruction">- Server Component with pagination (20 per page)</span>
+<span class="sub-instruction">- Search by email or name</span>
+<span class="sub-instruction">- Filter by: subscription status, role, signup date range</span>
+<span class="sub-instruction">- Sort by: created_at, email, last_sign_in</span>
+<span class="sub-instruction">- Table columns: Avatar, Email, Name, Role, Status, Joined, Actions</span>
+<span class="sub-instruction">- Click row to go to user detail</span>
+
+<span class="instruction">2. User queries (src/lib/admin/queries/users.ts):</span>
+<span class="sub-instruction">- getUsers(options): Paginated, filtered, sorted user list</span>
+<span class="sub-instruction">- getUserById(id): Full user details with subscription info</span>
+<span class="sub-instruction">- searchUsers(query): Quick search by email/name</span>
+<span class="sub-instruction">- getUserStats(): Counts for dashboard</span>
+
+<span class="instruction">3. User detail page (src/app/admin/users/[id]/page.tsx):</span>
+<span class="sub-instruction">- Profile section: avatar, name, email, role, signup date</span>
+<span class="sub-instruction">- Subscription section: current plan, status, renewal date</span>
+<span class="sub-instruction">- Activity section: recent actions (from your activity tracking)</span>
+<span class="sub-instruction">- Admin notes section: view/add notes about this user</span>
+<span class="sub-instruction">- Actions: Edit profile, Reset password, Disable account</span>
+
+<span class="instruction">4. User actions (src/app/admin/users/actions.ts):</span>
+<span class="sub-instruction">- updateUserProfile(userId, data): Edit name, avatar_url</span>
+<span class="sub-instruction">- sendPasswordReset(userId): Trigger password reset email</span>
+<span class="sub-instruction">- disableUser(userId): Set account to disabled status</span>
+<span class="sub-instruction">- enableUser(userId): Re-enable disabled account</span>
+<span class="sub-instruction">- addAdminNote(userId, content): Add a note to user</span>
+<span class="sub-instruction">- All actions log to audit log</span>
+
+<span class="instruction">5. User components (src/components/admin/users/):</span>
+<span class="sub-instruction">- UserTable: Sortable, clickable rows</span>
+<span class="sub-instruction">- UserFilters: Search, status, role, date filters</span>
+<span class="sub-instruction">- UserCard: Profile display for detail page</span>
+<span class="sub-instruction">- UserActions: Action buttons with confirmations</span>
+<span class="sub-instruction">- AdminNotesSection: Notes list with add form</span>
+
+<span class="section-header">QUALITY STANDARDS</span>
+<span class="instruction">All actions require confirmation dialog</span>
+<span class="instruction">All actions create audit log entries</span>
+<span class="instruction">Search is debounced (300ms)</span>
+<span class="instruction">Pagination uses URL params (shareable)</span>
+<span class="instruction">Error states handled (user not found, etc.)</span>
+<span class="instruction">No function exceeds 30 lines</span>
+
+<span class="section-header">DELIVERABLES</span>
+<span class="instruction">1. src/app/admin/users/page.tsx</span>
+<span class="instruction">2. src/app/admin/users/[id]/page.tsx</span>
+<span class="instruction">3. src/app/admin/users/actions.ts</span>
+<span class="instruction">4. src/lib/admin/queries/users.ts</span>
+<span class="instruction">5. src/components/admin/users/ (all components)</span>
+
+<span class="section-header">VERIFICATION</span>
+<span class="instruction">1. User list loads with pagination</span>
+<span class="instruction">2. Search finds user by email</span>
+<span class="instruction">3. Filters narrow results correctly</span>
+<span class="instruction">4. Click user Ã¢â€ â€™ detail page shows</span>
+<span class="instruction">5. Add admin note Ã¢â€ â€™ appears in list</span>
+<span class="instruction">6. Password reset Ã¢â€ â€™ email sent (check Supabase logs)</span>
+<span class="instruction">7. Disable user Ã¢â€ â€™ status changes, audit log created</span></div>
+</div>
+
+<h3>Prompt 7.4: Subscription Viewing</h3>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Prompt 7.4: Subscription Viewing</span>
+    <span class="copy-hint">Copy this entire prompt</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Full-Stack Developer building subscription visibility for admin console.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">User management is complete (Prompt 7.3).</span>
+<span class="instruction">Building read-only subscription viewing for Phase 1.</span>
+<span class="instruction">Manual billing adjustments will come in Phase 2 (Post-MVP).</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Create subscription overview and detail viewing.</span>
+
+<span class="section-header">REQUIREMENTS</span>
+
+<span class="instruction">1. Subscriptions list page (src/app/admin/subscriptions/page.tsx):</span>
+<span class="sub-instruction">- Overview metrics: Total active, MRR, Churn this month</span>
+<span class="sub-instruction">- Table of subscriptions with pagination</span>
+<span class="sub-instruction">- Columns: User, Plan, Status, Started, Renews, MRR</span>
+<span class="sub-instruction">- Filter by: plan, status (active, canceled, past_due)</span>
+<span class="sub-instruction">- Click row to go to user detail (subscription shown there)</span>
+
+<span class="instruction">2. Subscription queries (src/lib/admin/queries/subscriptions.ts):</span>
+<span class="sub-instruction">- getSubscriptions(options): Paginated, filtered list</span>
+<span class="sub-instruction">- getSubscriptionStats(): MRR, counts by status, churn rate</span>
+<span class="sub-instruction">- getSubscriptionsByPlan(): Breakdown by plan type</span>
+<span class="sub-instruction">- getRecentChanges(): New, canceled, upgraded in last 7 days</span>
+
+<span class="instruction">3. MRR calculation helper (src/lib/admin/utils/mrr.ts):</span>
+<span class="sub-instruction">- calculateMRR(subscriptions): Sum of monthly values</span>
+<span class="sub-instruction">- Handle annual plans (divide by 12)</span>
+<span class="sub-instruction">- Format as currency</span>
+
+<span class="instruction">4. Subscription components (src/components/admin/subscriptions/):</span>
+<span class="sub-instruction">- SubscriptionTable: Sortable rows</span>
+<span class="sub-instruction">- SubscriptionFilters: Plan, status filters</span>
+<span class="sub-instruction">- MRRCard: Display MRR with trend indicator</span>
+<span class="sub-instruction">- SubscriptionStatusBadge: Colored status indicator</span>
+
+<span class="instruction">5. Add subscription info to user detail:</span>
+<span class="sub-instruction">- Current plan name and price</span>
+<span class="sub-instruction">- Status with colored badge</span>
+<span class="sub-instruction">- Start date and next renewal date</span>
+<span class="sub-instruction">- Link to Stripe customer portal (if applicable)</span>
+
+<span class="section-header">QUALITY STANDARDS</span>
+<span class="instruction">MRR calculation handles edge cases (trials, discounts)</span>
+<span class="instruction">Status badges use consistent colors</span>
+<span class="instruction">No sensitive payment data displayed (no card numbers)</span>
+<span class="instruction">Queries efficient with proper indexes</span>
+
+<span class="section-header">DELIVERABLES</span>
+<span class="instruction">1. src/app/admin/subscriptions/page.tsx</span>
+<span class="instruction">2. src/lib/admin/queries/subscriptions.ts</span>
+<span class="instruction">3. src/lib/admin/utils/mrr.ts</span>
+<span class="instruction">4. src/components/admin/subscriptions/ (all components)</span>
+<span class="instruction">5. Updated user detail page with subscription section</span>
+
+<span class="section-header">VERIFICATION</span>
+<span class="instruction">1. Subscriptions page shows list and metrics</span>
+<span class="instruction">2. MRR calculation matches expected value</span>
+<span class="instruction">3. Filter by status shows correct results</span>
+<span class="instruction">4. User detail shows subscription info</span>
+<span class="instruction">5. No card numbers or sensitive data visible</span></div>
+</div>
+
+<h3>Prompt 7.5: Error Log Integration</h3>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Prompt 7.5: Error Log Integration</span>
+    <span class="copy-hint">Copy this entire prompt</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Full-Stack Developer integrating error tracking into admin console.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">User and subscription viewing complete.</span>
+<span class="instruction">Integrating with error tracking service for visibility into production errors.</span>
+<span class="instruction">Using <span class="placeholder">{{Sentry / your error tracking service}}</span>.</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Create error log viewing in admin console.</span>
+
+<span class="section-header">REQUIREMENTS</span>
+
+<span class="instruction">1. Set up error tracking (if not already done):</span>
+<span class="sub-instruction">- Install @sentry/nextjs (or your service's SDK)</span>
+<span class="sub-instruction">- Configure in next.config.js</span>
+<span class="sub-instruction">- Add SENTRY_DSN to environment variables</span>
+<span class="sub-instruction">- Create sentry.client.config.ts and sentry.server.config.ts</span>
+
+<span class="instruction">2. Create API route for fetching errors (src/app/api/admin/errors/route.ts):</span>
+<span class="sub-instruction">- GET: Fetch recent errors from Sentry API</span>
+<span class="sub-instruction">- Requires admin authentication</span>
+<span class="sub-instruction">- Query params: limit, cursor (for pagination)</span>
+<span class="sub-instruction">- Returns: issues with count, last_seen, first_seen, title</span>
+
+<span class="instruction">3. Error log page (src/app/admin/errors/page.tsx):</span>
+<span class="sub-instruction">- List of recent errors with severity indicator</span>
+<span class="sub-instruction">- For each error: title, count, last occurrence, affected users</span>
+<span class="sub-instruction">- Click to expand: stack trace preview, affected user IDs</span>
+<span class="sub-instruction">- Link to full details in Sentry dashboard</span>
+<span class="sub-instruction">- Filter by: severity, resolved status, date range</span>
+
+<span class="instruction">4. Error components (src/components/admin/errors/):</span>
+<span class="sub-instruction">- ErrorList: Expandable error items</span>
+<span class="sub-instruction">- ErrorItem: Single error with expand/collapse</span>
+<span class="sub-instruction">- ErrorSeverityBadge: Color-coded severity</span>
+<span class="sub-instruction">- StackTracePreview: Formatted stack trace snippet</span>
+
+<span class="instruction">5. Dashboard integration:</span>
+<span class="sub-instruction">- Add error count widget to admin dashboard</span>
+<span class="sub-instruction">- Show unresolved error count</span>
+<span class="sub-instruction">- Alert style if > 10 unresolved errors</span>
+
+<span class="instruction">Alternative if not using Sentry:</span>
+<span class="sub-instruction">- Create local error_logs table</span>
+<span class="sub-instruction">- Log errors from API routes and server actions</span>
+<span class="sub-instruction">- Query and display from database</span>
+
+<span class="section-header">QUALITY STANDARDS</span>
+<span class="instruction">Error fetching is paginated (don't load all at once)</span>
+<span class="instruction">Stack traces truncated in preview (full in expanded)</span>
+<span class="instruction">No sensitive data in error details exposed</span>
+<span class="instruction">Sentry API key stored securely (env var)</span>
+
+<span class="section-header">DELIVERABLES</span>
+<span class="instruction">1. Error tracking SDK configuration</span>
+<span class="instruction">2. src/app/api/admin/errors/route.ts</span>
+<span class="instruction">3. src/app/admin/errors/page.tsx</span>
+<span class="instruction">4. src/components/admin/errors/ (all components)</span>
+<span class="instruction">5. Updated admin dashboard with error widget</span>
+
+<span class="section-header">VERIFICATION</span>
+<span class="instruction">1. Trigger a test error in the app</span>
+<span class="instruction">2. Error appears in admin errors page</span>
+<span class="instruction">3. Click to expand shows stack trace</span>
+<span class="instruction">4. Link to Sentry opens correct issue</span>
+<span class="instruction">5. Dashboard shows error count</span></div>
+</div>
+
+<div class="security-check">
+  <h3>Security Check: Admin Console</h3>
+  <p>The admin console has elevated privileges. Verify thoroughly:</p>
+  <ul>
+    <li><strong>Access Control:</strong> Non-admin users cannot access any /admin/* route</li>
+    <li><strong>Role Checks:</strong> super_admin-only features hidden from regular admin</li>
+    <li><strong>Audit Logging:</strong> All admin actions create audit log entries</li>
+    <li><strong>No Data Leaks:</strong> Admin pages don't expose data in URL params or error messages</li>
+    <li><strong>API Protection:</strong> Admin API routes verify admin role server-side</li>
+    <li><strong>Action Confirmation:</strong> Destructive actions require confirmation</li>
+  </ul>
+</div>
+
+<div class="quality-gate">
+  <h3>Quality Gate: Milestone 7</h3>
+  <ul>
+    <li>Admin dashboard loads with stats</li>
+    <li>User list with search and filters works</li>
+    <li>User detail shows all sections</li>
+    <li>Admin notes can be added and viewed</li>
+    <li>User actions (password reset, disable) work and log to audit</li>
+    <li>Subscription list shows correct MRR</li>
+    <li>Error log shows recent errors</li>
+    <li>Non-admin user cannot access /admin routes</li>
+    <li>All admin actions create audit log entries</li>
+    <li>No TypeScript errors</li>
+  </ul>
+</div>
+
+<div class="checkpoint">
+  <h3>Checkpoint B: Admin Console Complete</h3>
+  <p>The admin console provides your operational foundation. Before proceeding to additional features:</p>
+  
+  <h4>Operational Readiness</h4>
+  <ul>
+    <li>Can you find any user by email within 10 seconds?</li>
+    <li>Can you see a user's subscription status and history?</li>
+    <li>Can you see recent errors in your application?</li>
+    <li>Do admin actions leave an audit trail?</li>
+  </ul>
+  
+  <h4>Security Verification</h4>
+  <ul>
+    <li>Create a test non-admin user and verify they cannot access /admin</li>
+    <li>Create a test admin user and verify they can access admin but not super_admin features</li>
+    <li>Review audit logs for your test actions</li>
+  </ul>
+  
+  <h4>Code Quality Review</h4>
+  <ul>
+    <li>Run the refactoring audit prompt</li>
+    <li>Address any issues before proceeding</li>
+  </ul>
+</div>
+
+<hr class="divider">
+
+<!-- PART IV: REMAINING MILESTONES -->
+<div class="phase-header">
+  <h2>PART IV: REMAINING MILESTONES (8-11)</h2>
+</div>
+
+<h2>Milestone 8: Supporting Features</h2>
+
+<p>Apply the same four-prompt pattern from Milestone 6 (Data Layer, Server Actions, UI Components, Page Assembly) for each additional user-facing feature. Keep features small and focused. Complete and verify each feature before starting the next.</p>
+
+<h2>Milestone 9: Payments</h2>
+
+<p>Split into focused prompts covering Stripe configuration and webhook setup, the checkout flow implementation, billing management UI, and subscription status handling. Security is especially critical here since you're handling payment data.</p>
+
+<h2>Milestone 10: Polish</h2>
+
+<p>Split into prompts for error boundary implementation, loading state audit and improvement, empty state audit, edge case handling, and accessibility audit. This milestone ensures the application feels complete and professional.</p>
+
+<h2>Milestone 11: Testing</h2>
+
+<p>Split into prompts for test infrastructure setup, critical path E2E tests, unit tests for business logic, and integration tests for API routes. Focus on testing the paths that matter most: authentication, the money action, and payment flows.</p>
+
+<hr class="divider">
+
+<!-- PART V: QUALITY TOOLS -->
+<div class="phase-header">
+  <h2>PART V: QUALITY TOOLS</h2>
+</div>
+
+<h1>Refactoring Audit Prompt</h1>
+
+<p>Run this prompt at each major checkpoint to identify and address accumulated technical debt.</p>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Refactoring Audit</span>
+    <span class="copy-hint">Copy this entire prompt</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Senior Developer conducting a code quality audit.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Project: <span class="placeholder">{{productName}}</span></span>
+<span class="instruction">Just completed: <span class="placeholder">{{milestone name}}</span></span>
+<span class="instruction">Conducting quality review before proceeding.</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Identify and fix code quality issues.</span>
+
+<span class="section-header">AUDIT AREAS</span>
+
+<span class="instruction">1. LONG FUNCTIONS (exceeding 30 lines)</span>
+<span class="sub-instruction">Search for functions over 30 lines</span>
+<span class="sub-instruction">For each: identify, explain issue, provide refactored version</span>
+
+<span class="instruction">2. LONG FILES (exceeding 200 lines)</span>
+<span class="sub-instruction">Search for files over 200 lines</span>
+<span class="sub-instruction">For each: identify, suggest how to split</span>
+
+<span class="instruction">3. DEEP NESTING (more than 3 levels)</span>
+<span class="sub-instruction">Search for deeply nested code</span>
+<span class="sub-instruction">For each: identify, show flattened version using early returns</span>
+
+<span class="instruction">4. DUPLICATE CODE</span>
+<span class="sub-instruction">Find repeated patterns (3+ occurrences)</span>
+<span class="sub-instruction">For each: identify locations, create shared utility</span>
+
+<span class="instruction">5. MISSING ERROR HANDLING</span>
+<span class="sub-instruction">Find async operations without try/catch</span>
+<span class="sub-instruction">For each: identify, add proper error handling</span>
+
+<span class="instruction">6. TYPE SAFETY ISSUES</span>
+<span class="sub-instruction">Find uses of "any" type</span>
+<span class="sub-instruction">Find non-null assertions (!) without justification</span>
+<span class="sub-instruction">For each: provide proper typing</span>
+
+<span class="instruction">7. NAMING ISSUES</span>
+<span class="sub-instruction">Find vague names (data, info, item, temp)</span>
+<span class="sub-instruction">Find inconsistent naming patterns</span>
+<span class="sub-instruction">For each: suggest better name</span>
+
+<span class="section-header">OUTPUT FORMAT</span>
+<span class="instruction">For each issue found:</span>
+<span class="sub-instruction">- File and line number</span>
+<span class="sub-instruction">- Category (from above)</span>
+<span class="sub-instruction">- Current code snippet</span>
+<span class="sub-instruction">- Problem explanation</span>
+<span class="sub-instruction">- Fixed code</span>
+
+<span class="instruction">Summary at end:</span>
+<span class="sub-instruction">- Total issues by category</span>
+<span class="sub-instruction">- Most problematic files</span>
+<span class="sub-instruction">- Recommended priority order for fixes</span></div>
+</div>
+
+<h1>Code Review Prompt</h1>
+
+<p>Use this prompt to conduct structured code reviews with Claude Chat after completing milestones.</p>
+
+<div class="prompt-container">
+  <div class="prompt-header">
+    <span>Code Review Request</span>
+    <span class="copy-hint">Use in Claude Chat</span>
+  </div>
+  <div class="prompt-content"><span class="section-header">ROLE</span>
+<span class="instruction">Senior Developer conducting a thorough code review.</span>
+
+<span class="section-header">CONTEXT</span>
+<span class="instruction">Project: <span class="placeholder">{{productName}}</span></span>
+<span class="instruction">Milestone: <span class="placeholder">{{milestone name}}</span></span>
+<span class="instruction">Files to review are pasted below.</span>
+
+<span class="section-header">OBJECTIVE</span>
+<span class="instruction">Review the code for quality, security, and best practices.</span>
+
+<span class="section-header">REVIEW CRITERIA</span>
+
+<span class="instruction">STRUCTURE (score 1-5)</span>
+<span class="sub-instruction">- Functions appropriately sized?</span>
+<span class="sub-instruction">- Files appropriately sized?</span>
+<span class="sub-instruction">- Clear separation of concerns?</span>
+<span class="sub-instruction">- Dependencies explicit?</span>
+
+<span class="instruction">SIMPLICITY (score 1-5)</span>
+<span class="sub-instruction">- Code readable without explanation?</span>
+<span class="sub-instruction">- Names reveal intent?</span>
+<span class="sub-instruction">- No unnecessary complexity?</span>
+<span class="sub-instruction">- Comments explain "why" where needed?</span>
+
+<span class="instruction">SAFETY (score 1-5)</span>
+<span class="sub-instruction">- Inputs validated at boundaries?</span>
+<span class="sub-instruction">- Errors handled explicitly?</span>
+<span class="sub-instruction">- Auth/authz checks in place?</span>
+<span class="sub-instruction">- No sensitive data exposure?</span>
+
+<span class="instruction">PERFORMANCE (score 1-5)</span>
+<span class="sub-instruction">- No obvious inefficiencies?</span>
+<span class="sub-instruction">- No N+1 queries?</span>
+<span class="sub-instruction">- Appropriate data fetching?</span>
+
+<span class="instruction">STABILITY (score 1-5)</span>
+<span class="sub-instruction">- Edge cases handled?</span>
+<span class="sub-instruction">- States handled (loading, error, empty)?</span>
+<span class="sub-instruction">- Code maintainable long-term?</span>
+
+<span class="section-header">OUTPUT FORMAT</span>
+
+<span class="instruction">SUMMARY</span>
+<span class="sub-instruction">Overall assessment and scores</span>
+
+<span class="instruction">ISSUES (grouped by severity)</span>
+<span class="sub-instruction">Critical: Must fix before merging</span>
+<span class="sub-instruction">Warning: Should fix soon</span>
+<span class="sub-instruction">Suggestion: Nice to have</span>
+
+<span class="instruction">For each issue:</span>
+<span class="sub-instruction">- File and location</span>
+<span class="sub-instruction">- Problem description</span>
+<span class="sub-instruction">- Suggested fix with code</span>
+
+<span class="instruction">PRAISE</span>
+<span class="sub-instruction">What's done well (important for learning)</span>
+
+<span class="section-header">CODE TO REVIEW</span>
+<span class="instruction"><span class="placeholder">{{paste code files here}}</span></span></div>
+</div>
+
+<hr class="divider">
+
+<!-- APPENDIX A -->
+<div class="phase-header">
+  <h2>APPENDIX A: POST-MVP ADMIN ROADMAP</h2>
+</div>
+
+<p>These features are important but not launch-blocking. Build them after you have real users and understand your actual operational needs. They're documented here so you don't forget about them and have a starting point when you're ready.</p>
+
+<h2>Phase 2: Operational Features</h2>
+
+<p>Build these when you're handling regular support requests and need more powerful tools.</p>
+
+<div class="roadmap-item">
+  <h4>User Impersonation <span class="priority priority-high">High Priority</span></h4>
+  <p><strong>What:</strong> Ability to see the app exactly as a specific user sees it, without knowing their password.</p>
+  <p><strong>Why:</strong> When users report issues, you need to reproduce what they're experiencing. Screenshots and descriptions are often incomplete.</p>
+  <p><strong>Implementation notes:</strong> Create a temporary session that sets the viewed user's ID but retains admin audit logging. Show clear visual indicator that you're in impersonation mode. Log all impersonation sessions. Limit impersonation duration (auto-expire after 30 minutes).</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>Manual Billing Adjustments <span class="priority priority-high">High Priority</span></h4>
+  <p><strong>What:</strong> Extend trials, apply discounts, issue refunds, change plans, cancel subscriptions manually.</p>
+  <p><strong>Why:</strong> Automated systems can't handle every situation. Good customer service sometimes requires making exceptions.</p>
+  <p><strong>Implementation notes:</strong> All actions go through Stripe API, not direct database modification. Require reason field for audit log. Implement approval workflow for large refunds (require super_admin).</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>Feature Flags <span class="priority priority-medium">Medium Priority</span></h4>
+  <p><strong>What:</strong> Enable/disable features for all users or specific segments without deploying code.</p>
+  <p><strong>Why:</strong> Allows gradual rollouts, beta testing with select users, and quick disable of broken features.</p>
+  <p><strong>Implementation notes:</strong> Store flags in system_settings or dedicated table. Create useFeatureFlag hook for frontend. Cache flags to avoid per-request database hits. Support percentage rollouts and user segment targeting.</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>Audit Log Viewer <span class="priority priority-medium">Medium Priority</span></h4>
+  <p><strong>What:</strong> Searchable, filterable view of all admin actions.</p>
+  <p><strong>Why:</strong> Accountability, security investigation, and compliance requirements.</p>
+  <p><strong>Implementation notes:</strong> Already logging to admin_audit_logs from Phase 1. Build UI to search by admin, action type, target, date range. Add export to CSV functionality.</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>Bulk User Actions <span class="priority priority-low">Low Priority</span></h4>
+  <p><strong>What:</strong> Select multiple users and perform actions (send email, apply tag, export data).</p>
+  <p><strong>Why:</strong> Efficiency when dealing with groups of users (e.g., all trial users, all users on legacy plan).</p>
+  <p><strong>Implementation notes:</strong> Implement carefully to avoid accidentally affecting wrong users. Require confirmation showing count. Process in background job for large batches.</p>
+</div>
+
+<h2>Phase 3: Growth Features</h2>
+
+<p>Build these when you're actively optimizing for growth and need deeper insights.</p>
+
+<div class="roadmap-item">
+  <h4>Analytics Dashboard <span class="priority priority-high">High Priority</span></h4>
+  <p><strong>What:</strong> User acquisition trends, engagement metrics (DAU/WAU/MAU), feature usage, conversion funnels.</p>
+  <p><strong>Why:</strong> Understanding user behavior is essential for growth decisions.</p>
+  <p><strong>Implementation notes:</strong> Can integrate with analytics service (Mixpanel, PostHog, Amplitude) or build from event tracking data. Focus on actionable metrics, not vanity metrics. Include cohort analysis for retention.</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>Revenue Analytics <span class="priority priority-high">High Priority</span></h4>
+  <p><strong>What:</strong> MRR trends, churn analysis, LTV calculation, expansion revenue tracking.</p>
+  <p><strong>Why:</strong> Financial health visibility is essential for a sustainable business.</p>
+  <p><strong>Implementation notes:</strong> Pull from Stripe data. Show new MRR, churned MRR, expansion MRR, net MRR change. Calculate and display churn rate and LTV. Alert on unusual changes.</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>SEO Tools <span class="priority priority-medium">Medium Priority</span></h4>
+  <p><strong>What:</strong> Manage meta tags, Open Graph images, robots.txt, sitemap settings.</p>
+  <p><strong>Why:</strong> SEO is important for organic growth, and marketers shouldn't need developers to update descriptions.</p>
+  <p><strong>Implementation notes:</strong> Store settings in system_settings. Generate meta tags dynamically from settings. Include preview of how pages will appear in search results.</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>GDPR Compliance Tools <span class="priority priority-medium">Medium Priority</span></h4>
+  <p><strong>What:</strong> Data export (all user data in portable format), data deletion (complete erasure), consent management.</p>
+  <p><strong>Why:</strong> Legal requirement in EU and increasingly expected by privacy-conscious users everywhere.</p>
+  <p><strong>Implementation notes:</strong> Data export: gather from all tables, format as JSON/CSV, include Stripe data. Data deletion: soft-delete then hard-delete after verification period, anonymize records that must be retained. Log all GDPR requests for compliance records.</p>
+</div>
+
+<div class="roadmap-item">
+  <h4>Advanced Monitoring <span class="priority priority-low">Low Priority</span></h4>
+  <p><strong>What:</strong> Performance metrics, slow query identification, API response time tracking, uptime monitoring.</p>
+  <p><strong>Why:</strong> Proactive performance management prevents user-facing issues.</p>
+  <p><strong>Implementation notes:</strong> Integrate with APM service (Vercel Analytics, Datadog, New Relic) or build from request logging. Set up alerts for performance degradation. Track p50, p95, p99 response times.</p>
+</div>
+
+<hr class="divider">
+
+<!-- APPENDIX B -->
+<div class="phase-header">
+  <h2>APPENDIX B: ADMIN DATABASE SCHEMA REFERENCE</h2>
+</div>
+
+<p>Complete schema for admin-related tables. Include these in your Milestone 3 database migration.</p>
+
+<h3>Profiles Table Modification</h3>
+
+<div class="code-block">-- Add role column to profiles table
+ALTER TABLE public.profiles 
+ADD COLUMN IF NOT EXISTS role text DEFAULT 'user'
+CHECK (role IN ('user', 'admin', 'super_admin'));
+
+-- Create index for role queries
+CREATE INDEX IF NOT EXISTS idx_profiles_role ON public.profiles(role);
+
+-- Update RLS policy to allow admin access
+CREATE POLICY "Admins can view all profiles"
+  ON public.profiles FOR SELECT
+  USING (
+    auth.uid() = id 
+    OR EXISTS (
+      SELECT 1 FROM public.profiles 
+      WHERE id = auth.uid() 
+      AND role IN ('admin', 'super_admin')
+    )
+  );</div>
+
+<h3>Admin Audit Logs Table</h3>
+
+<table class="schema-table">
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>Type</th>
+      <th>Constraints</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>id</td>
+      <td>uuid</td>
+      <td>PRIMARY KEY, DEFAULT uuid_generate_v4()</td>
+      <td>Unique identifier</td>
+    </tr>
+    <tr>
+      <td>admin_id</td>
+      <td>uuid</td>
+      <td>REFERENCES profiles(id), NOT NULL</td>
+      <td>Admin who performed action</td>
+    </tr>
+    <tr>
+      <td>action</td>
+      <td>text</td>
+      <td>NOT NULL</td>
+      <td>Action type (e.g., 'user.view', 'user.disable')</td>
+    </tr>
+    <tr>
+      <td>target_type</td>
+      <td>text</td>
+      <td></td>
+      <td>Entity type affected (e.g., 'user', 'subscription')</td>
+    </tr>
+    <tr>
+      <td>target_id</td>
+      <td>uuid</td>
+      <td></td>
+      <td>ID of affected entity</td>
+    </tr>
+    <tr>
+      <td>details</td>
+      <td>jsonb</td>
+      <td></td>
+      <td>Additional context</td>
+    </tr>
+    <tr>
+      <td>ip_address</td>
+      <td>text</td>
+      <td></td>
+      <td>Admin's IP address</td>
+    </tr>
+    <tr>
+      <td>created_at</td>
+      <td>timestamptz</td>
+      <td>DEFAULT now(), NOT NULL</td>
+      <td>When action occurred</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Admin Notes Table</h3>
+
+<table class="schema-table">
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>Type</th>
+      <th>Constraints</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>id</td>
+      <td>uuid</td>
+      <td>PRIMARY KEY, DEFAULT uuid_generate_v4()</td>
+      <td>Unique identifier</td>
+    </tr>
+    <tr>
+      <td>admin_id</td>
+      <td>uuid</td>
+      <td>REFERENCES profiles(id), NOT NULL</td>
+      <td>Admin who wrote note</td>
+    </tr>
+    <tr>
+      <td>target_user_id</td>
+      <td>uuid</td>
+      <td>REFERENCES profiles(id), NOT NULL</td>
+      <td>User note is about</td>
+    </tr>
+    <tr>
+      <td>content</td>
+      <td>text</td>
+      <td>NOT NULL</td>
+      <td>Note content</td>
+    </tr>
+    <tr>
+      <td>created_at</td>
+      <td>timestamptz</td>
+      <td>DEFAULT now(), NOT NULL</td>
+      <td>When note was created</td>
+    </tr>
+    <tr>
+      <td>updated_at</td>
+      <td>timestamptz</td>
+      <td>DEFAULT now(), NOT NULL</td>
+      <td>When note was last updated</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>System Settings Table</h3>
+
+<table class="schema-table">
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>Type</th>
+      <th>Constraints</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>key</td>
+      <td>text</td>
+      <td>PRIMARY KEY</td>
+      <td>Setting identifier</td>
+    </tr>
+    <tr>
+      <td>value</td>
+      <td>text</td>
+      <td>NOT NULL</td>
+      <td>Setting value</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>text</td>
+      <td></td>
+      <td>Human-readable description</td>
+    </tr>
+    <tr>
+      <td>is_sensitive</td>
+      <td>boolean</td>
+      <td>DEFAULT false</td>
+      <td>If true, hide value in UI</td>
+    </tr>
+    <tr>
+      <td>updated_at</td>
+      <td>timestamptz</td>
+      <td>DEFAULT now(), NOT NULL</td>
+      <td>Last update time</td>
+    </tr>
+    <tr>
+      <td>updated_by</td>
+      <td>uuid</td>
+      <td>REFERENCES profiles(id)</td>
+      <td>Admin who last updated</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Helper Function</h3>
+
+<div class="code-block">-- Helper function to check if current user is admin
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE id = auth.uid() 
+    AND role IN ('admin', 'super_admin')
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Helper function to check if current user is super admin
+CREATE OR REPLACE FUNCTION public.is_super_admin()
+RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE id = auth.uid() 
+    AND role = 'super_admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;</div>
+
+<h3>RLS Policies</h3>
+
+<div class="code-block">-- Admin audit logs: admins can read, system inserts
+ALTER TABLE public.admin_audit_logs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can view audit logs"
+  ON public.admin_audit_logs FOR SELECT
+  USING (public.is_admin());
+
+-- Admin notes: admins can CRUD
+ALTER TABLE public.admin_notes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can manage notes"
+  ON public.admin_notes FOR ALL
+  USING (public.is_admin());
+
+-- System settings: admins read, super_admins write
+ALTER TABLE public.system_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can view settings"
+  ON public.system_settings FOR SELECT
+  USING (public.is_admin());
+
+CREATE POLICY "Super admins can update settings"
+  ON public.system_settings FOR UPDATE
+  USING (public.is_super_admin());</div>
+
+<hr class="divider">
+
+<p style="text-align: center; color: var(--muted); margin-top: 3rem;">
+  AI SaaS Handbook - Build Phase Guide v3<br>
+  Companion Document to AI SaaS Handbook v2.2<br>
+  January 2026
+</p>
+
+</body>
+</html>

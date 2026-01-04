@@ -1,0 +1,42 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Local development
+.env
+.env.local
+
+# Python (if using local server)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node (if using local tooling)
+node_modules/
+npm-debug.log*
+
+# Build outputs (we commit source HTML directly)
+dist/
+build/
+out/
+
+# Archives of downloaded files (keep in Downloads, not repo)
+*.zip
+*.tar.gz

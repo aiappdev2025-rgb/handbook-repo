@@ -1,0 +1,3648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SaaS Handbook v2.2 - Complete Edition</title>
+  <style>
+    :root {
+      --primary: #1a365d;
+      --secondary: #2c5282;
+      --accent: #2d3748;
+      --text: #1a202c;
+      --muted: #718096;
+      --bg: #ffffff;
+      --surface: #f7fafc;
+      --border: #e2e8f0;
+      --code-bg: #f5f5f5;
+      --prompt-bg: #fffbeb;
+      --success: #48bb78;
+      --warning: #ed8936;
+      --error: #f56565;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: var(--bg);
+    }
+    
+    h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 0.5rem;
+      margin-top: 3rem;
+    }
+    
+    h2 {
+      color: var(--secondary);
+      font-size: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    h3 {
+      color: var(--accent);
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    
+    h4 {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+    
+    p { margin: 1rem 0; }
+    
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+    
+    li { margin: 0.5rem 0; }
+    
+    .title-page {
+      text-align: center;
+      padding: 4rem 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 3rem;
+    }
+    
+    .title-page h1 {
+      font-size: 3rem;
+      border: none;
+      margin: 0;
+    }
+    
+    .subtitle {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      margin: 1rem 0;
+    }
+    
+    .version {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+    
+    .date {
+      color: var(--muted);
+    }
+    
+    .part-header {
+      text-align: center;
+      padding: 3rem 0;
+      margin: 3rem 0;
+      background: var(--surface);
+      border-radius: 8px;
+    }
+    
+    .part-header h2 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin: 0;
+    }
+    
+    .toc {
+      background: var(--surface);
+      padding: 2rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+    }
+    
+    .toc h2 {
+      margin-top: 0;
+    }
+    
+    .toc-section {
+      margin: 1rem 0;
+    }
+    
+    .toc-section strong {
+      color: var(--primary);
+    }
+    
+    .toc-items {
+      margin-left: 1.5rem;
+      color: var(--muted);
+    }
+    
+    .prompt-block {
+      background: var(--prompt-bg);
+      border-left: 4px solid #d69e2e;
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    
+    .checklist {
+      background: var(--surface);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+    
+    .checklist h4 {
+      margin-top: 0;
+    }
+    
+    .warning {
+      background: #feebc8;
+      border-left: 4px solid var(--warning);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .note {
+      background: #bee3f8;
+      border-left: 4px solid #3182ce;
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .success {
+      background: #c6f6d5;
+      border-left: 4px solid var(--success);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    
+    .comparison-table th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+    
+    .comparison-table tr:nth-child(even) {
+      background: #fafafa;
+    }
+    
+    .design-option {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .design-option h4 {
+      margin-top: 0;
+      color: var(--secondary);
+    }
+    
+    .design-option.recommended {
+      border-color: var(--success);
+      background: #f0fff4;
+    }
+    
+    .tool-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    
+    .badge-chat {
+      background: #e9d8fd;
+      color: #553c9a;
+    }
+    
+    .badge-code {
+      background: #c6f6d5;
+      color: #276749;
+    }
+    
+    .badge-both {
+      background: #feebc8;
+      color: #c05621;
+    }
+    
+    .divider {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 3rem 0;
+    }
+    
+    @media print {
+      body { max-width: none; }
+      .part-header { break-before: page; }
+      h1 { break-before: page; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TITLE PAGE -->
+<div class="title-page">
+  <h1>AI SaaS Handbook</h1>
+  <p class="subtitle">A Complete Methodology for Building Production-Quality SaaS Products<br>with AI-Assisted Development</p>
+  <p class="version">Version 2.2 - Complete Edition</p>
+  <p class="date">January 2026</p>
+  
+  <div style="margin-top: 3rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <strong>This Edition Includes:</strong>
+    <ul>
+      <li>Comprehensive code quality standards integrated throughout every stage</li>
+      <li>Infrastructure setup guides for GitHub, Supabase, and Vercel</li>
+      <li><strong style="color: #2d3748;">NEW: Multi-Environment Configuration (Local â†’ Preview â†’ Production)</strong></li>
+      <li><strong style="color: #2d3748;">NEW: Environment-specific Supabase projects and branch strategies</strong></li>
+      <li><strong style="color: #2d3748;">NEW: CI/CD pipelines with environment promotion workflow</strong></li>
+      <li>Expanded UX methodology with multiple design exploration techniques</li>
+      <li>Enhanced UI system with visual direction options and design critique</li>
+      <li>Claude tools guide: when to use Chat vs Code CLI</li>
+      <li>Quality gates with explicit verification criteria</li>
+      <li>Refactoring checkpoints and code review protocols</li>
+    </ul>
+  </div>
+</div>
+
+<!-- DOCUMENT SYSTEM OVERVIEW -->
+<div style="background: #f0f9ff; border: 2px solid #0284c7; border-radius: 8px; padding: 2rem; margin: 2rem 0;">
+  <h2 style="color: #0369a1; margin-top: 0; border: none;">ðŸ“š AI SaaS Handbook Documentation System</h2>
+  
+  <p>This handbook is the <strong>central hub</strong> of a modular documentation system. It provides the methodology, philosophy, and phase overviews, while companion guides provide detailed tactical execution for each major phase.</p>
+  
+  <h3 style="color: #0369a1; font-size: 1.1rem;">The Complete Document Set</h3>
+  
+  <table class="comparison-table" style="margin: 1rem 0;">
+    <tr>
+      <th>Document</th>
+      <th>Purpose</th>
+      <th>When to Use</th>
+    </tr>
+    <tr style="background: #dbeafe;">
+      <td><strong>AI SaaS Handbook v2.2</strong><br><em>(This Document)</em></td>
+      <td>Core methodology, quality standards, infrastructure setup, phase overviews</td>
+      <td>Start here. Reference throughout project.</td>
+    </tr>
+    <tr>
+      <td><strong>Build Phase Guide v3</strong></td>
+      <td>Detailed prompts for all 11 build milestones, checkpoint procedures, admin console setup</td>
+      <td>During Part V: Build Phase execution</td>
+    </tr>
+    <tr>
+      <td><strong>Landing Page &amp; A/B Testing Guide</strong></td>
+      <td>Copywriting, SEO, visual assets (AI generation), landing page implementation, A/B testing</td>
+      <td>Before/during marketing site creation</td>
+    </tr>
+  </table>
+  
+  <h3 style="color: #0369a1; font-size: 1.1rem;">How They Work Together</h3>
+  
+  <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem; font-family: monospace; font-size: 0.85rem; margin: 1rem 0;">
+<pre style="margin: 0; white-space: pre-wrap;">PROJECT LIFECYCLE FLOW
+
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  MAIN HANDBOOK (This Document)                                  â”‚
+â”‚  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â”‚
+â”‚                                                                 â”‚
+â”‚  Part I: Foundation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¶ â”‚
+â”‚  Part II: Documentation Stages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¶ â”‚
+â”‚  Part III: Design Excellence â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¶ â”‚
+â”‚  Part IV: Technical Foundation (incl. Multi-Environment) â”€â”€â”€â”€â–¶ â”‚
+â”‚                                                                 â”‚
+â”‚  Part V: Build Phase â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                â”‚
+â”‚         (Overview only)        â”‚                                â”‚
+â”‚                                â–¼                                â”‚
+â”‚                   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                    â”‚
+â”‚                   â”‚  BUILD PHASE GUIDE v3  â”‚ â—€â”€â”€ Detailed       â”‚
+â”‚                   â”‚  (Companion Document)  â”‚     Prompts        â”‚
+â”‚                   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                    â”‚
+â”‚                                â”‚                                â”‚
+â”‚                                â–¼                                â”‚
+â”‚  Part VI: QA and Launch â—€â”€â”€â”€â”€â”€â”˜                                 â”‚
+â”‚                                                                 â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  LANDING PAGE & A/B TESTING GUIDE                               â”‚
+â”‚  (Use when creating marketing site - can run parallel to build) â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜</pre>
+  </div>
+  
+  <h3 style="color: #0369a1; font-size: 1.1rem;">Quick Reference: Where to Find What</h3>
+  
+  <ul style="margin: 0.5rem 0;">
+    <li><strong>Quality standards and code review criteria</strong> â†’ Main Handbook, Part I</li>
+    <li><strong>Business planning and design briefs</strong> â†’ Main Handbook, Parts II-III</li>
+    <li><strong>Environment setup (Local/Preview/Prod)</strong> â†’ Main Handbook, Chapter 19</li>
+    <li><strong>Detailed build prompts (Milestones 1-11)</strong> â†’ Build Phase Guide v3</li>
+    <li><strong>Admin console implementation</strong> â†’ Build Phase Guide v3, Part III</li>
+    <li><strong>Landing page copywriting and SEO</strong> â†’ Landing Page Guide, Parts II-III</li>
+    <li><strong>AI image generation for marketing</strong> â†’ Landing Page Guide, Part V</li>
+    <li><strong>A/B testing setup</strong> â†’ Landing Page Guide, Parts VII-VIII</li>
+  </ul>
+</div>
+
+<!-- DOCUMENT SYSTEM OVERVIEW -->
+<div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #0284c7; border-radius: 12px; padding: 2rem; margin: 2rem 0;">
+  <h2 style="color: #0369a1; margin-top: 0; border: none;">ðŸ“š Document System Overview</h2>
+  
+  <p>The AI SaaS Handbook is part of a modular documentation system. Each document has a specific purpose, and together they provide complete coverage from idea to launch.</p>
+  
+  <h3 style="color: #0369a1; margin-top: 1.5rem;">The Complete Document Set</h3>
+  
+  <table class="comparison-table" style="margin: 1rem 0;">
+    <tr>
+      <th>Document</th>
+      <th>Purpose</th>
+      <th>When to Use</th>
+    </tr>
+    <tr style="background: #dbeafe;">
+      <td><strong>AI SaaS Handbook v2.2</strong><br><em>(This Document)</em></td>
+      <td>Strategic hub: methodology, process, standards, and navigation to companion guides</td>
+      <td>Start here. Use throughout project for reference and quality standards</td>
+    </tr>
+    <tr>
+      <td><strong>Build Phase Guide v3</strong></td>
+      <td>Tactical execution: detailed prompts for every build milestone with copy-paste instructions</td>
+      <td>During Part V (Build Phase) - follow milestone by milestone</td>
+    </tr>
+    <tr>
+      <td><strong>Landing Page & A/B Testing Guide</strong></td>
+      <td>Complete guide for copywriting, SEO, visual assets, landing page implementation, and A/B testing</td>
+      <td>After core app is built, before launch marketing</td>
+    </tr>
+  </table>
+  
+  <h3 style="color: #0369a1; margin-top: 1.5rem;">How the Documents Work Together</h3>
+  
+  <div style="background: white; border-radius: 8px; padding: 1.5rem; font-family: monospace; font-size: 0.9rem;">
+    <pre style="margin: 0; white-space: pre-wrap;">
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    AI SAAS HANDBOOK (Hub)                       â”‚
+â”‚  Parts I-IV: Foundation, Documentation, Design, Infrastructure  â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚                                                                 â”‚
+â”‚   Part V: Build Phase â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¶ BUILD PHASE GUIDE v3         â”‚
+â”‚   (Overview & Standards)          (Detailed Prompts)            â”‚
+â”‚                                                                 â”‚
+â”‚   Part VI: Launch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¶ LANDING PAGE GUIDE           â”‚
+â”‚   (QA & Deployment)               (Marketing & Testing)         â”‚
+â”‚                                                                 â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+    </pre>
+  </div>
+  
+  <h3 style="color: #0369a1; margin-top: 1.5rem;">Recommended Reading Order</h3>
+  
+  <ol>
+    <li><strong>First Project:</strong> Read this handbook cover-to-cover, then use Build Phase Guide during implementation</li>
+    <li><strong>Subsequent Projects:</strong> Use handbook as reference, jump directly to relevant companion guides</li>
+    <li><strong>Quick Reference:</strong> Document Navigation Guide provides one-page summary of when to use what</li>
+  </ol>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  
+  <div class="toc-section">
+    <strong>Part I: Foundation</strong>
+    <div class="toc-items">
+      1. Introduction and Philosophy<br>
+      2. The Code Quality Crisis<br>
+      3. The Quality Framework: Five Pillars<br>
+      4. Claude Tools Guide: Chat vs Code CLI
+    </div>
+  </div>
+  
+  <div class="toc-section">
+    <strong>Part II: Documentation Stages</strong>
+    <div class="toc-items">
+      5. Stage 0.1: Research and Opportunity Assessment<br>
+      6. Stage 1.0: Business One-Pager<br>
+      7. Stage 2.0: Shared Design Brief
+    </div>
+  </div>
+  
+  <div class="toc-section">
+    <strong>Part III: Design Excellence</strong>
+    <div class="toc-items">
+      8. Design Philosophy and Process<br>
+      9. Stage 3.0: UX Package (Enhanced)<br>
+      10. Stage 3.1: UX Critic and Validation<br>
+      11. Stage 4.0: UI System (Enhanced)<br>
+      12. Visual Direction Exploration<br>
+      13. Design Quality Assurance
+    </div>
+  </div>
+  
+  <div class="toc-section">
+    <strong>Part IV: Technical Foundation</strong>
+    <div class="toc-items">
+      14. Stage 5.0: Solution Architecture<br>
+      15. Security, Testing, and Scale Readiness<br>
+      16. Infrastructure Setup: GitHub<br>
+      17. Infrastructure Setup: Supabase<br>
+      18. Infrastructure Setup: Vercel<br>
+      19. Multi-Environment Configuration (NEW)
+    </div>
+  </div>
+  
+  <div class="toc-section">
+    <strong>Part V: Build Phase</strong>
+    <div class="toc-items">
+      20. Build Phase Overview and Quality Standards<br>
+      21. Build Milestones with Quality Gates<br>
+      22. Code Review and Refactoring
+    </div>
+  </div>
+  
+  <div class="toc-section">
+    <strong>Part VI: Launch</strong>
+    <div class="toc-items">
+      23. QA and Launch
+    </div>
+  </div>
+  
+  <div class="toc-section">
+    <strong>Appendices</strong>
+    <div class="toc-items">
+      A. Quality Verification Checklists<br>
+      B. Anti-Pattern Reference<br>
+      C. Claude Prompt Templates Quick Reference<br>
+      D. Multi-Environment Configuration Reference (Enhanced)
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PART I: FOUNDATION -->
+<div class="part-header">
+  <h2>PART I: FOUNDATION</h2>
+</div>
+
+<h1>1. Introduction and Philosophy</h1>
+
+<h2>1.1 What This Handbook Is</h2>
+
+<p>The AI SaaS Handbook is a complete methodology for building production-quality SaaS products using AI-assisted development. It provides structured prompts, quality gates, and verification criteria that guide you from initial idea through launch.</p>
+
+<p>This is not a collection of tips. It is a system. Each stage produces artifacts that feed into subsequent stages. Vocabulary established early becomes canonical throughout. Decisions made in documentation prevent rework during implementation. Quality standards enforced at every step prevent the accumulation of technical debt that kills projects.</p>
+
+<h2>1.2 The Problem This Handbook Solves</h2>
+
+<p>AI-assisted development has a fundamental tension. AI tools can produce code faster than ever before, but speed without quality leads to disaster. A codebase full of working-but-unmaintainable code is worse than no codebase at all, because it creates the illusion of progress while accumulating hidden costs.</p>
+
+<p>The handbook solves this by embedding quality requirements into every stage. Rather than building fast and fixing later, you build correctly from the start. The AI receives explicit quality criteria and verification requirements. The output is code that works AND can be maintained, extended, and debugged.</p>
+
+<h2>1.3 Core Principles</h2>
+
+<h3>Documentation Before Implementation</h3>
+<p>Every hour spent on documentation saves ten hours of rework. The Business One-Pager forces clarity about what you are building and for whom. The Design Brief establishes vocabulary and constraints. The UX Package defines user flows before any code exists. The Architecture locks technical decisions before implementation begins.</p>
+
+<h3>Design Is Not Decoration</h3>
+<p>Good design is not about making things pretty at the end. It is about understanding users deeply, exploring multiple solutions, and making intentional choices that serve user needs. The expanded design sections in this handbook treat UX and UI as first-class concerns that receive the same rigor as architecture and code quality.</p>
+
+<h3>Quality Is Non-Negotiable</h3>
+<p>Every piece of code must meet explicit quality standards. Functions must be appropriately sized. Error handling must be comprehensive. Security must be defense-in-depth. Performance must be considered from the start. These are not aspirational goals. They are requirements.</p>
+
+<h3>Verification at Every Step</h3>
+<p>Trust but verify. AI-generated artifacts can be impressive, but they can also be subtly wrong. Every artifact produced by the handbook workflow must be verified against explicit criteria before it feeds into subsequent stages.</p>
+
+<h3>Right Tool for the Task</h3>
+<p>Claude Chat and Claude Code CLI have different strengths. Using the right tool for each task dramatically improves outcomes. This handbook specifies which tool to use at each stage and why.</p>
+
+<hr class="divider">
+
+<h1>2. The Code Quality Crisis</h1>
+
+<h2>2.1 Understanding Vibe Coding</h2>
+
+<p>"Vibe coding" is a phenomenon where AI-generated code appears to work but fails to meet professional quality standards. The code passes visual inspection. It runs without errors in the happy path. But underneath, it is a maintenance nightmare waiting to happen.</p>
+
+<p>The term captures the essence of the problem: the developer "goes with the vibe" rather than verifying the substance. The AI produced something that looks right, so it must be right. This assumption is dangerous.</p>
+
+<h2>2.2 The Six Failure Patterns</h2>
+
+<p>These patterns are predictable. Understanding them is the first step to preventing them.</p>
+
+<h3>Pattern 1: Monolithic Function Syndrome</h3>
+<p>The AI generates a single function that handles an entire feature: fetching data, transforming it, validating it, updating state, handling errors, and rendering output. This function might be 150 lines long. It technically works. But it cannot be tested in isolation, is impossible to understand at a glance, and any change risks breaking unrelated behavior.</p>
+
+<h3>Pattern 2: Copy-Paste Proliferation</h3>
+<p>When the AI needs similar functionality in multiple places, it often duplicates code with minor modifications rather than extracting shared logic. You end up with five slightly different implementations of the same pattern. Each has its own quirks. Bugs fixed in one place remain in the others.</p>
+
+<h3>Pattern 3: Implicit Coupling</h3>
+<p>The AI creates code where components know too much about each other's internals. A UI component directly accesses database logic. A utility function assumes specific application state. These hidden dependencies make the code fragile. Changes ripple unpredictably.</p>
+
+<h3>Pattern 4: Security Afterthought</h3>
+<p>Input validation, authentication checks, and authorization logic get added inline wherever they seem needed. There is no systematic enforcement. Some paths are protected. Others are not. The gaps are invisible until exploited.</p>
+
+<h3>Pattern 5: Performance Blindness</h3>
+<p>The AI generates code that works correctly but performs unnecessary operations. Data is re-fetched when it is already available. Values are re-computed on every render. Sequential API calls could be parallel. O(nÂ²) algorithms are used where O(n) is possible.</p>
+
+<h3>Pattern 6: Error Handling Inconsistency</h3>
+<p>Some functions have try-catch blocks. Others do not. Some errors are logged. Others are silently swallowed. Some failures show user-friendly messages. Others expose stack traces. There is no coherent strategy.</p>
+
+<h2>2.3 The Solution: Explicit Quality Standards</h2>
+
+<p>The solution is not to use AI less. It is to use AI more precisely. AI is incredibly responsive to guidance. When you provide explicit quality criteria, the AI will meet them. When you do not, the AI will optimize for what it can infer: something that looks complete.</p>
+
+<hr class="divider">
+
+<h1>3. The Quality Framework: Five Pillars</h1>
+
+<p>The quality framework provides concrete standards for evaluating code. It is organized into five pillars: Structure, Simplicity, Safety, Speed, and Stability.</p>
+
+<h2>3.1 Structure</h2>
+<p>Structure is about organizing code so that each piece has a clear purpose and location.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Single Responsibility:</strong> Every function, component, and module should do one thing. If you cannot describe what it does in a single sentence without "and," it is doing too much.</li>
+  <li><strong>Appropriate Abstraction:</strong> Code at the same level should operate at the same abstraction level. Orchestration functions should not contain low-level details.</li>
+  <li><strong>Explicit Dependencies:</strong> No reaching into global state. Dependencies come through parameters, props, or imports.</li>
+  <li><strong>Cohesive Modules:</strong> Group related functionality. Separate unrelated functionality.</li>
+</ul>
+
+<h2>3.2 Simplicity</h2>
+<p>Simplicity is about minimizing cognitive load.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Function Length:</strong> Functions should rarely exceed 20-30 lines. The 100-line function is almost always a code smell.</li>
+  <li><strong>Nesting Depth:</strong> Maximum 3 levels. Use early returns to reduce nesting.</li>
+  <li><strong>Naming Clarity:</strong> Names should reveal intent. "userSubscriptionStatus" beats "data".</li>
+  <li><strong>No Magic Values:</strong> Named constants for all numbers and strings in logic.</li>
+</ul>
+
+<h2>3.3 Safety</h2>
+<p>Safety encompasses security and correctness.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Input Validation at Boundaries:</strong> All external data validated once, at entry.</li>
+  <li><strong>Defense in Depth:</strong> Multiple layers of security checks. API routes AND RLS.</li>
+  <li><strong>Fail Securely:</strong> Errors should not expose sensitive information or leave inconsistent state.</li>
+  <li><strong>Explicit Error Handling:</strong> Every operation that can fail should have explicit handling.</li>
+</ul>
+
+<h2>3.4 Speed</h2>
+<p>Speed is about performance and efficiency.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Avoid Unnecessary Work:</strong> Do not compute, fetch, or render what is not needed.</li>
+  <li><strong>Appropriate Data Structures:</strong> Choose structures that match access patterns.</li>
+  <li><strong>Database Efficiency:</strong> No N+1 queries. Select only needed columns. Use indexes.</li>
+  <li><strong>Measure Before Optimizing:</strong> Profile real performance. Optimize actual bottlenecks.</li>
+</ul>
+
+<h2>3.5 Stability</h2>
+<p>Stability is about reliability and maintainability.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Test Coverage:</strong> Critical paths have automated tests.</li>
+  <li><strong>Consistent Patterns:</strong> Similar problems solved similarly throughout.</li>
+  <li><strong>Documentation at Decision Points:</strong> Comments explain "why" for non-obvious choices.</li>
+  <li><strong>Observable Behavior:</strong> Sufficient logging and metrics for production debugging.</li>
+</ul>
+
+<hr class="divider">
+
+<h1>4. Claude Tools Guide: Chat vs Code CLI</h1>
+
+<p>Understanding when to use Claude Chat (web interface) versus Claude Code CLI is crucial for effective AI-assisted development. Each tool has distinct strengths, and using the right tool for each task dramatically improves outcomes.</p>
+
+<h2>4.1 Claude Chat (Web Interface)</h2>
+
+<p>Claude Chat excels at thinking, planning, and producing documents. Use it for tasks that require exploration, iteration on ideas, and producing artifacts that are primarily text-based.</p>
+
+<div class="note">
+<strong>Best for:</strong> Strategic thinking, document creation, design exploration, and any task where you want to discuss, iterate, and refine before committing.
+</div>
+
+<h3>Ideal Use Cases</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Stage</th>
+    <th>Task</th>
+    <th>Why Chat Works Best</th>
+  </tr>
+  <tr>
+    <td>Research (0.1)</td>
+    <td>Market analysis, competitive research</td>
+    <td>Requires web search, iterative exploration, synthesis of multiple sources</td>
+  </tr>
+  <tr>
+    <td>Business One-Pager (1.0)</td>
+    <td>Business strategy document</td>
+    <td>Needs clarifying questions, iteration, strategic thinking</td>
+  </tr>
+  <tr>
+    <td>Design Brief (2.0)</td>
+    <td>Single source of truth document</td>
+    <td>Requires discussion, checkpoint answers, vocabulary decisions</td>
+  </tr>
+  <tr>
+    <td>UX Package (3.0)</td>
+    <td>Wireframes, flows, states</td>
+    <td>Design exploration needs conversation, multiple options, refinement</td>
+  </tr>
+  <tr>
+    <td>UI System (4.0)</td>
+    <td>Design tokens, visual direction</td>
+    <td>Visual decisions benefit from discussion and iteration</td>
+  </tr>
+  <tr>
+    <td>Architecture (5.0)</td>
+    <td>Technical design document</td>
+    <td>Complex decisions need exploration before commitment</td>
+  </tr>
+  <tr>
+    <td>Security (R1)</td>
+    <td>Threat modeling, requirements</td>
+    <td>Security analysis requires careful reasoning</td>
+  </tr>
+</table>
+
+<h3>Chat Workflow Tips</h3>
+<ul>
+  <li><strong>Start broad, then narrow:</strong> Begin with open exploration, then focus on specifics</li>
+  <li><strong>Request multiple options:</strong> Ask for 2-3 alternatives before deciding</li>
+  <li><strong>Use artifacts:</strong> Request HTML/React artifacts for interactive visualizations</li>
+  <li><strong>Save outputs:</strong> Copy final documents to your project files immediately</li>
+  <li><strong>Iterate in conversation:</strong> Refine outputs through follow-up questions</li>
+</ul>
+
+<h2>4.2 Claude Code CLI</h2>
+
+<p>Claude Code CLI excels at implementation. Use it for tasks that involve writing, modifying, and testing actual code files in your project.</p>
+
+<div class="success">
+<strong>Best for:</strong> Writing code, configuring infrastructure, modifying files, running commands, and any task that touches your actual codebase.
+</div>
+
+<h3>Ideal Use Cases</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Stage</th>
+    <th>Task</th>
+    <th>Why Code CLI Works Best</th>
+  </tr>
+  <tr>
+    <td>Project Setup</td>
+    <td>Initialize Next.js, configure tools</td>
+    <td>Needs to run commands, create files, install packages</td>
+  </tr>
+  <tr>
+    <td>Design System</td>
+    <td>Configure Tailwind, install shadcn</td>
+    <td>Modifies config files, runs CLI commands</td>
+  </tr>
+  <tr>
+    <td>Database</td>
+    <td>Create schema, migrations, RLS</td>
+    <td>Writes SQL files, can test migrations</td>
+  </tr>
+  <tr>
+    <td>Build</td>
+    <td>Implement features, components</td>
+    <td>Writes code, can run and test immediately</td>
+  </tr>
+  <tr>
+    <td>Testing</td>
+    <td>Write and run tests</td>
+    <td>Needs to execute tests, see results</td>
+  </tr>
+  <tr>
+    <td>Debugging</td>
+    <td>Find and fix issues</td>
+    <td>Can read files, trace errors, apply fixes</td>
+  </tr>
+  <tr>
+    <td>Refactoring</td>
+    <td>Improve existing code</td>
+    <td>Modifies multiple files, verifies changes</td>
+  </tr>
+</table>
+
+<h3>Code CLI Workflow Tips</h3>
+<ul>
+  <li><strong>Provide context:</strong> Share relevant spec documents at session start</li>
+  <li><strong>Work incrementally:</strong> Complete one feature before starting the next</li>
+  <li><strong>Verify as you go:</strong> Run and test after each significant change</li>
+  <li><strong>Commit frequently:</strong> Save working states to git often</li>
+  <li><strong>Review generated code:</strong> Check against quality standards before accepting</li>
+</ul>
+
+<h2>4.3 Handoff Between Tools</h2>
+
+<p>The most effective workflow uses both tools, with clear handoff points.</p>
+
+<h3>Typical Flow</h3>
+<ol>
+  <li><strong>Chat:</strong> Create Business One-Pager through discussion and iteration</li>
+  <li><strong>Chat:</strong> Develop Design Brief with checkpoint answers</li>
+  <li><strong>Chat:</strong> Explore UX options, create wireframes, iterate on flows</li>
+  <li><strong>Chat:</strong> Define UI system with visual direction exploration</li>
+  <li><strong>Chat:</strong> Design architecture with trade-off discussions</li>
+  <li><strong>Code CLI:</strong> Set up project infrastructure (GitHub, Supabase, Vercel)</li>
+  <li><strong>Code CLI:</strong> Implement design system configuration</li>
+  <li><strong>Code CLI:</strong> Create database schema and migrations</li>
+  <li><strong>Code CLI:</strong> Build features milestone by milestone</li>
+  <li><strong>Chat:</strong> Conduct code reviews and discuss issues</li>
+  <li><strong>Code CLI:</strong> Apply review fixes</li>
+  <li><strong>Code CLI:</strong> Final testing and deployment</li>
+</ol>
+
+<h3>Context Transfer</h3>
+
+<p>When moving from Chat to Code CLI, transfer context explicitly:</p>
+
+<div class="code-block">## Starting Code CLI Session
+
+I'm building [ProductName] and moving from planning to implementation.
+
+Key documents:
+- Design Brief: [paste or summarize key points]
+- Architecture: [paste data model and API design]
+- UI Specs: [paste design tokens and component list]
+
+Current milestone: [Milestone N - Name]
+Goal: [Specific deliverable]
+
+Quality standards to follow:
+- No function > 30 lines
+- No file > 200 lines
+- Zod validation on all inputs
+- Error handling on all async operations</div>
+
+<h2>4.4 Tool Selection Quick Reference</h2>
+
+<table class="comparison-table">
+  <tr>
+    <th>Task Type</th>
+    <th>Tool</th>
+    <th>Reason</th>
+  </tr>
+  <tr>
+    <td>Strategic planning</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Needs exploration and iteration</td>
+  </tr>
+  <tr>
+    <td>Document creation</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Benefits from conversation</td>
+  </tr>
+  <tr>
+    <td>Design exploration</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Requires multiple options</td>
+  </tr>
+  <tr>
+    <td>Code writing</td>
+    <td><span class="tool-badge badge-code">Code CLI</span></td>
+    <td>Needs file system access</td>
+  </tr>
+  <tr>
+    <td>Configuration</td>
+    <td><span class="tool-badge badge-code">Code CLI</span></td>
+    <td>Modifies project files</td>
+  </tr>
+  <tr>
+    <td>Debugging</td>
+    <td><span class="tool-badge badge-code">Code CLI</span></td>
+    <td>Needs to read/run code</td>
+  </tr>
+  <tr>
+    <td>Code review</td>
+    <td><span class="tool-badge badge-both">Both</span></td>
+    <td>Chat for review, CLI for fixes</td>
+  </tr>
+  <tr>
+    <td>Refactoring</td>
+    <td><span class="tool-badge badge-code">Code CLI</span></td>
+    <td>Modifies multiple files</td>
+  </tr>
+  <tr>
+    <td>Learning/explaining</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Benefits from dialogue</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- PART II: DOCUMENTATION STAGES -->
+<div class="part-header">
+  <h2>PART II: DOCUMENTATION STAGES</h2>
+</div>
+
+<h1>5. Stage 0.1: Research and Opportunity Assessment</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<h2>5.1 Purpose</h2>
+<p>Before committing to build, validate that the opportunity is worth pursuing. This stage gathers market evidence, competitive intelligence, and customer signals that inform all subsequent decisions.</p>
+
+<h2>5.2 Quality Criteria</h2>
+<ul>
+  <li>Claims must cite sources (reviews, forum posts, market reports)</li>
+  <li>TAM/SAM/SOM must show calculation methodology</li>
+  <li>Competitive analysis must include actual product testing</li>
+  <li>Pain points must come from real user voices</li>
+  <li>Go/no-go recommendation must be explicit with confidence level</li>
+</ul>
+
+<h2>5.3 Prompt Template</h2>
+
+<div class="prompt-block">[ROLE: MARKET RESEARCHER - Validate opportunity for {{productName}}]
+
+CONTEXT: Evaluate whether this opportunity is worth pursuing. Be skeptical. 
+Find evidence, not confirmation. The goal is truth, not enthusiasm.
+
+INITIAL IDEA:
+{{productIdea}}
+
+RULES:
+- Cite sources for all claims
+- Distinguish between evidence and assumption
+- Be explicit about confidence levels
+- Identify what would change your recommendation
+
+OUTPUT FORMAT:
+
+## 1) MARKET SIZE
+- TAM: [size] - [calculation methodology]
+- SAM: [size] - [how narrowed]
+- SOM: [realistic capture] - [assumptions]
+
+## 2) CUSTOMER PAIN EVIDENCE
+For each pain point: Pain, Evidence (quotes/sources), Severity
+
+## 3) COMPETITIVE LANDSCAPE
+For each competitor: Name, Positioning, Strengths, Weaknesses, Pricing
+
+## 4) POSITIONING GAP
+- Underserved segment, Unmet need, Evidence
+
+## 5) KEY RISKS
+Risk, Likelihood, Impact, Mitigation
+
+## 6) RECOMMENDATION
+- Decision: [GO / NO-GO / NEEDS MORE DATA]
+- Confidence: [H/M/L]
+- Key assumptions that must be true</div>
+
+<hr class="divider">
+
+<h1>6. Stage 1.0: Business One-Pager</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<h2>6.1 Purpose</h2>
+<p>The Business One-Pager forces clarity about what you are building, for whom, and why it matters. Everything downstream depends on clarity achieved here.</p>
+
+<h2>6.2 Required Sections</h2>
+<ol>
+  <li><strong>Problem & Urgency</strong> - What specific problem? Why painful enough to pay?</li>
+  <li><strong>Ideal Customer Profile</strong> - Who specifically? Where do they congregate?</li>
+  <li><strong>Solution</strong> - What does it do? What does it NOT do?</li>
+  <li><strong>Differentiation</strong> - Why choose this over alternatives?</li>
+  <li><strong>Revenue Model + Pricing</strong> - How make money? Pricing structure?</li>
+  <li><strong>#1 Money Action</strong> - Single measurable revenue-generating action</li>
+  <li><strong>MVP Scope</strong> - Must-have for v1. Explicit exclusions.</li>
+  <li><strong>Key Risks</strong> - What could kill this? Validation plan?</li>
+  <li><strong>Success Metrics</strong> - Activation, retention, conversion targets</li>
+</ol>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ol>
+    <li>All nine sections present and substantive</li>
+    <li>ICP specific enough to identify real people</li>
+    <li>Success metrics have specific numeric targets</li>
+    <li>MVP scope has explicit inclusions AND exclusions</li>
+    <li>Assumptions marked with [ASSUMPTION] label</li>
+  </ol>
+</div>
+
+<hr class="divider">
+
+<h1>7. Stage 2.0: Shared Design Brief</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<h2>7.1 Purpose</h2>
+<p>The Design Brief is the single source of truth for all subsequent work. Vocabulary defined here becomes canonical. Every subsequent prompt receives this document verbatim.</p>
+
+<h2>7.2 Required Sections</h2>
+<ol>
+  <li><strong>SaaS One-Liner</strong> - "[Product] helps [ICP] to [outcome] by [mechanism]"</li>
+  <li><strong>Target Users</strong> - Primary persona, context, current pain</li>
+  <li><strong>#1 Money Action</strong> - "[User] [verbs] [object]"</li>
+  <li><strong>Top 3 Jobs To Be Done</strong> - JTBD format</li>
+  <li><strong>MVP Screens/Pages</strong> - Every screen with purpose</li>
+  <li><strong>Core User Journey</strong> - 6-10 steps</li>
+  <li><strong>Constraints</strong> - Stack, deadline, must-keep</li>
+  <li><strong>Competitors/Inspirations</strong> - Copy this, avoid that</li>
+  <li><strong>Success Metrics</strong> - Targets with numbers</li>
+  <li><strong>Checkpoint Answers</strong> - All architectural decisions</li>
+</ol>
+
+<h2>7.3 Checkpoint Questions</h2>
+<p>Every question must have an explicit answer - no "TBD" allowed:</p>
+<ul>
+  <li>Tenancy: single-user | single-workspace | multi-workspace</li>
+  <li>Roles: owner-only | owner+member | owner+admin+member+viewer</li>
+  <li>Billing: seat-based | usage-based | flat-rate + trial | freemium | paid</li>
+  <li>Activation moment: what happens in first 5 minutes</li>
+  <li>Core entities: top 3 data objects</li>
+  <li>Integrations: required for MVP</li>
+  <li>Day-1 emails: magic-link, welcome, invite, receipt (y/n each)</li>
+  <li>File uploads: y/n, types, max size</li>
+  <li>Background jobs: y/n, what kind</li>
+  <li>Audit trail: y/n</li>
+  <li>Data export: y/n, format</li>
+  <li>Support: contact-form | chat | email</li>
+  <li>Compliance: none | GDPR | SOC2-later</li>
+</ul>
+
+<hr class="divider">
+
+<!-- PART III: DESIGN EXCELLENCE -->
+<div class="part-header">
+  <h2>PART III: DESIGN EXCELLENCE</h2>
+</div>
+
+<h1>8. Design Philosophy and Process</h1>
+
+<p>Good design is not decoration applied at the end. It is a process of deeply understanding user needs, exploring multiple solutions, and making intentional choices that serve those needs. This section establishes the design philosophy that guides all UX and UI work in the handbook.</p>
+
+<h2>8.1 Design Principles</h2>
+
+<h3>User-Centered, Not Feature-Centered</h3>
+<p>Every design decision should trace back to a user need. "Users need to quickly understand their subscription status" is a valid driver. "We should add a dashboard widget" is not. Start with jobs to be done, not features to build.</p>
+
+<h3>Clarity Over Cleverness</h3>
+<p>The best interfaces are invisible. Users should accomplish their goals without thinking about the interface. Resist the temptation to add visual flourishes that do not serve comprehension. Every element should earn its place.</p>
+
+<h3>Consistency Creates Confidence</h3>
+<p>When patterns are consistent, users learn the interface once and can predict behavior. Inconsistency forces users to relearn, creates confusion, and erodes trust. Establish patterns early and apply them rigorously.</p>
+
+<h3>Design for the Edges</h3>
+<p>Empty states, error states, and edge cases are not afterthoughts. They are often the moments of highest user frustration or opportunity. Design these states with as much care as the happy path.</p>
+
+<h3>Accessibility Is Not Optional</h3>
+<p>Accessible design is better design for everyone. Sufficient contrast, keyboard navigation, screen reader support, and touch-friendly targets improve the experience for all users, not just those with disabilities.</p>
+
+<h2>8.2 The Design Process</h2>
+
+<p>The handbook design process has four phases, each building on the previous:</p>
+
+<h3>Phase 1: Understand (Part of Design Brief)</h3>
+<p>Define who users are, what they need to accomplish, and what constraints exist. This happens primarily in the Design Brief through persona definition, jobs to be done, and checkpoint questions.</p>
+
+<h3>Phase 2: Explore (UX Package)</h3>
+<p>Generate multiple approaches to solving user needs. Create wireframes for different layouts and flows. Do not commit to a single direction too early. Exploration prevents premature optimization.</p>
+
+<h3>Phase 3: Refine (UX Critic + UI System)</h3>
+<p>Critique the explorations rigorously. Identify friction, gaps, and inconsistencies. Then translate the refined UX into a visual system with multiple direction options before selecting one.</p>
+
+<h3>Phase 4: Specify (Final UI Specs)</h3>
+<p>Document the chosen direction with enough detail for implementation. Design tokens, component specifications, screen-by-screen breakdowns, and interaction details.</p>
+
+<h2>8.3 Multiple Options Requirement</h2>
+
+<div class="warning">
+<strong>Critical:</strong> At key decision points, you must generate multiple options before committing. A single option is not a choice - it is a default. Choices require alternatives.
+</div>
+
+<p>Specifically, require multiple options for:</p>
+<ul>
+  <li><strong>Information Architecture:</strong> 2-3 different ways to organize navigation and screens</li>
+  <li><strong>Core Flow Layout:</strong> 2-3 different layouts for the main user journey</li>
+  <li><strong>Visual Direction:</strong> 3 distinct visual approaches before selecting one</li>
+  <li><strong>Complex Interactions:</strong> 2+ approaches for any non-trivial interaction</li>
+</ul>
+
+<hr class="divider">
+
+<h1>9. Stage 3.0: UX Package (Enhanced)</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<h2>9.1 Purpose</h2>
+<p>Create implementation-ready wireframes and flows that have been explored from multiple angles. The UX Package is not just documentation - it is a thinking tool that forces you to consider alternatives and edge cases.</p>
+
+<h2>9.2 Process: Three Rounds</h2>
+
+<p>The enhanced UX process has three distinct rounds:</p>
+
+<h3>Round 1: Divergent Exploration</h3>
+<p>Generate multiple approaches without judging them. The goal is breadth, not perfection.</p>
+
+<div class="prompt-block">[ROLE: UX DESIGNER - Divergent exploration for {{productName}}]
+
+Create 2-3 DIFFERENT approaches for each of these:
+
+1. INFORMATION ARCHITECTURE OPTIONS
+For each option:
+- Navigation structure (sidebar vs top-nav vs hybrid)
+- Screen grouping logic
+- Entry points to key features
+- Trade-offs of this approach
+
+2. MONEY PATH OPTIONS
+For each option:
+- Steps from landing to conversion
+- Friction points and how addressed
+- Information required at each step
+- Trade-offs of this approach
+
+3. DASHBOARD/HOME OPTIONS
+For each option:
+- What information is prioritized
+- Layout approach
+- First action users can take
+- Trade-offs of this approach
+
+Do NOT recommend yet. Just explore options.</div>
+
+<h3>Round 2: Convergent Decision</h3>
+<p>Evaluate the options against user needs and constraints. Select the best approach for each area.</p>
+
+<div class="prompt-block">[ROLE: UX DESIGNER - Convergent decision for {{productName}}]
+
+Based on the options explored, recommend the best approach for each area.
+
+For each recommendation:
+1. Which option (or hybrid) do you recommend?
+2. Why does this best serve the target user?
+3. What are the risks of this choice?
+4. What would cause us to reconsider?
+
+Consider:
+- Target user's technical sophistication
+- Primary job to be done
+- Competitive positioning
+- Implementation complexity</div>
+
+<h3>Round 3: Detailed Specification</h3>
+<p>Now create the full UX Package based on the chosen directions.</p>
+
+<h2>9.3 UX Package Contents</h2>
+
+<h3>Information Architecture</h3>
+<ul>
+  <li>Public pages: Landing, Pricing, Login, Signup, etc.</li>
+  <li>App pages: Dashboard, core features, settings</li>
+  <li>Navigation hierarchy and grouping</li>
+  <li>URL structure</li>
+</ul>
+
+<h3>User Journeys</h3>
+<p>For each journey, specify:</p>
+<ul>
+  <li>Entry point: How user arrives</li>
+  <li>Steps: Screen â†’ Sees â†’ Does â†’ Result</li>
+  <li>Success criteria: What indicates journey complete</li>
+  <li>Rescue paths: What happens when things go wrong</li>
+</ul>
+
+<p>Required journeys:</p>
+<ol>
+  <li><strong>Money Path:</strong> First visit through conversion (8-12 steps max)</li>
+  <li><strong>Onboarding:</strong> Signup through "aha moment"</li>
+  <li><strong>Core Loop:</strong> Primary repeated task</li>
+  <li><strong>Recovery:</strong> Password reset, billing issue resolution</li>
+</ol>
+
+<h3>Screen Wireframes</h3>
+<p>For EACH screen:</p>
+
+<div class="code-block">### [Screen Name]
+
+**Purpose:** One sentence describing why this screen exists
+**Entry Points:** How users arrive here
+**Exit Points:** Where users go next
+
+**Layout:**
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  [Header/Navigation]                â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  [Main Content Area]                â”‚
+â”‚                                     â”‚
+â”‚  [Key Components]                   â”‚
+â”‚                                     â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  [Footer/Actions]                   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+
+**Key Components:**
+1. [Component] - [Purpose]
+2. [Component] - [Purpose]
+
+**Primary CTA:** [Button text] â†’ [Action] â†’ [Destination]
+
+**STATES (all five required):**
+- DEFAULT: Normal state with data present
+- LOADING: Skeleton or spinner, what changes
+- EMPTY: No data yet, message, CTA to populate
+- ERROR: What went wrong, how to recover
+- VALIDATION: Inline errors, how to fix</div>
+
+<h3>Microcopy Pack</h3>
+<p>Real text, not placeholders:</p>
+<ul>
+  <li>CTAs: Button text with destination</li>
+  <li>Labels: Field labels, placeholders, helper text</li>
+  <li>Empty States: Headline, body, action</li>
+  <li>Errors: User-friendly message, recovery action</li>
+  <li>Success: Confirmation messages</li>
+  <li>Tooltips: Contextual help</li>
+</ul>
+
+<h2>9.4 UX Quality Criteria</h2>
+
+<div class="checklist">
+  <h4>UX Package Verification</h4>
+  <ol>
+    <li>Multiple IA options were explored before selecting</li>
+    <li>Multiple flow options were explored before selecting</li>
+    <li>Every screen from Design Brief has a wireframe</li>
+    <li>Every screen has all five states defined</li>
+    <li>User journeys include rescue paths</li>
+    <li>Screen names match Design Brief exactly</li>
+    <li>Microcopy is real text, not placeholder</li>
+    <li>Primary CTAs are clear on every screen</li>
+  </ol>
+</div>
+
+<hr class="divider">
+
+<h1>10. Stage 3.1: UX Critic and Validation</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<h2>10.1 Purpose</h2>
+<p>Ruthlessly critique the UX Package before moving to visual design. Find friction, gaps, and inconsistencies while changes are cheap. This is adversarial review - the goal is to find problems.</p>
+
+<h2>10.2 Critic Prompt</h2>
+
+<div class="prompt-block">[ROLE: UX CRITIC - Adversarial review for {{productName}}]
+
+Your job is to FIND PROBLEMS, not praise. Be harsh. Better to find issues now.
+
+INPUT - UX PACKAGE:
+{{uxPackage}}
+
+EVALUATE AGAINST:
+
+## 1) FRICTION ANALYSIS
+For each user journey:
+- Where does the user have to think?
+- Where might they hesitate?
+- Where could they make a mistake?
+- What's the minimum viable path? Can we remove steps?
+
+## 2) CONSISTENCY AUDIT
+- Are similar actions handled similarly?
+- Are patterns reused appropriately?
+- Does terminology stay consistent?
+- Are visual hierarchies consistent?
+
+## 3) STATES COMPLETENESS
+For each screen, verify:
+- Empty state has clear CTA to populate
+- Loading state indicates progress
+- Error state explains what happened and how to fix
+- Validation state shows inline errors with clear fixes
+
+## 4) EDGE CASES
+- What happens with very long content?
+- What happens with zero items?
+- What happens with 1000 items?
+- What happens with slow connections?
+- What happens on mobile?
+
+## 5) ACCESSIBILITY
+- Can everything be keyboard navigated?
+- Are focus states clear?
+- Is there sufficient contrast?
+- Can screen readers parse the structure?
+- Are touch targets large enough?
+
+## 6) COGNITIVE LOAD
+- How many things compete for attention?
+- Is the visual hierarchy clear?
+- Can users quickly find what they need?
+- Is progressive disclosure used appropriately?
+
+OUTPUT FORMAT:
+
+### TOP 10 ISSUES (ranked by impact)
+For each:
+- Issue: [Specific description]
+- Impact: [High/Med/Low] - [why]
+- Location: [Screen/flow]
+- Fix: [Concrete solution]
+- Effort: [S/M/L]
+
+### QUICK WINS
+Issues that are Low effort + High impact - do these first
+
+### VALIDATION TESTS
+5 specific tests to run with real users:
+- What to test
+- How to test (can be informal)
+- What indicates pass/fail</div>
+
+<h2>10.3 Acting on Critic Feedback</h2>
+
+<ol>
+  <li><strong>Address all High-impact issues</strong> before proceeding to UI</li>
+  <li><strong>Address Quick Wins</strong> immediately</li>
+  <li><strong>Document deferred issues</strong> for post-MVP</li>
+  <li><strong>Update the UX Package</strong> with fixes</li>
+  <li><strong>Re-run critic</strong> on updated package if changes were significant</li>
+</ol>
+
+<hr class="divider">
+
+<h1>11. Stage 4.0: UI System (Enhanced)</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<h2>11.1 Purpose</h2>
+<p>Translate the refined UX into a visual system. This is not about picking colors - it is about creating a coherent visual language that serves user needs and differentiates the product.</p>
+
+<h2>11.2 Process: Visual Direction Exploration</h2>
+
+<div class="warning">
+<strong>Do not skip this step.</strong> Before defining design tokens, explore 3 distinct visual directions. This prevents defaulting to the first idea and ensures intentional choices.
+</div>
+
+<h3>Step 1: Generate Three Directions</h3>
+
+<div class="prompt-block">[ROLE: UI DESIGNER - Visual direction exploration for {{productName}}]
+
+Create 3 DISTINCT visual directions. Each should be viable - no strawmen.
+
+For each direction, define:
+
+## DIRECTION [A/B/C]: [Name]
+
+### Mood & Feeling
+What emotion should users feel? (e.g., "Professional and trustworthy" vs "Playful and approachable" vs "Bold and cutting-edge")
+
+### Color Strategy
+- Primary: [hex] - [usage]
+- Secondary: [hex] - [usage]
+- Accent: [hex] - [usage]
+- Background approach: [light/dark/gradient]
+- How color reinforces the mood
+
+### Typography Strategy
+- Font pairing: [heading] + [body]
+- Why these fonts (personality, readability)
+- Type scale approach (compact vs spacious)
+
+### Shape Language
+- Corner radius approach (sharp vs rounded vs mixed)
+- Container treatment (cards, borders, shadows)
+- Icon style (outlined vs filled vs custom)
+
+### Density & Spacing
+- Information density (compact vs airy)
+- Whitespace philosophy
+- Padding/margin approach
+
+### Sample Application
+Describe how the Dashboard would look in this direction
+
+### Best For
+What type of user/product does this serve best?
+
+### Risk
+What could go wrong with this direction?</div>
+
+<h3>Step 2: Evaluate and Select</h3>
+
+<p>Evaluate each direction against:</p>
+<ul>
+  <li><strong>User fit:</strong> Does it match target user expectations?</li>
+  <li><strong>Competitive differentiation:</strong> Does it stand out from competitors?</li>
+  <li><strong>Brand alignment:</strong> Does it support the brand voice?</li>
+  <li><strong>Implementation feasibility:</strong> Can it be built with Tailwind/shadcn?</li>
+  <li><strong>Scalability:</strong> Will it work as the product grows?</li>
+</ul>
+
+<div class="prompt-block">[ROLE: UI DESIGNER - Direction evaluation for {{productName}}]
+
+Evaluate the 3 directions:
+
+## EVALUATION MATRIX
+
+| Criteria | Direction A | Direction B | Direction C |
+|----------|-------------|-------------|-------------|
+| User fit | | | |
+| Differentiation | | | |
+| Brand alignment | | | |
+| Feasibility | | | |
+| Scalability | | | |
+
+## RECOMMENDATION
+Which direction (or hybrid) do you recommend and why?
+
+## RISKS
+What are the risks of this choice? How to mitigate?
+
+## WHAT TO PRESERVE FROM OTHER DIRECTIONS
+Any elements from non-selected directions worth incorporating?</div>
+
+<h2>11.3 UI System Contents</h2>
+
+<p>Once direction is selected, create the full UI System:</p>
+
+<h3>Design Tokens</h3>
+
+<div class="code-block">## Colors
+Primary: #[hex] - CTAs, links, active states
+Primary-hover: #[hex]
+Primary-active: #[hex]
+Secondary: #[hex] - secondary actions
+Background: #[hex] - page background
+Surface: #[hex] - cards, elevated surfaces
+Text: #[hex] - primary text
+Text-muted: #[hex] - secondary text
+Border: #[hex] - dividers, input borders
+Error: #[hex] - error states
+Success: #[hex] - success states
+Warning: #[hex] - warning states
+
+## Typography
+Font-family: [name] (available in Google Fonts)
+Scale:
+- xs: 12px / 1.5
+- sm: 14px / 1.5
+- base: 16px / 1.6
+- lg: 18px / 1.6
+- xl: 20px / 1.5
+- 2xl: 24px / 1.4
+- 3xl: 30px / 1.3
+- 4xl: 36px / 1.2
+
+Weights: 400 (normal), 500 (medium), 600 (semibold), 700 (bold)
+
+## Spacing
+1: 4px
+2: 8px
+3: 12px
+4: 16px
+6: 24px
+8: 32px
+12: 48px
+16: 64px
+
+## Radius
+none: 0
+sm: 2px
+md: 4px (default for inputs)
+lg: 8px (default for cards)
+xl: 12px
+full: 9999px (pills, avatars)
+
+## Shadows
+sm: 0 1px 2px rgba(0,0,0,0.05)
+md: 0 4px 6px rgba(0,0,0,0.1)
+lg: 0 10px 15px rgba(0,0,0,0.1)</div>
+
+<h3>Component Specifications</h3>
+
+<p>For each component:</p>
+
+<div class="code-block">### Button
+
+**Variants:**
+- Primary: filled with primary color
+- Secondary: outlined with border
+- Ghost: text only, no border
+- Destructive: filled with error color
+
+**Sizes:**
+- sm: h-8, px-3, text-sm
+- md: h-10, px-4, text-base (default)
+- lg: h-12, px-6, text-lg
+
+**States:**
+- Default: normal appearance
+- Hover: slightly darker/lighter
+- Focus: focus ring (2px offset, primary color)
+- Active: pressed appearance
+- Disabled: 50% opacity, cursor-not-allowed
+- Loading: spinner replaces text or icon
+
+**Accessibility:**
+- Minimum touch target: 44x44px
+- Focus visible for keyboard navigation
+- Disabled buttons not focusable
+
+**Usage:**
+- Primary: One per section, main action
+- Secondary: Supporting actions
+- Ghost: Tertiary actions, navigation
+- Destructive: Delete, cancel subscription</div>
+
+<h3>Screen Specifications</h3>
+
+<p>For each screen from UX Package:</p>
+
+<div class="code-block">### Dashboard Screen
+
+**Layout:**
+- Container: max-w-7xl, mx-auto, px-4 sm:px-6 lg:px-8
+- Grid: 12 columns on desktop, stacks on mobile
+- Sidebar: 256px fixed on desktop, drawer on mobile
+
+**Sections:**
+1. Header
+   - Height: 64px
+   - Background: surface
+   - Border-bottom: 1px border
+   - Contents: Logo, nav links, user menu
+
+2. Stats Cards
+   - Grid: 4 columns on desktop, 2 on tablet, 1 on mobile
+   - Card: surface bg, lg radius, md shadow
+   - Padding: p-6
+   
+3. Main Content
+   - Grid: 8 columns main, 4 columns sidebar on desktop
+   - Gap: gap-6
+   
+**Responsive Behavior:**
+- Desktop (1024px+): Full sidebar, 4-col stats
+- Tablet (768-1023px): Collapsed sidebar, 2-col stats
+- Mobile (<768px): Hidden sidebar, 1-col stats, hamburger menu
+
+**Interaction Notes:**
+- Stats cards: Subtle hover lift (translate-y-px, shadow-lg)
+- Sidebar links: Primary color on active, ghost style otherwise</div>
+
+<h2>11.4 UI Quality Criteria</h2>
+
+<div class="checklist">
+  <h4>UI System Verification</h4>
+  <ol>
+    <li>3 visual directions were explored before selecting</li>
+    <li>Selection rationale is documented</li>
+    <li>All design tokens are defined with values</li>
+    <li>Tokens map directly to Tailwind classes</li>
+    <li>All components have variants, sizes, and states specified</li>
+    <li>All states are defined: default, hover, focus, active, disabled, loading</li>
+    <li>Accessibility requirements are included</li>
+    <li>Responsive behavior is defined for all screens</li>
+    <li>Implementation notes are actionable</li>
+  </ol>
+</div>
+
+<hr class="divider">
+
+<h1>12. Visual Direction Exploration</h1>
+
+<p>This chapter provides detailed examples of how to explore visual directions effectively. Use these as templates for your own exploration.</p>
+
+<h2>12.1 Example: Three Directions for a B2B SaaS</h2>
+
+<div class="design-option">
+  <h4>Direction A: Corporate Trust</h4>
+  <p><strong>Mood:</strong> Professional, reliable, enterprise-ready</p>
+  <p><strong>Colors:</strong> Navy (#1e3a5f) primary, slate grays, minimal accent color</p>
+  <p><strong>Typography:</strong> Inter for everything - clean, neutral, highly legible</p>
+  <p><strong>Shapes:</strong> Sharp corners (radius-sm), subtle borders, minimal shadows</p>
+  <p><strong>Density:</strong> Compact, information-dense layouts</p>
+  <p><strong>Best for:</strong> Enterprise buyers, regulated industries, replacing legacy tools</p>
+  <p><strong>Risk:</strong> Can feel cold or generic without careful execution</p>
+</div>
+
+<div class="design-option">
+  <h4>Direction B: Modern Warmth</h4>
+  <p><strong>Mood:</strong> Approachable, human, premium but not stuffy</p>
+  <p><strong>Colors:</strong> Warm primary (teal or coral), cream backgrounds, generous white space</p>
+  <p><strong>Typography:</strong> Geometric sans heading (e.g., DM Sans) + humanist body (e.g., Source Sans)</p>
+  <p><strong>Shapes:</strong> Rounded corners (radius-lg), cards with subtle shadows, organic touches</p>
+  <p><strong>Density:</strong> Airy, generous spacing, focus on breathing room</p>
+  <p><strong>Best for:</strong> SMB buyers, creative industries, differentiating from corporate competitors</p>
+  <p><strong>Risk:</strong> May not feel "serious enough" for conservative buyers</p>
+</div>
+
+<div class="design-option recommended">
+  <h4>Direction C: Bold Clarity (Recommended)</h4>
+  <p><strong>Mood:</strong> Confident, focused, premium tool for professionals</p>
+  <p><strong>Colors:</strong> High-contrast primary (deep purple or blue), near-white backgrounds, bold accent for CTAs</p>
+  <p><strong>Typography:</strong> Strong heading font (e.g., Plus Jakarta Sans bold) + readable body (Inter)</p>
+  <p><strong>Shapes:</strong> Medium radius (radius-md), bold borders on focus, strategic shadows</p>
+  <p><strong>Density:</strong> Balanced - not cramped, not wasteful. Every element earns space.</p>
+  <p><strong>Best for:</strong> Professional users who value efficiency, standing out in crowded market</p>
+  <p><strong>Risk:</strong> Bold choices require confidence in execution</p>
+</div>
+
+<h2>12.2 Hybrid Directions</h2>
+
+<p>Often the best solution combines elements from multiple directions. Document what you're taking from each:</p>
+
+<div class="code-block">## Hybrid Direction: "Professional Clarity"
+
+Taking from Direction A (Corporate Trust):
+- Compact density for power users
+- Subtle shadows for depth without drama
+- Information-forward layouts
+
+Taking from Direction C (Bold Clarity):
+- High-contrast primary color
+- Strong heading typography
+- Strategic use of bold borders
+
+Avoiding:
+- Direction A's coldness (adding warmer neutral tones)
+- Direction B's excessive airiness (maintaining info density)
+- Direction C's bold accents on everything (reserving for key moments)</div>
+
+<hr class="divider">
+
+<h1>13. Design Quality Assurance</h1>
+
+<p>Design quality assurance ensures the UI system is complete, consistent, and ready for implementation.</p>
+
+<h2>13.1 Design System Checklist</h2>
+
+<div class="checklist">
+  <h4>Completeness Check</h4>
+  <ol>
+    <li><strong>Tokens:</strong> All colors, typography, spacing, radius, shadows defined</li>
+    <li><strong>Components:</strong> Button, Input, Select, Checkbox, Radio, Card, Modal, Toast, Table, Avatar, Badge</li>
+    <li><strong>Patterns:</strong> Form layout, card grid, list with actions, empty state, error boundary</li>
+    <li><strong>Pages:</strong> Every screen from UX Package has specs</li>
+  </ol>
+</div>
+
+<div class="checklist">
+  <h4>Consistency Check</h4>
+  <ol>
+    <li>Same spacing used for same purpose throughout</li>
+    <li>Same component variants used for same context</li>
+    <li>Color usage follows defined meanings</li>
+    <li>Typography hierarchy is consistent</li>
+    <li>Interactive elements have consistent states</li>
+  </ol>
+</div>
+
+<div class="checklist">
+  <h4>Accessibility Check</h4>
+  <ol>
+    <li>Color contrast meets WCAG AA (4.5:1 for text, 3:1 for large text)</li>
+    <li>Focus states are visible and consistent</li>
+    <li>Touch targets are minimum 44x44px</li>
+    <li>No information conveyed by color alone</li>
+    <li>Form fields have visible labels</li>
+  </ol>
+</div>
+
+<h2>13.2 Design Review Prompt</h2>
+
+<div class="prompt-block">[ROLE: DESIGN REVIEWER - Quality review for {{productName}} UI System]
+
+Review the UI System for quality, consistency, and implementation readiness.
+
+INPUT - UI SYSTEM:
+{{uiSystem}}
+
+CHECK:
+
+## 1) TOKEN COVERAGE
+- Are all necessary colors defined?
+- Is the typography scale complete?
+- Are spacing values sufficient for all needs?
+- Can all designs be built with these tokens?
+
+## 2) COMPONENT COMPLETENESS
+For each component:
+- All variants defined?
+- All sizes defined?
+- All states defined?
+- Accessibility requirements included?
+- Usage guidelines clear?
+
+## 3) CONSISTENCY ISSUES
+- Any conflicting patterns?
+- Any tokens that should be consolidated?
+- Any components that duplicate functionality?
+
+## 4) IMPLEMENTATION GAPS
+- Anything unclear for developers?
+- Any responsive behaviors undefined?
+- Any interactions not specified?
+
+## 5) ACCESSIBILITY ISSUES
+- Contrast problems?
+- Touch target concerns?
+- Focus state gaps?
+
+OUTPUT:
+List specific issues with locations and fixes</div>
+
+<hr class="divider">
+
+<!-- PART IV: TECHNICAL FOUNDATION -->
+<div class="part-header">
+  <h2>PART IV: TECHNICAL FOUNDATION</h2>
+</div>
+
+<h1>14. Stage 5.0: Solution Architecture</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<h2>14.1 Purpose</h2>
+<p>Design the technical foundation: data model, APIs, integrations, and infrastructure. Architecture that ships fast but will not block scaling.</p>
+
+<h2>14.2 Required Sections</h2>
+<ol>
+  <li><strong>System Overview</strong> - High-level component diagram</li>
+  <li><strong>Data Model</strong> - All entities with schemas, relationships, indexes, RLS</li>
+  <li><strong>API Design</strong> - All endpoints with auth, input/output, errors</li>
+  <li><strong>Authentication & Authorization</strong></li>
+  <li><strong>File Storage</strong> (if needed)</li>
+  <li><strong>External Integrations</strong> - Stripe, email, etc.</li>
+  <li><strong>Background Jobs</strong> (if needed)</li>
+  <li><strong>Error Handling Strategy</strong></li>
+  <li><strong>Security Implementation</strong></li>
+  <li><strong>Monitoring & Observability</strong></li>
+</ol>
+
+<hr class="divider">
+
+<h1>15. Security, Testing, and Scale Readiness</h1>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat</span></p>
+
+<p>These supporting stages ensure the architecture is secure, testable, and scalable. Run Security Validator (R1) after Design Brief and Architecture. Run Test Strategy (R3) and Scale Readiness (R4) after Architecture.</p>
+
+<h2>15.1 Security Validator Outputs</h2>
+<ul>
+  <li>Threat Model Light: assets, actors, trust boundaries</li>
+  <li>Top 10 Abuse Cases with mitigations</li>
+  <li>Security Requirements Checklist</li>
+  <li>Input Validation Requirements</li>
+  <li>Data Protection requirements</li>
+</ul>
+
+<h2>15.2 Test Strategy Outputs</h2>
+<ul>
+  <li>Test Priorities: ranked list</li>
+  <li>Unit, Integration, E2E test specifications</li>
+  <li>Security and Performance tests</li>
+  <li>Test data requirements</li>
+</ul>
+
+<h2>15.3 Scale Readiness Outputs</h2>
+<ul>
+  <li>Scale Profile: user projections</li>
+  <li>Bottleneck Analysis per component</li>
+  <li>Cost Projections at scale</li>
+  <li>Monitoring Requirements</li>
+</ul>
+
+<hr class="divider">
+
+<h1>16. Infrastructure Setup: GitHub</h1>
+
+<p><span class="tool-badge badge-code">Use Claude Code CLI</span></p>
+
+<h2>16.1 Repository Setup</h2>
+
+<div class="code-block"># Create new repository
+# Go to github.com/new or use GitHub CLI:
+
+gh repo create {{productName}} --private --clone
+
+cd {{productName}}</div>
+
+<h2>16.2 Branch Protection</h2>
+
+<p>Configure branch protection for main branch:</p>
+<ol>
+  <li>Go to Repository Settings â†’ Branches â†’ Add rule</li>
+  <li>Branch name pattern: <code>main</code></li>
+  <li>Enable:
+    <ul>
+      <li>Require pull request reviews before merging (1 reviewer for solo, more for teams)</li>
+      <li>Require status checks to pass before merging</li>
+      <li>Require branches to be up to date before merging</li>
+      <li>Include administrators</li>
+    </ul>
+  </li>
+</ol>
+
+<h2>16.3 Repository Structure</h2>
+
+<div class="code-block"># Recommended .gitignore for Next.js + Supabase
+
+# dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# testing
+coverage/
+
+# next.js
+.next/
+out/
+
+# production
+build/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# supabase
+supabase/.branches
+supabase/.temp</div>
+
+<h2>16.4 GitHub Actions (Optional)</h2>
+
+<div class="code-block"># .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+      
+      - name: Run type check
+        run: npm run type-check
+      
+      - name: Run tests
+        run: npm test</div>
+
+<h2>16.5 Verification</h2>
+
+<div class="checklist">
+  <h4>GitHub Setup Verification</h4>
+  <ol>
+    <li>Repository created and cloned locally</li>
+    <li>.gitignore includes all necessary patterns</li>
+    <li>Branch protection enabled on main</li>
+    <li>Initial commit pushed successfully</li>
+    <li>CI workflow runs (if configured)</li>
+  </ol>
+</div>
+
+<hr class="divider">
+
+<h1>17. Infrastructure Setup: Supabase</h1>
+
+<p><span class="tool-badge badge-code">Use Claude Code CLI</span></p>
+
+<h2>17.1 Project Creation</h2>
+
+<ol>
+  <li>Go to <a href="https://supabase.com/dashboard">supabase.com/dashboard</a></li>
+  <li>Click "New Project"</li>
+  <li>Select your organization</li>
+  <li>Enter project details:
+    <ul>
+      <li>Name: {{productName}}</li>
+      <li>Database Password: (generate strong password, save securely)</li>
+      <li>Region: Choose closest to your users</li>
+      <li>Pricing Plan: Free tier to start</li>
+    </ul>
+  </li>
+  <li>Wait for project to provision (1-2 minutes)</li>
+</ol>
+
+<h2>17.2 Local Development Setup</h2>
+
+<div class="code-block"># Install Supabase CLI
+npm install supabase --save-dev
+
+# Initialize Supabase in your project
+npx supabase init
+
+# Link to your remote project
+npx supabase link --project-ref YOUR_PROJECT_REF
+
+# The project ref is in your Supabase URL:
+# https://YOUR_PROJECT_REF.supabase.co</div>
+
+<h2>17.3 Environment Variables</h2>
+
+<div class="code-block"># .env.local (never commit this file!)
+
+# From Supabase Dashboard â†’ Settings â†’ API
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+
+# For server-side operations only
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key</div>
+
+<h2>17.4 Supabase Client Setup</h2>
+
+<div class="code-block">// lib/supabase/client.ts
+import { createBrowserClient } from '@supabase/ssr'
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+
+// lib/supabase/server.ts
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+export async function createClient() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {
+            // Handle server component context
+          }
+        },
+      },
+    }
+  )
+}</div>
+
+<h2>17.5 Authentication Configuration</h2>
+
+<p>In Supabase Dashboard â†’ Authentication â†’ Providers:</p>
+
+<ol>
+  <li><strong>Email:</strong> Enable email/password and optionally magic links</li>
+  <li><strong>OAuth (optional):</strong> Configure Google, GitHub, etc.</li>
+</ol>
+
+<p>In Authentication â†’ URL Configuration:</p>
+<ul>
+  <li>Site URL: <code>http://localhost:3000</code> (development)</li>
+  <li>Redirect URLs: Add <code>http://localhost:3000/**</code></li>
+</ul>
+
+<h2>17.6 Database Migrations</h2>
+
+<div class="code-block"># Create a new migration
+npx supabase migration new create_initial_schema
+
+# This creates: supabase/migrations/[timestamp]_create_initial_schema.sql
+# Edit this file with your schema
+
+# Apply migrations locally
+npx supabase db push
+
+# Apply to production
+npx supabase db push --linked</div>
+
+<h3>Example Migration</h3>
+
+<div class="code-block">-- supabase/migrations/[timestamp]_create_initial_schema.sql
+
+-- Enable UUID extension
+create extension if not exists "uuid-ossp";
+
+-- Create profiles table (extends auth.users)
+create table public.profiles (
+  id uuid references auth.users on delete cascade primary key,
+  email text not null,
+  full_name text,
+  avatar_url text,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz default now() not null
+);
+
+-- Enable RLS
+alter table public.profiles enable row level security;
+
+-- Profiles policies
+create policy "Users can view own profile"
+  on public.profiles for select
+  using (auth.uid() = id);
+
+create policy "Users can update own profile"
+  on public.profiles for update
+  using (auth.uid() = id);
+
+-- Trigger to create profile on signup
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email, full_name)
+  values (new.id, new.email, new.raw_user_meta_data->>'full_name');
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();</div>
+
+<h2>17.7 Storage Configuration (If Needed)</h2>
+
+<p>In Supabase Dashboard â†’ Storage:</p>
+
+<ol>
+  <li>Create bucket (e.g., "avatars", "uploads")</li>
+  <li>Set public/private based on use case</li>
+  <li>Configure bucket policies for access control</li>
+</ol>
+
+<h2>17.8 Verification</h2>
+
+<div class="checklist">
+  <h4>Supabase Setup Verification</h4>
+  <ol>
+    <li>Project created and accessible</li>
+    <li>Environment variables configured locally</li>
+    <li>Supabase CLI linked to project</li>
+    <li>Client libraries installed and configured</li>
+    <li>Authentication providers enabled</li>
+    <li>Initial migration created and applied</li>
+    <li>RLS policies in place for all tables</li>
+    <li>Can connect from local app</li>
+  </ol>
+</div>
+
+<hr class="divider">
+
+<h1>18. Infrastructure Setup: Vercel</h1>
+
+<p><span class="tool-badge badge-code">Use Claude Code CLI</span></p>
+
+<h2>18.1 Project Connection</h2>
+
+<ol>
+  <li>Go to <a href="https://vercel.com/new">vercel.com/new</a></li>
+  <li>Import your GitHub repository</li>
+  <li>Configure project:
+    <ul>
+      <li>Framework Preset: Next.js (auto-detected)</li>
+      <li>Root Directory: ./ (unless monorepo)</li>
+      <li>Build Command: <code>npm run build</code></li>
+      <li>Output Directory: .next</li>
+    </ul>
+  </li>
+  <li>Add Environment Variables (before first deploy)</li>
+</ol>
+
+<h2>18.2 Environment Variables</h2>
+
+<p>In Vercel Dashboard â†’ Project â†’ Settings â†’ Environment Variables:</p>
+
+<div class="code-block"># Required for all environments
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Stripe (when ready)
+STRIPE_SECRET_KEY=sk_test_... (use sk_live_... for production)
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+
+# Other
+NEXT_PUBLIC_APP_URL=https://your-domain.com</div>
+
+<p>Environment scoping:</p>
+<ul>
+  <li><strong>Production:</strong> Only the production deployment</li>
+  <li><strong>Preview:</strong> PR preview deployments</li>
+  <li><strong>Development:</strong> Local development (optional, usually use .env.local)</li>
+</ul>
+
+<h2>18.3 Domain Configuration</h2>
+
+<ol>
+  <li>Go to Project â†’ Settings â†’ Domains</li>
+  <li>Add your custom domain</li>
+  <li>Configure DNS as instructed:
+    <ul>
+      <li>For apex domain: A record pointing to Vercel IP</li>
+      <li>For www: CNAME to cname.vercel-dns.com</li>
+    </ul>
+  </li>
+  <li>SSL certificate is automatic</li>
+</ol>
+
+<h2>18.4 Deployment Settings</h2>
+
+<p>Recommended settings in Project â†’ Settings â†’ General:</p>
+
+<ul>
+  <li><strong>Build & Development Settings:</strong>
+    <ul>
+      <li>Framework Preset: Next.js</li>
+      <li>Node.js Version: 20.x</li>
+    </ul>
+  </li>
+  <li><strong>Root Directory:</strong> ./ (or subdirectory for monorepo)</li>
+</ul>
+
+<h2>18.5 Preview Deployments</h2>
+
+<p>Vercel automatically creates preview deployments for pull requests. Configure in Project â†’ Settings â†’ Git:</p>
+
+<ul>
+  <li>Enable "Preview Deployments" for all branches or specific branches</li>
+  <li>Comments on PRs with deployment URL</li>
+</ul>
+
+<h2>18.6 Vercel CLI (Optional)</h2>
+
+<div class="code-block"># Install Vercel CLI
+npm i -g vercel
+
+# Link local project to Vercel
+vercel link
+
+# Deploy preview
+vercel
+
+# Deploy to production
+vercel --prod
+
+# Pull environment variables locally
+vercel env pull .env.local</div>
+
+<h2>18.7 Verification</h2>
+
+<div class="checklist">
+  <h4>Vercel Setup Verification</h4>
+  <ol>
+    <li>Project imported from GitHub</li>
+    <li>All environment variables configured</li>
+    <li>First deployment successful</li>
+    <li>Preview URL accessible and working</li>
+    <li>Authentication flow works on deployed site</li>
+    <li>Custom domain configured (if applicable)</li>
+    <li>SSL certificate active</li>
+  </ol>
+</div>
+
+<h2>18.8 Update Supabase URLs</h2>
+
+<div class="warning">
+<strong>Important:</strong> After deploying to Vercel, update Supabase Authentication settings with your production URL.
+</div>
+
+<p>In Supabase Dashboard â†’ Authentication â†’ URL Configuration:</p>
+<ul>
+  <li>Site URL: <code>https://your-domain.com</code></li>
+  <li>Redirect URLs: Add <code>https://your-domain.com/**</code></li>
+</ul>
+
+<hr class="divider">
+
+<h1>19. Multi-Environment Configuration</h1>
+
+<p><span class="tool-badge badge-code">Use Claude Code CLI</span></p>
+
+<p>This chapter explains how to configure a complete multi-environment development workflow that connects GitHub, Supabase, and Vercel. By the end, you will have three distinct environments (Local Development, Preview/Staging, and Production) with proper isolation, environment-specific configurations, and automated deployment pipelines.</p>
+
+<h2>19.1 Environment Strategy Overview</h2>
+
+<p>A professional SaaS application requires multiple environments to safely develop, test, and deploy changes. Each environment serves a specific purpose and has its own configuration.</p>
+
+<h3>The Three Environments</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Environment</th>
+    <th>Purpose</th>
+    <th>Database</th>
+    <th>URL</th>
+    <th>When Used</th>
+  </tr>
+  <tr>
+    <td><strong>Local Development</strong></td>
+    <td>Daily development work</td>
+    <td>Local Supabase (Docker) or Dev Project</td>
+    <td>localhost:3000</td>
+    <td>Writing and testing code locally</td>
+  </tr>
+  <tr>
+    <td><strong>Preview (Staging)</strong></td>
+    <td>Test changes before production</td>
+    <td>Supabase Development Project</td>
+    <td>*.vercel.app (PR previews)</td>
+    <td>PR reviews, QA testing, client demos</td>
+  </tr>
+  <tr>
+    <td><strong>Production</strong></td>
+    <td>Live application for real users</td>
+    <td>Supabase Production Project</td>
+    <td>your-domain.com</td>
+    <td>Real users and paying customers</td>
+  </tr>
+</table>
+
+<h3>Why Environment Separation Matters</h3>
+
+<p>Without proper environment separation, you risk testing with production data (privacy/security issues), breaking production with untested changes, polluting production analytics with test data, and accidentally charging real customers during testing. Each environment should be completely isolated so that changes in one cannot affect the others.</p>
+
+<h3>Service Mapping by Environment</h3>
+
+<div class="code-block">â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                         ENVIRONMENT ARCHITECTURE                         â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚                                                                          â”‚
+â”‚   LOCAL DEVELOPMENT                                                      â”‚
+â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                           â”‚
+â”‚   â”‚ localhost   â”‚â”€â”€â”€â–¶â”‚ Local Supabase      â”‚  (Docker)                 â”‚
+â”‚   â”‚ :3000       â”‚    â”‚ OR Dev Project      â”‚                           â”‚
+â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                           â”‚
+â”‚         â”‚                                                                â”‚
+â”‚         â”‚ git push                                                       â”‚
+â”‚         â–¼                                                                â”‚
+â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                                       â”‚
+â”‚   â”‚   GitHub    â”‚                                                       â”‚
+â”‚   â”‚   (main)    â”‚                                                       â”‚
+â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                                                       â”‚
+â”‚         â”‚                                                                â”‚
+â”‚         â”œâ”€â”€â”€ Pull Request â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”       â”‚
+â”‚         â”‚                                                        â”‚       â”‚
+â”‚         â–¼                                                        â–¼       â”‚
+â”‚   PREVIEW (Vercel)                                    PRODUCTION        â”‚
+â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
+â”‚   â”‚ PR Preview  â”‚â”€â”€â”€â–¶â”‚ Supabase DEV        â”‚   â”‚ Supabase PROD       â”‚ â”‚
+â”‚   â”‚ *.vercel.appâ”‚    â”‚ Project             â”‚   â”‚ Project             â”‚ â”‚
+â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
+â”‚                                                          â–²              â”‚
+â”‚                                                          â”‚              â”‚
+â”‚                                               â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
+â”‚                                               â”‚ your-domain.com     â”‚   â”‚
+â”‚                                               â”‚ (Vercel Production) â”‚   â”‚
+â”‚                                               â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
+â”‚                                                                          â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜</div>
+
+<h2>19.2 Supabase Multi-Project Strategy</h2>
+
+<p>The recommended approach is to have two separate Supabase projects: one for development/preview and one for production. This ensures complete data isolation and allows you to test migrations safely.</p>
+
+<h3>Creating Your Supabase Projects</h3>
+
+<p>In the Supabase dashboard, create two projects with clear naming conventions.</p>
+
+<div class="code-block"># Project naming convention
+{{productName}}-dev    # Development/Preview project
+{{productName}}-prod   # Production project
+
+# Example
+acme-crm-dev
+acme-crm-prod</div>
+
+<p>For each project, note down the following credentials (you will need them later):</p>
+
+<div class="code-block"># For EACH project, collect:
+Project Reference ID:     xxxxxxxxxxxxxxxx
+Database Password:        (save securely!)
+API URL:                  https://xxxxxxxx.supabase.co
+Anon Key:                 eyJhbGc...
+Service Role Key:         eyJhbGc...  (keep secret!)</div>
+
+<h3>Local Supabase Setup Options</h3>
+
+<p>For local development, you have two options. Either option works, but local Supabase provides faster iteration and complete offline capability.</p>
+
+<h4>Option A: Local Supabase with Docker (Recommended)</h4>
+
+<p>Running Supabase locally gives you a complete local database that resets cleanly, faster development cycles with no network latency, ability to work offline, and safe experimentation without affecting any remote data.</p>
+
+<div class="code-block"># Prerequisites: Docker Desktop must be running
+
+# Initialize Supabase in your project
+npx supabase init
+
+# Start local Supabase (first run downloads images, takes a few minutes)
+npx supabase start
+
+# This outputs local credentials:
+# API URL: http://127.0.0.1:54321
+# anon key: eyJhbGc...
+# service_role key: eyJhbGc...
+# DB URL: postgresql://postgres:<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aadac5d9decdd8cfd9ea9b989d849a849a849b">[email&#160;protected]</a>:54322/postgres
+
+# Stop when done
+npx supabase stop</div>
+
+<h4>Option B: Use Development Project Remotely</h4>
+
+<p>If Docker is not available or you prefer cloud development, you can connect directly to your development Supabase project.</p>
+
+<div class="code-block"># Link to your dev project
+npx supabase link --project-ref YOUR_DEV_PROJECT_REF
+
+# Use the dev project credentials in .env.local</div>
+
+<h3>Migration Strategy Across Environments</h3>
+
+<p>Database migrations flow from local to dev to production, never the reverse. This ensures that production always receives tested, verified schema changes.</p>
+
+<div class="code-block"># Migration workflow
+Local â”€â”€â–¶ Dev â”€â”€â–¶ Production
+
+# 1. Create and test migrations locally
+npx supabase migration new add_user_preferences
+# Edit: supabase/migrations/[timestamp]_add_user_preferences.sql
+
+# 2. Apply locally and test
+npx supabase db reset  # Resets local DB and applies all migrations
+
+# 3. Push to Dev project for integration testing
+npx supabase db push --project-ref YOUR_DEV_PROJECT_REF
+
+# 4. After testing in Preview environment, push to Production
+npx supabase db push --project-ref YOUR_PROD_PROJECT_REF</div>
+
+<div class="warning">
+<strong>Never modify production database directly.</strong> All schema changes must go through migrations that are version controlled in Git. This ensures reproducibility and allows rollbacks if needed.
+</div>
+
+<h2>19.3 GitHub Branch Strategy</h2>
+
+<p>Your Git branching strategy should align with your environments. Here is the recommended approach for most SaaS projects.</p>
+
+<h3>Branch Structure</h3>
+
+<div class="code-block">main (production)
+  â”‚
+  â”œâ”€â”€ feature/user-settings      # Feature branches
+  â”œâ”€â”€ feature/billing-dashboard
+  â”œâ”€â”€ fix/login-redirect
+  â””â”€â”€ chore/update-dependencies
+
+# Branch naming conventions
+feature/{{short-description}}    # New features
+fix/{{short-description}}        # Bug fixes
+chore/{{short-description}}      # Maintenance tasks
+hotfix/{{short-description}}     # Urgent production fixes</div>
+
+<h3>Branch Protection Rules</h3>
+
+<p>Configure branch protection on your main branch in GitHub (Settings â†’ Branches â†’ Add rule).</p>
+
+<div class="code-block"># Required settings for 'main' branch:
+âœ“ Require a pull request before merging
+âœ“ Require status checks to pass before merging
+  - Required checks: lint-and-test, type-check
+âœ“ Require branches to be up to date before merging
+âœ“ Do not allow bypassing the above settings
+
+# Optional but recommended:
+âœ“ Require conversation resolution before merging
+âœ“ Restrict who can push to matching branches (for teams)</div>
+
+<h3>Development Workflow</h3>
+
+<div class="code-block"># 1. Start a new feature
+git checkout main
+git pull origin main
+git checkout -b feature/add-user-settings
+
+# 2. Develop locally (commits along the way)
+git add .
+git commit -m "Add user settings page structure"
+git commit -m "Implement settings form with validation"
+git commit -m "Add settings API route and database update"
+
+# 3. Push and create PR
+git push -u origin feature/add-user-settings
+# Create PR in GitHub â†’ triggers Preview deployment
+
+# 4. After review and testing, merge to main
+# Merging to main â†’ triggers Production deployment
+
+# 5. Clean up
+git checkout main
+git pull origin main
+git branch -d feature/add-user-settings</div>
+
+<h2>19.4 Vercel Environment Configuration</h2>
+
+<p>Vercel provides built-in support for environment-specific deployments. Configure it to use different environment variables for Preview vs Production.</p>
+
+<h3>Environment Variables by Scope</h3>
+
+<p>In Vercel Dashboard â†’ Project â†’ Settings â†’ Environment Variables, add variables with the appropriate scope.</p>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PRODUCTION ONLY (Scope: Production)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROD_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-prod-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-prod-service-role-key
+
+STRIPE_SECRET_KEY=sk_live_xxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxx (production webhook)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxxxx
+
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PREVIEW ONLY (Scope: Preview)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_DEV_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-dev-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-dev-service-role-key
+
+STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxx (test webhook)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
+
+NEXT_PUBLIC_APP_URL=https://your-project-git-branch.vercel.app
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# DEVELOPMENT (Scope: Development) - Optional, usually use .env.local
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Can add here or use vercel env pull</div>
+
+<div class="note">
+<strong>Tip:</strong> Use Vercel's "Development" scope sparingly. It's cleaner to manage local environment variables in <code>.env.local</code> which is never committed to Git.
+</div>
+
+<h3>Preview Deployment Configuration</h3>
+
+<p>Configure preview deployments in Vercel Dashboard â†’ Project â†’ Settings â†’ Git.</p>
+
+<div class="code-block"># Recommended Preview settings:
+
+Preview Deployments: Enabled
+- Deploy all branches that create a pull request
+
+Comments on Pull Requests: Enabled
+- Adds deployment URL as comment on PR
+
+Ignored Build Step (optional):
+- Can skip builds for documentation-only changes
+- Example: [[ "$VERCEL_GIT_COMMIT_MESSAGE" == *"[skip ci]"* ]]</div>
+
+<h3>Update Supabase Auth URLs</h3>
+
+<p>Both Supabase projects need their authentication URLs configured correctly.</p>
+
+<div class="code-block"># In DEVELOPMENT Supabase project (Authentication â†’ URL Configuration):
+
+Site URL: http://localhost:3000
+Redirect URLs:
+  - http://localhost:3000/**
+  - https://*-your-vercel-team.vercel.app/**  # Wildcard for all previews
+
+# In PRODUCTION Supabase project (Authentication â†’ URL Configuration):
+
+Site URL: https://your-domain.com
+Redirect URLs:
+  - https://your-domain.com/**
+  - https://www.your-domain.com/**  # If using www redirect</div>
+
+<h2>19.5 Local Development Configuration</h2>
+
+<p>Your local development environment needs a properly configured <code>.env.local</code> file that connects to either local Supabase or your development project.</p>
+
+<h3>Environment File Structure</h3>
+
+<div class="code-block"># .env.local - NEVER commit this file!
+# Add to .gitignore: .env.local, .env*.local
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# Option A: Using Local Supabase (Docker)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# Option B: Using Remote Dev Supabase
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# NEXT_PUBLIC_SUPABASE_URL=https://YOUR_DEV_PROJECT.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your-dev-anon-key
+# SUPABASE_SERVICE_ROLE_KEY=your-dev-service-role-key
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# Stripe (always use test keys locally)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxx
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# App Configuration
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Optional: Enable debug logging
+# DEBUG=true</div>
+
+<h3>Environment Template File</h3>
+
+<p>Create an <code>.env.example</code> file that you DO commit to Git. This documents required variables without exposing secrets.</p>
+
+<div class="code-block"># .env.example - Template for .env.local (safe to commit)
+
+# Supabase Configuration
+# Get these from: supabase.com/dashboard â†’ Project â†’ Settings â†’ API
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Stripe Configuration  
+# Get these from: dashboard.stripe.com/apikeys
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000</div>
+
+<h3>Pulling Environment Variables from Vercel</h3>
+
+<p>If you prefer to sync your local environment with Vercel's development variables:</p>
+
+<div class="code-block"># Link your local project to Vercel (one-time setup)
+vercel link
+
+# Pull environment variables to .env.local
+vercel env pull .env.local
+
+# This overwrites .env.local with variables from Vercel's "Development" scope</div>
+
+<h2>19.6 CI/CD Pipeline Configuration</h2>
+
+<p>A proper CI/CD pipeline automates testing and deployment. Here is a comprehensive GitHub Actions workflow that handles linting, testing, and integrates with your deployment strategy.</p>
+
+<h3>Main CI Workflow</h3>
+
+<div class="code-block"># .github/workflows/ci.yml
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  # QUALITY CHECKS - Runs on every push and PR
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+      
+      - name: Run type check
+        run: npm run type-check
+      
+      - name: Run tests
+        run: npm test
+        env:
+          # Use test/mock values for CI
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+  
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  # BUILD CHECK - Ensures the app builds successfully
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: quality
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_URL: https://example.com
+
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  # DATABASE MIGRATION CHECK - Validates migrations are valid SQL
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  
+  migrations:
+    name: Migration Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install Supabase CLI
+        run: npm install supabase --save-dev
+      
+      - name: Validate migrations
+        run: |
+          # Check that migration files are valid SQL
+          for file in supabase/migrations/*.sql; do
+            if [ -f "$file" ]; then
+              echo "Checking $file..."
+              # Basic SQL syntax validation
+              if ! head -1 "$file" > /dev/null 2>&1; then
+                echo "Error: $file is not readable"
+                exit 1
+              fi
+            fi
+          done
+          echo "All migrations validated successfully"</div>
+
+<h3>Database Migration Workflow</h3>
+
+<p>For automated migration deployment to your Supabase projects:</p>
+
+<div class="code-block"># .github/workflows/migrations.yml
+
+name: Database Migrations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+
+jobs:
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  # DEPLOY TO DEV - Automatic on main push
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Supabase CLI
+        run: npm install supabase --save-dev
+      
+      - name: Deploy migrations to Dev
+        run: npx supabase db push --project-ref ${{ secrets.SUPABASE_DEV_PROJECT_REF }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  # DEPLOY TO PROD - Requires manual approval
+  # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  
+  deploy-prod:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+    environment: production  # Requires manual approval in GitHub
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Supabase CLI
+        run: npm install supabase --save-dev
+      
+      - name: Deploy migrations to Production
+        run: npx supabase db push --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_REF }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}</div>
+
+<h3>Required GitHub Secrets</h3>
+
+<p>Configure these secrets in GitHub â†’ Repository â†’ Settings â†’ Secrets and variables â†’ Actions.</p>
+
+<div class="code-block"># Required Secrets:
+
+SUPABASE_ACCESS_TOKEN          # From supabase.com â†’ Account â†’ Access Tokens
+SUPABASE_DEV_PROJECT_REF       # Your dev project reference ID
+SUPABASE_PROD_PROJECT_REF      # Your prod project reference ID
+
+# Optional (for CI testing):
+TEST_SUPABASE_URL              # Can use dev project URL
+TEST_SUPABASE_ANON_KEY         # Can use dev project anon key</div>
+
+<h3>GitHub Environments for Approval Gates</h3>
+
+<p>Create a "production" environment in GitHub for manual deployment approval.</p>
+
+<div class="code-block"># In GitHub â†’ Repository â†’ Settings â†’ Environments:
+
+1. Create environment: "production"
+2. Add protection rules:
+   âœ“ Required reviewers: Add yourself or team leads
+   âœ“ Wait timer: Optional (e.g., 5 minutes for last-minute cancellation)
+3. Add environment-specific secrets if needed</div>
+
+<h2>19.7 Stripe Webhook Configuration</h2>
+
+<p>Stripe requires separate webhook endpoints for test and live modes. Configure both to match your environments.</p>
+
+<h3>Webhook Setup by Environment</h3>
+
+<div class="code-block"># In Stripe Dashboard â†’ Developers â†’ Webhooks:
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# TEST MODE WEBHOOK (for local + preview)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+Endpoint URL: https://YOUR_DEV_DOMAIN.vercel.app/api/webhooks/stripe
+Events to send:
+  - checkout.session.completed
+  - customer.subscription.created
+  - customer.subscription.updated
+  - customer.subscription.deleted
+  - invoice.paid
+  - invoice.payment_failed
+
+â†’ Copy the Signing Secret to STRIPE_WEBHOOK_SECRET (Preview scope)
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# LIVE MODE WEBHOOK (for production)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+Endpoint URL: https://your-domain.com/api/webhooks/stripe
+Events to send: (same as above)
+
+â†’ Copy the Signing Secret to STRIPE_WEBHOOK_SECRET (Production scope)
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# LOCAL DEVELOPMENT WEBHOOK (using Stripe CLI)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Install Stripe CLI: https://stripe.com/docs/stripe-cli
+stripe login
+
+# Forward webhooks to local server
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+
+# This outputs a webhook signing secret for local use
+# Add to .env.local as STRIPE_WEBHOOK_SECRET</div>
+
+<h2>19.8 Complete Environment Verification</h2>
+
+<p>After setting up all environments, verify everything works correctly.</p>
+
+<div class="checklist">
+  <h4>Local Development Verification</h4>
+  <ol>
+    <li>Run <code>npm run dev</code> - app starts on localhost:3000</li>
+    <li>Can sign up a new user (check Supabase Auth dashboard)</li>
+    <li>Can sign in with the new user</li>
+    <li>Database operations work (create/read/update/delete)</li>
+    <li>Protected routes redirect correctly when not authenticated</li>
+    <li>Stripe checkout works in test mode (use test card 4242...)</li>
+    <li>Stripe webhooks received locally (if using Stripe CLI)</li>
+  </ol>
+</div>
+
+<div class="checklist">
+  <h4>Preview Environment Verification</h4>
+  <ol>
+    <li>Create a PR from a feature branch</li>
+    <li>GitHub Actions pass (lint, type-check, test, build)</li>
+    <li>Vercel creates preview deployment automatically</li>
+    <li>Preview URL is commented on the PR</li>
+    <li>Preview connects to DEV Supabase (check auth works)</li>
+    <li>Data created in preview is isolated from production</li>
+    <li>Stripe test mode works on preview</li>
+  </ol>
+</div>
+
+<div class="checklist">
+  <h4>Production Environment Verification</h4>
+  <ol>
+    <li>Merge PR to main triggers production deployment</li>
+    <li>Production URL accessible (your-domain.com)</li>
+    <li>SSL certificate active (https works)</li>
+    <li>Production connects to PROD Supabase</li>
+    <li>Production data is separate from dev data</li>
+    <li>Stripe live mode active (use real card for final test)</li>
+    <li>Webhooks fire correctly in production</li>
+    <li>Error tracking (Sentry etc.) receives errors</li>
+  </ol>
+</div>
+
+<h2>19.9 Environment Configuration Summary</h2>
+
+<p>Here is a quick reference for all environment configurations.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Configuration</th>
+    <th>Local</th>
+    <th>Preview</th>
+    <th>Production</th>
+  </tr>
+  <tr>
+    <td><strong>Supabase Project</strong></td>
+    <td>Local (Docker) or Dev</td>
+    <td>Dev project</td>
+    <td>Prod project</td>
+  </tr>
+  <tr>
+    <td><strong>Stripe Mode</strong></td>
+    <td>Test (sk_test_)</td>
+    <td>Test (sk_test_)</td>
+    <td>Live (sk_live_)</td>
+  </tr>
+  <tr>
+    <td><strong>Database Data</strong></td>
+    <td>Test/seed data</td>
+    <td>Test data</td>
+    <td>Real user data</td>
+  </tr>
+  <tr>
+    <td><strong>Auth Redirect URLs</strong></td>
+    <td>localhost:3000</td>
+    <td>*.vercel.app</td>
+    <td>your-domain.com</td>
+  </tr>
+  <tr>
+    <td><strong>Deployment Trigger</strong></td>
+    <td>Manual (npm run dev)</td>
+    <td>Automatic (PR created)</td>
+    <td>Automatic (merge to main)</td>
+  </tr>
+  <tr>
+    <td><strong>Migration Deployment</strong></td>
+    <td>Manual (supabase db push)</td>
+    <td>Automatic (CI/CD)</td>
+    <td>With approval (CI/CD)</td>
+  </tr>
+</table>
+
+<div class="success">
+<strong>Environment Setup Complete!</strong> You now have a professional multi-environment workflow. Changes flow safely from Local â†’ Preview â†’ Production with proper isolation and automated deployments at each stage.
+</div>
+
+<hr class="divider">
+
+<!-- PART V: BUILD PHASE -->
+<div class="part-header">
+  <h2>PART V: BUILD PHASE</h2>
+</div>
+
+<div class="note" style="background: #dbeafe; border-left-color: #0284c7;">
+<strong>ðŸ“˜ Companion Guide Required</strong><br>
+This section provides the <em>overview and quality standards</em> for the Build phase. For the <strong>detailed prompts, checkpoint procedures, and admin console implementation</strong>, use the <strong>Build Phase Guide v3</strong> companion document. That guide contains the complete prompt templates for all 11 milestones that you'll copy directly into Claude Code CLI.
+</div>
+
+<h1>20. Build Phase Overview and Quality Standards</h1>
+
+<p><span class="tool-badge badge-code">Use Claude Code CLI</span></p>
+
+<h2>20.1 Code Quality Standards</h2>
+
+<p>Include in every Build prompt:</p>
+
+<h3>Structure Requirements</h3>
+<ul>
+  <li>No function exceeds 30 lines</li>
+  <li>No file exceeds 200 lines</li>
+  <li>Maximum nesting depth: 3 levels</li>
+  <li>Single responsibility per function</li>
+  <li>Explicit dependencies only</li>
+</ul>
+
+<h3>Simplicity Requirements</h3>
+<ul>
+  <li>Descriptive names that reveal intent</li>
+  <li>Named constants, no magic values</li>
+  <li>Boring code over clever code</li>
+  <li>Comments explain "why" not "what"</li>
+</ul>
+
+<h3>Safety Requirements</h3>
+<ul>
+  <li>Validate all inputs with Zod at boundaries</li>
+  <li>Parameterized queries only</li>
+  <li>Auth check on every protected route</li>
+  <li>Authorization check on sensitive operations</li>
+  <li>Error handling on all external calls</li>
+  <li>No sensitive data in logs</li>
+</ul>
+
+<h3>Performance Requirements</h3>
+<ul>
+  <li>No N+1 queries</li>
+  <li>Appropriate memoization</li>
+  <li>Select only needed fields</li>
+</ul>
+
+<h3>Stability Requirements</h3>
+<ul>
+  <li>Error handling on all async operations</li>
+  <li>Loading and error states in UI</li>
+  <li>Sufficient logging for debugging</li>
+</ul>
+
+<h2>20.2 Build Milestones</h2>
+
+<p>The Build phase is organized into 11 milestones with two major checkpoints. Complete each milestone before moving to the next.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>#</th>
+    <th>Milestone</th>
+    <th>Focus</th>
+    <th>Checkpoint</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td><strong>Project Setup</strong></td>
+    <td>Initialize Next.js, configure tools</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>Design System</strong></td>
+    <td>Tailwind config, shadcn/ui setup</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><strong>Database</strong></td>
+    <td>Schema, migrations, RLS, seed data</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><strong>Layouts</strong></td>
+    <td>Page layouts, navigation shell</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td><strong>Authentication</strong></td>
+    <td>Auth flows, protected routes</td>
+    <td></td>
+  </tr>
+  <tr style="background: #fef3c7;">
+    <td>6</td>
+    <td><strong>Core Feature</strong></td>
+    <td>Main feature (money action)</td>
+    <td style="color: #92400e; font-weight: 600;">âš‘ Checkpoint A</td>
+  </tr>
+  <tr style="background: #fdf4ff;">
+    <td>7</td>
+    <td><strong>Admin Console</strong></td>
+    <td>User management, subscription viewing, error logs</td>
+    <td style="color: #86198f; font-weight: 600;">âš‘ Checkpoint B</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td><strong>Supporting Features</strong></td>
+    <td>Remaining features from spec</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td><strong>Payments</strong></td>
+    <td>Stripe integration</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td><strong>Polish</strong></td>
+    <td>Error handling, loading states</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td><strong>Testing</strong></td>
+    <td>Test implementation</td>
+    <td></td>
+  </tr>
+</table>
+
+<div class="note" style="background: #dbeafe; border-left-color: #0284c7;">
+<strong>ðŸ“˜ Detailed Prompts in Companion Guide</strong><br>
+The <strong>Build Phase Guide v3</strong> contains the complete, copy-ready prompts for each milestone. Each prompt follows a consistent structure (ROLE, CONTEXT, OBJECTIVE, REQUIREMENTS, QUALITY STANDARDS, DELIVERABLES) designed for Claude Code CLI. The guide also includes the Major Checkpoint procedures and Admin Console implementation details.
+</div>
+
+<hr class="divider">
+
+<h1>21. Build Milestones with Quality Gates</h1>
+
+<h2>21.1 Quality Gate Protocol</h2>
+
+<p>After each milestone:</p>
+<ol>
+  <li>Run the application and verify deliverables work</li>
+  <li>Review code against quality standards</li>
+  <li>Check for functions > 30 lines</li>
+  <li>Check for files > 200 lines</li>
+  <li>Verify error handling present</li>
+  <li>Confirm no TypeScript errors</li>
+  <li>Iterate with Claude if issues found</li>
+</ol>
+
+<h2>21.2 Major Checkpoints</h2>
+
+<h3>Checkpoint A: After Milestone 6 (Core Feature)</h3>
+<p>This checkpoint verifies the foundation is solid before building more features.</p>
+<ul>
+  <li>Full code quality audit against standards</li>
+  <li>Refactoring sprint to address any violations</li>
+  <li>Security review of authentication and authorization</li>
+  <li>Performance check on database queries</li>
+  <li>See Build Phase Guide v3 for detailed checkpoint procedure</li>
+</ul>
+
+<h3>Checkpoint B: After Milestone 7 (Admin Console)</h3>
+<p>This checkpoint verifies operational visibility before adding more features.</p>
+<ul>
+  <li>Can find any user by email in under 10 seconds</li>
+  <li>Can see subscription status and history for any user</li>
+  <li>Can see recent errors and affected users</li>
+  <li>Admin actions create audit log entries</li>
+  <li>Non-admin users cannot access /admin routes</li>
+</ul>
+
+<h2>21.3 Milestone-Specific Gates</h2>
+
+<h3>Milestone 3: Database</h3>
+<ul>
+  <li>All tables from Architecture created</li>
+  <li>RLS enabled on every table</li>
+  <li>Policies for all operations</li>
+  <li>Indexes on filtered/joined columns</li>
+  <li>Migrations idempotent</li>
+</ul>
+
+<h3>Milestone 5: Authentication</h3>
+<ul>
+  <li>Login flow works</li>
+  <li>Protected routes redirect correctly</li>
+  <li>Session persists across refreshes</li>
+  <li>Logout clears session</li>
+  <li>No tokens exposed to client</li>
+</ul>
+
+<h3>Milestone 6: Core Feature</h3>
+<ul>
+  <li>Money action works end-to-end</li>
+  <li>All states handled</li>
+  <li>Input validation working</li>
+  <li>Authorization enforced</li>
+  <li>No N+1 queries</li>
+</ul>
+
+<h3>Milestone 7: Admin Console</h3>
+<ul>
+  <li>Admin routes protected by role check</li>
+  <li>User list with search, filter, pagination works</li>
+  <li>User detail shows profile, subscription, activity</li>
+  <li>Admin notes functionality working</li>
+  <li>All admin actions logged to audit table</li>
+</ul>
+
+<h3>Milestone 9: Payments</h3>
+<ul>
+  <li>Checkout flow completes</li>
+  <li>Webhook handles events</li>
+  <li>Subscription status updates</li>
+  <li>Webhook signature verified</li>
+  <li>No Stripe keys exposed</li>
+</ul>
+
+<hr class="divider">
+
+<h1>22. Code Review and Refactoring</h1>
+
+<h2>22.1 Code Review Protocol</h2>
+
+<p><span class="tool-badge badge-chat">Use Claude Chat for review</span> <span class="tool-badge badge-code">Use Code CLI for fixes</span></p>
+
+<h3>Review Criteria</h3>
+<ul>
+  <li>Structure: Function size, nesting, responsibilities</li>
+  <li>Simplicity: Readability, naming, cleverness</li>
+  <li>Safety: Validation, error handling, security</li>
+  <li>Performance: Efficiency, queries, renders</li>
+  <li>Stability: Maintainability, edge cases</li>
+</ul>
+
+<h2>22.2 Refactoring Checkpoints</h2>
+
+<p>Run dedicated refactoring after:</p>
+<ul>
+  <li>Milestone 3 (Database) - before features</li>
+  <li>Milestone 6 (Core Feature) - before additional features</li>
+  <li>Milestone 9 (Polish) - before testing</li>
+</ul>
+
+<h3>Refactoring Audit Areas</h3>
+<ol>
+  <li>Long Functions > 30 lines</li>
+  <li>Long Files > 200 lines</li>
+  <li>Duplicate Code patterns</li>
+  <li>Inconsistent Patterns</li>
+  <li>Missing Error Handling</li>
+  <li>Type Safety Gaps</li>
+  <li>Test Coverage Gaps</li>
+</ol>
+
+<hr class="divider">
+
+<!-- PART VI: LAUNCH -->
+<div class="part-header">
+  <h2>PART VI: LAUNCH</h2>
+</div>
+
+<h1>23. QA and Launch</h1>
+
+<h2>23.1 Pre-Launch Checklist</h2>
+
+<h3>Functionality</h3>
+<ul>
+  <li>All user journeys work end-to-end</li>
+  <li>All error states display correctly</li>
+  <li>All forms validate correctly</li>
+  <li>All integrations function</li>
+</ul>
+
+<h3>Security</h3>
+<ul>
+  <li>Security requirements verified</li>
+  <li>No sensitive data in client bundle</li>
+  <li>All routes have appropriate auth</li>
+  <li>RLS policies verified</li>
+</ul>
+
+<h3>Performance</h3>
+<ul>
+  <li>Pages load under 3 seconds</li>
+  <li>No console errors</li>
+  <li>Images optimized</li>
+  <li>Bundle size acceptable</li>
+</ul>
+
+<h3>Infrastructure</h3>
+<ul>
+  <li>Production environment variables set</li>
+  <li>Supabase URL configuration updated</li>
+  <li>Stripe in live mode</li>
+  <li>Domain and SSL configured</li>
+  <li>Error tracking enabled</li>
+  <li>Analytics configured</li>
+</ul>
+
+<h2>23.2 Launch Verification</h2>
+
+<p>Test on production deployment:</p>
+<ol>
+  <li>Complete signup flow</li>
+  <li>Complete login flow</li>
+  <li>Complete core feature (money action)</li>
+  <li>Complete payment flow (with test card)</li>
+  <li>Verify webhook handling</li>
+  <li>Test on mobile devices</li>
+  <li>Test across browsers</li>
+</ol>
+
+<h2>23.3 Post-Launch</h2>
+
+<h3>First 24 Hours</h3>
+<ul>
+  <li>Monitor error rates</li>
+  <li>Monitor response times</li>
+  <li>Watch user signups</li>
+  <li>Check payment success rate</li>
+</ul>
+
+<h3>First Week</h3>
+<ul>
+  <li>Daily metrics review</li>
+  <li>User feedback collection</li>
+  <li>Bug triage</li>
+  <li>Cost monitoring</li>
+</ul>
+
+<hr class="divider">
+
+<!-- APPENDICES -->
+<div class="part-header">
+  <h2>APPENDICES</h2>
+</div>
+
+<h1>Appendix A: Quality Verification Checklists</h1>
+
+<h2>Function Quality</h2>
+<ul>
+  <li>Single, clear responsibility?</li>
+  <li>30 lines or fewer?</li>
+  <li>Nesting depth 3 or less?</li>
+  <li>Names reveal intent?</li>
+  <li>Magic values as named constants?</li>
+  <li>Error handling if can fail?</li>
+  <li>Dependencies explicit?</li>
+</ul>
+
+<h2>Component Quality</h2>
+<ul>
+  <li>Single purpose?</li>
+  <li>150 lines or fewer?</li>
+  <li>All states handled?</li>
+  <li>Props typed with TypeScript?</li>
+  <li>Accessible?</li>
+</ul>
+
+<h2>API Route Quality</h2>
+<ul>
+  <li>Authentication verified first?</li>
+  <li>Authorization checked?</li>
+  <li>Input validated with Zod?</li>
+  <li>Errors handled consistently?</li>
+  <li>Sensitive data excluded from logs?</li>
+</ul>
+
+<hr class="divider">
+
+<h1>Appendix B: Anti-Pattern Reference</h1>
+
+<h2>Structure Anti-Patterns</h2>
+<ul>
+  <li><strong>God Function:</strong> Does everything. Fix: Extract focused functions.</li>
+  <li><strong>Deep Nesting:</strong> 4+ levels. Fix: Early returns, extract helpers.</li>
+  <li><strong>Implicit Dependencies:</strong> Hidden globals. Fix: Pass as parameters.</li>
+</ul>
+
+<h2>Safety Anti-Patterns</h2>
+<ul>
+  <li><strong>Optimistic Trust:</strong> Assuming valid input. Fix: Validate at boundaries.</li>
+  <li><strong>Catch-All Silence:</strong> Swallowing errors. Fix: Handle or fail visibly.</li>
+  <li><strong>Security Sprinkle:</strong> Random auth checks. Fix: Consistent boundaries.</li>
+</ul>
+
+<h2>Performance Anti-Patterns</h2>
+<ul>
+  <li><strong>N+1 Queries:</strong> Loop fetching. Fix: Joins or batch fetches.</li>
+  <li><strong>Render Thrashing:</strong> Constant re-renders. Fix: Memoization.</li>
+  <li><strong>Eager Loading:</strong> Everything upfront. Fix: Lazy loading.</li>
+</ul>
+
+<hr class="divider">
+
+<h1>Appendix C: Claude Prompt Templates Quick Reference</h1>
+
+<table class="comparison-table">
+  <tr>
+    <th>Stage</th>
+    <th>Tool</th>
+    <th>Primary Output</th>
+  </tr>
+  <tr>
+    <td>0.1 Research</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Market validation</td>
+  </tr>
+  <tr>
+    <td>1.0 Business One-Pager</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>9-section summary</td>
+  </tr>
+  <tr>
+    <td>2.0 Design Brief</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Single source of truth</td>
+  </tr>
+  <tr>
+    <td>3.0 UX Package</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Wireframes and flows</td>
+  </tr>
+  <tr>
+    <td>3.1 UX Critic</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Issues and fixes</td>
+  </tr>
+  <tr>
+    <td>4.0 UI System</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Design tokens and specs</td>
+  </tr>
+  <tr>
+    <td>5.0 Architecture</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Technical spec</td>
+  </tr>
+  <tr>
+    <td>R1 Security</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Security requirements</td>
+  </tr>
+  <tr>
+    <td>Infrastructure</td>
+    <td><span class="tool-badge badge-code">Code CLI</span></td>
+    <td>Configured services</td>
+  </tr>
+  <tr>
+    <td>6.0 Build</td>
+    <td><span class="tool-badge badge-code">Code CLI</span></td>
+    <td>Working code</td>
+  </tr>
+  <tr>
+    <td>Code Review</td>
+    <td><span class="tool-badge badge-both">Both</span></td>
+    <td>Issues + fixes</td>
+  </tr>
+  <tr>
+    <td>7.0 Launch</td>
+    <td><span class="tool-badge badge-code">Code CLI</span></td>
+    <td>Deployed app</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<h1>Appendix D: Multi-Environment Configuration Reference</h1>
+
+<h2>Environment Variables by Service</h2>
+
+<h3>Supabase Variables</h3>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# LOCAL DEVELOPMENT (.env.local)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Option A: Local Supabase (Docker)
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+
+# Option B: Remote Dev Project
+# NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your-dev-anon-key
+# SUPABASE_SERVICE_ROLE_KEY=your-dev-service-role-key
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PREVIEW (Vercel Environment Variables - Preview scope)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_SUPABASE_URL=https://your-dev-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-dev-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-dev-service-role-key
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PRODUCTION (Vercel Environment Variables - Production scope)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_SUPABASE_URL=https://your-prod-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-prod-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-prod-service-role-key</div>
+
+<h3>Stripe Variables</h3>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# LOCAL + PREVIEW (Test Mode)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxx
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PRODUCTION (Live Mode)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+STRIPE_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxxxxxxxxxxx</div>
+
+<h3>App Configuration Variables</h3>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# LOCAL
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PREVIEW (Dynamic - Vercel provides VERCEL_URL automatically)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Option 1: Use Vercel's automatic URL
+NEXT_PUBLIC_APP_URL=https://${VERCEL_URL}
+
+# Option 2: Set a stable preview domain
+NEXT_PUBLIC_APP_URL=https://preview.your-domain.com
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PRODUCTION
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+NEXT_PUBLIC_APP_URL=https://your-domain.com</div>
+
+<h2>Supabase Auth URL Configuration</h2>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# DEVELOPMENT Supabase Project (Dashboard â†’ Authentication â†’ URL Config)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+Site URL: http://localhost:3000
+
+Redirect URLs:
+  http://localhost:3000/**
+  https://*-yourteam.vercel.app/**
+  https://your-project-*.vercel.app/**
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PRODUCTION Supabase Project (Dashboard â†’ Authentication â†’ URL Config)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+Site URL: https://your-domain.com
+
+Redirect URLs:
+  https://your-domain.com/**
+  https://www.your-domain.com/**</div>
+
+<h2>Supabase RLS Policy Template</h2>
+
+<div class="code-block">-- Users can only access their own data
+create policy "Users can view own records"
+  on public.table_name for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert own records"
+  on public.table_name for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update own records"
+  on public.table_name for update
+  using (auth.uid() = user_id);
+
+create policy "Users can delete own records"
+  on public.table_name for delete
+  using (auth.uid() = user_id);</div>
+
+<h2>GitHub Secrets Reference</h2>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# Repository Secrets (Settings â†’ Secrets and variables â†’ Actions)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Supabase CLI Authentication
+SUPABASE_ACCESS_TOKEN         # From supabase.com â†’ Account â†’ Access Tokens
+
+# Project References
+SUPABASE_DEV_PROJECT_REF      # From dev project URL: https://[REF].supabase.co
+SUPABASE_PROD_PROJECT_REF     # From prod project URL: https://[REF].supabase.co
+
+# CI Testing (optional, can use dev project)
+TEST_SUPABASE_URL             # Dev project URL for CI tests
+TEST_SUPABASE_ANON_KEY        # Dev project anon key for CI tests</div>
+
+<h2>Supabase CLI Commands Reference</h2>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# LOCAL DEVELOPMENT
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+npx supabase init              # Initialize Supabase in project
+npx supabase start             # Start local Supabase (Docker)
+npx supabase stop              # Stop local Supabase
+npx supabase status            # Show local Supabase status and URLs
+npx supabase db reset          # Reset local DB and apply all migrations
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# MIGRATIONS
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+npx supabase migration new NAME                           # Create new migration
+npx supabase db diff --use-migra -f NAME                  # Generate migration from DB changes
+npx supabase db push                                      # Push migrations to linked project
+npx supabase db push --project-ref REF                    # Push to specific project
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PROJECT LINKING
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+npx supabase link --project-ref REF                       # Link to remote project
+npx supabase db pull                                      # Pull remote schema as migration
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# TYPE GENERATION
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+npx supabase gen types typescript --local > types/supabase.ts    # From local
+npx supabase gen types typescript --linked > types/supabase.ts   # From linked project</div>
+
+<h2>Vercel CLI Commands Reference</h2>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# PROJECT SETUP
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+vercel login                   # Authenticate with Vercel
+vercel link                    # Link local project to Vercel project
+vercel env pull .env.local     # Pull env vars to local file
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# DEPLOYMENTS
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+vercel                         # Deploy to preview
+vercel --prod                  # Deploy to production
+vercel logs                    # View deployment logs
+vercel inspect [url]           # Inspect a deployment
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ENVIRONMENT VARIABLES
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+vercel env ls                             # List all env vars
+vercel env add NAME                       # Add new env var (interactive)
+vercel env rm NAME                        # Remove env var
+vercel env pull .env.local                # Pull to local file</div>
+
+<h2>Environment Verification Commands</h2>
+
+<div class="code-block"># â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# VERIFY LOCAL SETUP
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Check local Supabase is running
+npx supabase status
+
+# Check environment variables are loaded
+node -e "console.log(process.env.NEXT_PUBLIC_SUPABASE_URL)"
+
+# Test database connection
+npx supabase db reset && echo "Database OK"
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# VERIFY PREVIEW SETUP
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Check Vercel project is linked
+vercel whoami && vercel project ls
+
+# Preview environment variables
+vercel env ls --environment preview
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# VERIFY PRODUCTION SETUP
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# Production environment variables
+vercel env ls --environment production
+
+# Check domain configuration
+vercel domains ls</div>
+
+<hr class="divider">
+
+<p style="text-align: center; color: #718096; font-style: itali
