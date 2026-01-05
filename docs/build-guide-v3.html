@@ -457,46 +457,79 @@
 <div class="title-section">
   <h1>Build Phase Guide</h1>
   <p class="subtitle">Structured Prompts, Quality Gates, and Verification Checkpoints</p>
-  <p style="color: var(--muted); margin-top: 0.5rem;">Version 3 - Aligned with AI SaaS Handbook v2.2</p>
+  <p style="color: var(--muted); margin-top: 0.5rem;">Version 3 - Aligned with AI SaaS Handbook v3.0</p>
   <p style="color: var(--muted);">Companion Document to the AI SaaS Handbook</p>
+</div>
+
+<!-- HOW TO USE THIS GUIDE -->
+<div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 2px solid #3b82f6; border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+  <h2 style="color: #1e40af; margin-top: 0; border: none;">📖 How This Guide Relates to the Handbook</h2>
+
+  <p><strong>The Handbook</strong> (Parts I-V) teaches you the methodology: research, design, architecture, MOAI, SPEC-first development, and TDD workflow.</p>
+
+  <p><strong>This Build Guide</strong> is where you execute. It contains the step-by-step prompts, quality gates, and verification checks for all 11 milestones.</p>
+
+  <div style="background: white; border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+    <strong>Your workflow:</strong>
+    <ol style="margin-bottom: 0;">
+      <li>Read Handbook Part V (Chapters 24-27) to understand MOAI methodology</li>
+      <li>Open this Build Guide for milestone execution</li>
+      <li>For each milestone: follow prompts → verify quality → commit</li>
+      <li>At checkpoints: run debt audit, reference Handbook Ch 27</li>
+    </ol>
+  </div>
+
+  <p style="margin-bottom: 0;"><strong>Keep both documents open.</strong> This guide tells you what to do; the Handbook explains why.</p>
 </div>
 
 <!-- PREREQUISITES BOX -->
 <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
   <h2 style="color: #92400e; margin-top: 0; border: none;">&#9888; Prerequisites: Complete Before Starting Build Phase</h2>
   
-  <p style="margin-bottom: 1rem;">Before using this guide, ensure you have completed the following from the <strong>AI SaaS Handbook v2.2</strong>:</p>
+  <p style="margin-bottom: 1rem;">Before using this guide, ensure you have completed the following from the <strong>AI SaaS Handbook v3.0</strong>:</p>
   
   <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-    <h4 style="margin-top: 0; color: #92400e;">Part II: Documentation Stages</h4>
+    <h4 style="margin-top: 0; color: #92400e;">Part II: Documentation Stages (Chapters 5-7)</h4>
     <ul style="margin-bottom: 0;">
-      <li>&#10003; Stage 0.1: Research and Opportunity Assessment</li>
-      <li>&#10003; Stage 1.0: Business One-Pager</li>
-      <li>&#10003; Stage 2.0: Shared Design Brief</li>
+      <li>&#10003; Chapter 5: Research and Opportunity Assessment</li>
+      <li>&#10003; Chapter 6: Business One-Pager → saved as <code>docs/one-pager.md</code></li>
+      <li>&#10003; Chapter 7: Shared Design Brief → saved as <code>docs/design-brief.md</code></li>
     </ul>
   </div>
   
   <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-    <h4 style="margin-top: 0; color: #92400e;">Part III: Design Excellence</h4>
+    <h4 style="margin-top: 0; color: #92400e;">Part III: Design Excellence (Chapters 8-13)</h4>
     <ul style="margin-bottom: 0;">
-      <li>&#10003; Stage 3.0: UX Package</li>
-      <li>&#10003; Stage 3.1: UX Critic and Validation</li>
-      <li>&#10003; Stage 4.0: UI System</li>
+      <li>&#10003; Chapters 9-10: UX Package → saved as <code>docs/ux-package.md</code></li>
+      <li>&#10003; Chapters 11-12: UI System → saved as <code>docs/ui-system.md</code></li>
     </ul>
   </div>
   
   <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-    <h4 style="margin-top: 0; color: #92400e;">Part IV: Technical Foundation (CRITICAL)</h4>
+    <h4 style="margin-top: 0; color: #92400e;">Part IV: Technical Foundation (Chapters 14-23)</h4>
     <ul style="margin-bottom: 0;">
-      <li>&#10003; Chapter 14: Solution Architecture</li>
+      <li>&#10003; Chapter 14: Solution Architecture → saved as <code>docs/architecture.md</code></li>
       <li>&#10003; Chapter 15: Database Schema Design</li>
       <li>&#10003; Chapters 16-18: Infrastructure Setup (GitHub, Supabase, Vercel)</li>
-      <li>&#10003; <strong>Chapter 19: Multi-Environment Configuration</strong>  -  Local, Preview, and Production environments must be configured before any build work begins</li>
+      <li>&#10003; Chapter 19: Multi-Environment Configuration</li>
+      <li>&#10003; Chapter 22: Build Contract → saved as <code>docs/build-contract.md</code></li>
+      <li>&#10003; Chapter 23: Environment Setup (CLAUDE.md, docs/ folder)</li>
     </ul>
   </div>
-  
-  <p style="margin-bottom: 0;"><strong>Why this matters:</strong> The prompts in this guide assume your environment is fully configured. Without proper multi-environment setup, you'll face deployment issues, data isolation problems, and CI/CD failures that are much harder to fix later.</p>
+
+  <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+    <h4 style="margin-top: 0; color: #92400e;">Part V: MOAI Methodology (Chapters 24-27) - READ BEFORE BUILDING</h4>
+    <ul style="margin-bottom: 0;">
+      <li>&#10003; Chapter 24: MOAI-ADK Overview</li>
+      <li>&#10003; Chapter 25: SPEC-First Development (EARS format)</li>
+      <li>&#10003; Chapter 26: TDD Workflow (RED → GREEN → REFACTOR)</li>
+      <li>&#10003; Chapter 27: Technical Debt Scoring Framework</li>
+    </ul>
+  </div>
+
+  <p style="margin-bottom: 0;"><strong>Why this matters:</strong> The prompts in this guide assume your environment is fully configured and you understand the MOAI methodology. Without proper setup, you'll face deployment issues and quality problems that are much harder to fix later.</p>
 </div>
+
 
 <!-- TABLE OF CONTENTS -->
 <h1>Table of Contents</h1>

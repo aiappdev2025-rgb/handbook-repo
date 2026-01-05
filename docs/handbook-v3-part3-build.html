@@ -205,7 +205,19 @@
   <p style="color: var(--muted); margin-top: 0.5rem;">SPEC-First Development with TDD Enforcement</p>
 </div>
 
+<div class="note" style="background: #eff6ff; border-left-color: #3b82f6;">
+  <h4 style="margin-top: 0;">📖 How to Use Part V</h4>
+  <p><strong>Objective:</strong> Understand the MOAI methodology before executing milestones.</p>
+  <p><strong>What you'll learn:</strong> SPEC-First Development, EARS requirements format, TDD workflow, and technical debt management.</p>
+  <p><strong>What to do:</strong> Read Chapters 24-27 to understand the methodology. Then open the <a href="build-guide-v3.html">Build Phase Guide</a> for step-by-step milestone execution.</p>
+  <p style="margin-bottom: 0;"><strong>Time:</strong> ~30 minutes to read. Do not start coding yet.</p>
+</div>
+
 <h1 id="chapter-24">Chapter 24: MOAI-ADK Overview</h1>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>📖 Read for Understanding</strong> &mdash; This chapter explains the MOAI methodology. No action required yet. You'll apply these concepts when executing milestones in the Build Guide.
+</div>
 
 <p>MOAI-ADK (Methodology for Organized AI-Driven Development Kit) structures AI-assisted implementation through SPEC-First Development, EARS Requirements, TDD Workflow, and Documentation Sync.</p>
 
@@ -233,6 +245,10 @@ Architecture      ----+                              v
 </div>
 
 <h1 id="chapter-25">Chapter 25: SPEC-First Development</h1>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>📖 Read for Understanding</strong> &mdash; Learn the EARS requirements format and test case structure. You'll write SPECs using these patterns for each feature before coding.
+</div>
 
 <h2>25.1 EARS Requirements Format</h2>
 
@@ -277,6 +293,10 @@ Reference Build Contract section 2.3 for authentication requirements"</div>
 </div>
 
 <h1 id="chapter-26">Chapter 26: TDD Workflow</h1>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>📖 Read for Understanding</strong> &mdash; Understand the RED → GREEN → REFACTOR cycle. You'll follow this exact workflow for every feature during milestone execution.
+</div>
 
 <div class="file-structure">
 TDD CYCLE: RED --> GREEN --> REFACTOR --> DONE
@@ -345,6 +365,10 @@ npm run lint</div>
 </div>
 
 <h1 id="chapter-27">Chapter 27: Technical Debt Scoring Framework <span class="new-badge">NEW</span></h1>
+
+<div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
+  <strong>📖 Read + Setup</strong> &mdash; Understand the scoring methodology, then copy the automation templates to your project. You'll run debt audits at each checkpoint during the build phase.
+</div>
 
 <p>Technical debt is inevitable during rapid development. The difference between successful projects and troubled ones is not the absence of debt &mdash; it's the <strong>awareness and management</strong> of that debt. This framework provides objective measurement so you can make informed decisions about when to incur debt, when to pay it down, and when to stop and remediate.</p>
 
@@ -672,6 +696,10 @@ Current checkpoint: [CHECKPOINT_A | CHECKPOINT_B | CHECKPOINT_C]</div>
 
 <h1 id="chapter-28">Chapter 28: Build Milestones</h1>
 
+<div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
+  <strong>📖 Reference</strong> &mdash; This is an overview of all milestones and checkpoints. For detailed prompts and step-by-step instructions, open the <a href="build-guide-v3.html">Build Phase Guide</a>.
+</div>
+
 <table class="comparison-table">
   <tr><th>Milestone</th><th>Focus</th><th>Deliverables</th></tr>
   <tr><td>M1-M4</td><td>Setup, Design System, Database, Layouts</td><td>Foundation ready</td></tr>
@@ -716,6 +744,33 @@ npm test -- --coverage
 
 # Tag checkpoint
 git tag -a checkpoint-a -m "Checkpoint A: Foundation complete"</div>
+</div>
+
+<!-- TRANSITION TO BUILD GUIDE -->
+<div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; color: white;">
+  <h2 style="color: white; margin-top: 0; border: none;">🚀 Ready to Start Building</h2>
+
+  <p>You now understand the MOAI methodology:</p>
+  <ul style="margin-bottom: 1.5rem;">
+    <li><strong>SPEC-First</strong> &mdash; Define features with EARS requirements before coding</li>
+    <li><strong>TDD Workflow</strong> &mdash; RED → GREEN → REFACTOR for every feature</li>
+    <li><strong>Technical Debt</strong> &mdash; Measure and manage debt at each checkpoint</li>
+  </ul>
+
+  <p style="margin-bottom: 1.5rem;"><strong>Next Step:</strong> Open the Build Phase Guide and start Milestone 1. The Build Guide contains the detailed prompts, step-by-step instructions, and quality checks for all 11 milestones.</p>
+
+  <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+    <strong>How to use the Build Guide:</strong>
+    <ol style="margin-bottom: 0;">
+      <li>Open the Build Guide alongside this handbook</li>
+      <li>Follow milestones in order (M1 → M11)</li>
+      <li>For each feature: write SPEC → follow TDD → pass quality gate</li>
+      <li>At checkpoints (A, B, C): run debt audit, tag release</li>
+      <li>Return to this handbook for methodology reference as needed</li>
+    </ol>
+  </div>
+
+  <a href="build-guide-v3.html" style="display: inline-block; background: white; color: #7c3aed; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 0.5rem;">Open Build Phase Guide →</a>
 </div>
 
 <hr class="divider">
