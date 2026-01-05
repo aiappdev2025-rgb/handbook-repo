@@ -110,6 +110,11 @@
     .badge-chat { background: #e9d8fd; color: #553c9a; }
     .badge-code { background: #c6f6d5; color: #276749; }
 
+    .prompt-indicator { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .session-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; }
+    .session-new { background: #fef3c7; color: #92400e; }
+    .session-same { background: #dbeafe; color: #1e40af; }
+
     .divider { border: none; border-top: 2px solid var(--border); margin: 3rem 0; }
 
     .part-nav { display: flex; justify-content: space-between; margin: 3rem 0; padding: 1.5rem; background: var(--surface); border-radius: 8px; }
@@ -156,8 +161,12 @@
     <strong>Part IV: Technical Foundation</strong>
     <div class="toc-items">
       <a href="#chapter-14">14. Solution Architecture</a> |
+      <a href="#chapter-15">15. Database Schema Design</a> |
+      <a href="#chapter-16">16. GitHub Repository Setup</a> |
+      <a href="#chapter-17">17. Supabase Project Setup</a> |
+      <a href="#chapter-18">18. Vercel Project Setup</a> |
       <a href="#chapter-19">19. Multi-Environment Configuration</a>
-      (<a href="#section-19-1">19.1</a> | <a href="#section-19-2">19.2</a> | <a href="#section-19-3">19.3</a> | <a href="#section-19-4">19.4</a> | <a href="#section-19-5">19.5</a> | <a href="#section-19-6">19.6</a> | <a href="#section-19-7">19.7</a> | <a href="#section-19-8">19.8</a> | <a href="#section-19-9">19.9</a>)
+      (<a href="#section-19-1">19.1</a> | <a href="#section-19-2">19.2</a> | <a href="#section-19-3">19.3</a> | <a href="#section-19-4">19.4</a> | <a href="#section-19-5">19.5</a> | <a href="#section-19-6">19.6</a> | <a href="#section-19-7">19.7</a> | <a href="#section-19-8">19.8</a> | <a href="#section-19-9">19.9</a> | <a href="#section-19-10">19.10</a>)
     </div>
   </div>
 
@@ -207,6 +216,11 @@
 
 <h2>14.2 Architecture Prompt</h2>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-new">New Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(start fresh for technical planning)</span>
+</div>
 <div class="prompt-block">Create a Solution Architecture document for [PRODUCT NAME].
 
 Technology Stack (recommended for AI SaaS):
@@ -224,7 +238,359 @@ The Architecture document should include:
 4. Authentication and Authorization
 5. AI Integration (prompts, error handling, cost management)
 6. Third-Party Integrations
-7. Security Considerations</div>
+7. Security Considerations
+8. Project Structure (folder organization, route groups, component folders)
+
+Output the complete document in markdown format, ready to save as docs/architecture.md.</div>
+
+<h2>14.3 Save the Architecture Document</h2>
+
+<div class="note-block" style="border-left: 4px solid var(--warning); background: #fffbeb; padding: 1rem; margin: 1rem 0;">
+  <strong>⚠️ Critical Step for Claude Code Integration</strong>
+  <p style="margin: 0.5rem 0 0 0;">The Architecture document will be referenced during implementation in Claude Code. Save it now so Claude Code can access it:</p>
+</div>
+
+<ol>
+  <li>Create a <code>docs/</code> folder in your project directory (if it doesn't exist)</li>
+  <li>Copy the complete Architecture output from Claude Chat</li>
+  <li>Save as <code>docs/architecture.md</code></li>
+</ol>
+
+<p>This file becomes part of your project's context system. Claude Code will read it when initializing your project structure (Chapter 16) and reference it throughout the build phase.</p>
+
+<div class="checklist">
+  <h4>Before Proceeding</h4>
+  <ul>
+    <li><code>docs/architecture.md</code> exists with complete Architecture output</li>
+    <li>Project Structure section includes folder organization and route groups</li>
+    <li>Database Schema section lists all tables and relationships</li>
+    <li>API Design section defines routes and methods</li>
+  </ul>
+</div>
+
+<h1 id="chapter-15">Chapter 15: Database Schema Design</h1>
+
+<h2>15.1 Purpose</h2>
+<p>With your architecture defined, the next step is to design the concrete database schema. This chapter generates SQL-ready schema definitions including tables, relationships, indexes, and Row Level Security (RLS) policies.</p>
+
+<h2>15.2 Database Schema Prompt</h2>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues from Architecture)</span>
+</div>
+<div class="prompt-block">Based on the Architecture document we just created, generate a complete database schema for Supabase.
+
+For each table, provide:
+1. **CREATE TABLE statement** with all columns, types, and constraints
+2. **RLS policies** for SELECT, INSERT, UPDATE, DELETE
+3. **Indexes** for frequently queried columns
+4. **Triggers** for updated_at timestamps
+
+Required tables based on our architecture:
+- user_profiles (extends auth.users)
+- [LIST YOUR DOMAIN TABLES FROM ARCHITECTURE]
+- subscriptions (Stripe sync)
+- usage_logs (if applicable)
+
+For each RLS policy, explain the security rationale.
+
+Output as a single SQL migration file that can be run in Supabase SQL Editor.</div>
+
+<h2>15.3 Schema Validation Checklist</h2>
+
+<div class="checklist">
+  <h4>Before Proceeding</h4>
+  <ul>
+    <li>All tables have <code>id</code> (UUID), <code>created_at</code>, <code>updated_at</code></li>
+    <li>Foreign keys reference correct tables with ON DELETE behavior</li>
+    <li>RLS is enabled on ALL tables</li>
+    <li>RLS policies cover all CRUD operations</li>
+    <li>Indexes exist for foreign keys and frequently filtered columns</li>
+    <li>No sensitive data exposed without proper policy checks</li>
+  </ul>
+</div>
+
+<hr class="divider">
+
+<h1 id="chapter-16">Chapter 16: GitHub Repository Setup</h1>
+
+<h2>16.1 Purpose</h2>
+<p>Create and configure your GitHub repository with proper structure, branch protection, and essential configuration files.</p>
+
+<h2>16.2 Repository Creation</h2>
+
+<p>Create your repository on GitHub:</p>
+<ol>
+  <li>Go to <a href="https://github.com/new">github.com/new</a></li>
+  <li>Name: <code>[your-project-name]</code> (lowercase, hyphens)</li>
+  <li>Visibility: Private (recommended until launch)</li>
+  <li>Initialize with README: No (we'll create our own)</li>
+  <li>Add .gitignore: None (we'll use Next.js template)</li>
+</ol>
+
+<h2>16.3 Project Initialization Prompt</h2>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-new">New Session</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(first time using Claude Code)</span>
+</div>
+<div class="prompt-block">Initialize a new Next.js project for [PROJECT_NAME].
+
+**Reference**: Read docs/architecture.md and use the Project Structure section.
+
+1. Create the project with:
+   - Next.js 14+ with App Router
+   - TypeScript (strict mode)
+   - Tailwind CSS
+   - ESLint
+
+2. Set up the folder structure as defined in docs/architecture.md, including:
+   - All route groups from the Architecture
+   - Feature-specific component folders for each domain entity
+   - Service integration folders (supabase/, stripe/, etc.)
+   - Any domain-specific lib/ folders
+
+3. Create a comprehensive .gitignore for Next.js + Supabase + env files
+
+4. Create initial README.md with project name and setup instructions
+
+5. Initialize git and make initial commit
+
+6. Connect to GitHub remote: [REPO_URL]</div>
+
+<h2>16.4 Branch Strategy</h2>
+
+<table class="comparison-table">
+  <tr>
+    <th>Branch</th>
+    <th>Purpose</th>
+    <th>Deploys To</th>
+  </tr>
+  <tr>
+    <td><code>main</code></td>
+    <td>Production-ready code</td>
+    <td>Production (Vercel)</td>
+  </tr>
+  <tr>
+    <td><code>develop</code></td>
+    <td>Integration branch (optional)</td>
+    <td>Preview</td>
+  </tr>
+  <tr>
+    <td><code>feature/*</code></td>
+    <td>New features</td>
+    <td>Preview</td>
+  </tr>
+  <tr>
+    <td><code>fix/*</code></td>
+    <td>Bug fixes</td>
+    <td>Preview</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<h1 id="chapter-17">Chapter 17: Supabase Project Setup</h1>
+
+<h2>17.1 Purpose</h2>
+<p>Create and configure your Supabase projects for each environment. This is done through the Supabase dashboard.</p>
+
+<h2>17.2 Create Projects</h2>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (Supabase Dashboard) - These steps cannot be automated.
+</div>
+
+<p>Go to <a href="https://supabase.com/dashboard">supabase.com/dashboard</a> and create three projects:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Project Name</th>
+    <th>Purpose</th>
+    <th>Region</th>
+  </tr>
+  <tr>
+    <td><code>[project]-dev</code></td>
+    <td>Local development</td>
+    <td>Closest to you</td>
+  </tr>
+  <tr>
+    <td><code>[project]-staging</code></td>
+    <td>Preview deployments</td>
+    <td>Same as production</td>
+  </tr>
+  <tr>
+    <td><code>[project]-prod</code></td>
+    <td>Production users</td>
+    <td>Closest to users</td>
+  </tr>
+</table>
+
+<h2>17.3 Configure Authentication</h2>
+
+<p>For each project, go to <strong>Authentication → URL Configuration</strong>:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Site URL</th>
+    <th>Redirect URLs</th>
+  </tr>
+  <tr>
+    <td>Dev</td>
+    <td><code>http://localhost:3000</code></td>
+    <td><code>http://localhost:3000/**</code></td>
+  </tr>
+  <tr>
+    <td>Staging</td>
+    <td><code>https://*-[username].vercel.app</code></td>
+    <td><code>https://*-[username].vercel.app/**</code></td>
+  </tr>
+  <tr>
+    <td>Prod</td>
+    <td><code>https://[your-domain].com</code></td>
+    <td><code>https://[your-domain].com/**</code></td>
+  </tr>
+</table>
+
+<h2>17.4 Apply Schema Migration</h2>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">Same Session</span>
+</div>
+<div class="prompt-block">Set up Supabase CLI and apply the initial schema migration.
+
+1. Initialize Supabase in the project:
+   supabase init
+
+2. Link to the development project:
+   supabase link --project-ref [DEV_PROJECT_REF]
+
+3. Create a migration file from the schema we designed in Chapter 15:
+   supabase migration new initial_schema
+
+4. Apply the migration:
+   supabase db push
+
+5. Verify the tables were created correctly.</div>
+
+<h2>17.5 Record Credentials</h2>
+
+<p>From each project's <strong>Settings → API</strong>, record:</p>
+<ul>
+  <li>Project URL</li>
+  <li>Anon (public) key</li>
+  <li>Service role key (keep secret!)</li>
+</ul>
+
+<div class="warning">
+  <h4>Security</h4>
+  <p>Store credentials in a password manager. Never commit them to your repository.</p>
+</div>
+
+<hr class="divider">
+
+<h1 id="chapter-18">Chapter 18: Vercel Project Setup</h1>
+
+<h2>18.1 Purpose</h2>
+<p>Configure Vercel to deploy your Next.js application with proper environment variable management across Development, Preview, and Production.</p>
+
+<h2>18.2 Import Project</h2>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (Vercel Dashboard) - Initial setup requires the dashboard.
+</div>
+
+<ol>
+  <li>Go to <a href="https://vercel.com/new">vercel.com/new</a></li>
+  <li>Import your GitHub repository</li>
+  <li>Framework Preset: Next.js (auto-detected)</li>
+  <li>Root Directory: <code>./</code></li>
+  <li>Deploy (initial deploy will fail without env vars - that's OK)</li>
+</ol>
+
+<h2>18.3 Environment Variables</h2>
+
+<p>Go to <strong>Project Settings → Environment Variables</strong>. Add variables for each scope:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Variable</th>
+    <th>Development</th>
+    <th>Preview</th>
+    <th>Production</th>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_URL</code></td>
+    <td>Dev URL</td>
+    <td>Staging URL</td>
+    <td>Prod URL</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td>
+    <td>Dev key</td>
+    <td>Staging key</td>
+    <td>Prod key</td>
+  </tr>
+  <tr>
+    <td><code>SUPABASE_SERVICE_ROLE_KEY</code></td>
+    <td>Dev service key</td>
+    <td>Staging service key</td>
+    <td>Prod service key</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td>
+    <td>Test key</td>
+    <td>Test key</td>
+    <td>Live key</td>
+  </tr>
+  <tr>
+    <td><code>STRIPE_SECRET_KEY</code></td>
+    <td>Test secret</td>
+    <td>Test secret</td>
+    <td>Live secret</td>
+  </tr>
+</table>
+
+<h2>18.4 Verify Deployment</h2>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">Same Session</span>
+</div>
+<div class="prompt-block">Verify the Vercel deployment is working correctly.
+
+1. Pull the environment variables for local development:
+   vercel link
+   vercel env pull .env.local
+
+2. Start the development server:
+   npm run dev
+
+3. Verify:
+   - App loads at localhost:3000
+   - No console errors about missing env vars
+   - Supabase client initializes (check network tab)
+
+4. Trigger a new deployment to verify Preview works:
+   git commit --allow-empty -m "Trigger deploy"
+   git push</div>
+
+<h2>18.5 Domain Configuration (Production)</h2>
+
+<p>When ready for launch:</p>
+<ol>
+  <li>Go to <strong>Project Settings → Domains</strong></li>
+  <li>Add your custom domain</li>
+  <li>Follow DNS configuration instructions</li>
+  <li>HTTPS is automatic</li>
+</ol>
+
+<hr class="divider">
 
 <h1 id="chapter-19">Chapter 19: Multi-Environment Configuration</h1>
 
@@ -1079,6 +1445,155 @@ supabase db pull
   <p>Once all checklists are complete, your multi-environment setup is ready. You can develop locally against Development, share preview URLs with testers (connecting to Staging), and deploy to Production with confidence.</p>
 </div>
 
+<h2 id="section-19-10">19.10 Automating Setup with Claude Code</h2>
+
+<p>Many of the local setup tasks in this chapter can be automated using Claude Code. This section describes a two-stage workflow: use Claude Chat to generate your configuration, then Claude Code to execute the setup.</p>
+
+<div class="moai-box">
+  <h4>What Can Be Automated?</h4>
+  <table class="comparison-table" style="margin-top: 1rem;">
+    <tr>
+      <th>Automated by Claude Code</th>
+      <th>Manual (Web Dashboard)</th>
+    </tr>
+    <tr>
+      <td>
+        <ul style="margin: 0; padding-left: 1.2rem;">
+          <li>Creating <code>.env.local</code> file</li>
+          <li>Creating <code>.env.example</code> file</li>
+          <li>Creating <code>lib/config.ts</code></li>
+          <li>Updating <code>.gitignore</code></li>
+          <li>Running CLI commands</li>
+          <li>Creating migration files</li>
+        </ul>
+      </td>
+      <td>
+        <ul style="margin: 0; padding-left: 1.2rem;">
+          <li>Creating Supabase projects</li>
+          <li>Configuring Auth URLs</li>
+          <li>Creating Vercel project</li>
+          <li>Adding Vercel env vars</li>
+          <li>Configuring Stripe products</li>
+          <li>Copying credentials</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h3>Prerequisites: Complete Manual Steps First</h3>
+
+<p>Before using automation, complete these manual steps and gather your credentials:</p>
+
+<div class="checklist">
+  <h4>Required Before Automation</h4>
+  <ul>
+    <li>Create 3 Supabase projects (Dev, Staging, Prod) and record URLs + keys</li>
+    <li>Create Vercel project and import your repository</li>
+    <li>Get Stripe API keys (test mode)</li>
+    <li>Know your production domain (if you have one)</li>
+  </ul>
+</div>
+
+<h3>Stage 1: Generate Configuration with Claude Chat</h3>
+
+<p>Use this prompt in Claude Chat, filling in your actual values:</p>
+
+<div class="prompt-block">I need to set up my multi-environment configuration for a Next.js SaaS project. Please generate files and a Claude Code prompt.
+
+**Project name:** [YOUR_PROJECT_NAME]
+
+**Supabase credentials:**
+- Dev URL: https://[DEV_REF].supabase.co
+- Dev Anon Key: [DEV_ANON_KEY]
+- Dev Service Role Key: [DEV_SERVICE_KEY]
+
+**Stripe credentials (test mode):**
+- Publishable Key: pk_test_[YOUR_KEY]
+- Secret Key: sk_test_[YOUR_KEY]
+
+**Production domain:** [YOUR_DOMAIN].com (or "TBD" if not ready)
+
+Please generate:
+1. A complete `.env.local` file for local development
+2. A complete `.env.example` file (with placeholder values, safe to commit)
+3. A `lib/config.ts` file with getAppUrl() function
+4. A Claude Code prompt that will:
+   - Create these files
+   - Update .gitignore to exclude .env.local
+   - Run: npm install, vercel link, supabase login, supabase link
+   - Verify the setup works</div>
+
+<h3>Stage 2: Execute with Claude Code</h3>
+
+<p>Claude Chat will generate a prompt specifically for Claude Code. Copy that prompt and give it to Claude Code in your project directory. Claude Code will:</p>
+
+<ol>
+  <li>Create the configuration files with your actual values</li>
+  <li>Update <code>.gitignore</code> to protect secrets</li>
+  <li>Run the necessary CLI commands</li>
+  <li>Verify the setup by running <code>npm run dev</code></li>
+</ol>
+
+<div class="note">
+  <strong>Interactive Commands:</strong> Some commands (<code>vercel link</code>, <code>supabase login</code>) require interactive input. Claude Code will run them and you'll respond to the prompts as needed.
+</div>
+
+<h3>Example: Generated Claude Code Prompt</h3>
+
+<p>Claude Chat should generate something like this for Claude Code:</p>
+
+<div class="prompt-block">Set up local development environment for [PROJECT_NAME].
+
+Create the following files:
+
+**1. .env.local** (at project root):
+```
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+**2. .env.example** (at project root):
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+...
+```
+
+**3. lib/config.ts**:
+```typescript
+export const getAppUrl = () => {
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return 'http://localhost:3000';
+};
+```
+
+**4. Update .gitignore** to include:
+```
+.env.local
+.env*.local
+```
+
+**5. Run these commands:**
+- npm install
+- vercel link (I'll respond to prompts)
+- supabase link --project-ref [DEV_REF]
+
+**6. Verify by running:** npm run dev</div>
+
+<div class="tip" style="background: var(--surface); border-left: 4px solid var(--muted); padding: 1rem 1.5rem; margin: 1.5rem 0;">
+  <strong>Why This Workflow?</strong> Separating generation (Chat) from execution (Code) lets you review the configuration before it's created, catch any errors in your credentials, and maintain the flexibility to adjust values before committing.
+</div>
+
 <hr class="divider">
 
 <!-- PART IV-B: BUILD CONTRACT -->
@@ -1118,6 +1633,11 @@ supabase db pull
 
 <h1 id="chapter-22">Chapter 22: Generating the Build Contract</h1>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-new">New Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(fresh context for synthesis)</span>
+</div>
 <div class="prompt-block">I need you to generate a Build Contract from my design artifacts.
 
 Please analyze the attached design artifacts and create a Build Contract with these sections:
@@ -1140,7 +1660,20 @@ Please analyze the attached design artifacts and create a Build Contract with th
 
 7. **Quality Standards**: Compile standards from all documents.
 
-[Attach: Design Brief, UX Package, UI System, Architecture Document]</div>
+[Attach: Design Brief, UX Package, UI System, Architecture Document]
+
+Output in markdown format, ready to save as docs/build-contract.md.</div>
+
+<h2>22.1 Save the Build Contract</h2>
+
+<ol>
+  <li>Copy the complete Build Contract output from Claude Chat</li>
+  <li>Save as <code>docs/build-contract.md</code></li>
+</ol>
+
+<div class="note">
+  <strong>Bridge Complete:</strong> With the Build Contract saved, you now have all design artifacts ready in your <code>docs/</code> folder. Claude Code will reference these during implementation.
+</div>
 
 <hr class="divider">
 
@@ -1167,18 +1700,27 @@ Please analyze the attached design artifacts and create a Build Contract with th
 
 <h2>23.1 What You Should Have Ready</h2>
 
-<p>Before proceeding, confirm you have these artifacts from your Claude Chat sessions:</p>
+<p>Before proceeding, confirm you have these artifacts saved in your <code>docs/</code> folder:</p>
 
 <div class="checklist">
   <h4>Pre-Implementation Checklist</h4>
   <ul>
-    <li><strong>Design Brief</strong> with Vocabulary section defining canonical terms</li>
-    <li><strong>UX Package</strong> with user flows and screen descriptions</li>
-    <li><strong>UI System</strong> with component specifications and visual direction</li>
-    <li><strong>Architecture Document</strong> with database schema and API design</li>
-    <li><strong>Build Contract</strong> (generated from the above artifacts)</li>
+    <li><code>docs/one-pager.md</code> &mdash; Business One-Pager (Chapter 6)</li>
+    <li><code>docs/design-brief.md</code> &mdash; Design Brief with Vocabulary section (Chapter 7)</li>
+    <li><code>docs/ux-package.md</code> &mdash; UX Package with user flows and screens (Chapters 9-10)</li>
+    <li><code>docs/ui-system.md</code> &mdash; UI System with component specs (Chapters 11-12)</li>
+    <li><code>docs/architecture.md</code> &mdash; Architecture with schema and API design (Chapter 14)</li>
+    <li><code>docs/build-contract.md</code> &mdash; Build Contract (Chapter 22)</li>
   </ul>
 </div>
+
+<div class="code-block">docs/
+├── one-pager.md        # Business model and strategy
+├── design-brief.md     # Product vision and vocabulary
+├── ux-package.md       # User flows and screen inventory
+├── ui-system.md        # Visual design system
+├── architecture.md     # Technical architecture
+└── build-contract.md   # Implementation reference</div>
 
 <p>If any of these are missing or incomplete, go back to the relevant chapter and complete them. The Build Phase assumes all design decisions have been made.</p>
 
@@ -1213,61 +1755,61 @@ git commit -m "Initial Next.js project setup"</div>
   <tr><td>No awareness of your architecture</td><td>Knows your stack, schema, API patterns</td></tr>
 </table>
 
-<h2>CLAUDE.md Template</h2>
+<h2>Generate CLAUDE.md</h2>
 
-<p>Create this file at the root of your project:</p>
+<p>Rather than manually creating CLAUDE.md, generate it from your design artifacts. This ensures consistency between your documentation and Claude Code's context.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-new">New Session</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(first Claude Code task)</span>
+</div>
+<div class="prompt-block">Generate a CLAUDE.md file for this project by reading the design artifacts in docs/.
+
+Read these files:
+- docs/design-brief.md (for vocabulary, user types, product overview)
+- docs/architecture.md (for tech stack, folder structure, API patterns, database conventions)
+- docs/build-contract.md (for quality standards, component specs)
+
+Generate CLAUDE.md at project root with these sections:
+
+1. **Project Overview**: Brief description from design-brief.md
+2. **Technology Stack**: Extract from architecture.md
+3. **Project Structure**: Folder layout from architecture.md Project Structure section
+4. **Code Standards**: Quality requirements from build-contract.md
+5. **Database Conventions**: Naming, RLS policies from architecture.md
+6. **API Conventions**: Route patterns, validation from architecture.md
+7. **Key Commands**: Standard npm scripts (dev, build, test, lint, type-check)
+8. **Vocabulary**: Canonical terms from design-brief.md Section 2
+9. **Current Sprint Focus**: Set to "M1 - Project Setup"
+10. **Project Artifacts**: List all docs/*.md files with descriptions
+11. **SPEC Convention**: Note that test files must include `// SPEC: SPEC-XXX-NNN` comment
+
+Keep the file concise (~2-5K tokens). Focus on actionable context, not prose.</div>
+
+<h2>CLAUDE.md Structure</h2>
+
+<p>The generated file should follow this structure:</p>
 
 <div class="code-block"># CLAUDE.md
 
 ## Project Overview
-[PROJECT_NAME] is a [brief description]. Built with Next.js 14+, Supabase, and Claude API.
+[Generated from design-brief.md]
 
 ## Technology Stack
-- **Framework**: Next.js 14+ with App Router
-- **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS
-- **Database**: Supabase (PostgreSQL)
-- **Auth**: Supabase Auth
-- **AI**: Claude API (Anthropic)
-- **Payments**: Stripe
-- **Hosting**: Vercel
+[Generated from architecture.md]
 
 ## Project Structure
-```
-src/
-├── app/                 # Next.js App Router pages
-│   ├── (auth)/         # Auth-required routes
-│   ├── (public)/       # Public routes
-│   └── api/            # API routes
-├── components/         # React components
-│   ├── ui/            # Base UI components
-│   └── features/      # Feature-specific components
-├── lib/               # Utilities and helpers
-│   ├── supabase/     # Supabase client and helpers
-│   ├── stripe/       # Stripe integration
-│   └── utils/        # General utilities
-└── types/            # TypeScript type definitions
-```
+[Generated from architecture.md Project Structure section]
 
 ## Code Standards
-- Functions: Max 30 lines
-- Files: Max 200 lines
-- Nesting: Max 3 levels deep
-- All functions must have explicit return types
-- Use Zod for runtime validation
-- Handle all errors explicitly (no silent catches)
+[Generated from build-contract.md Quality Standards]
 
 ## Database Conventions
-- Table names: snake_case, plural (e.g., `user_profiles`)
-- Column names: snake_case (e.g., `created_at`)
-- All tables have: `id` (uuid), `created_at`, `updated_at`
-- RLS policies required on all tables
+[Generated from architecture.md]
 
 ## API Conventions
-- Routes in `src/app/api/`
-- Use route handlers (not pages)
-- Always validate input with Zod
-- Return consistent JSON: `{ data, error }`
+[Generated from architecture.md]
 
 ## Key Commands
 - `npm run dev` - Start development server
@@ -1276,16 +1818,24 @@ src/
 - `npm run lint` - Run ESLint
 - `npm run type-check` - TypeScript check
 
+## Vocabulary
+[Generated from design-brief.md Section 2 - canonical terms]
+
 ## Current Sprint Focus
-[Update this as you progress through milestones]
 - Currently working on: M1 - Project Setup
 - Next milestone: M2 - Design System
 
-## Reference Documents
-- Build Contract: `docs/build-contract.md`
-- Architecture: `docs/architecture.md`
-- SPECs: `docs/specs/`
-</div>
+## Project Artifacts
+- `docs/design-brief.md` - Canonical vocabulary and product definition
+- `docs/ux-package.md` - User flows and screen descriptions
+- `docs/ui-system.md` - Component specs and visual direction
+- `docs/architecture.md` - Database schema and API design
+- `docs/build-contract.md` - Implementation reference
+
+## SPEC Convention
+Test files must include a comment linking to their SPEC:
+`// SPEC: SPEC-AUTH-001`
+This enables automated verification that SPECs match implementation.</div>
 
 <div class="note">
   <strong>Keep CLAUDE.md Updated:</strong> As your project evolves, update this file. Add new patterns you establish, document decisions, and update the "Current Sprint Focus" section when you change milestones.
@@ -1396,6 +1946,132 @@ git commit -m "Add CLAUDE.md, TECH-DEBT.md, and documentation structure
 </table>
 
 <p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.5rem;">For a detailed visual timeline of when each Claude Code activity occurs, see the <a href="claude-code-integration.html">Claude Code Integration Timeline</a>.</p>
+
+<h1 id="chapter-23-8">Chapter 23.8: Using Claude Projects Effectively</h1>
+
+<p>If you're using Claude Chat with <strong>Projects</strong> (the feature that lets you add persistent Project Knowledge), this section explains how to leverage it throughout the handbook workflow and connect it to Claude Code.</p>
+
+<div class="moai-box">
+  <h4>The Complete Flow</h4>
+  <p>Claude Projects and Claude Code serve different phases but work together:</p>
+  <div class="file-structure" style="font-size: 0.85rem;">
+Claude Chat Projects          Your Repository           Claude Code
+┌─────────────────┐          ┌─────────────────┐       ┌─────────────────┐
+│ Project Knowledge│   ──►   │ docs/           │  ──►  │ Reads CLAUDE.md │
+│ - Design Brief   │  Export │ - design-brief.md│       │ which points to │
+│ - UX Package     │   as    │ - ux-package.md │       │ docs/ files     │
+│ - UI System      │   .md   │ - ui-system.md  │       │                 │
+│ - Architecture   │  files  │ - architecture.md│       │ Full context    │
+│ - Build Contract │         │ - build-contract.md│    │ for impl work   │
+└─────────────────┘          └─────────────────┘       └─────────────────┘
+  </div>
+</div>
+
+<h2>23.8.1 Setting Up Your Project</h2>
+
+<p>Create a Claude Project for your SaaS product at the start of the handbook workflow:</p>
+
+<ol>
+  <li>Go to <strong>claude.ai</strong> and create a new Project</li>
+  <li>Name it after your product (e.g., "MyApp SaaS Development")</li>
+  <li>Add artifacts to <strong>Project Knowledge</strong> as you complete each stage</li>
+</ol>
+
+<h2>23.8.2 When to Add Artifacts</h2>
+
+<table class="comparison-table">
+  <tr>
+    <th>Artifact</th>
+    <th>When to Add to Projects</th>
+    <th>When to Export to docs/</th>
+  </tr>
+  <tr>
+    <td>Design Brief</td>
+    <td>After Stage 2.0 (Chapter 7)</td>
+    <td>At Critical Transition (Chapter 23)</td>
+  </tr>
+  <tr>
+    <td>UX Package</td>
+    <td>After Stage 3.0 (Chapters 8-10)</td>
+    <td>At Critical Transition (Chapter 23)</td>
+  </tr>
+  <tr>
+    <td>UI System</td>
+    <td>After Stage 4.0 (Chapters 11-13)</td>
+    <td>At Critical Transition (Chapter 23)</td>
+  </tr>
+  <tr>
+    <td>Architecture Doc</td>
+    <td>After Part IV (Chapters 14-18)</td>
+    <td>At Critical Transition (Chapter 23)</td>
+  </tr>
+  <tr>
+    <td>Build Contract</td>
+    <td>After Chapter 22</td>
+    <td>Immediately (this IS the bridge)</td>
+  </tr>
+</table>
+
+<h2>23.8.3 When to Use Same Chat vs New Chat</h2>
+
+<p>Within your Claude Project, you can continue existing chats or start new ones:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Same Chat</th>
+    <th>New Chat</th>
+  </tr>
+  <tr>
+    <td>Sequential prompts within a stage</td>
+    <td>Starting a new stage or chapter</td>
+  </tr>
+  <tr>
+    <td>Iterating on a single artifact</td>
+    <td>Context feels "heavy" (Claude forgets details)</td>
+  </tr>
+  <tr>
+    <td>Quick follow-up questions</td>
+    <td>Switching to different artifact focus</td>
+  </tr>
+</table>
+
+<div class="tip">
+  <strong>Key Benefit:</strong> Since your artifacts are in Project Knowledge, you don't need to copy/paste them into each prompt. Claude can see them automatically in every chat within that project.
+</div>
+
+<h2>23.8.4 Orienting Claude in New Chats</h2>
+
+<p>When starting a new chat within your project, briefly orient Claude:</p>
+
+<div class="prompt-block">I'm working through the AI SaaS Handbook methodology.
+
+I've completed Stage 2.0 (Design Brief) and Stage 3.0 (UX Package) - both are in the project knowledge.
+
+Now I need to work on Stage 4.0: UI System. Please review the Design Brief vocabulary and UX flows, then help me develop the UI System following the handbook's structure.</div>
+
+<h2>23.8.5 The Handoff: Projects to Claude Code</h2>
+
+<p>At the Critical Transition (Chapter 23), you export artifacts from Claude Projects to your repository:</p>
+
+<ol>
+  <li><strong>Export each artifact</strong> &mdash; Copy content from Project Knowledge into markdown files</li>
+  <li><strong>Place in docs/ folder</strong> &mdash; Follow the structure in <a href="#chapter-23-4">Chapter 23.4</a></li>
+  <li><strong>Update CLAUDE.md</strong> &mdash; Add the Project Artifacts section (see template above) so Claude Code knows where to find them</li>
+  <li><strong>Commit to git</strong> &mdash; These files are now part of your codebase</li>
+</ol>
+
+<div class="note">
+  <strong>Why Export?</strong> Claude Code can only read files in your repository. It cannot access Claude Chat's Project Knowledge. The export bridges this gap.
+</div>
+
+<h2>23.8.6 Pro Tips</h2>
+
+<ul>
+  <li><strong>Reference by name:</strong> In Claude Chat, say "using the Design Brief in project knowledge" rather than pasting the content</li>
+  <li><strong>Keep Projects updated:</strong> If you refine artifacts through iteration, update Project Knowledge with the latest version</li>
+  <li><strong>Use descriptive names:</strong> When exporting, use clear filenames like <code>design-brief-v1.md</code></li>
+  <li><strong>Sync changes:</strong> If you update docs/ files after the transition, consider updating Project Knowledge too (useful if you return to Claude Chat for design changes)</li>
+</ul>
 
 <hr class="divider">
 

@@ -399,7 +399,7 @@ npm run lint</div>
     <td><strong>Documentation Sync</strong></td>
     <td>10%</td>
     <td>CLAUDE.md current, SPECs match implementation</td>
-    <td>No (Manual review)</td>
+    <td>Partial (see 27.3.5)</td>
   </tr>
   <tr>
     <td><strong>Dependency Health</strong></td>
@@ -468,18 +468,49 @@ npm test -- --coverage
 # 6: 50-59% coverage
 # 1-5: Below 50% coverage</div>
 
-<h3>Documentation Sync Score</h3>
-<p>Manual checklist (run at checkpoints):</p>
+<h3 id="doc-sync-score">27.3.5 Documentation Sync Score</h3>
+
+<p>Documentation sync is partially automated via <code>scripts/spec-check.sh</code>:</p>
+
+<h4>Automated Checks (via spec-check.sh)</h4>
+<div class="code-block"># Run the SPEC verification script
+./scripts/spec-check.sh
+
+# Or in JSON format for CI
+./scripts/spec-check.sh --json</div>
+
+<p>The script checks:</p>
 <div class="checklist">
   <ul>
-    <li>CLAUDE.md reflects current project state</li>
-    <li>All completed SPECs marked as "Done"</li>
+    <li><strong>SPEC Status</strong>: All SPECs have <code>Status: Done</code></li>
+    <li><strong>SPEC-Test Links</strong>: Each SPEC has a test file with <code>// SPEC: SPEC-XXX-NNN</code> comment</li>
+    <li><strong>Test Case IDs</strong>: Test case IDs (TC-001, etc.) from SPEC appear in test file</li>
+    <li><strong>Orphaned TODOs</strong>: No TODO comments older than 7 days (git blame)</li>
+    <li><strong>CLAUDE.md exists</strong>: File present at project root</li>
+  </ul>
+</div>
+
+<h4>Manual Checks (still required)</h4>
+<div class="checklist">
+  <ul>
+    <li>CLAUDE.md content reflects current project state</li>
     <li>Build Contract matches implementation</li>
-    <li>No orphaned TODO comments older than 1 week</li>
     <li>README has accurate setup instructions</li>
   </ul>
 </div>
-<p><strong>Scoring:</strong> 2 points per item checked (max 10)</p>
+
+<p><strong>Scoring:</strong> Automated script produces 0-10 score. Deduct 1 point per manual check that fails.</p>
+
+<div class="note">
+  <strong>SPEC-Test Linking Convention:</strong> Test files must include a comment linking to their SPEC:
+  <div class="code-block">// SPEC: SPEC-AUTH-001
+describe('User Authentication', () => {
+  // TC-001: User can log in with valid credentials
+  it('should authenticate user with valid email and password', () => {
+    ...
+  });
+});</div>
+</div>
 
 <h3>Dependency Health Score</h3>
 <div class="code-block"># Check for vulnerabilities
@@ -550,38 +581,93 @@ Example:
   <strong>Checkpoint Gate:</strong> At Checkpoint A and B, a score below 6.0 is a hard stop. Do not proceed to the next milestone until debt is remediated to at least 6.0.
 </div>
 
-<h2>27.6 Tracking Debt Over Time</h2>
+<h2>27.6 Generating and Updating TECH-DEBT.md</h2>
 
-<p>Create a <code>TECH-DEBT.md</code> file in your project root to track debt items. Update it at every checkpoint.</p>
+<p>At each checkpoint, use Claude Code to run all debt checks and generate/update <code>TECH-DEBT.md</code>:</p>
 
-<div class="code-block"># TECH-DEBT.md structure
-project-root/
-+-- TECH-DEBT.md          # Debt registry
-+-- CLAUDE.md             # AI context
-+-- docs/
-|   +-- build-contract.md
-|   +-- specs/
-+-- src/</div>
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">At Checkpoints</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(run at Checkpoint A, B, and C)</span>
+</div>
+<div class="prompt-block">Run a comprehensive technical debt audit and update TECH-DEBT.md.
 
-<p>Each debt item should include:</p>
-<ul>
-  <li><strong>Location:</strong> File and line number</li>
-  <li><strong>Category:</strong> Which of the 6 categories</li>
-  <li><strong>Severity:</strong> Critical, High, Medium, Low</li>
-  <li><strong>Reason for deferral:</strong> Why not fix now</li>
-  <li><strong>Remediation estimate:</strong> Hours or T-shirt size</li>
-  <li><strong>Revisit date:</strong> When to address</li>
-</ul>
+**Step 1: Run Automated Checks**
+Execute these commands and capture results:
+- `npm run lint -- --format json` (complexity, error handling, type safety)
+- `npm test -- --coverage` (test coverage percentage)
+- `npm audit --json` (security vulnerabilities)
+- `npm outdated --json` (dependency health)
+- `./scripts/spec-check.sh --json` (documentation sync)
+
+**Step 2: Calculate Scores**
+For each category (weights in parentheses):
+- Complexity (25%): Score based on ESLint violations
+- Error Handling (20%): Score based on empty catches, unhandled errors
+- Type Safety (20%): Score based on `any` types, strict mode
+- Test Coverage (20%): Score based on line coverage percentage
+- Documentation Sync (10%): Score from spec-check.sh
+- Dependencies (5%): Score based on audit + outdated
+
+**Step 3: Update TECH-DEBT.md**
+Generate/update TECH-DEBT.md at project root with:
+1. Current checkpoint name and date
+2. Overall score and category breakdown
+3. Comparison to previous checkpoint (if exists)
+4. Active debt items with severity (Critical/High/Medium/Low)
+5. Resolved items since last checkpoint
+6. Recommended actions for items below threshold
+
+**Step 4: Report Gate Decision**
+- Score >= 6.0: PASS - proceed to next milestone
+- Score < 6.0: BLOCK - remediation required before proceeding
+
+Current checkpoint: [CHECKPOINT_A | CHECKPOINT_B | CHECKPOINT_C]</div>
+
+<h3>TECH-DEBT.md Structure</h3>
+
+<p>The generated file should follow this structure:</p>
+
+<div class="code-block"># TECH-DEBT.md
+
+## Current Status
+- **Checkpoint**: [A/B/C]
+- **Date**: [YYYY-MM-DD]
+- **Overall Score**: [X.XX]/10
+- **Gate Decision**: [PASS/BLOCK]
+
+## Category Scores
+| Category | Score | Weight | Weighted | Trend |
+|----------|-------|--------|----------|-------|
+| Complexity | X/10 | 25% | X.XX | [↑/↓/→] |
+| Error Handling | X/10 | 20% | X.XX | [↑/↓/→] |
+| Type Safety | X/10 | 20% | X.XX | [↑/↓/→] |
+| Test Coverage | X/10 | 20% | X.XX | [↑/↓/→] |
+| Doc Sync | X/10 | 10% | X.XX | [↑/↓/→] |
+| Dependencies | X/10 | 5% | X.XX | [↑/↓/→] |
+
+## Active Debt Items
+| ID | Category | Severity | Location | Description | Effort |
+|----|----------|----------|----------|-------------|--------|
+| TD-001 | Complexity | High | src/lib/api.ts:45 | Function exceeds 30 lines | S |
+
+## Checkpoint History
+| Checkpoint | Date | Score | Decision |
+|------------|------|-------|----------|
+| A | 2024-XX-XX | X.XX | PASS |
+
+## Resolved Since Last Checkpoint
+- TD-XXX: [Description]</div>
 
 <div class="moai-box">
   <h4>Automated Debt Tracking</h4>
   <p>Configure your project to run debt checks automatically:</p>
   <ol>
-    <li><strong>ESLint rules</strong> for complexity detection (see Build Guide Appendix)</li>
-    <li><strong>GitHub Action</strong> to run checks on every PR</li>
-    <li><strong>Pre-commit hook</strong> to catch issues before they're committed</li>
+    <li><strong>ESLint rules</strong>: Use <code>templates/eslint-debt-config.js</code></li>
+    <li><strong>GitHub Action</strong>: Use <code>templates/github-debt-check.yml</code></li>
+    <li><strong>SPEC verification</strong>: Copy <code>templates/spec-check.sh</code> to <code>scripts/</code></li>
   </ol>
-  <p>Templates for all automation are provided in the Build Phase Guide v3.</p>
+  <p>The GitHub Action runs on every PR and blocks merges if score falls below threshold.</p>
 </div>
 
 <h1 id="chapter-28">Chapter 28: Build Milestones</h1>

@@ -111,6 +111,11 @@
     .badge-chat { background: #e9d8fd; color: #553c9a; }
     .badge-code { background: #c6f6d5; color: #276749; }
 
+    .prompt-indicator { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .session-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; }
+    .session-new { background: #fef3c7; color: #92400e; }
+    .session-same { background: #dbeafe; color: #1e40af; }
+
     .checkpoint-box { background: #ede9fe; border: 2px solid #8b5cf6; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
     .checkpoint-box h4 { color: #5b21b6; margin-top: 0; }
 
@@ -162,7 +167,8 @@
       <a href="#chapter-1">1. Introduction and Philosophy</a> |
       <a href="#chapter-2">2. The Code Quality Crisis</a> |
       <a href="#chapter-3">3. The Quality Framework: Five Pillars</a> |
-      <a href="#chapter-4">4. Claude Tools Guide: Chat vs Code CLI</a>
+      <a href="#chapter-4">4. Claude Tools Guide: Chat vs Code CLI</a> |
+      <a href="#section-4-4">4.4 Setting Up Claude Projects</a>
     </div>
   </div>
 
@@ -521,6 +527,72 @@ Claude Chat                          Claude Code CLI
   </tr>
 </table>
 
+<h2 id="section-4-4">4.4 Setting Up Claude Projects (Recommended)</h2>
+
+<p>Before starting the prompts in Part II, we recommend setting up a <strong>Claude Project</strong> to organize your work. Claude Projects lets you store artifacts in persistent "Project Knowledge" that's available across all chats within that project.</p>
+
+<div class="moai-box">
+  <h4>Why Use Claude Projects?</h4>
+  <ul>
+    <li><strong>No re-pasting:</strong> Artifacts in Project Knowledge are automatically available - no need to paste your Design Brief into every chat</li>
+    <li><strong>Context preserved:</strong> Start new chats without losing access to previous work</li>
+    <li><strong>Organized workflow:</strong> All your SaaS project artifacts in one place</li>
+  </ul>
+</div>
+
+<h3>Before Starting the Prompts</h3>
+
+<ol>
+  <li>Go to <strong>claude.ai</strong> and create a new Project</li>
+  <li>Name it after your product (e.g., "MyApp - SaaS Development")</li>
+  <li>Add artifacts to Project Knowledge as you complete each stage (see table below)</li>
+</ol>
+
+<h3>When to Add Artifacts</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>After Completing...</th>
+    <th>Add to Project Knowledge</th>
+  </tr>
+  <tr>
+    <td>Stage 0.1 (Chapter 5)</td>
+    <td>Research findings</td>
+  </tr>
+  <tr>
+    <td>Stage 1.0 (Chapter 6)</td>
+    <td>Business One-Pager</td>
+  </tr>
+  <tr>
+    <td>Stage 2.0 (Chapter 7)</td>
+    <td>Design Brief</td>
+  </tr>
+  <tr>
+    <td>Stage 3.0 (Chapters 8-10)</td>
+    <td>UX Package</td>
+  </tr>
+  <tr>
+    <td>Stage 4.0 (Chapters 11-13)</td>
+    <td>UI System</td>
+  </tr>
+  <tr>
+    <td>Part IV (Architecture)</td>
+    <td>Architecture Document</td>
+  </tr>
+  <tr>
+    <td>Part IV-B (Build Contract)</td>
+    <td>Build Contract</td>
+  </tr>
+</table>
+
+<div class="note">
+  <strong>Full Guide:</strong> For the complete Claude Projects workflow—including when to start new chats, how to transition artifacts to Claude Code, and the Projects-to-Code handoff—see <a href="handbook-v3-part2-setup.html#chapter-23-8">Chapter 23.8: Using Claude Projects Effectively</a>.
+</div>
+
+<div class="tip" style="background: var(--surface); border-left: 4px solid var(--muted); padding: 1rem 1.5rem; margin: 1.5rem 0;">
+  <strong>Not using Projects?</strong> You can still follow the handbook. Save your artifacts locally as markdown files and paste relevant sections when Claude needs context. The workflow remains the same—Projects just makes it more convenient.
+</div>
+
 <hr class="divider">
 
 <!-- PART II: DOCUMENTATION STAGES -->
@@ -534,12 +606,13 @@ Claude Chat                          Claude Code CLI
 <h2>5.1 Purpose</h2>
 <p>Research is the foundation. This stage validates that a real market opportunity exists before investing in design and development. The output is a clear understanding of market size, competitive landscape, and customer pain points.</p>
 
-<div class="note">
-<strong>Tool:</strong> <span class="tool-badge badge-chat">Claude Chat</span> - requires web search, iterative exploration, and synthesis.
-</div>
-
 <h2>5.2 Research Prompt</h2>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-new">New Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(start of your project)</span>
+</div>
 <div class="prompt-block">I'm evaluating an opportunity in [MARKET/INDUSTRY]. I need comprehensive research covering:
 
 1. **Market Size**: TAM, SAM, SOM with data sources
@@ -574,6 +647,11 @@ My specific angle is: [YOUR DIFFERENTIATOR OR APPROACH]</div>
 
 <h2>6.2 One-Pager Prompt</h2>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues from Research)</span>
+</div>
 <div class="prompt-block">Create a Business One-Pager for my SaaS product.
 
 **Product Concept**: [DESCRIBE YOUR PRODUCT]
@@ -591,7 +669,15 @@ The one-pager should cover:
 7. **Success Metrics**: What does success look like in 6 months? 12 months?
 8. **Key Risks**: What could make this fail? How do we mitigate?
 
-Format as a single-page document with clear sections.</div>
+Output in markdown format, ready to save as docs/one-pager.md.</div>
+
+<h2>6.3 Save the One-Pager</h2>
+
+<ol>
+  <li>Create a <code>docs/</code> folder in your project directory (if it doesn't exist)</li>
+  <li>Copy the complete One-Pager output from Claude Chat</li>
+  <li>Save as <code>docs/one-pager.md</code></li>
+</ol>
 
 <hr class="divider">
 
@@ -606,6 +692,11 @@ Format as a single-page document with clear sections.</div>
 
 <h2>7.2 Design Brief Prompt</h2>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-new">New Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(fresh context for design work)</span>
+</div>
 <div class="prompt-block">Create a Shared Design Brief for [PRODUCT NAME].
 
 **Business Context**: [ATTACH ONE-PAGER OR SUMMARIZE]
@@ -645,7 +736,20 @@ For each user type:
 **SECTION 6: Scope Boundaries**
 - In scope for MVP
 - Out of scope (future phases)
-- Explicit anti-goals</div>
+- Explicit anti-goals
+
+Output in markdown format, ready to save as docs/design-brief.md.</div>
+
+<h2>7.3 Save the Design Brief</h2>
+
+<ol>
+  <li>Copy the complete Design Brief output from Claude Chat</li>
+  <li>Save as <code>docs/design-brief.md</code></li>
+</ol>
+
+<div class="note">
+  <strong>Vocabulary is Code:</strong> The terms defined in Section 2 will become variable names, function names, and database columns. Ensure they are clear, unambiguous, and follow naming conventions (no spaces, consistent casing).
+</div>
 
 <hr class="divider">
 
@@ -675,6 +779,11 @@ For each user type:
 
 <h2>9.2 UX Package Prompt</h2>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues from Design Brief)</span>
+</div>
 <div class="prompt-block">Create a UX Package for [PRODUCT NAME].
 
 **Design Brief**: [ATTACH OR REFERENCE]
@@ -715,12 +824,26 @@ For each core flow from Design Brief:
 **SECTION 5: Responsive Behavior**
 - Breakpoints
 - What changes at each breakpoint
-- Mobile-specific interactions</div>
+- Mobile-specific interactions
+
+Output in markdown format, ready to save as docs/ux-package.md.</div>
+
+<h2>9.3 Save the UX Package</h2>
+
+<ol>
+  <li>Copy the complete UX Package output from Claude Chat</li>
+  <li>Save as <code>docs/ux-package.md</code></li>
+</ol>
 
 <h2>10.1 UX Critique</h2>
 
 <p>Before proceeding to UI, the UX Package should be critiqued for usability issues, missing states, and flow problems.</p>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(critique in same chat)</span>
+</div>
 <div class="prompt-block">Review this UX Package as a UX expert. Identify:
 
 1. **Usability Issues**: Friction points, confusing flows, cognitive overload
@@ -733,6 +856,20 @@ For each issue, suggest a specific improvement.
 
 [ATTACH UX PACKAGE]</div>
 
+<h2>10.2 Update the UX Package</h2>
+
+<p>After receiving the critique, incorporate the improvements into your UX Package:</p>
+
+<ol>
+  <li>Review each identified issue and suggested improvement</li>
+  <li>Ask Claude to generate an updated UX Package with the fixes incorporated</li>
+  <li>Replace <code>docs/ux-package.md</code> with the updated version</li>
+</ol>
+
+<div class="note">
+  <strong>Iterate as Needed:</strong> You may run multiple critique cycles until the UX Package is solid. Always update the same file rather than creating separate versions.
+</div>
+
 <hr class="divider">
 
 <h1 id="stage-4">Chapter 11-13: UI System</h1>
@@ -742,6 +879,11 @@ For each issue, suggest a specific improvement.
 
 <h2>11.2 UI System Prompt</h2>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues UX/UI work)</span>
+</div>
 <div class="prompt-block">Create a UI System for [PRODUCT NAME].
 
 **Design Brief**: [ATTACH]
@@ -784,12 +926,26 @@ Components needed:
 - Overall aesthetic (minimal, bold, playful, professional)
 - Photography/illustration style
 - Icon style
-- Motion principles</div>
+- Motion principles
 
-<h2>12.1 Visual Direction Options</h2>
+Output in markdown format, ready to save as docs/ui-system.md.</div>
+
+<h2>11.3 Save the UI System</h2>
+
+<ol>
+  <li>Copy the complete UI System output from Claude Chat</li>
+  <li>Save as <code>docs/ui-system.md</code></li>
+</ol>
+
+<h2>12.1 Visual Direction Options (Optional)</h2>
 
 <p>For important projects, explore multiple visual directions before committing:</p>
 
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(optional exploration)</span>
+</div>
 <div class="prompt-block">Present 3 distinct visual directions for [PRODUCT NAME]:
 
 **Direction A**: [Description - e.g., "Minimal and Professional"]
@@ -802,6 +958,8 @@ For each direction, provide:
 - Sample component (button, card)
 - Mood/feeling conveyed
 - Best suited for which audience</div>
+
+<p>If you explore multiple directions and choose one, ask Claude to regenerate the UI System with the chosen direction. Then update <code>docs/ui-system.md</code> with the new version.</p>
 
 <hr class="divider">
 
