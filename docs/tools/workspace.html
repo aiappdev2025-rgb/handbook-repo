@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../css/handbook.css">
+  <style>
+    /* Workspace Specific Styles */
+    .workspace-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .workspace-header h1 {
+      color: white;
+      border: none;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .workspace-header .project-name {
+      font-size: 1.25rem;
+      opacity: 0.9;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-light {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    .btn-light:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    /* Progress bar in header */
+    .header-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-right: 1rem;
+    }
+
+    .header-progress-bar {
+      width: 150px;
+      height: 8px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .header-progress-fill {
+      height: 100%;
+      background: white;
+      transition: width 0.3s;
+    }
+
+    .header-progress-text {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+
+    .tab {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      color: var(--text);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Tab content */
+    .tab-content {
+      display: none;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Profile Form */
+    .form-section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section h3 {
+      margin-top: 0;
+      color: var(--primary);
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+    }
+
+    /* Tags/Chips */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .tag-remove {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .tag-remove:hover {
+      color: var(--error);
+    }
+
+    .add-tag-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .add-tag-input input {
+      flex: 1;
+    }
+
+    /* Artifacts Grid */
+    .phase-section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .phase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .phase-header:hover {
+      background: var(--surface);
+    }
+
+    .phase-header h3 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .phase-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .phase-1 .phase-badge { background: #dbeafe; color: #1e40af; }
+    .phase-2 .phase-badge { background: #fce7f3; color: #be185d; }
+    .phase-3 .phase-badge { background: #dcfce7; color: #166534; }
+    .phase-4 .phase-badge { background: #f3e8ff; color: #6b21a8; }
+    .phase-5 .phase-badge { background: #fef3c7; color: #92400e; }
+
+    .phase-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .phase-progress-bar {
+      width: 100px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .phase-progress-fill {
+      height: 100%;
+      background: var(--success);
+    }
+
+    .phase-content {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .phase-content.open {
+      display: block;
+    }
+
+    .artifact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .artifact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .artifact-item:hover {
+      background: var(--border);
+    }
+
+    .artifact-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .artifact-status.empty {
+      border: 2px dashed var(--border);
+      color: var(--muted);
+    }
+
+    .artifact-status.draft {
+      background: var(--warning-bg);
+      color: #92400e;
+    }
+
+    .artifact-status.completed {
+      background: var(--success-bg);
+      color: #065f46;
+    }
+
+    .artifact-info {
+      flex: 1;
+    }
+
+    .artifact-name {
+      font-weight: 500;
+    }
+
+    .artifact-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .artifact-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    /* Logs */
+    .log-filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .log-list {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .log-day {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .log-day:last-child {
+      border-bottom: none;
+    }
+
+    .log-day-header {
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .log-entries {
+      padding: 0.5rem 0;
+    }
+
+    .log-entry {
+      display: flex;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .log-time {
+      color: var(--muted);
+      min-width: 60px;
+    }
+
+    .log-action {
+      font-weight: 500;
+      min-width: 150px;
+    }
+
+    .log-detail {
+      color: var(--accent);
+      flex: 1;
+    }
+
+    .log-duration {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* Summary stats */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .summary-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .summary-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Auto-save indicator */
+    .save-indicator {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: var(--success-bg);
+      color: #065f46;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-indicator.visible {
+      opacity: 1;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 700px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    /* Artifact editor */
+    .artifact-editor {
+      margin-top: 1rem;
+    }
+
+    .artifact-editor textarea {
+      width: 100%;
+      min-height: 400px;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+
+<div class="workspace-header">
+  <div>
+    <h1>Project Workspace</h1>
+    <div class="project-name" id="project-name">Loading...</div>
+  </div>
+  <div class="header-progress" id="header-progress">
+    <div class="header-progress-bar">
+      <div class="header-progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    <span class="header-progress-text" id="progress-text">0%</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-light" onclick="exportProject()">Export</button>
+    <a href="project-list.html" class="btn btn-light">All Projects</a>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('profile')">Profile</div>
+  <div class="tab" onclick="switchTab('artifacts')">Artifacts</div>
+  <div class="tab" onclick="switchTab('logs')">Activity Log</div>
+</div>
+
+<!-- Profile Tab -->
+<div id="tab-profile" class="tab-content active">
+  <div class="tab-intro" style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+    <strong style="color: #166534;">Profile Tab</strong>
+    <p style="color: #4b5563; margin: 0.25rem 0 0; font-size: 0.9rem;">Enter your app details here. This information will be used to generate customized prompts for each phase. The more complete your profile, the better your prompts will be.</p>
+  </div>
+
+  <div class="form-section">
+    <h3>Basic Information</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="app-name">App Name</label>
+        <input type="text" id="app-name" onchange="updateProfile()">
+      </div>
+      <div class="form-group">
+        <label for="app-tagline">Tagline</label>
+        <input type="text" id="app-tagline" onchange="updateProfile()">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="app-description">Description</label>
+      <textarea id="app-description" rows="3" onchange="updateProfile()"></textarea>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Tech Stack</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tech-framework">Framework</label>
+        <select id="tech-framework" onchange="updateProfile()">
+          <option value="nextjs">Next.js</option>
+          <option value="remix">Remix</option>
+          <option value="nuxt">Nuxt.js</option>
+          <option value="sveltekit">SvelteKit</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="tech-database">Database</label>
+        <select id="tech-database" onchange="updateProfile()">
+          <option value="supabase">Supabase</option>
+          <option value="planetscale">PlanetScale</option>
+          <option value="neon">Neon</option>
+          <option value="firebase">Firebase</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="tech-styling">Styling</label>
+        <select id="tech-styling" onchange="updateProfile()">
+          <option value="tailwind-shadcn">Tailwind + shadcn/ui</option>
+          <option value="tailwind">Tailwind Only</option>
+          <option value="css-modules">CSS Modules</option>
+          <option value="styled-components">Styled Components</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>User Roles</h3>
+    <p style="color: #64748b; font-size: 0.85rem; margin: -0.25rem 0 0.75rem;">Define the different types of users in your app. This helps generate appropriate authentication and authorization logic.</p>
+    <div id="roles-container" class="tags-container"></div>
+    <div class="add-tag-input">
+      <input type="text" id="new-role" placeholder="e.g., admin, user, moderator, guest">
+      <button class="btn btn-secondary" onclick="addRole()">Add Role</button>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Core Features</h3>
+    <p style="color: #64748b; font-size: 0.85rem; margin: -0.25rem 0 0.75rem;">List the main features of your app. These will be used to generate SPEC documents and milestone prompts.</p>
+    <div id="features-container" class="tags-container"></div>
+    <div class="add-tag-input">
+      <input type="text" id="new-feature" placeholder="e.g., user-dashboard, invoice-generator, team-chat">
+      <button class="btn btn-secondary" onclick="addFeature()">Add Feature</button>
+    </div>
+  </div>
+</div>
+
+<!-- Artifacts Tab -->
+<div id="tab-artifacts" class="tab-content">
+  <div class="tab-intro" style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+    <strong style="color: #92400e;">Artifacts Tab</strong>
+    <p style="color: #4b5563; margin: 0.25rem 0 0; font-size: 0.9rem;">Store the outputs from your Claude prompts here. Click <strong>Start</strong> to begin working on an artifact (starts the timer), then paste your content and click <strong>Mark Complete</strong> when done. Your time is automatically tracked.</p>
+    <div style="display: flex; gap: 1.5rem; margin-top: 0.75rem; font-size: 0.85rem;">
+      <span><span style="display: inline-block; width: 12px; height: 12px; border: 2px dashed #cbd5e1; border-radius: 50%; margin-right: 0.35rem;"></span> Not started</span>
+      <span><span style="display: inline-block; width: 12px; height: 12px; background: #fef3c7; border-radius: 50%; margin-right: 0.35rem;"></span> In progress</span>
+      <span><span style="display: inline-block; width: 12px; height: 12px; background: #d1fae5; border-radius: 50%; margin-right: 0.35rem;"></span> Completed</span>
+    </div>
+  </div>
+
+  <div id="artifacts-container">
+    <!-- Phases rendered dynamically -->
+  </div>
+</div>
+
+<!-- Logs Tab -->
+<div id="tab-logs" class="tab-content">
+  <div class="tab-intro" style="background: #ede9fe; border: 1px solid #c4b5fd; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+    <strong style="color: #5b21b6;">Activity Log</strong>
+    <p style="color: #4b5563; margin: 0.25rem 0 0; font-size: 0.9rem;">Track your progress over time. Every action is logged with timestamps so you can see how long each phase and artifact took. Use this to estimate future projects and identify bottlenecks.</p>
+  </div>
+
+  <div class="summary-cards" id="summary-cards">
+    <!-- Summary rendered dynamically -->
+  </div>
+
+  <div class="log-filters">
+    <select id="log-filter" onchange="renderLogs()">
+      <option value="">All Activities</option>
+      <option value="artifact_completed">Artifacts Completed</option>
+      <option value="phase_completed">Phases Completed</option>
+      <option value="profile_updated">Profile Updates</option>
+    </select>
+  </div>
+
+  <div class="log-list" id="log-list">
+    <!-- Logs rendered dynamically -->
+  </div>
+</div>
+
+<!-- Artifact Editor Modal -->
+<div id="artifact-modal" class="modal-overlay">
+  <div class="modal">
+    <h2 id="artifact-modal-title">Edit Artifact</h2>
+    <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+      <p style="margin: 0; font-size: 0.9rem; color: #0369a1;">
+        <strong>Workflow:</strong> Run the corresponding prompt in Claude Chat or Claude Code, then paste the output here.
+        Use <strong>Save as Draft</strong> if you're still working, or <strong>Mark Complete</strong> when finished.
+      </p>
+    </div>
+    <div class="artifact-editor">
+      <textarea id="artifact-content" placeholder="Paste your artifact content here (markdown format recommended)..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('artifact-modal')">Cancel</button>
+      <button class="btn btn-secondary" onclick="saveArtifactDraft()">Save as Draft</button>
+      <button class="btn btn-primary" onclick="saveArtifactComplete()">Mark Complete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save indicator -->
+<div id="save-indicator" class="save-indicator">Saved</div>
+
+<script src="../js/workspace-db.js"></script>
+<script src="../js/project-manager.js"></script>
+<script>
+  // Initialize
+  const manager = new ProjectManager();
+  let currentArtifact = null; // { phase, id }
+
+  // Load project on page load
+  document.addEventListener('DOMContentLoaded', async () => {
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get('id');
+
+    if (!projectId) {
+      window.location.href = 'project-list.html';
+      return;
+    }
+
+    try {
+      await manager.openProject(projectId);
+      renderAll();
+    } catch (error) {
+      alert('Project not found');
+      window.location.href = 'project-list.html';
+    }
+  });
+
+  // Render everything
+  function renderAll() {
+    renderHeader();
+    renderProfile();
+    renderArtifacts();
+    renderLogs();
+  }
+
+  // Render header
+  function renderHeader() {
+    const project = manager.getCurrent();
+    if (!project) return;
+
+    document.getElementById('project-name').textContent = project.meta.name;
+
+    const progress = manager.getOverallProgress();
+    document.getElementById('progress-fill').style.width = `${progress.percentage}%`;
+    document.getElementById('progress-text').textContent = `${progress.percentage}% complete`;
+  }
+
+  // Render profile form
+  function renderProfile() {
+    const project = manager.getCurrent();
+    if (!project) return;
+
+    const { profile } = project;
+
+    document.getElementById('app-name').value = profile.appName || '';
+    document.getElementById('app-tagline').value = profile.tagline || '';
+    document.getElementById('app-description').value = profile.description || '';
+    document.getElementById('tech-framework').value = profile.techStack?.framework || 'nextjs';
+    document.getElementById('tech-database').value = profile.techStack?.database || 'supabase';
+    document.getElementById('tech-styling').value = profile.techStack?.styling || 'tailwind-shadcn';
+
+    renderRoles();
+    renderFeatures();
+  }
+
+  // Render roles
+  function renderRoles() {
+    const project = manager.getCurrent();
+    const container = document.getElementById('roles-container');
+
+    container.innerHTML = (project.profile.userRoles || []).map(role => `
+      <span class="tag">
+        ${escapeHtml(typeof role === 'string' ? role : role.name)}
+        <span class="tag-remove" onclick="removeRole('${escapeHtml(typeof role === 'string' ? role : role.name)}')">&times;</span>
+      </span>
+    `).join('');
+  }
+
+  // Render features
+  function renderFeatures() {
+    const project = manager.getCurrent();
+    const container = document.getElementById('features-container');
+
+    container.innerHTML = (project.profile.coreFeatures || []).map(feature => `
+      <span class="tag">
+        ${escapeHtml(typeof feature === 'string' ? feature : feature.name)}
+        <span class="tag-remove" onclick="removeFeature('${escapeHtml(typeof feature === 'string' ? feature : feature.name)}')">&times;</span>
+      </span>
+    `).join('');
+  }
+
+  // Update profile
+  async function updateProfile() {
+    await manager.updateProfile({
+      appName: document.getElementById('app-name').value,
+      tagline: document.getElementById('app-tagline').value,
+      description: document.getElementById('app-description').value,
+      techStack: {
+        framework: document.getElementById('tech-framework').value,
+        database: document.getElementById('tech-database').value,
+        styling: document.getElementById('tech-styling').value,
+        auth: document.getElementById('tech-database').value === 'supabase' ? 'supabase' : 'custom'
+      }
+    });
+    showSaveIndicator();
+  }
+
+  // Add role
+  async function addRole() {
+    const input = document.getElementById('new-role');
+    const name = input.value.trim();
+    if (!name) return;
+
+    await manager.addUserRole({ name, description: '' });
+    input.value = '';
+    renderRoles();
+    showSaveIndicator();
+  }
+
+  // Remove role
+  async function removeRole(name) {
+    await manager.removeUserRole(name);
+    renderRoles();
+    showSaveIndicator();
+  }
+
+  // Add feature
+  async function addFeature() {
+    const input = document.getElementById('new-feature');
+    const name = input.value.trim();
+    if (!name) return;
+
+    await manager.addCoreFeature({ name, description: '' });
+    input.value = '';
+    renderFeatures();
+    showSaveIndicator();
+  }
+
+  // Remove feature
+  async function removeFeature(name) {
+    await manager.removeCoreFeature(name);
+    renderFeatures();
+    showSaveIndicator();
+  }
+
+  // Render artifacts
+  function renderArtifacts() {
+    const container = document.getElementById('artifacts-container');
+    const phaseNames = ['', 'Validate', 'Design', 'Architect', 'Build', 'Launch'];
+
+    let html = '';
+
+    for (let phase = 1; phase <= 5; phase++) {
+      const templates = ARTIFACT_TEMPLATES[`phase${phase}`] || [];
+      const artifacts = manager.getPhaseArtifacts(phase);
+      const progress = manager.getPhaseProgress(phase);
+
+      html += `
+        <div class="phase-section phase-${phase}">
+          <div class="phase-header" onclick="togglePhase(${phase})">
+            <h3>
+              <span class="phase-badge">Phase ${phase}</span>
+              ${phaseNames[phase]}
+            </h3>
+            <div class="phase-progress">
+              <div class="phase-progress-bar">
+                <div class="phase-progress-fill" style="width: ${progress.percentage}%"></div>
+              </div>
+              <span>${progress.completed}/${progress.total}</span>
+              <span>${ProjectManager.formatDuration(progress.timeSpent)}</span>
+            </div>
+          </div>
+          <div class="phase-content" id="phase-content-${phase}">
+            <div class="artifact-list">
+      `;
+
+      // Render template artifacts
+      templates.forEach(template => {
+        const artifact = manager.getArtifact(phase, template.id);
+        const status = artifact?.status || 'empty';
+        const statusIcon = status === 'completed' ? '✓' : status === 'draft' ? '◐' : '';
+
+        html += `
+          <div class="artifact-item">
+            <div class="artifact-status ${status}">${statusIcon}</div>
+            <div class="artifact-info">
+              <div class="artifact-name">${template.name}</div>
+              <div class="artifact-meta">
+                Chapter ${template.chapter}
+                ${artifact?.totalDurationMinutes ? ` • ${ProjectManager.formatDuration(artifact.totalDurationMinutes)}` : ''}
+              </div>
+            </div>
+            <div class="artifact-actions">
+              ${status === 'empty'
+                ? `<button class="btn btn-secondary btn-sm" onclick="startArtifact(${phase}, '${template.id}', '${template.name}', ${template.chapter})">Start</button>`
+                : `<button class="btn btn-secondary btn-sm" onclick="editArtifact(${phase}, '${template.id}', '${template.name}')">Edit</button>`
+              }
+            </div>
+          </div>
+        `;
+      });
+
+      // Render any additional artifacts (like SPECs)
+      artifacts.forEach(artifact => {
+        const isTemplate = templates.some(t => t.id === artifact.id);
+        if (isTemplate) return; // Skip template artifacts
+
+        const status = artifact.status || 'empty';
+        const statusIcon = status === 'completed' ? '✓' : status === 'draft' ? '◐' : '';
+
+        html += `
+          <div class="artifact-item">
+            <div class="artifact-status ${status}">${statusIcon}</div>
+            <div class="artifact-info">
+              <div class="artifact-name">${artifact.name}</div>
+              <div class="artifact-meta">
+                ${artifact.totalDurationMinutes ? ProjectManager.formatDuration(artifact.totalDurationMinutes) : ''}
+              </div>
+            </div>
+            <div class="artifact-actions">
+              <button class="btn btn-secondary btn-sm" onclick="editArtifact(${phase}, '${artifact.id}', '${artifact.name}')">Edit</button>
+            </div>
+          </div>
+        `;
+      });
+
+      // Add SPEC button for Phase 4
+      if (phase === 4) {
+        html += `
+          <div class="artifact-item" style="border: 2px dashed var(--border); background: transparent;">
+            <div class="artifact-info">
+              <div class="artifact-name" style="color: var(--muted);">+ Add SPEC Document</div>
+            </div>
+            <div class="artifact-actions">
+              <button class="btn btn-secondary btn-sm" onclick="addSpec()">Add SPEC</button>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
+
+    // Open current phase by default
+    const progress = manager.getOverallProgress();
+    togglePhase(progress.currentPhase);
+  }
+
+  // Toggle phase accordion
+  function togglePhase(phase) {
+    const content = document.getElementById(`phase-content-${phase}`);
+    const isOpen = content.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.phase-content').forEach(el => el.classList.remove('open'));
+
+    // Open clicked if it was closed
+    if (!isOpen) {
+      content.classList.add('open');
+    }
+  }
+
+  // Start artifact
+  async function startArtifact(phase, id, name, chapter) {
+    await manager.startArtifact(phase, id, { name, chapter });
+    currentArtifact = { phase, id };
+
+    document.getElementById('artifact-modal-title').textContent = `Edit: ${name}`;
+    document.getElementById('artifact-content').value = '';
+    document.getElementById('artifact-modal').classList.add('active');
+  }
+
+  // Edit artifact
+  async function editArtifact(phase, id, name) {
+    const artifact = manager.getArtifact(phase, id);
+    currentArtifact = { phase, id };
+
+    document.getElementById('artifact-modal-title').textContent = `Edit: ${name}`;
+    document.getElementById('artifact-content').value = artifact?.content || '';
+    document.getElementById('artifact-modal').classList.add('active');
+  }
+
+  // Save artifact as draft
+  async function saveArtifactDraft() {
+    if (!currentArtifact) return;
+
+    const content = document.getElementById('artifact-content').value;
+    await manager.saveArtifact(currentArtifact.phase, currentArtifact.id, content, 'draft');
+
+    closeModal('artifact-modal');
+    renderArtifacts();
+    renderHeader();
+    showSaveIndicator();
+  }
+
+  // Save artifact as complete
+  async function saveArtifactComplete() {
+    if (!currentArtifact) return;
+
+    const content = document.getElementById('artifact-content').value;
+    await manager.completeArtifact(currentArtifact.phase, currentArtifact.id, content);
+
+    closeModal('artifact-modal');
+    renderArtifacts();
+    renderHeader();
+    renderLogs();
+    showSaveIndicator();
+  }
+
+  // Add SPEC
+  async function addSpec() {
+    const specId = prompt('Enter SPEC ID (e.g., SPEC-AUTH-001):');
+    if (!specId) return;
+
+    const specName = prompt('Enter SPEC name (e.g., Authentication):');
+    if (!specName) return;
+
+    await manager.addSpec(specId, specName);
+    renderArtifacts();
+    showSaveIndicator();
+  }
+
+  // Render logs
+  function renderLogs() {
+    const filter = document.getElementById('log-filter')?.value || '';
+    const logs = manager.getLogs({ action: filter || undefined, limit: 100 });
+
+    // Render summary
+    const summary = manager.getActivitySummary();
+    const progress = manager.getOverallProgress();
+
+    document.getElementById('summary-cards').innerHTML = `
+      <div class="summary-card">
+        <div class="summary-value">${progress.percentage}%</div>
+        <div class="summary-label">Complete</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-value">${ProjectManager.formatDuration(progress.timeSpent)}</div>
+        <div class="summary-label">Time Invested</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-value">${summary?.artifactsCompleted || 0}</div>
+        <div class="summary-label">Artifacts Done</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-value">${summary?.phasesCompleted || 0}/5</div>
+        <div class="summary-label">Phases Done</div>
+      </div>
+    `;
+
+    // Group logs by day
+    const logsByDay = {};
+    logs.forEach(log => {
+      const day = log.ts.split('T')[0];
+      if (!logsByDay[day]) logsByDay[day] = [];
+      logsByDay[day].push(log);
+    });
+
+    // Render logs
+    let html = '';
+    Object.entries(logsByDay).forEach(([day, dayLogs]) => {
+      const dateStr = new Date(day).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      html += `
+        <div class="log-day">
+          <div class="log-day-header">${dateStr}</div>
+          <div class="log-entries">
+      `;
+
+      dayLogs.forEach(log => {
+        const time = new Date(log.ts).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        html += `
+          <div class="log-entry">
+            <span class="log-time">${time}</span>
+            <span class="log-action">${formatAction(log.action)}</span>
+            <span class="log-detail">${escapeHtml(log.detail)}</span>
+            ${log.duration ? `<span class="log-duration">${ProjectManager.formatDuration(log.duration)}</span>` : ''}
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+        </div>
+      `;
+    });
+
+    document.getElementById('log-list').innerHTML = html || '<p style="padding: 2rem; text-align: center; color: var(--muted);">No activity logged yet.</p>';
+  }
+
+  // Format action name
+  function formatAction(action) {
+    const actions = {
+      'project_created': 'Project Created',
+      'project_opened': 'Project Opened',
+      'project_closed': 'Project Closed',
+      'profile_updated': 'Profile Updated',
+      'role_added': 'Role Added',
+      'role_removed': 'Role Removed',
+      'feature_added': 'Feature Added',
+      'feature_removed': 'Feature Removed',
+      'artifact_started': 'Started',
+      'artifact_saved': 'Saved',
+      'artifact_completed': 'Completed',
+      'phase_completed': 'Phase Complete'
+    };
+    return actions[action] || action;
+  }
+
+  // Switch tab
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+    document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+
+    // Re-render tab content
+    if (tabName === 'artifacts') renderArtifacts();
+    if (tabName === 'logs') renderLogs();
+  }
+
+  // Close modal
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+    currentArtifact = null;
+  }
+
+  // Export project
+  async function exportProject() {
+    await manager.downloadCurrent();
+  }
+
+  // Show save indicator
+  function showSaveIndicator() {
+    const indicator = document.getElementById('save-indicator');
+    indicator.classList.add('visible');
+    setTimeout(() => indicator.classList.remove('visible'), 2000);
+  }
+
+  // Escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+        modal.classList.remove('active');
+      });
+    }
+  });
+
+  // Modal overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+      }
+    });
+  });
+
+  // Enter key for inputs
+  document.getElementById('new-role').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addRole();
+  });
+  document.getElementById('new-feature').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addFeature();
+  });
+</script>
+
+</body>
+</html>

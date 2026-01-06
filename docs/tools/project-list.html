@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Workspace - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../css/handbook.css">
+  <style>
+    /* Project List Specific Styles */
+    .workspace-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .workspace-header h1 {
+      color: white;
+      border: none;
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .workspace-header p {
+      opacity: 0.9;
+      margin: 0.5rem 0 0;
+    }
+
+    .workspace-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    .btn-danger {
+      background: var(--error-bg);
+      color: var(--error);
+    }
+
+    .btn-danger:hover {
+      background: var(--error);
+      color: white;
+    }
+
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .project-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-color: var(--secondary);
+    }
+
+    .project-info h3 {
+      margin: 0 0 0.5rem;
+      color: var(--primary);
+      font-size: 1.25rem;
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .project-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .progress-bar {
+      width: 120px;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--success);
+      transition: width 0.3s;
+    }
+
+    .project-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-icon:hover {
+      background: var(--border);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: var(--surface);
+      border-radius: 12px;
+      border: 2px dashed var(--border);
+    }
+
+    .empty-state h3 {
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    /* Storage info */
+    .storage-info {
+      text-align: center;
+      padding: 1rem;
+      background: var(--surface);
+      border-radius: 8px;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-draft {
+      background: var(--warning-bg);
+      color: #92400e;
+    }
+
+    .status-in_progress {
+      background: var(--info-bg);
+      color: #1e40af;
+    }
+
+    .status-completed {
+      background: var(--success-bg);
+      color: #065f46;
+    }
+
+    /* Phase indicator */
+    .phase-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .phase-1 { background: #dbeafe; color: #1e40af; }
+    .phase-2 { background: #fce7f3; color: #be185d; }
+    .phase-3 { background: #dcfce7; color: #166534; }
+    .phase-4 { background: #f3e8ff; color: #6b21a8; }
+    .phase-5 { background: #fef3c7; color: #92400e; }
+
+    /* Hidden file input */
+    #import-file {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="workspace-header">
+  <h1>Project Workspace</h1>
+  <p>Manage your SaaS projects and track progress through all phases</p>
+</div>
+
+<div class="workspace-container">
+
+  <!-- Getting Started Guide -->
+  <div id="getting-started" class="getting-started" style="background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%); border: 2px solid #3b82f6; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: start;">
+      <div>
+        <h3 style="color: #1e40af; margin: 0 0 0.75rem;">How to Use the Project Workspace</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="background: #3b82f6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</span>
+            <div>
+              <strong style="color: #1e40af;">Create a Project</strong>
+              <p style="font-size: 0.85rem; color: #64748b; margin: 0.25rem 0 0;">Click "New Project" and enter your app details. This becomes your central hub.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="background: #3b82f6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</span>
+            <div>
+              <strong style="color: #1e40af;">Fill Your Profile</strong>
+              <p style="font-size: 0.85rem; color: #64748b; margin: 0.25rem 0 0;">Add tech stack, user roles, and features. This info populates your prompts.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="background: #3b82f6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</span>
+            <div>
+              <strong style="color: #1e40af;">Store Artifacts</strong>
+              <p style="font-size: 0.85rem; color: #64748b; margin: 0.25rem 0 0;">After running prompts in Claude, paste the outputs here. Track time spent on each.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="background: #3b82f6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">4</span>
+            <div>
+              <strong style="color: #1e40af;">Track Progress</strong>
+              <p style="font-size: 0.85rem; color: #64748b; margin: 0.25rem 0 0;">See your completion % per phase. Export your project anytime for backup.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button onclick="hideGettingStarted()" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.25rem; padding: 0.25rem;" title="Dismiss">&times;</button>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="showNewProjectModal()">
+      + New Project
+    </button>
+    <button class="btn btn-secondary" onclick="importProject()">
+      Import Project
+    </button>
+    <input type="file" id="import-file" accept=".json" onchange="handleImport(event)">
+    <a href="../index.html" class="btn btn-secondary" style="margin-left: auto; text-decoration: none;">
+      Back to Handbook
+    </a>
+  </div>
+
+  <div id="project-list" class="project-list">
+    <!-- Projects loaded dynamically -->
+  </div>
+
+  <div id="empty-state" class="empty-state" style="display: none;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+    <h3>Start Your SaaS Journey</h3>
+    <p>Create your first project to begin tracking your development from idea to launch.</p>
+    <p style="font-size: 0.85rem; color: #94a3b8; max-width: 400px; margin: 0 auto 1.5rem;">Each project stores your app profile, design artifacts, and tracks your progress through all 5 phases of the AI SaaS Handbook methodology.</p>
+    <button class="btn btn-primary" onclick="showNewProjectModal()">
+      + Create First Project
+    </button>
+  </div>
+
+  <div id="storage-info" class="storage-info">
+    <!-- Storage info loaded dynamically -->
+  </div>
+
+</div>
+
+<!-- New Project Modal -->
+<div id="new-project-modal" class="modal-overlay">
+  <div class="modal">
+    <h2>Create New Project</h2>
+    <p style="color: #64748b; margin: -0.5rem 0 1.5rem; font-size: 0.9rem;">Start by giving your project a name. You can fill in more details later in the workspace.</p>
+    <form id="new-project-form" onsubmit="createProject(event)">
+      <div class="form-group">
+        <label for="project-name">Project Name *</label>
+        <input type="text" id="project-name" required placeholder="e.g., TaskFlow, InvoiceHub, FitTracker">
+        <small style="color: #94a3b8; font-size: 0.8rem;">This will be used throughout your prompts as your app name</small>
+      </div>
+      <div class="form-group">
+        <label for="project-tagline">Tagline</label>
+        <input type="text" id="project-tagline" placeholder="e.g., Simple invoicing for freelancers">
+        <small style="color: #94a3b8; font-size: 0.8rem;">A short description that captures your app's value proposition</small>
+      </div>
+      <div class="form-group">
+        <label for="project-description">Description</label>
+        <textarea id="project-description" rows="3" placeholder="What problem does your app solve? Who is it for?"></textarea>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label for="project-framework">Framework</label>
+          <select id="project-framework">
+            <option value="nextjs">Next.js (Recommended)</option>
+            <option value="remix">Remix</option>
+            <option value="nuxt">Nuxt.js</option>
+            <option value="sveltekit">SvelteKit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="project-database">Database</label>
+          <select id="project-database">
+            <option value="supabase">Supabase (Recommended)</option>
+            <option value="planetscale">PlanetScale</option>
+            <option value="neon">Neon</option>
+            <option value="firebase">Firebase</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('new-project-modal')">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          Create Project
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="modal-overlay">
+  <div class="modal">
+    <h2>Delete Project?</h2>
+    <p>This action cannot be undone. All project data including artifacts and logs will be permanently deleted.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('delete-modal')">
+        Cancel
+      </button>
+      <button class="btn btn-danger" onclick="confirmDelete()">
+        Delete Project
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/workspace-db.js"></script>
+<script src="../js/project-manager.js"></script>
+<script>
+  // Initialize
+  const manager = new ProjectManager();
+  let deleteTargetId = null;
+
+  // Load projects on page load
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadProjects();
+    await loadStorageInfo();
+    checkGettingStarted();
+  });
+
+  // Check if getting started should be shown
+  function checkGettingStarted() {
+    const hidden = localStorage.getItem('workspace-getting-started-hidden');
+    if (hidden === 'true') {
+      document.getElementById('getting-started').style.display = 'none';
+    }
+  }
+
+  // Hide getting started guide
+  function hideGettingStarted() {
+    document.getElementById('getting-started').style.display = 'none';
+    localStorage.setItem('workspace-getting-started-hidden', 'true');
+  }
+
+  // Load and display projects
+  async function loadProjects() {
+    const projects = await manager.listProjects();
+    const listEl = document.getElementById('project-list');
+    const emptyEl = document.getElementById('empty-state');
+
+    if (projects.length === 0) {
+      listEl.style.display = 'none';
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    listEl.style.display = 'flex';
+    emptyEl.style.display = 'none';
+
+    listEl.innerHTML = projects.map(project => {
+      const progress = calculateProgress(project);
+      const phaseNames = ['', 'Validate', 'Design', 'Architect', 'Build', 'Launch'];
+
+      return `
+        <div class="project-card">
+          <div class="project-info">
+            <h3>${escapeHtml(project.meta.name)}</h3>
+            <div class="project-meta">
+              <span class="status-badge status-${project.meta.status}">
+                ${project.meta.status.replace('_', ' ')}
+              </span>
+              <span class="phase-indicator phase-${progress.currentPhase}">
+                Phase ${progress.currentPhase}: ${phaseNames[progress.currentPhase]}
+              </span>
+              <span>
+                <div class="progress-bar">
+                  <div class="progress-bar-fill" style="width: ${progress.percentage}%"></div>
+                </div>
+                ${progress.percentage}%
+              </span>
+              <span>Modified ${ProjectManager.formatRelativeTime(project.meta.lastModifiedAt)}</span>
+            </div>
+          </div>
+          <div class="project-actions">
+            <a href="workspace.html?id=${project.meta.id}" class="btn btn-primary" style="text-decoration: none;">
+              Open
+            </a>
+            <button class="btn-icon" onclick="exportProject('${project.meta.id}')" title="Export">
+              &#8681;
+            </button>
+            <button class="btn-icon" onclick="showDeleteModal('${project.meta.id}')" title="Delete">
+              &#128465;
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Calculate progress for a project
+  function calculateProgress(project) {
+    let completed = 0;
+    let total = 0;
+    let currentPhase = 1;
+
+    // Count artifacts per phase
+    for (let phase = 1; phase <= 5; phase++) {
+      const templates = ARTIFACT_TEMPLATES[`phase${phase}`] || [];
+      const prefix = `phase${phase}/`;
+      const artifacts = Object.entries(project.artifacts)
+        .filter(([key]) => key.startsWith(prefix));
+
+      const phaseCompleted = artifacts.filter(([, a]) => a.status === 'completed').length;
+      const phaseTotal = Math.max(templates.length, artifacts.length);
+
+      completed += phaseCompleted;
+      total += phaseTotal;
+
+      // Determine current phase
+      if (phaseCompleted < phaseTotal && currentPhase === phase) {
+        currentPhase = phase;
+      } else if (phaseCompleted >= phaseTotal && phase < 5) {
+        currentPhase = phase + 1;
+      }
+    }
+
+    // Default total if no artifacts yet
+    if (total === 0) {
+      total = Object.values(ARTIFACT_TEMPLATES).reduce((sum, arr) => sum + arr.length, 0);
+    }
+
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    return { completed, total, percentage, currentPhase };
+  }
+
+  // Load storage info
+  async function loadStorageInfo() {
+    const info = await manager.db.getStorageInfo();
+    document.getElementById('storage-info').innerHTML = `
+      ${info.projectCount} project${info.projectCount !== 1 ? 's' : ''} &bull;
+      ${info.estimatedSizeKB} KB used &bull;
+      Data stored locally in browser
+    `;
+  }
+
+  // Show new project modal
+  function showNewProjectModal() {
+    document.getElementById('new-project-modal').classList.add('active');
+    document.getElementById('project-name').focus();
+  }
+
+  // Close modal
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+  }
+
+  // Create new project
+  async function createProject(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('project-name').value.trim();
+    const tagline = document.getElementById('project-tagline').value.trim();
+    const description = document.getElementById('project-description').value.trim();
+    const framework = document.getElementById('project-framework').value;
+    const database = document.getElementById('project-database').value;
+
+    if (!name) return;
+
+    const project = await manager.newProject(name, {
+      tagline,
+      description,
+      techStack: {
+        framework,
+        database,
+        styling: 'tailwind-shadcn',
+        auth: database === 'supabase' ? 'supabase' : 'custom'
+      }
+    });
+
+    closeModal('new-project-modal');
+
+    // Reset form
+    document.getElementById('new-project-form').reset();
+
+    // Navigate to workspace
+    window.location.href = `workspace.html?id=${project.meta.id}`;
+  }
+
+  // Import project
+  function importProject() {
+    document.getElementById('import-file').click();
+  }
+
+  // Handle file import
+  async function handleImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const project = await manager.importFromFile(file);
+      alert(`Project "${project.meta.name}" imported successfully!`);
+      await loadProjects();
+      await loadStorageInfo();
+    } catch (error) {
+      alert(`Import failed: ${error.message}`);
+    }
+
+    // Reset file input
+    event.target.value = '';
+  }
+
+  // Export project
+  async function exportProject(id) {
+    await manager.db.downloadProject(id);
+  }
+
+  // Show delete confirmation
+  function showDeleteModal(id) {
+    deleteTargetId = id;
+    document.getElementById('delete-modal').classList.add('active');
+  }
+
+  // Confirm delete
+  async function confirmDelete() {
+    if (deleteTargetId) {
+      await manager.deleteProject(deleteTargetId);
+      closeModal('delete-modal');
+      deleteTargetId = null;
+      await loadProjects();
+      await loadStorageInfo();
+    }
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Close modals on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+        modal.classList.remove('active');
+      });
+    }
+  });
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

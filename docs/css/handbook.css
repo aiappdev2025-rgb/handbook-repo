@@ -87,8 +87,8 @@ body {
   border-right: 1px solid var(--border);
   padding: 1rem 0;
   position: sticky;
-  top: 60px;
-  height: calc(100vh - 60px);
+  top: 110px; /* top-nav (60px) + phase-nav (50px) */
+  height: calc(100vh - 110px);
   overflow-y: auto;
 }
 
@@ -100,8 +100,9 @@ body {
   .layout aside#sidebar.open {
     display: block;
     position: fixed;
-    top: 60px;
+    top: 110px; /* top-nav + phase-nav */
     left: 0;
+    height: calc(100vh - 110px);
     z-index: 999;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   }
@@ -212,6 +213,85 @@ body {
   }
   #top-nav .menu-toggle {
     display: block;
+  }
+}
+
+/* =============================================
+   Phase Navigation Bar
+   ============================================= */
+#phase-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+#phase-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 100px;
+  text-align: center;
+}
+
+#phase-nav a .phase-name {
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+#phase-nav a .phase-chapters {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
+
+/* Phase colors */
+#phase-nav a.phase-1 { background: #dbeafe; color: #1e40af; }
+#phase-nav a.phase-2 { background: #fce7f3; color: #be185d; }
+#phase-nav a.phase-3 { background: #dcfce7; color: #166534; }
+#phase-nav a.phase-4 { background: #f3e8ff; color: #6b21a8; }
+#phase-nav a.phase-5 { background: #fef3c7; color: #92400e; }
+
+/* Active phase */
+#phase-nav a.active {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-weight: 700;
+}
+
+#phase-nav a.active .phase-name {
+  font-size: 0.85rem;
+}
+
+/* Hover state for non-active */
+#phase-nav a:not(.active):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Hide on very small screens, show condensed */
+@media (max-width: 600px) {
+  #phase-nav {
+    gap: 0.25rem;
+    padding: 0.5rem;
+  }
+  #phase-nav a {
+    min-width: auto;
+    padding: 0.4rem 0.6rem;
+  }
+  #phase-nav a .phase-name {
+    font-size: 0.65rem;
+  }
+  #phase-nav a .phase-chapters {
+    display: none;
   }
 }
 

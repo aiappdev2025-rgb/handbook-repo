@@ -30,6 +30,10 @@
         ]
       },
       {
+        "label": "Workspace",
+        "href": "tools/project-list.html"
+      },
+      {
         "label": "Workflow",
         "href": "workflow-guide-v1.html"
       },
@@ -246,6 +250,55 @@
     }
   }
 
+  // Phase navigation data
+  const PHASES = [
+    { num: 1, name: 'Validate', chapters: 'Ch 1-7', href: 'handbook/phase1/chapter-01-introduction.html', pathPrefix: 'handbook/phase1' },
+    { num: 2, name: 'Design', chapters: 'Ch 8-12', href: 'handbook/phase2/chapter-08-design-philosophy.html', pathPrefix: 'handbook/phase2' },
+    { num: 3, name: 'Architect', chapters: 'Ch 13-22', href: 'handbook/phase3/chapter-13-architecture.html', pathPrefix: 'handbook/phase3' },
+    { num: 4, name: 'Build', chapters: 'Ch 23-41', href: 'handbook/phase4/chapter-23-moai-overview.html', pathPrefix: 'handbook/phase4' },
+    { num: 5, name: 'Launch', chapters: 'Ch 42-43', href: 'handbook/phase5/chapter-42-qa-deployment.html', pathPrefix: 'handbook/phase5' }
+  ];
+
+  // Render phase navigation bar
+  function renderPhaseNav(basePath, currentPath) {
+    const topNav = document.getElementById('top-nav');
+    if (!topNav) return;
+
+    // Only show phase nav on handbook pages
+    const isHandbookPage = currentPath.startsWith('handbook/phase');
+    if (!isHandbookPage) return;
+
+    // Create phase nav element
+    const phaseNav = document.createElement('nav');
+    phaseNav.id = 'phase-nav';
+
+    // Determine current phase
+    let currentPhase = null;
+    for (const phase of PHASES) {
+      if (currentPath.startsWith(phase.pathPrefix)) {
+        currentPhase = phase.num;
+        break;
+      }
+    }
+
+    // Build phase links
+    let html = '';
+    PHASES.forEach(phase => {
+      const isActive = phase.num === currentPhase;
+      html += `
+        <a href="${basePath}${phase.href}" class="phase-${phase.num}${isActive ? ' active' : ''}">
+          <span class="phase-name">Phase ${phase.num}: ${phase.name}</span>
+          <span class="phase-chapters">${phase.chapters}</span>
+        </a>
+      `;
+    });
+
+    phaseNav.innerHTML = html;
+
+    // Insert after top nav
+    topNav.insertAdjacentElement('afterend', phaseNav);
+  }
+
   // Determine which sidebar section to show based on current path
   function getSidebarSection(currentPath, sectionMapping) {
     for (const [pathPrefix, sectionId] of Object.entries(sectionMapping)) {
@@ -390,6 +443,7 @@
     const currentPath = getCurrentPagePath();
 
     renderTopNav(NAV_DATA, basePath, currentPath);
+    renderPhaseNav(basePath, currentPath);
     renderSidebar(NAV_DATA, basePath, currentPath);
     renderPageNav(NAV_DATA, basePath, currentPath);
   }

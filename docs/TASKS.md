@@ -148,12 +148,15 @@ COMPANION: Workflow Reference (separate, linked in nav)
 - [x] Check all internal links
 - [x] Validate on file:// protocol
 
-### Phase 7: Remaining Work (Future)
+### Phase 7: Current Sprint (COMPLETED)
+- [x] Add colorful phase navigation bar to chapter pages (like index.html)
+- [x] Review and clarify Chapter 42 actions (fix section IDs, clarify DO vs VERIFY)
+- [x] Create Project Workspace app (interactive form + artifact storage + logging)
+
+### Phase 8: Remaining Work (Future)
 - [ ] Add workflow tip callouts in milestone chapters (Option A)
 - [ ] Create Workflow Quick Reference Card (Option C)
 - [ ] Add Project Scaffolding Prompt to Chapter 28
-- [ ] Remove any orphaned files
-- [ ] Final commit
 
 ---
 
@@ -190,4 +193,4 @@ COMPANION: Workflow Reference (separate, linked in nav)
 
 ---
 
-*Last Updated: 2026-01-06 (Core restructuring complete, navigation validated)*
+*Last Updated: 2026-01-06 (Project Workspace app complete)*

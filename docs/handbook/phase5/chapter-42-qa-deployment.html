@@ -38,61 +38,20 @@
 
 <p>The pre-launch workflow ensures nothing critical is missed before users see your product. Work through each category systematically.</p>
 
-<div class="checklist">
-  <h4>Pre-Launch Checklist</h4>
-  <ul>
-    <li>All tests passing, no TypeScript errors, no linting errors</li>
-    <li>Environment variables secured, RLS policies tested</li>
-    <li>Lighthouse score >= 90, Core Web Vitals passing</li>
-    <li>All user flows tested, mobile responsive verified</li>
-    <li>Error monitoring configured, analytics configured</li>
-    <li>Database backups enabled, domain configured</li>
-  </ul>
+<div class="moai-box">
+  <h4>DO: Code Quality</h4>
+  <ol>
+    <li><strong>Run test suite</strong> — <code>npm test</code> — all tests must pass</li>
+    <li><strong>Run type check</strong> — <code>npx tsc --noEmit</code> — no TypeScript errors</li>
+    <li><strong>Run linter</strong> — <code>npm run lint</code> — no linting errors</li>
+    <li><strong>Run build</strong> — <code>npm run build</code> — build succeeds without warnings</li>
+  </ol>
 </div>
 
-<h3>Security Verification (OWASP-Based)</h3>
-
-<div class="warning">
-  <strong>Critical:</strong> Do not skip security verification. A single vulnerability can compromise all user data and destroy trust.
-</div>
-
-<h4>Authentication & Session Management</h4>
-<div class="code-block"># Verify password policies (Supabase Auth settings)
-# Dashboard -> Authentication -> Policies
-# - Minimum 8 characters
-# - Require mix of letters/numbers recommended
-
-# Test session expiry
-# Verify secure cookie settings (check browser DevTools)
-# - HttpOnly: true
-# - Secure: true (HTTPS only)
-# - SameSite: Lax or Strict</div>
-
-<h4>Authorization & Access Control</h4>
-<div class="code-block"># Test RLS policies by attempting unauthorized access
-# In Supabase SQL Editor, run as different roles:
-SET LOCAL ROLE anon;
-SELECT * FROM profiles; -- Should return empty or error
-
-SET LOCAL ROLE authenticated;
-SELECT * FROM profiles; -- Should only return own profile
-
-# Test horizontal and vertical privilege escalation</div>
-
-<h4>Input Validation & Injection Prevention</h4>
-<div class="code-block"># Test for SQL injection (should be prevented by Supabase client)
-# Try entering in form fields:
-# ' OR '1'='1
-# '; DROP TABLE users; --
-
-# Test for XSS (Cross-Site Scripting)
-# Try entering in any text field:
-# &lt;script&gt;alert('XSS')&lt;/script&gt;
-# Verify scripts do NOT execute</div>
-
-<h4>Security Headers</h4>
-<p><strong>Add to next.config.js:</strong></p>
-<div class="code-block">// next.config.js
+<div class="moai-box">
+  <h4>DO: Add Security Headers</h4>
+  <p>Add to <code>next.config.js</code>:</p>
+  <div class="code-block">// next.config.js
 const securityHeaders = [
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
@@ -106,42 +65,107 @@ module.exports = {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
 };</div>
+</div>
+
+<h3>Security Verification (OWASP-Based)</h3>
+
+<div class="warning">
+  <strong>Critical:</strong> Do not skip security verification. A single vulnerability can compromise all user data and destroy trust.
+</div>
+
+<div class="checklist">
+  <h4>VERIFY: Authentication & Session</h4>
+  <ul>
+    <li>Password policy enforced (Supabase Dashboard → Authentication → Policies)</li>
+    <li>Session cookies are HttpOnly, Secure, and SameSite (check browser DevTools)</li>
+    <li>Session expiry works correctly</li>
+  </ul>
+</div>
+
+<div class="moai-box">
+  <h4>DO: Test RLS Policies</h4>
+  <p>Run in Supabase SQL Editor:</p>
+  <div class="code-block">-- Test as anonymous user (should fail or return empty)
+SET LOCAL ROLE anon;
+SELECT * FROM profiles;
+
+-- Test as authenticated user (should only return own data)
+SET LOCAL ROLE authenticated;
+SELECT * FROM profiles;</div>
+</div>
+
+<div class="checklist">
+  <h4>VERIFY: Input Validation</h4>
+  <ul>
+    <li>SQL injection blocked — try <code>' OR '1'='1</code> in form fields</li>
+    <li>XSS blocked — try <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> in text fields</li>
+    <li>Scripts do NOT execute when malicious input is entered</li>
+  </ul>
+</div>
 
 <h3>Performance Verification</h3>
-<div class="code-block"># Run Lighthouse audit
+
+<div class="moai-box">
+  <h4>DO: Run Performance Audit</h4>
+  <div class="code-block"># Run Lighthouse audit
 npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html
 
 # Check bundle size
-npm run build
-
-# Verify Core Web Vitals in Chrome DevTools
-# Performance tab -> Largest Contentful Paint < 2.5s
-# First Input Delay < 100ms
-# Cumulative Layout Shift < 0.1</div>
-
-<h3>User Flow Testing</h3>
-<ol>
-  <li>Sign up with a new email → verify email flow works</li>
-  <li>Log in with credentials → redirects to dashboard</li>
-  <li>Complete core feature flow → data persists correctly</li>
-  <li>Test on mobile device or Chrome DevTools mobile view</li>
-  <li>Test error states (wrong password, network offline, etc.)</li>
-</ol>
-
-<h2 id="section-28-4">28.4 Launch Day Actions</h2>
-
-<p>Launch day has its own checklist separate from pre-launch verification.</p>
+npm run build</div>
+</div>
 
 <div class="checklist">
-  <h4>Launch Day Checklist</h4>
+  <h4>VERIFY: Performance Targets</h4>
   <ul>
-    <li>DNS configured and propagated (can take up to 48 hours)</li>
-    <li>SSL certificate active and verified</li>
-    <li>Production environment variables set in Vercel/hosting</li>
-    <li>Stripe webhooks configured for production URL</li>
-    <li>All team members have access to monitoring dashboards</li>
-    <li>Support channels ready (email, chat, etc.)</li>
+    <li>Lighthouse score >= 90</li>
+    <li>Largest Contentful Paint < 2.5s</li>
+    <li>First Input Delay < 100ms</li>
+    <li>Cumulative Layout Shift < 0.1</li>
   </ul>
+</div>
+
+<h3>User Flow Testing</h3>
+
+<div class="moai-box">
+  <h4>DO: Test Critical Flows</h4>
+  <ol>
+    <li><strong>Sign up</strong> — Create account with new email, verify email flow works</li>
+    <li><strong>Log in</strong> — Sign in with credentials, confirm redirect to dashboard</li>
+    <li><strong>Core feature</strong> — Complete main user flow, verify data persists</li>
+    <li><strong>Mobile</strong> — Test on mobile device or Chrome DevTools mobile view</li>
+    <li><strong>Error states</strong> — Test wrong password, network offline, invalid input</li>
+  </ol>
+</div>
+
+<h2 id="section-42-4">42.4 Launch Day Actions</h2>
+
+<p>Launch day has its own checklist separate from pre-launch verification. Complete these items before going live.</p>
+
+<div class="moai-box">
+  <h4>DO: Infrastructure Setup</h4>
+  <ol>
+    <li><strong>Configure DNS</strong> — Point your domain to Vercel (add CNAME or A records)</li>
+    <li><strong>Verify SSL</strong> — Check certificate is active in browser (padlock icon)</li>
+    <li><strong>Set production env vars</strong> — In Vercel dashboard, add all production keys</li>
+    <li><strong>Configure Stripe webhooks</strong> — Update webhook URL to production domain</li>
+    <li><strong>Enable monitoring</strong> — Set up error tracking (Sentry) and analytics</li>
+  </ol>
+</div>
+
+<div class="checklist">
+  <h4>VERIFY: Launch Readiness</h4>
+  <ul>
+    <li>DNS propagated (test with <code>dig yourdomain.com</code>)</li>
+    <li>SSL certificate shows valid in browser</li>
+    <li>All environment variables set (check Vercel logs for missing vars)</li>
+    <li>Stripe test payment works on production</li>
+    <li>Team members can access monitoring dashboards</li>
+    <li>Support email/chat channels are active</li>
+  </ul>
+</div>
+
+<div class="warning">
+  <strong>DNS Propagation:</strong> DNS changes can take up to 48 hours to propagate globally. Plan your launch accordingly and test from multiple networks.
 </div>
 
 <div class="note">
@@ -150,12 +174,12 @@ npm run build
 
 <div class="success">
   <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> A complete QA and launch checklist to verify before going live.</p>
-  <p><strong>What you should do:</strong> Execute every item in the pre-launch and launch day checklists before announcing to users.</p>
-  <p><strong>Next:</strong> Chapter 29 — Learn the project file structure for AI-assisted development.</p>
+  <p><strong>What you should have:</strong> A production-ready application with all infrastructure configured.</p>
+  <p><strong>What you should do:</strong> Execute every DO item, then verify every VERIFY item before announcing to users.</p>
+  <p><strong>Next:</strong> Chapter 43 — Learn the project file structure for AI-assisted development.</p>
 </div>
 
-<h2 id="section-28-5">28.5 Chapter Summary</h2>
+<h2 id="section-42-5">42.5 Chapter Summary</h2>
 
 <p>You've learned the QA and Launch workflow. Key takeaways:</p>
 
