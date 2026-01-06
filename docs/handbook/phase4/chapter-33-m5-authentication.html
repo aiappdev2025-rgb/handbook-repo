@@ -18,6 +18,15 @@
 
 <h1 id="chapter-33">Chapter 33: Milestone 5 - Authentication</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Implement secure authentication with Supabase Auth: login, signup, protected routes, and session management using 2 prompts.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M4 (Layouts) is complete. Your app should have working layouts and navigation before adding authentication.
+</div>
+
 <p class="chapter-intro">In this chapter, you'll implement authentication with Supabase Auth. By the end, you'll have secure login, signup, protected routes, and user session management.</p>
 
 <div class="workflow-tip">
@@ -29,10 +38,10 @@
 <p>Authentication is the gateway to your application. Proper implementation with Supabase Auth gives you secure sessions, token refresh, and protected routes - without building auth from scratch.</p>
 
 <div class="milestone-info">
-  <p><strong>Prerequisites:</strong> Milestone 4 complete</p>
+  <p><strong>Prerequisites:</strong> Milestone 4 (Layouts) complete</p>
   <p><strong>Tool:</strong> Claude Code CLI</p>
   <p><strong>Prompts:</strong> 2</p>
-  <p><strong>Deliverables:</strong> Auth flows working, protected routes, user session management.</p>
+  <p><strong>Deliverables:</strong> Auth flows working, protected routes, user session management</p>
 </div>
 
 <h2 id="section-33-2">33.2 Implementation Prompts</h2>
@@ -141,15 +150,25 @@ Redirects to dashboard after successful login</pre>
 
 <h2 id="section-33-3">33.3 Verification</h2>
 
-<div class="success">
-  <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> Supabase auth clients configured for browser and server, login and signup pages with form validation, middleware protecting authenticated routes, and user context provider.</p>
-  <p><strong>How to validate:</strong></p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Supabase auth clients configured for browser and server</li>
+    <li>Login and signup pages with form validation</li>
+    <li>Middleware protecting authenticated routes</li>
+    <li>User context provider and useUser hook</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
   <ul>
     <li>Create new account (receive verification email)</li>
     <li>Log in with valid credentials</li>
     <li>Protected routes redirect to login when unauthenticated</li>
     <li>Auth routes redirect to dashboard when logged in</li>
+    <li><code>npm run build</code> passes without errors</li>
   </ul>
 </div>
 

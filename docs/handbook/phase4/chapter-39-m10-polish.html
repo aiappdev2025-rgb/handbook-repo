@@ -18,6 +18,15 @@
 
 <h1 id="chapter-39">Chapter 39: Milestone 10 - Polish</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Optimize performance and refine UX: error boundaries, loading states, empty states, and accessibility compliance.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M9 (Payments). All features complete - now make everything feel professional.
+</div>
+
 <p class="chapter-intro">In this chapter, you'll polish your application with error handling, loading states, and accessibility improvements. By the end, your app will feel professional and production-ready.</p>
 
 <div class="workflow-tip">
@@ -29,10 +38,10 @@
 <p>Polish transforms a working app into a professional product. Error handling, loading states, and accessibility are what separate amateur projects from production-ready software.</p>
 
 <div class="milestone-info">
-  <p><strong>Prerequisites:</strong> Milestone 9 complete</p>
+  <p><strong>Prerequisites:</strong> Milestone 9 (Payments) complete</p>
   <p><strong>Tool:</strong> Claude Code CLI</p>
   <p><strong>Prompts:</strong> 5</p>
-  <p><strong>Deliverables:</strong> Error boundaries, loading states, empty states, edge case handling, WCAG compliance.</p>
+  <p><strong>Deliverables:</strong> Error boundaries, loading states, empty states, edge case handling, WCAG compliance</p>
 </div>
 
 <h2 id="section-39-2">39.2 Implementation Prompts</h2>
@@ -213,21 +222,32 @@ Forms announce errors properly</pre>
 
 <h2 id="section-39-3">39.3 Verification</h2>
 
-<div class="success">
-  <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> Error boundaries catching and displaying errors gracefully, loading states on all async operations, helpful empty states, and WCAG 2.1 AA accessibility compliance.</p>
-  <p><strong>How to validate:</strong></p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Error boundaries catching and displaying errors gracefully</li>
+    <li>Loading states on all async operations</li>
+    <li>Helpful empty states for new users</li>
+    <li>WCAG 2.1 AA accessibility compliance</li>
+    <li>Professional, polished user experience</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
   <ul>
     <li>Lighthouse accessibility score >= 90</li>
     <li>axe DevTools shows no critical issues</li>
     <li>All features work keyboard-only</li>
     <li>Loading states visible during data fetches</li>
+    <li>Empty states have clear CTAs</li>
+    <li><code>npm run build</code> passes without errors</li>
   </ul>
 </div>
 
-<div class="warning">
-  <h4>Pre-Launch Check Required</h4>
-  <p>After completing this milestone, you MUST complete <strong>Checkpoint C</strong> (next chapter) before launching.</p>
+<div class="gate-indicator">
+  <strong>GATE:</strong> You must complete Checkpoint C (next chapter) before launching.
 </div>
 
 <h2 id="section-39-4">39.4 Chapter Summary</h2>

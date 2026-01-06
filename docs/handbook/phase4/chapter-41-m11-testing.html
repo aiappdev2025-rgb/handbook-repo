@@ -18,6 +18,15 @@
 
 <h1 id="chapter-41">Chapter 41: Milestone 11 - Testing</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Implement comprehensive testing: unit tests, integration tests, and E2E tests covering critical user flows.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M10 (Polish) and Checkpoint C. Your app is launch-ready - now ensure it stays working.
+</div>
+
 <p class="chapter-intro">In this chapter, you'll implement comprehensive testing for your application. By the end, you'll have unit tests, integration tests, and end-to-end tests covering critical user flows.</p>
 
 <div class="workflow-tip">
@@ -32,7 +41,7 @@
   <p><strong>Prerequisites:</strong> Milestone 10 complete, Checkpoint C passed</p>
   <p><strong>Tool:</strong> Claude Code CLI</p>
   <p><strong>Prompts:</strong> 3</p>
-  <p><strong>Deliverables:</strong> Unit tests, integration tests, E2E tests, test coverage >= 80%.</p>
+  <p><strong>Deliverables:</strong> Unit tests, integration tests, E2E tests, test coverage >= 80%</p>
 </div>
 
 <h2 id="section-41-2">41.2 Implementation Prompts</h2>
@@ -182,15 +191,26 @@ npm test -- --coverage --reporter=html</div>
 
 <h2 id="section-41-4">41.4 Verification</h2>
 
-<div class="success">
-  <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> Unit tests for utilities and business logic, integration tests for server actions and components, and E2E tests for critical user flows.</p>
-  <p><strong>How to validate:</strong></p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Unit tests for utilities and business logic</li>
+    <li>Integration tests for server actions and components</li>
+    <li>E2E tests for critical user flows</li>
+    <li>CI pipeline running tests on pull requests</li>
+    <li>Test coverage >= 80% for new code</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
   <ul>
     <li>Test coverage >= 80% for new code</li>
     <li>All tests pass locally</li>
     <li>Tests run in CI pipeline</li>
     <li>E2E tests cover signup, login, core feature, checkout</li>
+    <li><code>npm run build</code> passes without errors</li>
   </ul>
 </div>
 

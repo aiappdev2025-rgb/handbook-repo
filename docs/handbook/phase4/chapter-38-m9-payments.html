@@ -18,6 +18,15 @@
 
 <h1 id="chapter-38">Chapter 38: Milestone 9 - Payments</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Implement billing with Stripe: subscription plans, checkout flow, webhooks, and customer billing management.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M8 (Supporting Features). Your app is feature-complete and ready to monetize.
+</div>
+
 <p class="chapter-intro">In this chapter, you'll integrate Stripe for subscription billing. By the end, you'll have a complete payment system with checkout, webhooks, and billing management.</p>
 
 <div class="workflow-tip">
@@ -29,10 +38,10 @@
 <p>Payment integration is where your SaaS becomes a business. Stripe handles the complexity of payment processing, but proper webhook handling and subscription state management are critical for reliable billing.</p>
 
 <div class="milestone-info">
-  <p><strong>Prerequisites:</strong> Milestone 8 complete</p>
+  <p><strong>Prerequisites:</strong> Milestone 8 (Supporting Features) complete</p>
   <p><strong>Tool:</strong> Claude Code CLI</p>
   <p><strong>Prompts:</strong> 4</p>
-  <p><strong>Deliverables:</strong> Stripe integration, webhooks, checkout flow, billing UI, subscription management.</p>
+  <p><strong>Deliverables:</strong> Stripe integration, webhooks, checkout flow, billing UI, subscription management</p>
 </div>
 
 <h2 id="section-38-2">38.2 Implementation Prompts</h2>
@@ -220,15 +229,27 @@ Canceled users see appropriate messaging</pre>
 
 <h2 id="section-38-3">38.3 Verification</h2>
 
-<div class="success">
-  <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> Stripe configured with webhook handler, checkout flow creating subscriptions, billing management page showing subscription status, and Customer Portal integration for self-service.</p>
-  <p><strong>How to validate:</strong></p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Stripe SDK configured with test mode</li>
+    <li>Webhook handler processing subscription events</li>
+    <li>Checkout flow creating subscriptions</li>
+    <li>Billing management page showing subscription status</li>
+    <li>Customer Portal integration for self-service</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
   <ul>
     <li>Complete checkout in Stripe test mode</li>
     <li>Verify subscription created in database</li>
-    <li>Billing page shows correct status</li>
-    <li>Customer Portal opens and works</li>
+    <li>Billing page shows correct subscription status</li>
+    <li>Customer Portal opens and allows management</li>
+    <li>Webhook events logged correctly</li>
+    <li><code>npm run build</code> passes without errors</li>
   </ul>
 </div>
 

@@ -871,6 +871,108 @@ code {
   color: #166534;
 }
 
+/* TL;DR Box - Quick summary at top of chapter */
+.tldr-box {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #7dd3fc;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.tldr-box h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #0369a1;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tldr-box p {
+  margin: 0;
+  color: #0c4a6e;
+  font-weight: 500;
+}
+
+/* When To Use - Indicates chapter context */
+.when-to-use {
+  background: #fefce8;
+  border-left: 3px solid #eab308;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.when-to-use strong {
+  color: #854d0e;
+}
+
+/* Expected Output Box */
+.expected-output {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.expected-output h4 {
+  margin-top: 0;
+  color: #166534;
+  font-size: 0.9rem;
+}
+
+/* Milestone info enhancement */
+.milestone-info {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.milestone-info p {
+  margin: 0.4rem 0;
+}
+
+.milestone-info p:first-child {
+  margin-top: 0;
+}
+
+.milestone-info p:last-child {
+  margin-bottom: 0;
+}
+
+/* Gate indicator for checkpoints */
+.gate-indicator {
+  background: var(--checkpoint-bg);
+  border: 2px solid var(--checkpoint-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gate-indicator::before {
+  content: "\2713";
+  background: var(--checkpoint-border);
+  color: white;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.gate-indicator strong {
+  color: #5b21b6;
+}
+
 /* =============================================
    Tables
    ============================================= */

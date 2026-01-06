@@ -18,6 +18,15 @@
 
 <h1 id="chapter-37">Chapter 37: Milestone 8 - Supporting Features</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Add secondary features using the same four-prompt pattern from M6. Each supporting feature is a mini-M6.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M7 (Admin Console). You have your core feature and admin panel - now complete the feature set.
+</div>
+
 <p class="chapter-intro">In this chapter, you'll build additional user-facing features using the same four-prompt pattern from M6. By the end, you'll have a complete feature set for your MVP.</p>
 
 <div class="workflow-tip">
@@ -29,10 +38,10 @@
 <p>Supporting features complement your core value proposition. Using the same four-prompt pattern ensures consistency and maintainability across your entire feature set.</p>
 
 <div class="milestone-info">
-  <p><strong>Prerequisites:</strong> Milestone 7 complete</p>
+  <p><strong>Prerequisites:</strong> Milestone 7 (Admin Console) complete</p>
   <p><strong>Tool:</strong> Claude Code CLI</p>
   <p><strong>Prompts:</strong> 4 prompts per feature</p>
-  <p><strong>Deliverables:</strong> Secondary features complete, tests passing, integrated with core feature.</p>
+  <p><strong>Deliverables:</strong> Secondary features complete, tests passing, integrated with core feature</p>
 </div>
 
 <h2 id="section-37-2">37.2 Feature Planning</h2>
@@ -108,16 +117,25 @@ Ready to execute Prompts 6.1-6.4 with feature substituted</pre>
 
 <h2 id="section-37-5">37.5 Verification</h2>
 
-<div class="success">
-  <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> All supporting features implemented using the four-prompt pattern, fully integrated with the core feature, with proper navigation and consistent UX patterns.</p>
-  <p><strong>How to validate:</strong></p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>All supporting features implemented using four-prompt pattern</li>
+    <li>Features integrated with core feature</li>
+    <li>Proper navigation between features</li>
+    <li>Consistent UX patterns across all features</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
   <ul>
     <li>Each feature passes the same criteria as M6</li>
-    <li>Complete CRUD journey works for each</li>
-    <li>Data persists correctly</li>
-    <li>Navigation is intuitive</li>
-    <li>Build passes without errors</li>
+    <li>Complete CRUD journey works for each feature</li>
+    <li>Data persists correctly to database</li>
+    <li>Navigation between features is intuitive</li>
+    <li><code>npm run build</code> passes without errors</li>
   </ul>
 </div>
 

@@ -18,9 +18,22 @@
 
 <h1 id="chapter-35">Chapter 35: Checkpoint B - Feature Complete Audit</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Quality gate after completing M1-M6. Verify code quality, test coverage, and feature completeness before proceeding.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After completing Milestone 6 (Core Feature). This is a mandatory quality gate - do not skip.
+</div>
+
+<div class="gate-indicator">
+  <strong>GATE:</strong> M1-M6 must be complete before running this checkpoint.
+</div>
+
 <p class="chapter-intro">This checkpoint ensures your core features (M1-M6) are production-quality before building additional functionality. Skipping this risks accumulating technical debt that slows future development.</p>
 
-<div class="checkpoint-box" style="background: #ede9fe; border: 2px solid #8b5cf6; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+<div class="checkpoint-box">
   <h2 style="color: #6d28d9; margin-top: 0;">Checkpoint B: Feature Complete Audit</h2>
   <p><strong>When:</strong> After completing Milestone 6 (Core Feature)</p>
   <p><strong>Purpose:</strong> Verify code quality, test coverage, and feature completeness</p>
@@ -130,17 +143,22 @@ git push origin checkpoint-b</div>
 
 <h2 id="section-35-7">35.7 Checkpoint Summary</h2>
 
-<div class="success">
-  <h4>Checkpoint B Complete</h4>
-  <p>Your core features are verified:</p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After passing this checkpoint, you should have:</p>
   <ul>
     <li>Technical debt score >= 7.0</li>
     <li>Test coverage >= 80%</li>
-    <li>All features functional</li>
-    <li>Performance acceptable</li>
-    <li>Code review passed</li>
-    <li>Git tagged: <code>checkpoint-b</code></li>
+    <li>All features functional end-to-end</li>
+    <li>Performance within acceptable range</li>
+    <li>Code review passed with no critical issues</li>
+    <li>Git tag: <code>checkpoint-b</code></li>
   </ul>
+</div>
+
+<div class="success">
+  <h4>Checkpoint B Complete</h4>
+  <p>Your core features are verified and ready for additional development. You may now proceed to Milestone 7 (Admin Console).</p>
 </div>
 
 <p><strong>Next:</strong> Chapter 36 (Milestone 7) - Build your admin console.</p>

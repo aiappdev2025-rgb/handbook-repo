@@ -18,6 +18,15 @@
 
 <h1 id="chapter-34">Chapter 34: Milestone 6 - Core Feature</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Build your product's main functionality using the four-prompt pattern: Data Layer → Server Actions → UI Components → Page Assembly.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M5 (Authentication) is working. Your users can now log in, so you can build the authenticated features they came for.
+</div>
+
 <p class="chapter-intro">In this chapter, you'll build your primary feature using the four-prompt pattern. By the end, you'll have a complete user journey with data persistence, validation, and UI components.</p>
 
 <div class="workflow-tip">
@@ -29,10 +38,10 @@
 <p>Your core feature is the primary value your application delivers. The four-prompt pattern (Data Layer → Server Actions → UI Components → Page Assembly) ensures clean architecture and separation of concerns that will scale with your application.</p>
 
 <div class="milestone-info">
-  <p><strong>Prerequisites:</strong> Milestone 5 complete</p>
+  <p><strong>Prerequisites:</strong> Milestone 5 (Authentication) complete</p>
   <p><strong>Tool:</strong> Claude Code CLI</p>
   <p><strong>Prompts:</strong> 4</p>
-  <p><strong>Deliverables:</strong> Core feature complete, tests passing, user journey functional.</p>
+  <p><strong>Deliverables:</strong> Core feature complete, tests passing, user journey functional</p>
 </div>
 
 <h2 id="section-34-2">34.2 The Four-Prompt Pattern</h2>
@@ -247,21 +256,30 @@ Test with real data in development</pre>
 
 <h2 id="section-34-4">34.4 Verification</h2>
 
-<div class="success">
-  <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> Complete data layer with typed queries/mutations, server actions with validation and authorization, reusable UI components for your core entity, and fully assembled pages for list, create, detail, and edit views.</p>
-  <p><strong>How to validate:</strong></p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Complete data layer with typed queries and mutations</li>
+    <li>Server actions with validation and authorization</li>
+    <li>Reusable UI components (list, card, form, detail)</li>
+    <li>Fully assembled pages for list, create, detail, and edit views</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
   <ul>
     <li>Complete user journey works: Create → View → Edit → Delete</li>
     <li>All operations persist to database</li>
     <li>Navigation flows are intuitive</li>
     <li><code>npm run build</code> passes without errors</li>
+    <li>Test with real data in development</li>
   </ul>
 </div>
 
-<div class="warning">
-  <h4>Quality Check Required</h4>
-  <p>After completing this milestone, you MUST complete <strong>Checkpoint B</strong> (next chapter) before proceeding to Milestone 7.</p>
+<div class="gate-indicator">
+  <strong>GATE:</strong> You must complete Checkpoint B (next chapter) before proceeding to Milestone 7.
 </div>
 
 <h2 id="section-34-5">34.5 Chapter Summary</h2>

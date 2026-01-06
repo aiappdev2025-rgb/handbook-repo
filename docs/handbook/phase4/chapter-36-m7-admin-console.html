@@ -18,6 +18,15 @@
 
 <h1 id="chapter-36">Chapter 36: Milestone 7 - Admin Console</h1>
 
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Build an administrative interface for managing your SaaS: user management, subscription viewing, error logs, and audit logging.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M6 (Core Feature) and Checkpoint B. You now have real data to manage and need operational visibility.
+</div>
+
 <p class="chapter-intro">In this chapter, you'll build an operational admin console for managing your SaaS. By the end, you'll have user management, subscription viewing, and error log access.</p>
 
 <div class="workflow-tip">
@@ -32,7 +41,7 @@
   <p><strong>Prerequisites:</strong> Milestone 6 complete, Checkpoint B passed</p>
   <p><strong>Tool:</strong> Claude Code CLI</p>
   <p><strong>Prompts:</strong> 5</p>
-  <p><strong>Deliverables:</strong> Admin role system, user management, subscription viewing, error logs.</p>
+  <p><strong>Deliverables:</strong> Admin role system, user management, subscription viewing, error logs</p>
 </div>
 
 <div class="note">
@@ -215,15 +224,26 @@ Stack traces visible in detail view</pre>
 
 <h2 id="section-36-4">36.4 Verification</h2>
 
-<div class="success">
-  <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> Protected admin area with role-based access, user management with search and filtering, subscription status viewing, error log viewing, and audit logging of admin actions.</p>
-  <p><strong>How to validate:</strong></p>
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Protected admin area with role-based access</li>
+    <li>User management with search and filtering</li>
+    <li>Subscription status viewing</li>
+    <li>Error log viewing and management</li>
+    <li>Audit logging of all admin actions</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
   <ul>
     <li>Non-admin users redirected from /admin</li>
     <li>User list with search and pagination works</li>
-    <li>Admin actions are logged</li>
-    <li>Error logs show recent errors</li>
+    <li>Admin actions are logged to audit log</li>
+    <li>Error logs show recent errors with details</li>
+    <li><code>npm run build</code> passes without errors</li>
   </ul>
 </div>
 
