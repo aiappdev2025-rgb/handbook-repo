@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 43: Launch Checklist - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+  <style>
+    /* Printable checklist styles */
+    @media print {
+      #top-nav, #sidebar, #page-nav, .workflow-tip, .when-to-use, .tldr-box {
+        display: none !important;
+      }
+      .layout {
+        display: block !important;
+      }
+      .content {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+      .printable-checklist {
+        page-break-inside: avoid;
+      }
+      .printable-checklist input[type="checkbox"] {
+        -webkit-appearance: checkbox;
+        appearance: checkbox;
+      }
+    }
+
+    .printable-checklist {
+      background: var(--bg-secondary, #f8f9fa);
+      border: 2px solid var(--border-color, #e9ecef);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .printable-checklist h4 {
+      margin-top: 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color, #e9ecef);
+    }
+
+    .printable-checklist ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .printable-checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border-color, #e9ecef);
+    }
+
+    .printable-checklist li:last-child {
+      border-bottom: none;
+    }
+
+    .printable-checklist input[type="checkbox"] {
+      margin-top: 0.25rem;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .print-button {
+      background: var(--accent-color, #2563eb);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .print-button:hover {
+      opacity: 0.9;
+    }
+
+    @media print {
+      .print-button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-43">Chapter 43: Launch Checklist</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Final verification before going live. A comprehensive checklist covering technical, security, legal, business, and marketing requirements for a successful launch.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> QA passed, staging verified, ready to launch to production.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll work through the final launch checklist. By the end, you'll have a live production application ready for real users.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> This is a GATE chapter. Every checkbox must be verified before announcing to users.
+</div>
+
+<h2 id="section-43-1">43.1 Overview</h2>
+
+<p>The launch checklist ensures nothing critical is missed. Work through each section systematically—a single overlooked item can derail your launch.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> <span class="gate-badge">GATE</span> Chapter 42 (QA & Deployment) complete. Staging verified and working.</p>
+  <p><strong>Tool:</strong> Browser, Vercel Dashboard, Stripe Dashboard, Supabase Dashboard</p>
+  <p><strong>Deliverables:</strong> Live production application accessible to users</p>
+</div>
+
+<button class="print-button" onclick="window.print()">Print Checklist</button>
+
+<h2 id="section-43-2">43.2 Technical Checklist</h2>
+
+<div class="printable-checklist">
+  <h4>Technical Requirements</h4>
+  <ul>
+    <li><input type="checkbox"> <strong>SSL Certificate</strong> — HTTPS active, padlock visible in browser</li>
+    <li><input type="checkbox"> <strong>DNS Configured</strong> — Domain points to Vercel, propagation complete</li>
+    <li><input type="checkbox"> <strong>Environment Variables</strong> — All production values set in Vercel</li>
+    <li><input type="checkbox"> <strong>Database Backups</strong> — Supabase automatic backups enabled</li>
+    <li><input type="checkbox"> <strong>Error Tracking</strong> — Sentry configured and receiving test errors</li>
+    <li><input type="checkbox"> <strong>Uptime Monitoring</strong> — Monitoring service active, alerts configured</li>
+    <li><input type="checkbox"> <strong>Build Passing</strong> — Latest commit deploys successfully</li>
+    <li><input type="checkbox"> <strong>Performance</strong> — Lighthouse score >= 90</li>
+  </ul>
+</div>
+
+<div class="moai-box">
+  <h4>DO: Verify DNS and SSL</h4>
+  <div class="code-block"># Check DNS propagation
+dig yourdomain.com
+
+# Check SSL certificate
+curl -vI https://yourdomain.com 2>&1 | grep -A 10 "Server certificate"
+
+# Or simply visit in browser and check:
+# - URL shows https://
+# - Padlock icon appears
+# - Certificate shows your domain</div>
+</div>
+
+<h2 id="section-43-3">43.3 Security Checklist</h2>
+
+<div class="printable-checklist">
+  <h4>Security Requirements</h4>
+  <ul>
+    <li><input type="checkbox"> <strong>Authentication Tested</strong> — Login, logout, password reset all work</li>
+    <li><input type="checkbox"> <strong>RLS Policies Verified</strong> — Users can only access their own data</li>
+    <li><input type="checkbox"> <strong>API Rate Limiting</strong> — Vercel or custom rate limiting active</li>
+    <li><input type="checkbox"> <strong>Security Headers</strong> — X-Frame-Options, HSTS, CSP configured</li>
+    <li><input type="checkbox"> <strong>Secrets Secure</strong> — No secrets in client-side code or git history</li>
+    <li><input type="checkbox"> <strong>Input Validation</strong> — Forms reject malicious input (XSS, SQL injection)</li>
+    <li><input type="checkbox"> <strong>Admin Routes Protected</strong> — Admin pages require proper authorization</li>
+    <li><input type="checkbox"> <strong>Sensitive Data Encrypted</strong> — PII handled according to policy</li>
+  </ul>
+</div>
+
+<div class="warning">
+  <strong>Security is Non-Negotiable:</strong> A single security vulnerability can compromise all user data. Do not skip any item in this section.
+</div>
+
+<h2 id="section-43-4">43.4 Legal Checklist</h2>
+
+<div class="printable-checklist">
+  <h4>Legal Requirements</h4>
+  <ul>
+    <li><input type="checkbox"> <strong>Privacy Policy</strong> — Published and linked in footer</li>
+    <li><input type="checkbox"> <strong>Terms of Service</strong> — Published and linked in footer</li>
+    <li><input type="checkbox"> <strong>Cookie Consent</strong> — Banner shown (if required in your jurisdiction)</li>
+    <li><input type="checkbox"> <strong>GDPR Compliance</strong> — Data deletion request process documented (if applicable)</li>
+    <li><input type="checkbox"> <strong>Accessibility</strong> — Basic WCAG 2.1 AA compliance verified</li>
+    <li><input type="checkbox"> <strong>Copyright Notice</strong> — Footer shows current year</li>
+  </ul>
+</div>
+
+<div class="note">
+  <strong>Legal Disclaimer:</strong> This checklist provides general guidance. Consult a lawyer for specific legal requirements in your jurisdiction.
+</div>
+
+<h2 id="section-43-5">43.5 Business Checklist</h2>
+
+<div class="printable-checklist">
+  <h4>Business Requirements</h4>
+  <ul>
+    <li><input type="checkbox"> <strong>Stripe Live Mode</strong> — Switched from test to live keys</li>
+    <li><input type="checkbox"> <strong>Stripe Webhooks</strong> — Production webhook URL configured</li>
+    <li><input type="checkbox"> <strong>Payment Test</strong> — Real (small) transaction completed and refunded</li>
+    <li><input type="checkbox"> <strong>Email Templates</strong> — Welcome, password reset, receipt emails work</li>
+    <li><input type="checkbox"> <strong>Transactional Email</strong> — Email provider configured (Resend, SendGrid, etc.)</li>
+    <li><input type="checkbox"> <strong>Support Channel</strong> — Contact email, chat, or help center ready</li>
+    <li><input type="checkbox"> <strong>Billing Portal</strong> — Users can manage subscription and billing</li>
+  </ul>
+</div>
+
+<div class="moai-box">
+  <h4>DO: Test Stripe Live Mode</h4>
+  <ol>
+    <li>Switch to live Stripe keys in Vercel environment variables</li>
+    <li>Update webhook URL to production domain in Stripe Dashboard</li>
+    <li>Make a real purchase (lowest tier)</li>
+    <li>Verify webhook received (Stripe Dashboard → Webhooks → Logs)</li>
+    <li>Issue refund to confirm refund flow works</li>
+    <li>Check user has correct subscription status in your app</li>
+  </ol>
+</div>
+
+<h2 id="section-43-6">43.6 Marketing Checklist</h2>
+
+<div class="printable-checklist">
+  <h4>Marketing Requirements</h4>
+  <ul>
+    <li><input type="checkbox"> <strong>Analytics Installed</strong> — Google Analytics, Plausible, or similar</li>
+    <li><input type="checkbox"> <strong>OG Images</strong> — Social sharing previews look good (test with opengraph.xyz)</li>
+    <li><input type="checkbox"> <strong>Meta Tags</strong> — Title, description, favicon on all pages</li>
+    <li><input type="checkbox"> <strong>Landing Page Live</strong> — Clear value proposition, CTA works</li>
+    <li><input type="checkbox"> <strong>Sitemap</strong> — sitemap.xml accessible</li>
+    <li><input type="checkbox"> <strong>Robots.txt</strong> — Configured correctly (not blocking important pages)</li>
+    <li><input type="checkbox"> <strong>Social Links</strong> — Twitter, LinkedIn, etc. (if applicable)</li>
+  </ul>
+</div>
+
+<div class="moai-box">
+  <h4>DO: Verify Social Sharing</h4>
+  <div class="code-block"># Test OG tags with these tools:
+# - https://opengraph.xyz (preview)
+# - https://cards-dev.twitter.com/validator (Twitter)
+# - https://developers.facebook.com/tools/debug/ (Facebook)
+
+# Check that:
+# - Title appears correctly
+# - Description is compelling
+# - Image renders at proper size (1200x630 recommended)
+# - URL is clean (no query params)</div>
+</div>
+
+<h2 id="section-43-7">43.7 Launch Day Protocol</h2>
+
+<p>Launch day has its own workflow. Follow these steps in order.</p>
+
+<div class="printable-checklist">
+  <h4>Launch Day Steps</h4>
+  <ul>
+    <li><input type="checkbox"> <strong>1. Final Smoke Test</strong> — Run through core flow on production one more time</li>
+    <li><input type="checkbox"> <strong>2. Team Standby</strong> — All team members available for quick response</li>
+    <li><input type="checkbox"> <strong>3. Monitoring Dashboard Open</strong> — Sentry, uptime, analytics visible</li>
+    <li><input type="checkbox"> <strong>4. Support Channel Ready</strong> — Email/chat monitored</li>
+    <li><input type="checkbox"> <strong>5. Deploy to Production</strong> — Merge to main, verify deployment</li>
+    <li><input type="checkbox"> <strong>6. Post-Deploy Smoke Test</strong> — Quick verification after deploy</li>
+    <li><input type="checkbox"> <strong>7. Announce</strong> — Social media, email list, communities</li>
+    <li><input type="checkbox"> <strong>8. Monitor</strong> — Watch for errors and user feedback for 24-48 hours</li>
+  </ul>
+</div>
+
+<div class="warning">
+  <strong>DNS Propagation:</strong> If you just set up DNS, wait up to 48 hours for global propagation. Test from multiple networks (mobile data, different ISPs) before announcing.
+</div>
+
+<h2 id="section-43-8">43.8 Post-Launch (First 48 Hours)</h2>
+
+<p>The first 48 hours after launch are critical. Stay vigilant.</p>
+
+<div class="checklist">
+  <h4>MONITOR: Post-Launch</h4>
+  <ul>
+    <li><strong>Error rates</strong> — Check Sentry for new errors every few hours</li>
+    <li><strong>Performance</strong> — Watch response times in Vercel Analytics</li>
+    <li><strong>User feedback</strong> — Respond quickly to support requests</li>
+    <li><strong>Conversion funnel</strong> — Are users completing signup and core actions?</li>
+    <li><strong>Payment flow</strong> — Are purchases completing successfully?</li>
+  </ul>
+</div>
+
+<div class="moai-box">
+  <h4>DO: Quick Response Protocol</h4>
+  <p>If critical issues arise:</p>
+  <ol>
+    <li><strong>Assess severity</strong> — Is the app unusable? Is data at risk?</li>
+    <li><strong>Communicate</strong> — If widespread, post status update (Twitter, status page)</li>
+    <li><strong>Fix or rollback</strong> — Quick fix if simple, otherwise rollback to last good deploy</li>
+    <li><strong>Postmortem</strong> — Document what happened and how to prevent it</li>
+  </ol>
+</div>
+
+<h2 id="section-43-9">43.9 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong></p>
+  <ul>
+    <li>Live production application at your domain</li>
+    <li>All checklist items verified</li>
+    <li>Real users able to sign up and use the product</li>
+    <li>Payments processing successfully</li>
+    <li>Monitoring active and alerting configured</li>
+  </ul>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Visit production URL — loads correctly</li>
+    <li>Create test account — signup flow works</li>
+    <li>Complete core feature — functionality works</li>
+    <li>Make test purchase — payment completes</li>
+    <li>Check monitoring — no critical errors</li>
+  </ul>
+</div>
+
+<h2 id="section-43-10">43.10 Complete Launch Checklist (Printable)</h2>
+
+<p>Use this comprehensive checklist for launch day. Click "Print Checklist" to save or print.</p>
+
+<button class="print-button" onclick="window.print()">Print Checklist</button>
+
+<div class="printable-checklist">
+  <h4>Complete Launch Checklist</h4>
+  <p><strong>Technical</strong></p>
+  <ul>
+    <li><input type="checkbox"> SSL Certificate active</li>
+    <li><input type="checkbox"> DNS configured and propagated</li>
+    <li><input type="checkbox"> Environment variables set</li>
+    <li><input type="checkbox"> Database backups enabled</li>
+    <li><input type="checkbox"> Error tracking configured</li>
+    <li><input type="checkbox"> Uptime monitoring active</li>
+    <li><input type="checkbox"> Build passing</li>
+    <li><input type="checkbox"> Performance >= 90</li>
+  </ul>
+  <p><strong>Security</strong></p>
+  <ul>
+    <li><input type="checkbox"> Authentication tested</li>
+    <li><input type="checkbox"> RLS policies verified</li>
+    <li><input type="checkbox"> Rate limiting active</li>
+    <li><input type="checkbox"> Security headers set</li>
+    <li><input type="checkbox"> Secrets secure</li>
+    <li><input type="checkbox"> Input validation working</li>
+    <li><input type="checkbox"> Admin routes protected</li>
+  </ul>
+  <p><strong>Legal</strong></p>
+  <ul>
+    <li><input type="checkbox"> Privacy Policy published</li>
+    <li><input type="checkbox"> Terms of Service published</li>
+    <li><input type="checkbox"> Cookie consent (if needed)</li>
+    <li><input type="checkbox"> Accessibility basics met</li>
+  </ul>
+  <p><strong>Business</strong></p>
+  <ul>
+    <li><input type="checkbox"> Stripe live mode</li>
+    <li><input type="checkbox"> Webhooks configured</li>
+    <li><input type="checkbox"> Payment tested</li>
+    <li><input type="checkbox"> Email templates working</li>
+    <li><input type="checkbox"> Support channel ready</li>
+  </ul>
+  <p><strong>Marketing</strong></p>
+  <ul>
+    <li><input type="checkbox"> Analytics installed</li>
+    <li><input type="checkbox"> OG images set</li>
+    <li><input type="checkbox"> Meta tags complete</li>
+    <li><input type="checkbox"> Landing page live</li>
+    <li><input type="checkbox"> Sitemap accessible</li>
+  </ul>
+  <p><strong>Launch Day</strong></p>
+  <ul>
+    <li><input type="checkbox"> Final smoke test</li>
+    <li><input type="checkbox"> Team standby</li>
+    <li><input type="checkbox"> Monitoring dashboard open</li>
+    <li><input type="checkbox"> Deploy to production</li>
+    <li><input type="checkbox"> Post-deploy verification</li>
+    <li><input type="checkbox"> Announce</li>
+  </ul>
+</div>
+
+<h2 id="section-43-11">43.11 Chapter Summary</h2>
+
+<p>You've completed the final launch checklist. Key takeaways:</p>
+
+<ul>
+  <li>Systematic verification prevents launch-day disasters</li>
+  <li>Security and legal requirements are non-negotiable</li>
+  <li>Business setup (payments, email) must be tested with real transactions</li>
+  <li>Marketing basics (analytics, OG images) maximize launch impact</li>
+  <li>Post-launch monitoring catches issues before users report them</li>
+</ul>
+
+<p><strong>Congratulations!</strong> You've completed the AI SaaS Handbook. Your application is now live and ready for users.</p>
+
+<div class="success">
+  <h4>You Did It!</h4>
+  <p>From idea validation through launch, you've built a production-quality SaaS application using AI-assisted development. The MOAI framework has guided you through every phase.</p>
+  <p><strong>What's next:</strong></p>
+  <ul>
+    <li>Monitor and iterate based on user feedback</li>
+    <li>Continue using MOAI principles for new features</li>
+    <li>Scale your application as usage grows</li>
+  </ul>
+</div>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

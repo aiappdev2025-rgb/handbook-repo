@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chapter 42: QA and Launch Checklist - AI SaaS Handbook</title>
+  <title>Chapter 42: QA & Deployment - AI SaaS Handbook</title>
   <link rel="stylesheet" href="../../css/handbook.css">
 </head>
 <body>
@@ -16,180 +16,319 @@
   <main class="content">
     <article>
 
-<h1 id="chapter-42">Chapter 42: QA and Launch Checklist</h1>
+<h1 id="chapter-42">Chapter 42: QA & Deployment</h1>
 
-<p>In this chapter, you'll learn the QA and launch checklist that ensures your application is production-ready. This is the final quality gate before real users see your product. By the end of this chapter, you'll have a complete launch verification workflow.</p>
-
-<h2 id="section-42-1">42.1 Why the Launch Phase Matters</h2>
-
-<p>The Launch phase ensures your application is production-ready. Skipping these checks leads to embarrassing bugs in front of real users, security vulnerabilities, and poor performance that drives users away. This phase connects all previous work — your design, architecture, and implementation — into a verified, deployable product.</p>
-
-<h2 id="section-42-2">42.2 How Launch Supports the Process</h2>
-
-<p>Launch is not just "pushing to production." It's the final quality gate that validates:</p>
-<ul>
-  <li><strong>Design intentions are realized</strong> — UX flows work as specified</li>
-  <li><strong>Architecture is sound</strong> — Performance meets requirements</li>
-  <li><strong>Implementation is complete</strong> — All features work, all tests pass</li>
-  <li><strong>Security is enforced</strong> — RLS policies, auth, and data protection verified</li>
-</ul>
-
-<h2 id="section-42-3">42.3 Pre-Launch Workflow</h2>
-
-<p>The pre-launch workflow ensures nothing critical is missed before users see your product. Work through each category systematically.</p>
-
-<div class="moai-box">
-  <h4>DO: Code Quality</h4>
-  <ol>
-    <li><strong>Run test suite</strong> — <code>npm test</code> — all tests must pass</li>
-    <li><strong>Run type check</strong> — <code>npx tsc --noEmit</code> — no TypeScript errors</li>
-    <li><strong>Run linter</strong> — <code>npm run lint</code> — no linting errors</li>
-    <li><strong>Run build</strong> — <code>npm run build</code> — build succeeds without warnings</li>
-  </ol>
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Comprehensive QA process and deployment pipeline setup. Validate your application through systematic testing, deploy to staging, configure monitoring, and prepare rollback procedures.</p>
 </div>
 
-<div class="moai-box">
-  <h4>DO: Add Security Headers</h4>
-  <p>Add to <code>next.config.js</code>:</p>
-  <div class="code-block">// next.config.js
-const securityHeaders = [
-  { key: 'X-DNS-Prefetch-Control', value: 'on' },
-  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
-  { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
-];
-
-module.exports = {
-  async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }];
-  },
-};</div>
+<div class="when-to-use">
+  <strong>When to use:</strong> All milestones complete, ready for final testing before launch.
 </div>
 
-<h3>Security Verification (OWASP-Based)</h3>
+<p class="chapter-intro">In this chapter, you'll establish your QA workflow and deployment pipeline. By the end, you'll have a staging environment running, all tests passing, and monitoring in place.</p>
 
-<div class="warning">
-  <strong>Critical:</strong> Do not skip security verification. A single vulnerability can compromise all user data and destroy trust.
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> This is a GATE chapter. Do not proceed to Launch until all verification items pass.
 </div>
+
+<h2 id="section-42-1">42.1 Overview</h2>
+
+<p>QA & Deployment bridges development and launch. It ensures your application works correctly in a production-like environment before real users see it.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> <span class="gate-badge">GATE</span> M11 Pre-Launch Testing complete. All checkpoints (A, B, C) passed.</p>
+  <p><strong>Tool:</strong> Claude Code CLI, Vercel Dashboard, Supabase Dashboard</p>
+  <p><strong>Deliverables:</strong> Staging environment deployed, all tests passing, monitoring configured, rollback plan documented</p>
+</div>
+
+<h2 id="section-42-2">42.2 QA Strategy</h2>
+
+<p>Systematic QA catches issues before users do. Work through each testing category methodically.</p>
+
+<h3>Manual Testing Checklist</h3>
 
 <div class="checklist">
-  <h4>VERIFY: Authentication & Session</h4>
+  <h4>VERIFY: Core User Flows</h4>
   <ul>
-    <li>Password policy enforced (Supabase Dashboard → Authentication → Policies)</li>
-    <li>Session cookies are HttpOnly, Secure, and SameSite (check browser DevTools)</li>
-    <li>Session expiry works correctly</li>
+    <li><strong>Sign up</strong> — Create account with new email, verify email confirmation works</li>
+    <li><strong>Log in</strong> — Sign in with credentials, confirm redirect to dashboard</li>
+    <li><strong>Core feature</strong> — Complete the main user journey end-to-end</li>
+    <li><strong>Settings</strong> — Update profile, change password, manage preferences</li>
+    <li><strong>Logout</strong> — Session cleared, redirect to home or login</li>
   </ul>
 </div>
 
-<div class="moai-box">
-  <h4>DO: Test RLS Policies</h4>
-  <p>Run in Supabase SQL Editor:</p>
-  <div class="code-block">-- Test as anonymous user (should fail or return empty)
-SET LOCAL ROLE anon;
-SELECT * FROM profiles;
-
--- Test as authenticated user (should only return own data)
-SET LOCAL ROLE authenticated;
-SELECT * FROM profiles;</div>
-</div>
-
 <div class="checklist">
-  <h4>VERIFY: Input Validation</h4>
+  <h4>VERIFY: Edge Cases</h4>
   <ul>
-    <li>SQL injection blocked — try <code>' OR '1'='1</code> in form fields</li>
-    <li>XSS blocked — try <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> in text fields</li>
-    <li>Scripts do NOT execute when malicious input is entered</li>
+    <li><strong>Error states</strong> — Wrong password, invalid input, network offline</li>
+    <li><strong>Empty states</strong> — New user with no data</li>
+    <li><strong>Loading states</strong> — Slow network simulation (DevTools Network throttling)</li>
+    <li><strong>Mobile</strong> — Test on actual device or Chrome DevTools mobile view</li>
+    <li><strong>Cross-browser</strong> — Chrome, Firefox, Safari (at minimum)</li>
   </ul>
 </div>
 
-<h3>Performance Verification</h3>
+<h3>Automated Test Verification</h3>
 
 <div class="moai-box">
-  <h4>DO: Run Performance Audit</h4>
-  <div class="code-block"># Run Lighthouse audit
-npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html
+  <h4>DO: Run Full Test Suite</h4>
+  <div class="code-block"># Run all tests
+npm test
 
-# Check bundle size
+# Run with coverage
+npm test -- --coverage
+
+# Run E2E tests
+npm run test:e2e
+
+# Verify TypeScript
+npx tsc --noEmit
+
+# Verify lint
+npm run lint
+
+# Verify build
 npm run build</div>
 </div>
 
 <div class="checklist">
-  <h4>VERIFY: Performance Targets</h4>
+  <h4>VERIFY: Test Metrics</h4>
   <ul>
-    <li>Lighthouse score >= 90</li>
-    <li>Largest Contentful Paint < 2.5s</li>
-    <li>First Input Delay < 100ms</li>
-    <li>Cumulative Layout Shift < 0.1</li>
+    <li>All unit tests pass</li>
+    <li>All integration tests pass</li>
+    <li>All E2E tests pass</li>
+    <li>Coverage >= 80% for business logic</li>
+    <li>No TypeScript errors</li>
+    <li>No lint warnings</li>
+    <li>Build completes without errors</li>
   </ul>
 </div>
 
-<h3>User Flow Testing</h3>
+<h2 id="section-42-3">42.3 Staging Environment</h2>
+
+<p>A staging environment mirrors production. It catches environment-specific issues before they reach users.</p>
+
+<h3>Staging Setup</h3>
 
 <div class="moai-box">
-  <h4>DO: Test Critical Flows</h4>
+  <h4>DO: Configure Staging Environment</h4>
   <ol>
-    <li><strong>Sign up</strong> — Create account with new email, verify email flow works</li>
-    <li><strong>Log in</strong> — Sign in with credentials, confirm redirect to dashboard</li>
-    <li><strong>Core feature</strong> — Complete main user flow, verify data persists</li>
-    <li><strong>Mobile</strong> — Test on mobile device or Chrome DevTools mobile view</li>
-    <li><strong>Error states</strong> — Test wrong password, network offline, invalid input</li>
+    <li><strong>Create staging branch</strong> — <code>git checkout -b staging</code></li>
+    <li><strong>Configure Vercel</strong> — Set up staging subdomain (e.g., staging.yourapp.com)</li>
+    <li><strong>Supabase staging project</strong> — Create separate project for staging data</li>
+    <li><strong>Set environment variables</strong> — Configure staging-specific keys in Vercel</li>
+    <li><strong>Deploy to staging</strong> — Push staging branch, verify deployment</li>
   </ol>
 </div>
 
-<h2 id="section-42-4">42.4 Launch Day Actions</h2>
-
-<p>Launch day has its own checklist separate from pre-launch verification. Complete these items before going live.</p>
+<h3>Data Seeding</h3>
 
 <div class="moai-box">
-  <h4>DO: Infrastructure Setup</h4>
-  <ol>
-    <li><strong>Configure DNS</strong> — Point your domain to Vercel (add CNAME or A records)</li>
-    <li><strong>Verify SSL</strong> — Check certificate is active in browser (padlock icon)</li>
-    <li><strong>Set production env vars</strong> — In Vercel dashboard, add all production keys</li>
-    <li><strong>Configure Stripe webhooks</strong> — Update webhook URL to production domain</li>
-    <li><strong>Enable monitoring</strong> — Set up error tracking (Sentry) and analytics</li>
-  </ol>
+  <h4>DO: Seed Staging Data</h4>
+  <div class="code-block"># Create seed script (src/lib/seed.ts or scripts/seed.ts)
+# Include realistic test data:
+# - Test users with various roles
+# - Sample content/items
+# - Edge case data (long strings, special characters)
+
+# Run seed
+npm run seed:staging</div>
 </div>
+
+<h3>Smoke Tests</h3>
 
 <div class="checklist">
-  <h4>VERIFY: Launch Readiness</h4>
+  <h4>VERIFY: Staging Works</h4>
   <ul>
-    <li>DNS propagated (test with <code>dig yourdomain.com</code>)</li>
-    <li>SSL certificate shows valid in browser</li>
-    <li>All environment variables set (check Vercel logs for missing vars)</li>
-    <li>Stripe test payment works on production</li>
-    <li>Team members can access monitoring dashboards</li>
-    <li>Support email/chat channels are active</li>
+    <li>Staging URL accessible (https://staging.yourapp.com)</li>
+    <li>Login works with seeded test user</li>
+    <li>Database connection working (data loads)</li>
+    <li>API routes respond correctly</li>
+    <li>Static assets load (images, fonts, CSS)</li>
+    <li>Environment variables correctly set (no "undefined" errors)</li>
   </ul>
 </div>
 
-<div class="warning">
-  <strong>DNS Propagation:</strong> DNS changes can take up to 48 hours to propagate globally. Plan your launch accordingly and test from multiple networks.
+<h2 id="section-42-4">42.4 Deployment Pipeline</h2>
+
+<p>A reliable deployment pipeline reduces launch risk. Configure CI/CD to catch issues automatically.</p>
+
+<h3>Vercel Configuration</h3>
+
+<div class="moai-box">
+  <h4>DO: Configure Vercel Project</h4>
+  <ol>
+    <li><strong>Connect repository</strong> — Link GitHub repo to Vercel project</li>
+    <li><strong>Set build command</strong> — <code>npm run build</code></li>
+    <li><strong>Set output directory</strong> — <code>.next</code></li>
+    <li><strong>Configure environment variables</strong>:
+      <ul>
+        <li><code>NEXT_PUBLIC_SUPABASE_URL</code></li>
+        <li><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></li>
+        <li><code>SUPABASE_SERVICE_ROLE_KEY</code></li>
+        <li><code>STRIPE_SECRET_KEY</code> (if using payments)</li>
+        <li><code>STRIPE_WEBHOOK_SECRET</code></li>
+      </ul>
+    </li>
+    <li><strong>Set up preview deployments</strong> — Enable for PRs</li>
+  </ol>
 </div>
 
-<div class="note">
-  <strong>Post-Launch Monitoring:</strong> Monitor error rates and user behavior closely for the first 48 hours. Be prepared to roll back if critical issues emerge.
+<h3>CI/CD Pipeline</h3>
+
+<div class="moai-box">
+  <h4>DO: GitHub Actions Workflow</h4>
+  <p>Create <code>.github/workflows/ci.yml</code>:</p>
+  <div class="code-block">name: CI
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test</div>
 </div>
+
+<h2 id="section-42-5">42.5 Rollback Plan</h2>
+
+<p>Know how to revert before you deploy. A clear rollback plan reduces stress during incidents.</p>
+
+<div class="warning">
+  <strong>Critical:</strong> Document your rollback plan BEFORE going live. In an incident, you won't have time to figure it out.
+</div>
+
+<div class="moai-box">
+  <h4>DO: Document Rollback Procedures</h4>
+  <p>Create <code>docs/runbooks/rollback.md</code>:</p>
+  <div class="code-block"># Rollback Procedures
+
+## Code Rollback (Vercel)
+1. Go to Vercel Dashboard → Deployments
+2. Find last known good deployment
+3. Click "..." → "Promote to Production"
+4. Verify site works
+
+## Database Rollback (Supabase)
+1. Go to Supabase Dashboard → Database → Backups
+2. Select backup from before the issue
+3. Click "Restore" (creates new project)
+4. Update environment variables to point to restored DB
+
+## Stripe Rollback
+- Stripe transactions cannot be rolled back
+- For pricing changes: revert in Stripe Dashboard → Products
+- For webhook issues: check Stripe Dashboard → Webhooks → Logs
+
+## Emergency Contacts
+- Primary: [Your name] - [phone]
+- Backup: [Team member] - [phone]</div>
+</div>
+
+<h2 id="section-42-6">42.6 Monitoring Setup</h2>
+
+<p>Monitoring tells you about problems before users complain. Set up error tracking and uptime monitoring before launch.</p>
+
+<h3>Error Tracking (Sentry)</h3>
+
+<div class="moai-box">
+  <h4>DO: Configure Sentry</h4>
+  <div class="code-block"># Install Sentry
+npm install @sentry/nextjs
+
+# Run setup wizard
+npx @sentry/wizard@latest -i nextjs
+
+# Verify in sentry.client.config.ts and sentry.server.config.ts
+# Test error reporting:
+# throw new Error("Test Sentry integration");</div>
+</div>
+
+<h3>Uptime Monitoring</h3>
+
+<div class="moai-box">
+  <h4>DO: Set Up Uptime Monitoring</h4>
+  <p>Options (choose one):</p>
+  <ul>
+    <li><strong>Vercel Analytics</strong> — Built-in, enable in Vercel Dashboard</li>
+    <li><strong>BetterStack (formerly BetterUptime)</strong> — Free tier, SMS alerts</li>
+    <li><strong>UptimeRobot</strong> — Free tier, 5-minute checks</li>
+  </ul>
+  <p>Configure to check:</p>
+  <ul>
+    <li>Homepage (GET /)</li>
+    <li>API health endpoint (GET /api/health)</li>
+    <li>Login page (GET /login)</li>
+  </ul>
+</div>
+
+<h3>Alerting</h3>
+
+<div class="checklist">
+  <h4>VERIFY: Alerting Configured</h4>
+  <ul>
+    <li>Error alerts go to Slack/email/SMS</li>
+    <li>Uptime alerts configured</li>
+    <li>Alert thresholds set (e.g., error rate > 1%)</li>
+    <li>Test alert received (trigger test error)</li>
+  </ul>
+</div>
+
+<h2 id="section-42-7">42.7 Verification</h2>
 
 <div class="success">
   <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> A production-ready application with all infrastructure configured.</p>
-  <p><strong>What you should do:</strong> Execute every DO item, then verify every VERIFY item before announcing to users.</p>
-  <p><strong>Next:</strong> Chapter 43 — Learn the project file structure for AI-assisted development.</p>
+  <p><strong>What you should have:</strong></p>
+  <ul>
+    <li>All automated tests passing (unit, integration, E2E)</li>
+    <li>Staging environment deployed and accessible</li>
+    <li>Manual QA complete on staging</li>
+    <li>CI/CD pipeline running on push</li>
+    <li>Rollback procedures documented</li>
+    <li>Error tracking (Sentry) configured</li>
+    <li>Uptime monitoring active</li>
+  </ul>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li><code>npm test</code> — All tests green</li>
+    <li>Staging URL accessible in browser</li>
+    <li>Trigger test error, verify appears in Sentry</li>
+    <li>Check uptime monitor shows "Up"</li>
+  </ul>
 </div>
 
-<h2 id="section-42-5">42.5 Chapter Summary</h2>
+<div class="note">
+  <strong>GATE Check:</strong> Do not proceed to Chapter 43 (Launch Checklist) until all verification items pass. This is your last quality gate before real users see your product.
+</div>
 
-<p>You've learned the QA and Launch workflow. Key takeaways:</p>
+<h2 id="section-42-8">42.8 Chapter Summary</h2>
+
+<p>You've established QA and deployment infrastructure. Key takeaways:</p>
 
 <ul>
-  <li>Launch is a quality gate, not just a deployment</li>
-  <li>Pre-launch checklist covers code, security, performance, and UX</li>
-  <li>Launch day checklist covers infrastructure and team readiness</li>
-  <li>Monitor closely for 48 hours post-launch</li>
-  <li>Be prepared to roll back if critical issues emerge</li>
+  <li>Systematic QA catches issues before users do</li>
+  <li>Staging mirrors production for realistic testing</li>
+  <li>CI/CD automates quality checks on every push</li>
+  <li>Rollback procedures reduce incident stress</li>
+  <li>Monitoring provides visibility into production health</li>
 </ul>
+
+<p><strong>Next:</strong> Chapter 43 — Final Launch Checklist before going live.</p>
 
     </article>
 

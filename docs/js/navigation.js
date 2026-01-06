@@ -118,7 +118,7 @@
         "basePath": "handbook/phase5",
         "chapters": [
           { "id": "ch42", "title": "42. QA & Deployment", "href": "chapter-42-qa-deployment.html" },
-          { "id": "ch43", "title": "43. File Structure", "href": "chapter-43-file-structure.html" }
+          { "id": "ch43", "title": "43. Launch Checklist", "href": "chapter-43-launch-checklist.html" }
         ]
       }
     },
@@ -165,7 +165,7 @@
       "handbook/phase4/chapter-40-checkpoint-c.html",
       "handbook/phase4/chapter-41-m11-testing.html",
       "handbook/phase5/chapter-42-qa-deployment.html",
-      "handbook/phase5/chapter-43-file-structure.html",
+      "handbook/phase5/chapter-43-launch-checklist.html",
       "handbook/phase4/appendix-a-spec-template.html",
       "handbook/phase4/appendix-b-quality-gates.html"
     ],
