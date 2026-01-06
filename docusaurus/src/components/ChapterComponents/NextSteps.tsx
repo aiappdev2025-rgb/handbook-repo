@@ -13,29 +13,57 @@ interface RelatedLink {
 
 interface NextStepsProps {
   next?: NextChapter;
+  previous?: NextChapter;
   related?: RelatedLink[];
 }
 
-export default function NextSteps({ next, related = [] }: NextStepsProps): JSX.Element {
+export default function NextSteps({
+  next,
+  previous,
+  related = []
+}: NextStepsProps): JSX.Element {
   return (
     <div className="next-steps">
       <div className="next-steps-header">NEXT STEPS</div>
-      {next && (
-        <a href={next.path} className="next-steps-main">
-          <span>Chapter {next.chapter}: {next.title}</span>
-          <span>→</span>
-        </a>
-      )}
-      {related.length > 0 && (
-        <div className="next-steps-related">
-          <div className="next-steps-related-title">Related:</div>
-          {related.map((item, i) => (
-            <a key={i} href={item.path} style={{ display: 'block', color: 'var(--accent-blue)', marginBottom: '0.25rem' }}>
-              {item.title}
-            </a>
-          ))}
-        </div>
-      )}
+      <div className="next-steps-content">
+        {next && (
+          <a href={next.path} className="next-steps-main">
+            <div className="next-steps-main-info">
+              <span className="next-steps-main-label">Next Chapter &rarr;</span>
+              <span className="next-steps-main-title">
+                Chapter {next.chapter}: {next.title}
+              </span>
+            </div>
+            <span>&rarr;</span>
+          </a>
+        )}
+
+        {previous && (
+          <a
+            href={previous.path}
+            className="next-steps-main"
+            style={{ opacity: 0.7 }}
+          >
+            <div className="next-steps-main-info">
+              <span className="next-steps-main-label">&larr; Previous Chapter</span>
+              <span className="next-steps-main-title">
+                Chapter {previous.chapter}: {previous.title}
+              </span>
+            </div>
+          </a>
+        )}
+
+        {related.length > 0 && (
+          <div className="next-steps-related">
+            <div className="next-steps-related-title">Related</div>
+            {related.map((item, i) => (
+              <a key={i} href={item.path}>
+                {item.title}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

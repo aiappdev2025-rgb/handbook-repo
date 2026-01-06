@@ -16,15 +16,23 @@ export default function WhenToUse({
       <div className="when-header">WHEN TO USE</div>
       <div className="when-grid">
         <div className="when-column">
-          <div className="when-title" style={{ color: '#22c55e' }}>USE WHEN</div>
+          <div className="when-title" style={{ color: 'var(--accent-green)' }}>
+            USE WHEN
+          </div>
           <ul className="when-list">
-            {useWhen.map((item, i) => <li key={i}>{item}</li>)}
+            {useWhen.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
           </ul>
         </div>
         <div className="when-column">
-          <div className="when-title" style={{ color: '#f59e0b' }}>NOT YET IF</div>
+          <div className="when-title" style={{ color: 'var(--accent-amber)' }}>
+            NOT YET IF
+          </div>
           <ul className="when-list">
-            {notYetIf.map((item, i) => <li key={i}>{item}</li>)}
+            {notYetIf.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
           </ul>
         </div>
       </div>

@@ -1,0 +1,211 @@
+/* ============================================
+   CHAPTER COMPONENTS - MODULE STYLES
+   Additional styles for component-specific needs
+   ============================================ */
+
+/*
+ * Note: Most component styles are in src/css/custom.css
+ * using global classes for consistency with the Geometric Grid theme.
+ *
+ * This module is available for component-specific overrides
+ * or scoped styles that need CSS Modules isolation.
+ */
+
+/* Reading time badge */
+.readingTime {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  font-family: var(--ifm-font-family-monospace);
+  margin-bottom: 2rem;
+}
+
+.readingTime::before {
+  content: '⏱️';
+}
+
+/* Phase indicator badge */
+.phaseBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+
+.phaseBadge--validate {
+  color: var(--phase-1);
+  border-color: var(--phase-1);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.phaseBadge--design {
+  color: var(--phase-2);
+  border-color: var(--phase-2);
+  background: rgba(236, 72, 153, 0.1);
+}
+
+.phaseBadge--architect {
+  color: var(--phase-3);
+  border-color: var(--phase-3);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.phaseBadge--build {
+  color: var(--phase-4);
+  border-color: var(--phase-4);
+  background: rgba(168, 85, 247, 0.1);
+}
+
+.phaseBadge--launch {
+  color: var(--phase-5);
+  border-color: var(--phase-5);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+/* Gate indicator */
+.gateBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--accent-amber);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid var(--accent-amber);
+}
+
+/* Checkpoint marker */
+.checkpoint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--gray-900);
+  border: 2px solid var(--accent-amber);
+  margin: 2rem 0;
+}
+
+.checkpointIcon {
+  font-size: 1.5rem;
+}
+
+.checkpointText {
+  font-weight: 600;
+  color: var(--accent-amber);
+}
+
+/* Collapsible section */
+.collapsible {
+  border: 1px solid var(--gray-700);
+  margin: 1rem 0;
+}
+
+.collapsibleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--gray-800);
+  cursor: pointer;
+  user-select: none;
+}
+
+.collapsibleHeader:hover {
+  background: var(--gray-700);
+}
+
+.collapsibleTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.collapsibleIcon {
+  transition: transform 0.2s;
+}
+
+.collapsibleIconOpen {
+  transform: rotate(180deg);
+}
+
+.collapsibleContent {
+  padding: 1rem;
+  border-top: 1px solid var(--gray-700);
+}
+
+/* Progress steps */
+.progressSteps {
+  display: flex;
+  gap: 0;
+  margin: 1.5rem 0;
+}
+
+.progressStep {
+  flex: 1;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  border-right: none;
+}
+
+.progressStep:last-child {
+  border-right: 1px solid var(--gray-700);
+}
+
+.progressStepActive {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+}
+
+.progressStepComplete {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  color: white;
+}
+
+/* Action item */
+.actionItem {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--gray-900);
+  border: 1px solid var(--gray-700);
+  margin: 0.5rem 0;
+}
+
+.actionItemNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: var(--accent-blue);
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.actionItemContent {
+  flex: 1;
+}
+
+.actionItemTitle {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.actionItemDescription {
+  font-size: 0.875rem;
+  color: var(--gray-400);
+}

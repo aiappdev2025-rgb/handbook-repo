@@ -1,6 +1,236 @@
 ---
 sidebar_position: 7
 title: "Design Brief"
+description: "Create a comprehensive design brief that defines your product scope, features, and acceptance criteria"
 ---
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  TemplateDownload,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
 # Design Brief
-*Content to be migrated*
+
+<span className="reading-time">25 min read</span>
+
+<TldrBox
+  what="Create a structured document defining features, user stories, and acceptance criteria."
+  why="The Design Brief is the contract between planning and design—ensures alignment before UX/UI investment."
+  outcome="A complete design-brief.md artifact ready to drive UX Package creation."
+/>
+
+<WhenToUse
+  useWhen={[
+    "You've validated your business idea (Chapters 1-6)",
+    "You have a clear MVP scope defined",
+    "You're ready to move from 'what problem' to 'what solution'"
+  ]}
+  notYetIf={[
+    "You haven't completed the Business One-Pager",
+    "Your MVP scope is still unclear",
+    "You're still validating market opportunity"
+  ]}
+  skipIf="You already have a detailed PRD from another source that covers all the items in this chapter"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Business One-Pager complete", link: "/phase-1-validate/business-one-pager" },
+    { text: "MVP Scoping complete", link: "/phase-1-validate/mvp-scoping" },
+    { text: "Competitive Analysis complete", link: "/phase-1-validate/competitive-analysis" }
+  ]}
+/>
+
+## What is a Design Brief?
+
+A Design Brief bridges business strategy and product design. It captures the **"what"** without prescribing the **"how"**. Think of it as the handoff document from business planning to UX/UI design.
+
+The Design Brief answers:
+- What features are we building?
+- Who are we building them for?
+- How will we know when each feature is complete?
+
+:::info Design Brief vs PRD vs SPEC
+**Design Brief** (this chapter): High-level features and user stories. Written in Claude Chat or manually.
+
+**PRD (Product Requirements Document)**: More detailed, often includes wireframes. We fold this into the UX Package in Phase 2.
+
+**SPEC Document**: Implementation-level detail for Claude Code. Created per-feature in Phase 4.
+:::
+
+## Design Brief Structure
+
+Your Design Brief should include these sections:
+
+### 1. Product Overview
+
+A single paragraph summarizing what you're building and why. This should be derived from your Business One-Pager.
+
+```markdown
+## Product Overview
+
+[Product Name] is a [category] that helps [target user] to [core value proposition].
+Unlike [competitor/alternative], our product [key differentiator].
+```
+
+### 2. Target User Personas
+
+Brief descriptions of your primary user types. Keep this to 2-3 personas maximum for MVP.
+
+| Persona | Description | Primary Need |
+|---------|-------------|--------------|
+| Persona 1 | Brief description | What they need most |
+| Persona 2 | Brief description | What they need most |
+
+### 3. Core Features (MVP)
+
+List 3-5 features for your MVP. Each feature should include:
+- **Feature Name**: Clear, concise identifier
+- **Description**: What the feature does (1-2 sentences)
+- **User Stories**: 2-4 stories in "As a [user], I want [goal] so that [benefit]" format
+- **Acceptance Criteria**: Testable conditions for "done"
+
+<TemplateDownload
+  name="DESIGN-BRIEF-TEMPLATE.MD"
+  file="design-brief-template.md"
+  description="Complete template with all sections and examples"
+/>
+
+### 4. Out of Scope
+
+Explicitly list features you are **not** building in the MVP. This prevents scope creep and sets stakeholder expectations.
+
+### 5. Success Metrics
+
+How will you measure if the MVP is successful? Include 2-3 measurable metrics.
+
+## Action Steps
+
+Follow these steps to complete your Design Brief:
+
+### Step 1: Copy the Template
+
+```bash
+cp templates/design-brief-template.md docs/design-brief.md
+```
+
+### Step 2: Fill in Product Overview
+
+Use your Business One-Pager as the source. Keep it to one paragraph.
+
+### Step 3: Define User Personas
+
+Review your Market Research and Opportunity Assessment. Extract the 2-3 most important user types.
+
+### Step 4: Document Core Features
+
+This is the most important section. For each feature:
+
+1. Write a clear feature name and description
+2. Create 2-4 user stories
+3. Define testable acceptance criteria
+
+:::warning MVP Discipline
+If you have more than 5 core features, you're probably not focused enough. Go back to MVP Scoping and cut ruthlessly.
+:::
+
+### Step 5: List Out of Scope Items
+
+Review your MVP Scoping "deferred features" list and add them here.
+
+### Step 6: Set Success Metrics
+
+Define 2-3 measurable outcomes that indicate MVP success.
+
+## Example: Design Brief Excerpt
+
+Here's a partial example for a task management app:
+
+```markdown
+## Core Feature: Task Creation
+
+**Description:** Users can create tasks with a title, description, due date, and priority level.
+
+### User Stories
+
+1. As a user, I want to quickly create a task with just a title so that I can capture ideas without friction.
+
+2. As a user, I want to set a due date on my task so that I can track deadlines.
+
+3. As a user, I want to assign a priority (High/Medium/Low) so that I can focus on what matters most.
+
+### Acceptance Criteria
+
+- [ ] User can create a task with title only (minimum required field)
+- [ ] Title has 200 character maximum with validation
+- [ ] Due date picker shows calendar UI
+- [ ] Due date cannot be in the past
+- [ ] Priority defaults to "Medium" if not specified
+- [ ] Task appears in list immediately after creation
+- [ ] Success toast confirms task creation
+```
+
+## Common Mistakes to Avoid
+
+1. **Too many features**: Stick to 3-5 for MVP
+2. **Vague user stories**: Every story should have a clear "so that" benefit
+3. **Untestable acceptance criteria**: If you can't test it, rewrite it
+4. **Missing "Out of Scope"**: This prevents scope creep later
+5. **No success metrics**: You need to know what "done" looks like
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`docs/design-brief.md` (2-4 pages)" },
+    { type: "State", description: "MVP scope locked and documented" },
+    { type: "Capability", description: "Ready to begin UX Package in Phase 2" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Design Brief contains exactly 3-5 core MVP features",
+    "Each feature has 2-4 user stories in proper format",
+    "Each user story has testable acceptance criteria",
+    "Out of Scope section explicitly lists deferred features",
+    "Success metrics are measurable (numbers, not feelings)",
+    "Document is committed to your repository"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 8,
+    title: "Design Philosophy",
+    path: "/phase-2-design/design-philosophy"
+  }}
+  previous={{
+    chapter: 6,
+    title: "MVP Scoping",
+    path: "/phase-1-validate/mvp-scoping"
+  }}
+  related={[
+    { title: "UX Package", path: "/phase-2-design/ux-package" },
+    { title: "SPEC Template", path: "/templates/spec-template" }
+  ]}
+/>
+
+<ChapterNav
+  current={7}
+  total={43}
+  previous={{
+    chapter: 6,
+    title: "MVP Scoping",
+    path: "/phase-1-validate/mvp-scoping"
+  }}
+  next={{
+    chapter: 8,
+    title: "Design Philosophy",
+    path: "/phase-2-design/design-philosophy"
+  }}
+/>

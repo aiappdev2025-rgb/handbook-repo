@@ -12,32 +12,20 @@ export default function TemplateDownload({
   description
 }: TemplateDownloadProps): JSX.Element {
   return (
-    <div style={{
-      background: 'var(--gray-900)',
-      border: '1px solid var(--gray-700)',
-      padding: '1rem',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '1rem'
-    }}>
-      <div>
-        <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>{name}</div>
-        {description && (
-          <div style={{ fontSize: '0.875rem', color: 'var(--gray-400)' }}>{description}</div>
-        )}
+    <div className="template-download">
+      <div className="template-download__info">
+        <span className="template-download__icon">📋</span>
+        <div className="template-download__text">
+          <span className="template-download__name">{name}</span>
+          {description && (
+            <span className="template-download__desc">{description}</span>
+          )}
+        </div>
       </div>
       <a
         href={`/templates/${file}`}
         download
-        style={{
-          background: 'var(--accent-blue)',
-          color: 'white',
-          padding: '0.5rem 1rem',
-          textDecoration: 'none',
-          fontSize: '0.875rem',
-          fontWeight: 600
-        }}
+        className="template-download__button"
       >
         Download
       </a>

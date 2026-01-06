@@ -15,7 +15,9 @@ export default function Prerequisites({
   gate = false
 }: PrerequisitesProps): JSX.Element {
   const [checked, setChecked] = useState<Record<number, boolean>>({});
-  const storageKey = `prereq-${typeof window !== 'undefined' ? window.location.pathname : ''}`;
+  const storageKey = typeof window !== 'undefined'
+    ? `prereq-${window.location.pathname}`
+    : 'prereq-ssr';
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -23,7 +25,7 @@ export default function Prerequisites({
       if (saved) {
         try {
           setChecked(JSON.parse(saved));
-        } catch (e) {
+        } catch {
           // Invalid JSON, ignore
         }
       }
@@ -44,7 +46,8 @@ export default function Prerequisites({
     <div className={`prerequisites ${gate ? 'prerequisites-gate' : ''}`}>
       <div className="prereq-header">
         <span className="prereq-title">
-          {gate ? 'GATE: Complete all items' : 'PREREQUISITES'}
+          {gate && <span>GATE:</span>}
+          {gate ? ' Complete all items' : 'PREREQUISITES'}
         </span>
         <span className="prereq-count">[{completedCount}/{items.length}]</span>
       </div>
@@ -57,11 +60,13 @@ export default function Prerequisites({
                 checked={checked[i] || false}
                 onChange={() => toggle(i)}
               />
-              <span style={{ textDecoration: checked[i] ? 'line-through' : 'none' }}>
-                {item.text}
-              </span>
+              <span>{item.text}</span>
             </label>
-            {item.link && <a href={item.link} className="prereq-link">→</a>}
+            {item.link && (
+              <a href={item.link} className="prereq-link">
+                &rarr; Link
+              </a>
+            )}
           </div>
         ))}
       </div>
