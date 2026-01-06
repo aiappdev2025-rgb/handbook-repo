@@ -1,5 +1,352 @@
 ---
+sidebar_position: 4
 title: "Troubleshooting"
+description: "Quick fixes for common Claude Code and MOAI workflow issues"
 ---
+
+import {
+  TldrBox,
+  WhenToUse
+} from '@site/src/components/ChapterComponents';
+
 # Troubleshooting
-*Content to be migrated*
+
+<span className="reading-time">10 min read</span>
+
+<TldrBox
+  what="Quick fixes for common issues when using Claude Code and the MOAI workflow methodology."
+  why="Problems happen. Having a troubleshooting guide saves time - most issues have known solutions."
+  outcome="Fast resolution of common issues without losing momentum on your project."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Something isn't working as expected",
+    "Claude Code isn't following instructions",
+    "Build or test failures you can't diagnose",
+    "Context management problems"
+  ]}
+  notYetIf={[
+    "Everything is working fine",
+    "You haven't started using Claude Code yet"
+  ]}
+  skipIf="You're looking for feature documentation (see Workflow Guide instead)"
+/>
+
+## Claude Code Issues
+
+### Claude Not Following Instructions
+
+**Symptoms**: Claude ignores CLAUDE.md rules, suggests patterns you've forbidden, or doesn't remember project conventions.
+
+| Possible Cause | Solution |
+|----------------|----------|
+| CLAUDE.md not being read | Check file is in project root, not in a subdirectory |
+| Context overloaded | Run `/status` - if over 100K tokens, run `/clear` and restart |
+| Instructions too vague | Make rules specific and actionable, not general guidelines |
+| Rules buried in text | Move critical rules to top of CLAUDE.md, use bold formatting |
+
+**Recovery Steps**:
+1. Run `/clear` to reset context
+2. Ask Claude to read your CLAUDE.md explicitly: "Read CLAUDE.md and confirm you understand the rules"
+3. If persistent, check CLAUDE.md for conflicting or unclear instructions
+
+### Claude "Forgets" Previous Work
+
+**Symptoms**: Claude asks about things you already discussed, suggests changes to completed work, or doesn't know about recent code.
+
+| Possible Cause | Solution |
+|----------------|----------|
+| Context was auto-compacted | Check `/status`, clear and reload from files |
+| Outdated context | Clear context, ask Claude to re-read relevant files |
+| Files not read into context | Explicitly ask Claude to read the specific files |
+
+**Prevention**:
+- Keep critical state in files (STATE.md, TASKS.md)
+- Clear context proactively before auto-compaction
+- Commit frequently so work is saved
+
+### Context Fills Up Too Fast
+
+**Symptoms**: Hitting 100K+ tokens quickly, large jumps in token count, slow responses.
+
+| Possible Cause | Solution |
+|----------------|----------|
+| Reading too many files | Only read files relevant to current task |
+| Verbose command output | Pipe output through `head` or `tail` |
+| Large error messages | Ask Claude to summarize errors instead of showing full traces |
+| Long conversations | Clear after each task completion |
+
+**Token-Saving Tips**:
+```
+# Instead of reading all files
+"Read src/components/Button.tsx"
+
+# Instead of full command output
+"Run npm test -- --silent"
+
+# Instead of full error traces
+"Summarize the error from npm run build"
+```
+
+### Stuck in Reasoning Loop
+
+**Symptoms**: Claude keeps suggesting the same approach, goes in circles, can't make progress.
+
+**Solution**:
+1. Stop immediately
+2. Update docs/MEMORY.md with what was tried
+3. Run `/clear`
+4. Start fresh with explicit context: "Previous approach X didn't work because Y. Let's try Z instead."
+
+## Build and Test Errors
+
+### TypeScript Errors
+
+**Symptoms**: `npm run build` or `npm run type-check` fails with TypeScript errors.
+
+| Error Type | Common Fix |
+|------------|------------|
+| "Property does not exist" | Check for typos, verify type definitions are imported |
+| "Type X is not assignable to Y" | Check return types, validate schema matches |
+| "Cannot find module" | Run `npm install`, check import paths |
+| "Implicit any" | Add explicit type annotations |
+
+**Quick Diagnostic**:
+```bash
+# See all TypeScript errors
+npm run type-check
+
+# Fix most common issues
+npm install                    # Missing dependencies
+npx prisma generate           # Regenerate Prisma types
+npm run db:types              # Regenerate Supabase types
+```
+
+### Build Failures
+
+**Symptoms**: `npm run build` fails after code changes.
+
+| Error Pattern | Solution |
+|---------------|----------|
+| Module not found | Check import paths, run `npm install` |
+| Syntax error | Check for missing brackets, semicolons, quotes |
+| Server component error | Move client hooks to 'use client' components |
+| Environment variables | Check `.env.local` has required variables |
+
+**Quick Recovery**:
+```bash
+# Clear caches and rebuild
+rm -rf .next node_modules/.cache
+npm run build
+```
+
+### Test Failures
+
+**Symptoms**: `npm run test` fails on tests that were passing.
+
+| Failure Type | Solution |
+|--------------|----------|
+| Snapshot mismatch | Review changes, update snapshots if intentional: `npm test -- -u` |
+| Timeout | Increase timeout or check for async issues |
+| Mock failure | Update mocks to match new implementation |
+| Database error | Check test database is running, reset if needed |
+
+**Debug Steps**:
+```bash
+# Run single test file
+npm test -- src/lib/auth.test.ts
+
+# Run with verbose output
+npm test -- --verbose
+
+# Run in watch mode for quick iteration
+npm test -- --watch
+```
+
+## Component Issues
+
+### Component Not Rendering
+
+**Symptoms**: Component shows blank, doesn't appear on page, no errors in console.
+
+| Possible Cause | Solution |
+|----------------|----------|
+| Missing import | Check component is imported in parent |
+| Export issue | Verify component has `export` or `export default` |
+| Conditional render | Check if render condition is met |
+| CSS hiding | Inspect element, check for `display: none` or `visibility: hidden` |
+
+**Debug Checklist**:
+1. Check browser console for errors
+2. Add `console.log` at component top to verify it runs
+3. Verify props are being passed correctly
+4. Check for early returns that might skip render
+
+### MDX Syntax Issues
+
+**Symptoms**: MDX page crashes, shows raw code, or has formatting problems.
+
+| Issue | Fix |
+|-------|-----|
+| JSX in markdown | Ensure JSX is properly closed, no extra whitespace |
+| Import errors | Check import path is correct, component exists |
+| Curly braces in text | Escape with backticks or use `{'{'}`|
+| Missing closing tags | All JSX tags must be closed: `<Component />` |
+
+**MDX Quick Fixes**:
+```mdx
+// Wrong - unclosed tag
+<TldrBox what="test">
+
+// Correct - self-closing or with closing tag
+<TldrBox what="test" />
+<TldrBox what="test"></TldrBox>
+
+// Wrong - raw curly brace
+Use {props} for data
+
+// Correct - escaped
+Use `{props}` for data
+```
+
+## Git Issues
+
+### Merge Conflicts
+
+**Symptoms**: Git refuses to merge or pull, shows conflict markers in files.
+
+**Resolution Steps**:
+1. Identify conflicting files: `git status`
+2. Open each file, look for `<<<<<<<`, `=======`, `>>>>>>>`
+3. Edit to keep desired code, remove markers
+4. Stage resolved files: `git add <file>`
+5. Complete merge: `git commit`
+
+**Prevent Future Conflicts**:
+- Pull before starting work: `git pull origin main`
+- Commit frequently in small chunks
+- Communicate with team about file ownership
+
+### Accidental Commits
+
+**Symptoms**: Committed wrong files, sensitive data, or incomplete work.
+
+| Situation | Solution |
+|-----------|----------|
+| Haven't pushed yet | `git reset --soft HEAD~1` to undo commit, keep changes |
+| Already pushed | `git revert HEAD` to create reverting commit |
+| Sensitive data pushed | Change credentials immediately, use `git filter-branch` to remove |
+
+**Safe Undo Pattern**:
+```bash
+# Undo last commit, keep changes staged
+git reset --soft HEAD~1
+
+# Undo last commit, keep changes unstaged
+git reset HEAD~1
+
+# Check what changed
+git status
+git diff
+```
+
+## MOAI Workflow Issues
+
+### SPEC Not Matching Implementation
+
+**Symptoms**: Implementation diverges from SPEC, requirements unclear, tests don't match behavior.
+
+**Resolution**:
+1. Stop implementation
+2. Review SPEC requirements against current code
+3. Update SPEC if requirements changed, or fix code if implementation wrong
+4. Update test cases to match corrected requirements
+5. Continue implementation
+
+### Quality Gate Failures
+
+**Symptoms**: Checkpoint audit fails, can't proceed to next milestone.
+
+| Failure Area | Quick Fix |
+|--------------|-----------|
+| Test coverage low | Add tests for uncovered paths |
+| Complexity too high | Extract functions, reduce nesting |
+| TypeScript errors | Fix type issues before proceeding |
+| Missing documentation | Update CLAUDE.md and README |
+
+**Quality Gate Recovery**:
+```bash
+# Check test coverage
+npm run test:coverage
+
+# Check for TypeScript errors
+npm run type-check
+
+# Check for lint errors
+npm run lint
+
+# Fix all before proceeding
+```
+
+### Lost Track of Progress
+
+**Symptoms**: Don't know what's done, what's next, or current state.
+
+**Recovery Steps**:
+1. Read `docs/STATE.md` for current status
+2. Read `docs/TASKS.md` for backlog
+3. Check recent git commits: `git log --oneline -20`
+4. Update STATE.md with current understanding
+5. Continue from verified state
+
+## Performance Issues
+
+### Slow Development Server
+
+**Symptoms**: `npm run dev` is slow, hot reload takes forever.
+
+| Cause | Solution |
+|-------|----------|
+| Too many files watched | Add directories to `.gitignore` and restart |
+| Memory issues | Increase Node memory: `NODE_OPTIONS=--max-old-space-size=4096` |
+| Outdated deps | Run `npm update` |
+| Cache corruption | Delete `.next` folder and restart |
+
+### Slow Build Times
+
+**Symptoms**: `npm run build` takes too long.
+
+**Optimizations**:
+```bash
+# Analyze bundle
+npm run build -- --analyze
+
+# Check for large dependencies
+npx depcheck
+
+# Clear cache
+rm -rf .next node_modules/.cache
+```
+
+## When Nothing Works
+
+If you've tried everything and still stuck:
+
+1. **Document the problem** in docs/MEMORY.md with what you tried
+2. **Commit current state**: `git commit -m "WIP: stuck on [issue]"`
+3. **Clear context completely**: `/clear`
+4. **Start fresh** with minimal context and explicit problem description
+5. **Try different approach** rather than same approach harder
+
+If still blocked after fresh start:
+- Search for the specific error message online
+- Check if it's a known issue in relevant library/framework
+- Consider if the approach is fundamentally wrong
+- Ask for help with full context of what was tried
+
+## Related Resources
+
+- [Workflow Guide](/reference/workflow-guide) - Context management best practices
+- [Quality Checklist](/templates/quality-checklist) - Gate requirements
+- [Tech Debt Audit](/templates/tech-debt) - Checkpoint audit templates

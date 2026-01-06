@@ -1,5 +1,324 @@
 ---
-title: "workflow guide"
+sidebar_position: 1
+title: "Workflow Guide"
+description: "Master context management and session patterns for effective Claude Code development"
 ---
-# workflow guide
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse
+} from '@site/src/components/ChapterComponents';
+
+# Workflow Guide
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Master context management for effective Claude Code sessions - manage the context window, structure sessions, and maintain continuity across multi-day projects."
+  why="Claude Code has a 200K token context limit. Without proper management, quality degrades as context fills. This guide teaches you to work with these limits."
+  outcome="Consistent productivity across long projects with clear session patterns and recovery strategies."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Context window fills up during work sessions",
+    "Sessions exceed 30 minutes of intensive work",
+    "Managing multi-session projects spanning days or weeks",
+    "Claude starts 'forgetting' earlier discussions"
+  ]}
+  notYetIf={[
+    "You're doing quick one-off tasks",
+    "You haven't started using Claude Code yet"
+  ]}
+  skipIf="You're already experienced with Claude Code context management"
+/>
+
+## The Context Window Mental Model
+
+Every interaction with Claude Code happens within a **context window** - a fixed-size memory space (200K tokens) that holds everything Claude can "see" at any moment.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    CONTEXT WINDOW (200K tokens max)                      │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌─────────────┐  ┌─────────────────┐  ┌─────────────────────────────┐  │
+│  │  SYSTEM     │  │  CONVERSATION   │  │    FILE CONTENTS            │  │
+│  │  PROMPT     │  │  HISTORY        │  │                             │  │
+│  │             │  │                 │  │  - Code you're editing      │  │
+│  │  - CLAUDE.md│  │  - Your messages│  │  - Files Claude reads       │  │
+│  │  - Tools    │  │  - Responses    │  │                             │  │
+│  │             │  │  - Tool results │  │                             │  │
+│  │  ~5-15K     │  │  GROWS OVER     │  │  Variable size              │  │
+│  │  (fixed)    │  │  TIME ⚠️        │  │  (loaded on demand)         │  │
+│  └─────────────┘  └─────────────────┘  └─────────────────────────────┘  │
+│                                                                          │
+│  When total exceeds limit → Auto-compaction → Details get lost           │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### The Problem: Context Grows, Quality Degrades
+
+As you work, conversation history grows with every exchange:
+
+| Time | Context Usage | Quality | Status |
+|------|---------------|---------|--------|
+| Session Start | 15K/200K | Excellent | Fresh, focused |
+| After 30 min | 45K/200K | Good | Still effective |
+| After 2 hours | 120K/200K | Declining | Getting noisy |
+| Danger Zone | 180K/200K | Poor | Auto-compact imminent |
+
+When context fills up, Claude Code automatically "compacts" the history—summarizing earlier parts. This is **lossy compression**: specific details, exact code snippets, and nuanced decisions get reduced to summaries.
+
+:::warning The Golden Rule
+Conversation context is volatile, but the filesystem is persistent. Keep critical information in files, not in conversation history.
+:::
+
+## Token Budget Guidelines
+
+Monitor your context usage with `/status` and take action based on the level:
+
+| Context Level | Token Range | Quality | Action |
+|---------------|-------------|---------|--------|
+| **Fresh** | 0-50K | Excellent | Work normally |
+| **Working** | 50-100K | Good | Consider clearing after current task |
+| **Heavy** | 100-150K | Declining | Finish task, then clear |
+| **Critical** | 150K+ | Poor | Clear immediately after commit |
+
+### What Consumes Tokens
+
+| Content Type | Approximate Cost | Notes |
+|--------------|------------------|-------|
+| Your messages | ~1 token per 4 characters | Prompts, questions, instructions |
+| Claude's responses | ~1 token per 4 characters | Explanations, code, analysis |
+| File reads | Full file size in tokens | Every time Claude reads a file |
+| Tool results | Full output included | Command output, search results |
+| Error messages | Full stack traces | Can be surprisingly large |
+
+## Filesystem as Persistent Memory
+
+Files persist across sessions while conversation context is cleared. Use this to your advantage:
+
+### What to Store in Files vs. Conversation
+
+| Store in Files | Keep in Conversation |
+|----------------|---------------------|
+| Project rules and conventions | Current task discussion |
+| Architectural decisions | Debugging back-and-forth |
+| Task backlog and status | Questions about current code |
+| Current project state | Iterative refinements |
+| Things that didn't work | Temporary experiments |
+
+### Recommended Documentation Structure
+
+```
+project-root/
+├── CLAUDE.md                    # Always read (keep lean!)
+├── docs/
+│   ├── STATE.md                 # Current project state (read each session)
+│   ├── TASKS.md                 # Task backlog with status
+│   ├── ARCHITECTURE.md          # Technical decisions
+│   ├── MEMORY.md                # Learnings, patterns, things that didn't work
+│   └── sessions/                # Session logs for continuity
+│       └── 2026-01-04-auth.md
+└── src/                         # Your application code
+```
+
+| File | Purpose | When to Read | Update Frequency |
+|------|---------|--------------|------------------|
+| CLAUDE.md | Project rules, commands, pointers | Automatic | Rarely |
+| STATE.md | Current sprint, active task, blockers | Start of each session | End of each session |
+| TASKS.md | Full backlog with completion status | When planning work | After completing tasks |
+| ARCHITECTURE.md | Data model, APIs, integrations | When working on related area | After architectural changes |
+| MEMORY.md | Patterns, decisions, failures | When stuck or making decisions | When learning something new |
+
+## The Session Rhythm
+
+Follow this five-step rhythm for consistent productivity:
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                         THE SESSION RHYTHM                            │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  1. START SESSION                                                     │
+│     - Claude reads CLAUDE.md automatically                           │
+│     - You: "Read docs/STATE.md and docs/TASKS.md"                    │
+│     - Claude now has full project context (~5-10K tokens)            │
+│                          ↓                                            │
+│  2. WORK ON ONE TASK                                                  │
+│     - Focus on single verifiable outcome                             │
+│     - Target: Complete in 20-50K tokens                              │
+│     - Check /status periodically                                     │
+│                          ↓                                            │
+│  3. VERIFY and COMMIT                                                 │
+│     - Test the outcome manually                                      │
+│     - git commit -m "feat: [description]"                            │
+│     - Update docs/TASKS.md (mark complete)                           │
+│                          ↓                                            │
+│  4. DECIDE: CONTINUE OR CLEAR                                         │
+│     - Context < 80K? → Continue to step 2                            │
+│     - Context > 80K? → Clear (step 5)                                │
+│     - Done for the day? → End session                                │
+│                          ↓                                            │
+│  5. CLEAR and CONTINUE                                                │
+│     - "Update docs/STATE.md with current status"                     │
+│     - git commit -m "checkpoint: [description]"                      │
+│     - /clear                                                         │
+│     - Return to step 1                                               │
+│                                                                       │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+### Session Prompts
+
+**Session Start (Standard):**
+```
+Read docs/STATE.md and docs/TASKS.md to restore project context.
+Then let me know:
+1. Where we left off
+2. What the next task is
+3. Any blockers or notes from last session
+```
+
+**Session End (Standard):**
+```
+I'm ending this session. Before I clear context:
+
+1. Update docs/STATE.md with:
+   - What we accomplished
+   - Current status
+   - What's next
+   - Any important notes for next session
+
+2. Update docs/TASKS.md:
+   - Mark completed tasks with [x]
+   - Mark in-progress tasks with [~]
+
+3. If we learned anything important, add it to docs/MEMORY.md
+```
+
+## When and How to Use /clear
+
+The `/clear` command resets your conversation context. Use this guide:
+
+| Situation | Action | Reason |
+|-----------|--------|--------|
+| Task completed successfully | **Clear** (Recommended) | Fresh context for next task |
+| Context exceeds 100K tokens | **Clear** (Required) | Prevent auto-compaction |
+| Stuck in a reasoning loop | **Clear** (Required) | Break out of bad patterns |
+| Switching to different codebase area | **Clear** (Recommended) | Remove irrelevant context |
+| After major refactoring | **Clear** (Required) | Old file states are now wrong |
+| End of work session | **Clear** (Required) | Clean start next session |
+
+### Pre-Clear Checklist
+
+Never clear context without completing this checklist first:
+
+- [ ] Current task is either complete or at a safe stopping point
+- [ ] All important code changes are saved to files
+- [ ] docs/STATE.md is updated with current status
+- [ ] Any learnings are captured in docs/MEMORY.md
+- [ ] Changes are committed to Git
+
+## Task Decomposition
+
+Large projects fail when you try to hold too much in context at once. Break projects into right-sized tasks:
+
+### Task Size Guidelines
+
+A well-sized task should:
+- Complete in **20-50K tokens** of context
+- Take **15-45 minutes** of focused work
+- Touch **1-3 files** primarily
+- Have **one clear verification step**
+- Be **committable on its own**
+
+### The "One Verifiable Outcome" Rule
+
+Every task should have exactly one way to verify it's complete:
+
+| Verification Type | Example | Use For |
+|-------------------|---------|---------|
+| Visual | "Page renders at /login with email and password fields" | UI components, layouts |
+| Functional | "Can log in with test credentials, redirects to /dashboard" | Features, flows |
+| File exists | "File exists at src/lib/supabase/client.ts" | Setup, configuration |
+| Test passes | "npm run test:auth passes all 5 test cases" | Logic, edge cases |
+| Command succeeds | "npm run build completes without errors" | Integration, deployment |
+
+## Context Recovery
+
+After clearing context, efficiently restore what Claude needs:
+
+**Minimal Recovery (Same Task Area):**
+```
+Read docs/STATE.md to see where we left off.
+The next task is: [specific task description]
+```
+
+**Full Recovery (After Break):**
+```
+I'm resuming work after a break. Please read:
+1. docs/STATE.md - Current state
+2. docs/TASKS.md - Task backlog
+3. docs/MEMORY.md - Project learnings
+
+Summarize where we are and what's next.
+```
+
+## Checkpoint Types
+
+Checkpoints are natural breakpoints where you commit work and can safely clear context:
+
+| Checkpoint | When | Actions |
+|------------|------|---------|
+| **Task Checkpoint** | After each task completes | Verify → Commit → Optionally clear |
+| **Session Checkpoint** | End of work session | Update STATE.md → Commit → Always clear |
+| **Milestone Checkpoint** | After completing a milestone | Run quality gate → Commit → Always clear |
+| **Recovery Checkpoint** | When stuck or confused | Save learnings → Commit → Clear → Fresh start |
+
+### Recovery Protocol
+
+When things aren't working:
+
+```
+Something isn't working right. Before we continue, let's checkpoint:
+
+1. Update docs/MEMORY.md with what we tried that didn't work
+2. Update docs/STATE.md with current status and blockers
+3. Commit current state: "WIP: [description of current state]"
+4. Then I'll clear context and we'll approach fresh
+
+Please make those updates now.
+```
+
+## MEMORY.md Pattern
+
+Track learnings across sessions with this format:
+
+```markdown
+# Project Memory
+
+## Key Decisions
+- 2026-01-03: Chose flat-rate pricing ($29/mo) over usage-based
+  - Reason: Simpler billing, predictable revenue, SMB preference
+
+- 2026-01-04: Using server actions instead of API routes
+  - Reason: Better type safety, simpler code, Next.js 14 best practice
+
+## Patterns Established
+- Form validation: zod schemas in src/lib/validations/
+- Error handling: Always return { success, data?, error? } shape
+
+## Things That Didn't Work
+- 2026-01-04: Tried useFormState for forms
+  - Problem: Confusing UX, loading states not smooth
+  - Solution: Using react-hook-form with server action submission
+```
+
+## Related Resources
+
+- [Claude Code Timing](/reference/claude-code-timing) - When to use Chat vs Code
+- [EARS Syntax](/reference/ears-syntax) - Writing clear requirements
+- [Troubleshooting](/reference/troubleshooting) - Common issues and fixes
+- [CLAUDE.md Template](/templates/claude-md) - Project context file setup

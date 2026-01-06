@@ -1,5 +1,228 @@
 ---
-title: "claude code timing"
+sidebar_position: 2
+title: "Claude Code Timing"
+description: "Know exactly when to switch from Claude Chat to Claude Code in your workflow"
 ---
-# claude code timing
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse
+} from '@site/src/components/ChapterComponents';
+
+# Claude Code Timing
+
+<span className="reading-time">8 min read</span>
+
+<TldrBox
+  what="Know exactly when to switch from Claude Chat to Claude Code - the transition point is the Build Contract."
+  why="Using the wrong tool wastes time. Claude Chat excels at exploration and documents; Claude Code excels at implementation. The transition point matters."
+  outcome="Clear understanding of which tool to use at each phase of your project."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Unsure which Claude tool to use for your current task",
+    "Planning your workflow across project phases",
+    "Starting a new project and setting up your process"
+  ]}
+  notYetIf={[
+    "You're already deep in implementation",
+    "You have a clear workflow established"
+  ]}
+  skipIf="You're experienced with both tools and their optimal use cases"
+/>
+
+## The Core Principle
+
+**Claude Chat** (web interface) is optimized for **exploration and document creation**.
+
+**Claude Code** (CLI) is optimized for **codebase-aware implementation**.
+
+The transition point is the **Build Contract** - the document that bridges design to implementation.
+
+## Project Lifecycle with Tool Transitions
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                        PROJECT LIFECYCLE v3.0                             │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  ╔═════════════════════════════════════════════════════════════════════╗ │
+│  ║  CLAUDE CHAT PHASE (Web Interface - Exploration & Documents)        ║ │
+│  ╠═════════════════════════════════════════════════════════════════════╣ │
+│  ║                                                                     ║ │
+│  ║  Phase 1-3: Research, Business Planning, Design Brief, UX, UI      ║ │
+│  ║  Phase 3: Solution Architecture, Infrastructure Planning            ║ │
+│  ║  Phase 3: Generate Build Contract                                   ║ │
+│  ║                                                                     ║ │
+│  ╚═════════════════════════════════════════════════════════════════════╝ │
+│                                    │                                      │
+│                                    ▼                                      │
+│  ╔═════════════════════════════════════════════════════════════════════╗ │
+│  ║  DEVELOPMENT ENVIRONMENT SETUP (Terminal + Claude Code)             ║ │
+│  ║  • Create project repository  • Set up CLAUDE.md  • Configure docs/ ║ │
+│  ╚═════════════════════════════════════════════════════════════════════╝ │
+│                                    │                                      │
+│                                    ▼                                      │
+│  ╔═════════════════════════════════════════════════════════════════════╗ │
+│  ║  CLAUDE CODE PHASE (CLI - Implementation)                           ║ │
+│  ╠═════════════════════════════════════════════════════════════════════╣ │
+│  ║                                                                     ║ │
+│  ║  Phase 4: Build Phase with MOAI                                     ║ │
+│  ║  • SPEC-First Development  • TDD Cycle  • Milestones 1-11          ║ │
+│  ║                                                                     ║ │
+│  ║  Phase 5: QA and Launch                                             ║ │
+│  ║                                                                     ║ │
+│  ╚═════════════════════════════════════════════════════════════════════╝ │
+│                                                                           │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+## Decision Flowchart
+
+Use this flowchart to decide which tool to use:
+
+```
+                    ┌─────────────────────────┐
+                    │   What are you doing?   │
+                    └───────────┬─────────────┘
+                                │
+            ┌───────────────────┼───────────────────┐
+            │                   │                   │
+            ▼                   ▼                   ▼
+     ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+     │  Exploring   │   │  Creating    │   │  Writing or  │
+     │  ideas or    │   │  design      │   │  modifying   │
+     │  researching │   │  documents   │   │  code        │
+     └──────┬───────┘   └──────┬───────┘   └──────┬───────┘
+            │                   │                   │
+            ▼                   ▼                   ▼
+     ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+     │ CLAUDE CHAT  │   │ CLAUDE CHAT  │   │ CLAUDE CODE  │
+     │ (Web)        │   │ (Web)        │   │ (CLI)        │
+     └──────────────┘   └──────────────┘   └──────────────┘
+```
+
+## Phase-by-Phase Tool Recommendations
+
+| Phase | Activities | Recommended Tool | Why |
+|-------|------------|------------------|-----|
+| **Phase 1: Validate** | Market research, validation, opportunity scoring | Claude Chat | Exploration, no codebase yet |
+| **Phase 2: Design** | Design Brief, UX Package, UI System | Claude Chat | Document creation, iteration |
+| **Phase 3: Architect** | Architecture decisions, Build Contract | Claude Chat | Planning, no implementation yet |
+| **Setup** | Create repo, CLAUDE.md, docs/ folder | Terminal + Claude Code | Repository initialization |
+| **Phase 4: Build** | SPEC creation, TDD, implementation | Claude Code | Codebase-aware development |
+| **Phase 5: Launch** | QA testing, deployment, monitoring | Claude Code | Working with live systems |
+
+## The Build Contract Transition
+
+The Build Contract is the **critical transition point**. It:
+
+1. **Consolidates all design artifacts** into a single reference
+2. **Defines vocabulary** that maps to code
+3. **Specifies all screens, components, and APIs**
+4. **Provides quality standards** for implementation
+
+:::tip The Transition Moment
+Once you have a Build Contract, you're ready to switch to Claude Code. Don't start Claude Code without it - you'll lack the context needed for consistent implementation.
+:::
+
+## Claude Chat Strengths
+
+Use Claude Chat (web interface) for:
+
+- **Exploration**: Brainstorming, research, ideation
+- **Document creation**: Design briefs, UX packages, architecture docs
+- **Iteration**: Refining ideas through conversation
+- **Long-form content**: Specifications, technical writing
+- **Visual review**: Looking at diagrams, UI mockups (via attachments)
+
+### Example Claude Chat Tasks
+
+```
+"Help me validate this SaaS idea for real estate agents"
+"Create a UX flow for the photo upload feature"
+"Design the database schema for user subscriptions"
+"Generate the Build Contract from these design documents"
+```
+
+## Claude Code Strengths
+
+Use Claude Code (CLI) for:
+
+- **Implementation**: Writing actual code files
+- **Codebase awareness**: Understanding existing code structure
+- **File operations**: Creating, editing, organizing files
+- **Testing**: Running tests, debugging issues
+- **Git workflow**: Commits, branches, version control
+- **Build processes**: Running builds, checking for errors
+
+### Example Claude Code Tasks
+
+```
+"Implement the login page based on SPEC-AUTH-001"
+"Create the PhotoUpload component with drag-and-drop"
+"Fix the TypeScript error in the user service"
+"Run the test suite and fix any failing tests"
+```
+
+## Common Mistakes
+
+### Starting Claude Code Too Early
+
+**Mistake**: Jumping into Claude Code before finishing design.
+
+**Problem**: Without a Build Contract, you'll make inconsistent decisions, backtrack frequently, and waste context on re-explaining requirements.
+
+**Solution**: Complete Phases 1-3 in Claude Chat first. Generate the Build Contract before touching Claude Code.
+
+### Staying in Claude Chat Too Long
+
+**Mistake**: Continuing to design and plan when you should be building.
+
+**Problem**: Analysis paralysis. Perfect is the enemy of good. You'll never start implementing.
+
+**Solution**: Once you have a Build Contract, switch to Claude Code. You can refine in parallel with implementation.
+
+### Using Claude Code for Design Documents
+
+**Mistake**: Trying to create UX flows or architecture diagrams in Claude Code.
+
+**Problem**: Claude Code is optimized for code, not prose. The CLI interface makes document iteration awkward.
+
+**Solution**: Use Claude Chat for all design documents, then copy the final versions into your repo.
+
+## Hybrid Workflows
+
+Sometimes you need both tools in the same session:
+
+| Situation | Workflow |
+|-----------|----------|
+| **Need to research while coding** | Keep Claude Chat open in browser for research, Claude Code in terminal for implementation |
+| **Found a design gap during build** | Document the gap, continue implementing what you can, update Build Contract in Claude Chat later |
+| **Complex debugging** | Use Claude Code for code changes, Claude Chat for explaining the problem and exploring solutions |
+
+## Quick Reference
+
+| Task Type | Tool | Phase |
+|-----------|------|-------|
+| Market research | Chat | 1 |
+| Competitor analysis | Chat | 1 |
+| Design Brief creation | Chat | 1 |
+| UX flow design | Chat | 2 |
+| UI system documentation | Chat | 2 |
+| Architecture planning | Chat | 3 |
+| Build Contract generation | Chat | 3 |
+| Repository setup | Code | 3/4 |
+| CLAUDE.md creation | Code | 4 |
+| SPEC document creation | Code | 4 |
+| Component implementation | Code | 4 |
+| Test writing | Code | 4 |
+| Bug fixes | Code | 4/5 |
+| Deployment | Code | 5 |
+
+## Related Resources
+
+- [Workflow Guide](/reference/workflow-guide) - Context management in Claude Code
+- [SPEC Template](/templates/spec-template) - Feature specification format
+- [Build Contract Template](/templates/build-contract) - Design-to-code bridge document
