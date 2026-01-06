@@ -553,7 +553,8 @@
     <span class="header-progress-text" id="progress-text">0%</span>
   </div>
   <div class="header-actions">
-    <button class="btn btn-light" onclick="exportProject()">Export</button>
+    <button class="btn btn-light" onclick="downloadAllArtifacts()">Download All .md</button>
+    <button class="btn btn-light" onclick="exportProject()">Export JSON</button>
     <a href="project-list.html" class="btn btn-light">All Projects</a>
   </div>
 </div>
@@ -647,8 +648,8 @@
 <div id="tab-artifacts" class="tab-content">
   <div class="tab-intro" style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
     <strong style="color: #92400e;">Artifacts Tab</strong>
-    <p style="color: #4b5563; margin: 0.25rem 0 0; font-size: 0.9rem;">Store the outputs from your Claude prompts here. Click <strong>Start</strong> to begin working on an artifact (starts the timer), then paste your content and click <strong>Mark Complete</strong> when done. Your time is automatically tracked.</p>
-    <div style="display: flex; gap: 1.5rem; margin-top: 0.75rem; font-size: 0.85rem;">
+    <p style="color: #4b5563; margin: 0.25rem 0 0; font-size: 0.9rem;">Store the outputs from your Claude prompts here. You can <strong>Upload .md</strong> files directly or <strong>Paste</strong> content manually. Use <strong>↓</strong> to download any artifact as a .md file.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 0.75rem; font-size: 0.85rem;">
       <span><span style="display: inline-block; width: 12px; height: 12px; border: 2px dashed #cbd5e1; border-radius: 50%; margin-right: 0.35rem;"></span> Not started</span>
       <span><span style="display: inline-block; width: 12px; height: 12px; background: #fef3c7; border-radius: 50%; margin-right: 0.35rem;"></span> In progress</span>
       <span><span style="display: inline-block; width: 12px; height: 12px; background: #d1fae5; border-radius: 50%; margin-right: 0.35rem;"></span> Completed</span>
@@ -705,6 +706,9 @@
     </div>
   </div>
 </div>
+
+<!-- Hidden file input for uploads -->
+<input type="file" id="artifact-file-input" accept=".md,.txt,.markdown" style="display: none;" onchange="handleFileUpload(event)">
 
 <!-- Save indicator -->
 <div id="save-indicator" class="save-indicator">Saved</div>
@@ -901,10 +905,9 @@
               </div>
             </div>
             <div class="artifact-actions">
-              ${status === 'empty'
-                ? `<button class="btn btn-secondary btn-sm" onclick="startArtifact(${phase}, '${template.id}', '${template.name}', ${template.chapter})">Start</button>`
-                : `<button class="btn btn-secondary btn-sm" onclick="editArtifact(${phase}, '${template.id}', '${template.name}')">Edit</button>`
-              }
+              ${status !== 'empty' ? `<button class="btn btn-secondary btn-sm" onclick="downloadArtifact(${phase}, '${template.id}')" title="Download as .md">↓</button>` : ''}
+              <button class="btn btn-secondary btn-sm" onclick="uploadArtifact(${phase}, '${template.id}', '${template.name}', ${template.chapter})">Upload</button>
+              <button class="btn btn-secondary btn-sm" onclick="${status === 'empty' ? `startArtifact(${phase}, '${template.id}', '${template.name}', ${template.chapter})` : `editArtifact(${phase}, '${template.id}', '${template.name}')`}">Paste</button>
             </div>
           </div>
         `;
@@ -928,7 +931,9 @@
               </div>
             </div>
             <div class="artifact-actions">
-              <button class="btn btn-secondary btn-sm" onclick="editArtifact(${phase}, '${artifact.id}', '${artifact.name}')">Edit</button>
+              ${status !== 'empty' ? `<button class="btn btn-secondary btn-sm" onclick="downloadArtifact(${phase}, '${artifact.id}')" title="Download as .md">↓</button>` : ''}
+              <button class="btn btn-secondary btn-sm" onclick="uploadArtifact(${phase}, '${artifact.id}', '${artifact.name}', null)">Upload</button>
+              <button class="btn btn-secondary btn-sm" onclick="editArtifact(${phase}, '${artifact.id}', '${artifact.name}')">Paste</button>
             </div>
           </div>
         `;
@@ -1151,9 +1156,133 @@
     currentArtifact = null;
   }
 
-  // Export project
+  // Export project as JSON
   async function exportProject() {
     await manager.downloadCurrent();
+  }
+
+  // =========================================
+  // File Upload/Download Functions
+  // =========================================
+
+  let uploadTarget = null; // { phase, id, name, chapter }
+
+  // Trigger file upload for an artifact
+  function uploadArtifact(phase, id, name, chapter) {
+    uploadTarget = { phase, id, name, chapter };
+    document.getElementById('artifact-file-input').click();
+  }
+
+  // Handle file upload
+  async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file || !uploadTarget) return;
+
+    try {
+      const content = await file.text();
+
+      // Start the artifact if not exists
+      await manager.startArtifact(uploadTarget.phase, uploadTarget.id, {
+        name: uploadTarget.name,
+        chapter: uploadTarget.chapter
+      });
+
+      // Save as complete
+      await manager.completeArtifact(uploadTarget.phase, uploadTarget.id, content);
+
+      renderArtifacts();
+      renderHeader();
+      renderLogs();
+      showSaveIndicator();
+
+      // Show success message
+      alert(`Uploaded "${file.name}" successfully!`);
+    } catch (error) {
+      alert(`Upload failed: ${error.message}`);
+    }
+
+    // Reset
+    event.target.value = '';
+    uploadTarget = null;
+  }
+
+  // Download single artifact as .md file
+  function downloadArtifact(phase, id) {
+    const artifact = manager.getArtifact(phase, id);
+    if (!artifact || !artifact.content) {
+      alert('No content to download');
+      return;
+    }
+
+    const filename = `${artifact.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.md`;
+    downloadFile(filename, artifact.content);
+  }
+
+  // Download all artifacts as individual .md files (ZIP)
+  async function downloadAllArtifacts() {
+    const project = manager.getCurrent();
+    if (!project) return;
+
+    const artifacts = Object.entries(project.artifacts);
+    if (artifacts.length === 0) {
+      alert('No artifacts to download');
+      return;
+    }
+
+    // Check if any artifacts have content
+    const withContent = artifacts.filter(([, a]) => a.content);
+    if (withContent.length === 0) {
+      alert('No artifacts with content to download');
+      return;
+    }
+
+    // If only one artifact, download directly
+    if (withContent.length === 1) {
+      const [, artifact] = withContent[0];
+      const filename = `${artifact.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.md`;
+      downloadFile(filename, artifact.content);
+      return;
+    }
+
+    // Multiple artifacts - create a combined markdown or individual downloads
+    const useZip = confirm(`Download ${withContent.length} artifacts.\n\nOK = Download as combined markdown file\nCancel = Download each file separately`);
+
+    if (useZip) {
+      // Combined markdown file
+      let combined = `# ${project.meta.name} - Project Artifacts\n\n`;
+      combined += `Exported: ${new Date().toLocaleString()}\n\n---\n\n`;
+
+      withContent.forEach(([key, artifact]) => {
+        const phase = key.split('/')[0];
+        combined += `## ${artifact.name}\n`;
+        combined += `*Phase: ${phase} | Status: ${artifact.status}*\n\n`;
+        combined += artifact.content;
+        combined += '\n\n---\n\n';
+      });
+
+      const filename = `${project.meta.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-artifacts.md`;
+      downloadFile(filename, combined);
+    } else {
+      // Download each file separately with slight delay
+      for (const [, artifact] of withContent) {
+        const filename = `${artifact.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.md`;
+        downloadFile(filename, artifact.content);
+        await new Promise(resolve => setTimeout(resolve, 300)); // Small delay between downloads
+      }
+    }
+  }
+
+  // Helper: Download a file
+  function downloadFile(filename, content) {
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   // Show save indicator
