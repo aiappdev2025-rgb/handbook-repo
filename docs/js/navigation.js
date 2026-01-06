@@ -1,10 +1,138 @@
 /**
  * AI SaaS Handbook - Navigation System
- * Single source of truth navigation loaded from navigation-data.json
+ * Navigation data embedded inline (no fetch required - works with file:// protocol)
  */
 
 (function() {
   'use strict';
+
+  // Navigation data embedded inline for file:// compatibility
+  const NAV_DATA = {
+    "site": {
+      "title": "AI SaaS Handbook",
+      "version": "3.0",
+      "baseUrl": "/docs"
+    },
+    "topNav": [
+      {
+        "label": "Home",
+        "href": "index.html",
+        "icon": "home"
+      },
+      {
+        "label": "Handbook",
+        "children": [
+          { "label": "Part 1: Strategy & Design", "href": "handbook/part1/chapter-01-introduction.html" },
+          { "label": "Part 2: Architecture & Setup", "href": "handbook/part2/chapter-13-architecture.html" },
+          { "label": "Part 3: Build & Launch", "href": "handbook/part3/chapter-23-moai-overview.html" }
+        ]
+      },
+      {
+        "label": "Build Guide",
+        "href": "build-guide-v3.html"
+      },
+      {
+        "label": "Workflow",
+        "href": "workflow-guide-v1.html"
+      },
+      {
+        "label": "References",
+        "children": [
+          { "label": "Navigation Guide", "href": "navigation-guide.html" },
+          { "label": "Claude Code Integration", "href": "claude-code-integration.html" }
+        ]
+      }
+    ],
+    "sidebar": {
+      "handbook-part1": {
+        "title": "Part 1: Strategy & Design",
+        "basePath": "handbook/part1",
+        "chapters": [
+          { "id": "ch1", "title": "1. Introduction", "href": "chapter-01-introduction.html" },
+          { "id": "ch2", "title": "2. Quality Crisis", "href": "chapter-02-quality-crisis.html" },
+          { "id": "ch3", "title": "3. Quality Framework", "href": "chapter-03-quality-framework.html" },
+          { "id": "ch4", "title": "4. Claude Tools", "href": "chapter-04-claude-tools.html" },
+          { "id": "ch5", "title": "5. Research", "href": "chapter-05-research.html" },
+          { "id": "ch6", "title": "6. One-Pager", "href": "chapter-06-one-pager.html" },
+          { "id": "ch7", "title": "7. Design Brief", "href": "chapter-07-design-brief.html" },
+          { "id": "ch8", "title": "8. Design Philosophy", "href": "chapter-08-design-philosophy.html" },
+          { "id": "ch9", "title": "9. UX Package", "href": "chapter-09-ux-package.html" },
+          { "id": "ch10", "title": "10. UX Critique", "href": "chapter-10-ux-critique.html" },
+          { "id": "ch11", "title": "11. UI System", "href": "chapter-11-ui-system.html" },
+          { "id": "ch12", "title": "12. Visual Direction", "href": "chapter-12-visual-direction.html" }
+        ]
+      },
+      "handbook-part2": {
+        "title": "Part 2: Architecture & Setup",
+        "basePath": "handbook/part2",
+        "chapters": [
+          { "id": "ch13", "title": "13. Architecture", "href": "chapter-13-architecture.html" },
+          { "id": "ch14", "title": "14. Database Schema", "href": "chapter-14-database-schema.html" },
+          { "id": "ch15", "title": "15. GitHub Setup", "href": "chapter-15-github-setup.html" },
+          { "id": "ch16", "title": "16. Supabase Setup", "href": "chapter-16-supabase-setup.html" },
+          { "id": "ch17", "title": "17. Vercel Setup", "href": "chapter-17-vercel-setup.html" },
+          { "id": "ch18", "title": "18. Multi-Environment", "href": "chapter-18-multi-environment.html" },
+          { "id": "ch19", "title": "19. Build Contract Intro", "href": "chapter-19-build-contract-intro.html" },
+          { "id": "ch20", "title": "20. Contract Structure", "href": "chapter-20-build-contract-structure.html" },
+          { "id": "ch21", "title": "21. Generating Contract", "href": "chapter-21-generating-contract.html" },
+          { "id": "ch22", "title": "22. Dev Environment", "href": "chapter-22-dev-environment.html" }
+        ]
+      },
+      "handbook-part3": {
+        "title": "Part 3: Build & Launch",
+        "basePath": "handbook/part3",
+        "chapters": [
+          { "id": "ch23", "title": "23. MOAI Overview", "href": "chapter-23-moai-overview.html" },
+          { "id": "ch24", "title": "24. SPEC-First Dev", "href": "chapter-24-spec-first.html" },
+          { "id": "ch25", "title": "25. TDD Workflow", "href": "chapter-25-tdd-workflow.html" },
+          { "id": "ch26", "title": "26. Tech Debt", "href": "chapter-26-tech-debt.html" },
+          { "id": "ch27", "title": "27. Build Milestones", "href": "chapter-27-build-milestones.html" },
+          { "id": "ch28", "title": "28. QA & Launch", "href": "chapter-28-qa-launch.html" },
+          { "id": "ch29", "title": "29. File Structure", "href": "chapter-29-file-structure.html" },
+          { "id": "app-a", "title": "Appendix A: SPEC Template", "href": "appendix-a-spec-template.html" },
+          { "id": "app-b", "title": "Appendix B: Quality Gates", "href": "appendix-b-quality-gates.html" }
+        ]
+      }
+    },
+    "pageOrder": [
+      "handbook/part1/chapter-01-introduction.html",
+      "handbook/part1/chapter-02-quality-crisis.html",
+      "handbook/part1/chapter-03-quality-framework.html",
+      "handbook/part1/chapter-04-claude-tools.html",
+      "handbook/part1/chapter-05-research.html",
+      "handbook/part1/chapter-06-one-pager.html",
+      "handbook/part1/chapter-07-design-brief.html",
+      "handbook/part1/chapter-08-design-philosophy.html",
+      "handbook/part1/chapter-09-ux-package.html",
+      "handbook/part1/chapter-10-ux-critique.html",
+      "handbook/part1/chapter-11-ui-system.html",
+      "handbook/part1/chapter-12-visual-direction.html",
+      "handbook/part2/chapter-13-architecture.html",
+      "handbook/part2/chapter-14-database-schema.html",
+      "handbook/part2/chapter-15-github-setup.html",
+      "handbook/part2/chapter-16-supabase-setup.html",
+      "handbook/part2/chapter-17-vercel-setup.html",
+      "handbook/part2/chapter-18-multi-environment.html",
+      "handbook/part2/chapter-19-build-contract-intro.html",
+      "handbook/part2/chapter-20-build-contract-structure.html",
+      "handbook/part2/chapter-21-generating-contract.html",
+      "handbook/part2/chapter-22-dev-environment.html",
+      "handbook/part3/chapter-23-moai-overview.html",
+      "handbook/part3/chapter-24-spec-first.html",
+      "handbook/part3/chapter-25-tdd-workflow.html",
+      "handbook/part3/chapter-26-tech-debt.html",
+      "handbook/part3/chapter-27-build-milestones.html",
+      "handbook/part3/chapter-28-qa-launch.html",
+      "handbook/part3/chapter-29-file-structure.html",
+      "handbook/part3/appendix-a-spec-template.html",
+      "handbook/part3/appendix-b-quality-gates.html"
+    ],
+    "sectionMapping": {
+      "handbook/part1": "handbook-part1",
+      "handbook/part2": "handbook-part2",
+      "handbook/part3": "handbook-part3"
+    }
+  };
 
   // Determine the base path based on current page location
   function getBasePath() {
@@ -27,19 +155,6 @@
     const docsIndex = path.indexOf('/docs/');
     if (docsIndex === -1) return '';
     return path.substring(docsIndex + 6); // After '/docs/'
-  }
-
-  // Load navigation data
-  async function loadNavigationData() {
-    const basePath = getBasePath();
-    try {
-      const response = await fetch(basePath + 'js/navigation-data.json');
-      if (!response.ok) throw new Error('Failed to load navigation data');
-      return await response.json();
-    } catch (error) {
-      console.error('Navigation data load error:', error);
-      return null;
-    }
   }
 
   // Render top navigation bar
@@ -229,20 +344,14 @@
     return pagePath.split('/').pop().replace('.html', '').replace(/-/g, ' ');
   }
 
-  // Initialize navigation
-  async function initNavigation() {
-    const data = await loadNavigationData();
-    if (!data) {
-      console.error('Could not initialize navigation');
-      return;
-    }
-
+  // Initialize navigation (synchronous - no fetch needed)
+  function initNavigation() {
     const basePath = getBasePath();
     const currentPath = getCurrentPagePath();
 
-    renderTopNav(data, basePath, currentPath);
-    renderSidebar(data, basePath, currentPath);
-    renderPageNav(data, basePath, currentPath);
+    renderTopNav(NAV_DATA, basePath, currentPath);
+    renderSidebar(NAV_DATA, basePath, currentPath);
+    renderPageNav(NAV_DATA, basePath, currentPath);
   }
 
   // Run when DOM is ready
