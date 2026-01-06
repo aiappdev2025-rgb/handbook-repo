@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 39: M10 - Polish - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-39">Chapter 39: Milestone 10 - Polish</h1>
+
+<p class="chapter-intro">In this chapter, you'll polish your application with error handling, loading states, and accessibility improvements. By the end, your app will feel professional and production-ready.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Polish is systematic. Use <a href="../workflow-guide-v1.html#task-decomposition">Task Decomposition</a> to audit each area methodically.
+</div>
+
+<h2 id="section-39-1">39.1 Overview</h2>
+
+<p>Polish transforms a working app into a professional product. Error handling, loading states, and accessibility are what separate amateur projects from production-ready software.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 9 complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 5</p>
+  <p><strong>Deliverables:</strong> Error boundaries, loading states, empty states, edge case handling, WCAG compliance.</p>
+</div>
+
+<h2 id="section-39-2">39.2 Implementation Prompts</h2>
+
+<h3>Prompt 10.1: Error Boundaries</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.1: Error Boundaries</h4>
+<pre>ROLE
+Frontend Developer implementing error handling.
+
+CONTEXT
+Project: {{productName}}
+All features complete.
+Need graceful error handling throughout.
+
+OBJECTIVE
+Implement error boundaries and global error handling.
+
+REQUIREMENTS
+
+1. Global error boundary (src/components/error-boundary.tsx):
+   - Catch unhandled React errors
+   - Display user-friendly error message
+   - Option to retry or go home
+   - Log error to error logging service
+
+2. Page-level error handling (src/app/**/error.tsx):
+   - Error.tsx files for each route group
+   - Reset button to try again
+   - Link back to safe location
+
+3. Not found pages (src/app/**/not-found.tsx):
+   - Custom 404 pages for each section
+   - Helpful messaging
+   - Links to valid destinations
+
+4. API error responses:
+   - Consistent error format across all endpoints
+   - Meaningful error messages
+   - Proper HTTP status codes
+
+VERIFICATION
+Trigger error and see boundary catch it
+404 pages display for invalid routes
+API errors return consistent format</pre>
+</div>
+
+<h3>Prompt 10.2: Loading States</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.2: Loading States Audit</h4>
+<pre>ROLE
+Frontend Developer improving loading states.
+
+CONTEXT
+Project: {{productName}}
+Features working but loading states incomplete.
+
+OBJECTIVE
+Audit and improve loading states throughout.
+
+REQUIREMENTS
+
+1. Page loading states (src/app/**/loading.tsx):
+   - Skeleton screens for each page type
+   - Match actual content layout
+   - Smooth transition when content loads
+
+2. Component loading states:
+   - Button loading states (spinner + disabled)
+   - Form submission loading
+   - List loading skeletons
+
+3. Async operation feedback:
+   - Show loading during server actions
+   - Optimistic updates where appropriate
+   - Progress indicators for long operations
+
+4. Suspense boundaries:
+   - Wrap async components in Suspense
+   - Provide fallback UI
+
+VERIFICATION
+All pages show loading skeleton during fetch
+Buttons show loading during submission
+No "flash of empty content"</pre>
+</div>
+
+<h3>Prompt 10.3: Empty States</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.3: Empty States</h4>
+<pre>ROLE
+Frontend Developer improving empty states.
+
+CONTEXT
+Project: {{productName}}
+Need helpful empty states for new users.
+
+OBJECTIVE
+Create engaging empty states for all list/content areas.
+
+REQUIREMENTS
+
+1. List empty states:
+   - Friendly illustration or icon
+   - Helpful message explaining what goes here
+   - CTA to create first item
+
+2. Dashboard empty states:
+   - Getting started guide for new users
+   - Progress indicators
+   - Quick actions
+
+3. Search empty states:
+   - "No results" with suggestions
+   - Alternative actions
+
+4. Error recovery states:
+   - Failed to load with retry
+   - Offline state with cached data option
+
+VERIFICATION
+New user sees helpful empty states
+Empty states have clear CTAs
+No blank white screens</pre>
+</div>
+
+<h3>Prompt 10.4: Accessibility Audit</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.4: Accessibility Audit</h4>
+<pre>ROLE
+Frontend Developer improving accessibility.
+
+CONTEXT
+Project: {{productName}}
+Need WCAG 2.1 AA compliance.
+
+OBJECTIVE
+Audit and fix accessibility issues.
+
+REQUIREMENTS
+
+1. Keyboard navigation:
+   - All interactive elements focusable
+   - Visible focus indicators
+   - Logical tab order
+   - Escape closes modals
+
+2. Screen reader support:
+   - Semantic HTML structure
+   - ARIA labels on interactive elements
+   - Meaningful alt text on images
+   - Announce dynamic content changes
+
+3. Color and contrast:
+   - 4.5:1 contrast ratio for text
+   - Don't rely on color alone
+   - Focus indicators visible
+
+4. Form accessibility:
+   - Labels associated with inputs
+   - Error messages announced
+   - Required fields indicated
+
+5. Testing:
+   - Run axe DevTools
+   - Test with keyboard only
+   - Test with screen reader
+
+VERIFICATION
+axe DevTools reports no critical issues
+All features work keyboard-only
+Forms announce errors properly</pre>
+</div>
+
+<h2 id="section-39-3">39.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Error boundaries catching and displaying errors gracefully, loading states on all async operations, helpful empty states, and WCAG 2.1 AA accessibility compliance.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Lighthouse accessibility score >= 90</li>
+    <li>axe DevTools shows no critical issues</li>
+    <li>All features work keyboard-only</li>
+    <li>Loading states visible during data fetches</li>
+  </ul>
+</div>
+
+<div class="warning">
+  <h4>Pre-Launch Check Required</h4>
+  <p>After completing this milestone, you MUST complete <strong>Checkpoint C</strong> (next chapter) before launching.</p>
+</div>
+
+<h2 id="section-39-4">39.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 10. Your project now has:</p>
+<ul>
+  <li>Error boundaries throughout</li>
+  <li>Loading states on all pages</li>
+  <li>Helpful empty states</li>
+  <li>Accessibility compliance</li>
+  <li>Professional polish</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 40 (Checkpoint C) - Pre-launch audit before going live.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

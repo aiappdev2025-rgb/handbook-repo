@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 41: M11 - Testing - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-41">Chapter 41: Milestone 11 - Testing</h1>
+
+<p class="chapter-intro">In this chapter, you'll implement comprehensive testing for your application. By the end, you'll have unit tests, integration tests, and end-to-end tests covering critical user flows.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Testing is iterative. See <a href="../workflow-guide-v1.html#agentic-patterns">Agentic Patterns</a> for efficient test generation.
+</div>
+
+<h2 id="section-41-1">41.1 Overview</h2>
+
+<p>Comprehensive testing ensures your application works correctly and continues to work as you make changes. Focus on testing critical user flows and business logic first.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 10 complete, Checkpoint C passed</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 3</p>
+  <p><strong>Deliverables:</strong> Unit tests, integration tests, E2E tests, test coverage >= 80%.</p>
+</div>
+
+<h2 id="section-41-2">41.2 Implementation Prompts</h2>
+
+<h3>Prompt 11.1: Unit Tests</h3>
+
+<div class="prompt-box">
+<h4>Prompt 11.1: Unit Tests</h4>
+<pre>ROLE
+Test Engineer implementing unit tests.
+
+CONTEXT
+Project: {{productName}}
+Testing framework: Vitest or Jest
+Need unit tests for utilities and business logic.
+
+OBJECTIVE
+Create unit tests for core utility functions and business logic.
+
+REQUIREMENTS
+
+1. Test setup:
+   - Configure Vitest or Jest
+   - Set up test utilities
+   - Configure coverage reporting
+
+2. Utility function tests:
+   - Test all helper functions in src/lib/
+   - Test validation schemas
+   - Test formatting functions
+
+3. Business logic tests:
+   - Test data transformation functions
+   - Test permission checks
+   - Test calculation logic
+
+4. Coverage target:
+   - >= 80% line coverage for utility code
+   - 100% coverage for critical business logic
+
+VERIFICATION
+npm test runs all tests
+Coverage report shows >= 80%
+All tests pass</pre>
+</div>
+
+<h3>Prompt 11.2: Integration Tests</h3>
+
+<div class="prompt-box">
+<h4>Prompt 11.2: Integration Tests</h4>
+<pre>ROLE
+Test Engineer implementing integration tests.
+
+CONTEXT
+Project: {{productName}}
+Unit tests complete (Prompt 11.1).
+Need integration tests for API and components.
+
+OBJECTIVE
+Create integration tests for server actions and components.
+
+REQUIREMENTS
+
+1. Server action tests:
+   - Test authentication required
+   - Test authorization (user can only access own data)
+   - Test validation errors
+   - Test successful operations
+
+2. Component tests:
+   - Test form submission flows
+   - Test error state rendering
+   - Test loading state rendering
+   - Use React Testing Library
+
+3. API route tests:
+   - Test webhook handlers
+   - Test checkout flow
+   - Test authentication endpoints
+
+4. Database tests:
+   - Use test database or mocks
+   - Test RLS policies work
+   - Reset state between tests
+
+VERIFICATION
+Integration tests cover critical paths
+Tests isolated (don't affect each other)
+All tests pass</pre>
+</div>
+
+<h3>Prompt 11.3: End-to-End Tests</h3>
+
+<div class="prompt-box">
+<h4>Prompt 11.3: End-to-End Tests</h4>
+<pre>ROLE
+Test Engineer implementing E2E tests.
+
+CONTEXT
+Project: {{productName}}
+Unit and integration tests complete.
+Need E2E tests for critical user flows.
+
+OBJECTIVE
+Create Playwright E2E tests for critical user journeys.
+
+REQUIREMENTS
+
+1. Test setup:
+   - Configure Playwright
+   - Set up test user accounts
+   - Configure for CI/CD
+
+2. Critical user flows to test:
+   - Sign up new user
+   - Login existing user
+   - Core feature CRUD (Create, Read, Update, Delete)
+   - Checkout flow (test mode)
+   - Settings update
+
+3. Test patterns:
+   - Use page object pattern
+   - Test across browsers (Chrome, Firefox, Safari)
+   - Test mobile viewport
+
+4. CI integration:
+   - Run on pull requests
+   - Screenshots on failure
+   - Parallel execution
+
+VERIFICATION
+All E2E tests pass
+Tests run in CI pipeline
+Critical flows covered</pre>
+</div>
+
+<h2 id="section-41-3">41.3 Test Coverage Summary</h2>
+
+<div class="code-block"># Run tests with coverage
+npm test -- --coverage
+
+# Run E2E tests
+npx playwright test
+
+# Generate coverage report
+npm test -- --coverage --reporter=html</div>
+
+<h2 id="section-41-4">41.4 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Unit tests for utilities and business logic, integration tests for server actions and components, and E2E tests for critical user flows.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Test coverage >= 80% for new code</li>
+    <li>All tests pass locally</li>
+    <li>Tests run in CI pipeline</li>
+    <li>E2E tests cover signup, login, core feature, checkout</li>
+  </ul>
+</div>
+
+<h2 id="section-41-5">41.5 Chapter Summary</h2>
+
+<p>You've completed Milestone 11 and the Build Phase! Your project now has:</p>
+<ul>
+  <li>Unit tests for utilities and logic</li>
+  <li>Integration tests for actions and components</li>
+  <li>E2E tests for critical user flows</li>
+  <li>Test coverage >= 80%</li>
+  <li>CI pipeline integration</li>
+</ul>
+
+<div class="success" style="margin-top: 2rem;">
+  <h4>Build Phase Complete!</h4>
+  <p>Congratulations! You've completed all 11 milestones and 3 checkpoints. Your SaaS application is now:</p>
+  <ul>
+    <li>Fully functional with core and supporting features</li>
+    <li>Secure with RLS and proper authorization</li>
+    <li>Monetized with Stripe integration</li>
+    <li>Polished with error handling and accessibility</li>
+    <li>Tested with comprehensive test coverage</li>
+    <li>Ready for launch!</li>
+  </ul>
+</div>
+
+<p><strong>Next:</strong> Chapter 42 (Phase 5) - QA and Deployment for production launch.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

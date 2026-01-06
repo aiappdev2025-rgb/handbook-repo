@@ -13,14 +13,12 @@
     {
       "label": "Handbook",
       "children": [
-        { "label": "Part 1: Strategy & Design", "href": "handbook/part1/chapter-01-introduction.html" },
-        { "label": "Part 2: Architecture & Setup", "href": "handbook/part2/chapter-13-architecture.html" },
-        { "label": "Part 3: Build & Launch", "href": "handbook/part3/chapter-23-moai-overview.html" }
+        { "label": "Phase 1: Validate", "href": "handbook/phase1/chapter-01-introduction.html" },
+        { "label": "Phase 2: Design", "href": "handbook/phase2/chapter-08-design-philosophy.html" },
+        { "label": "Phase 3: Architect", "href": "handbook/phase3/chapter-13-architecture.html" },
+        { "label": "Phase 4: Build", "href": "handbook/phase4/chapter-23-moai-overview.html" },
+        { "label": "Phase 5: Launch", "href": "handbook/phase5/chapter-42-qa-deployment.html" }
       ]
-    },
-    {
-      "label": "Build Guide",
-      "href": "build-guide-v3.html"
     },
     {
       "label": "Workflow",
@@ -35,9 +33,9 @@
     }
   ],
   "sidebar": {
-    "handbook-part1": {
-      "title": "Part 1: Strategy & Design",
-      "basePath": "handbook/part1",
+    "handbook-phase1": {
+      "title": "Phase 1: Validate",
+      "basePath": "handbook/phase1",
       "chapters": [
         { "id": "ch1", "title": "1. Introduction", "href": "chapter-01-introduction.html" },
         { "id": "ch2", "title": "2. Quality Crisis", "href": "chapter-02-quality-crisis.html" },
@@ -45,7 +43,13 @@
         { "id": "ch4", "title": "4. Claude Tools", "href": "chapter-04-claude-tools.html" },
         { "id": "ch5", "title": "5. Research", "href": "chapter-05-research.html" },
         { "id": "ch6", "title": "6. One-Pager", "href": "chapter-06-one-pager.html" },
-        { "id": "ch7", "title": "7. Design Brief", "href": "chapter-07-design-brief.html" },
+        { "id": "ch7", "title": "7. Design Brief", "href": "chapter-07-design-brief.html" }
+      ]
+    },
+    "handbook-phase2": {
+      "title": "Phase 2: Design",
+      "basePath": "handbook/phase2",
+      "chapters": [
         { "id": "ch8", "title": "8. Design Philosophy", "href": "chapter-08-design-philosophy.html" },
         { "id": "ch9", "title": "9. UX Package", "href": "chapter-09-ux-package.html" },
         { "id": "ch10", "title": "10. UX Critique", "href": "chapter-10-ux-critique.html" },
@@ -53,9 +57,9 @@
         { "id": "ch12", "title": "12. Visual Direction", "href": "chapter-12-visual-direction.html" }
       ]
     },
-    "handbook-part2": {
-      "title": "Part 2: Architecture & Setup",
-      "basePath": "handbook/part2",
+    "handbook-phase3": {
+      "title": "Phase 3: Architect",
+      "basePath": "handbook/phase3",
       "chapters": [
         { "id": "ch13", "title": "13. Architecture", "href": "chapter-13-architecture.html" },
         { "id": "ch14", "title": "14. Database Schema", "href": "chapter-14-database-schema.html" },
@@ -69,102 +73,107 @@
         { "id": "ch22", "title": "22. Dev Environment", "href": "chapter-22-dev-environment.html" }
       ]
     },
-    "handbook-part3": {
-      "title": "Part 3: Build & Launch",
-      "basePath": "handbook/part3",
+    "handbook-phase4": {
+      "title": "Phase 4: Build",
+      "basePath": "handbook/phase4",
       "chapters": [
         { "id": "ch23", "title": "23. MOAI Overview", "href": "chapter-23-moai-overview.html" },
         { "id": "ch24", "title": "24. SPEC-First Dev", "href": "chapter-24-spec-first.html" },
         { "id": "ch25", "title": "25. TDD Workflow", "href": "chapter-25-tdd-workflow.html" },
         { "id": "ch26", "title": "26. Tech Debt", "href": "chapter-26-tech-debt.html" },
         { "id": "ch27", "title": "27. Build Milestones", "href": "chapter-27-build-milestones.html" },
-        { "id": "ch28", "title": "28. QA & Launch", "href": "chapter-28-qa-launch.html" },
-        { "id": "ch29", "title": "29. File Structure", "href": "chapter-29-file-structure.html" },
-        { "id": "app-a", "title": "Appendix A: SPEC Template", "href": "appendix-a-spec-template.html" },
-        { "id": "app-b", "title": "Appendix B: Quality Gates", "href": "appendix-b-quality-gates.html" }
+        { "id": "ch28", "title": "28. M1: Project Setup", "href": "chapter-28-m1-project-setup.html" },
+        { "id": "ch29", "title": "29. M2: Design System", "href": "chapter-29-m2-design-system.html" },
+        { "id": "ch30", "title": "30. M3: Database", "href": "chapter-30-m3-database.html" },
+        { "id": "ch31", "title": "31. Checkpoint A", "href": "chapter-31-checkpoint-a.html" },
+        { "id": "ch32", "title": "32. M4: Layouts", "href": "chapter-32-m4-layouts.html" },
+        { "id": "ch33", "title": "33. M5: Authentication", "href": "chapter-33-m5-authentication.html" },
+        { "id": "ch34", "title": "34. M6: Core Feature", "href": "chapter-34-m6-core-feature.html" },
+        { "id": "ch35", "title": "35. Checkpoint B", "href": "chapter-35-checkpoint-b.html" },
+        { "id": "ch36", "title": "36. M7: Admin Console", "href": "chapter-36-m7-admin-console.html" },
+        { "id": "ch37", "title": "37. M8: Supporting Features", "href": "chapter-37-m8-supporting-features.html" },
+        { "id": "ch38", "title": "38. M9: Payments", "href": "chapter-38-m9-payments.html" },
+        { "id": "ch39", "title": "39. M10: Polish", "href": "chapter-39-m10-polish.html" },
+        { "id": "ch40", "title": "40. Checkpoint C", "href": "chapter-40-checkpoint-c.html" },
+        { "id": "ch41", "title": "41. M11: Testing", "href": "chapter-41-m11-testing.html" }
       ]
     },
-    "build-guide": {
-      "title": "Build Guide",
-      "basePath": "build-guide",
+    "handbook-phase5": {
+      "title": "Phase 5: Launch",
+      "basePath": "handbook/phase5",
       "chapters": [
-        { "id": "bg-p1", "title": "Part I: Foundation", "href": "part1-foundation.html" },
-        { "id": "bg-p2", "title": "Part II: Core (M1-6)", "href": "part2-core-milestones.html" },
-        { "id": "bg-p3", "title": "Part III: Admin (M7)", "href": "part3-admin-console.html" },
-        { "id": "bg-p4", "title": "Part IV: M8-11", "href": "part4-remaining-milestones.html" },
-        { "id": "bg-p5", "title": "Part V: Quality Tools", "href": "part5-quality-tools.html" },
-        { "id": "bg-app-a", "title": "App A: Admin Roadmap", "href": "appendix-a-admin-roadmap.html" },
-        { "id": "bg-app-b", "title": "App B: Admin Schema", "href": "appendix-b-admin-schema.html" },
-        { "id": "bg-app-c", "title": "App C: Prompt Usage", "href": "appendix-c-prompt-usage.html" }
+        { "id": "ch42", "title": "42. QA & Deployment", "href": "chapter-42-qa-deployment.html" },
+        { "id": "ch43", "title": "43. File Structure", "href": "chapter-43-file-structure.html" }
+      ]
+    },
+    "appendices": {
+      "title": "Appendices",
+      "basePath": "handbook/phase4",
+      "chapters": [
+        { "id": "app-a", "title": "A: SPEC Template", "href": "appendix-a-spec-template.html" },
+        { "id": "app-b", "title": "B: Quality Gates", "href": "appendix-b-quality-gates.html" }
       ]
     },
     "workflow-guide": {
-      "title": "Workflow Guide",
-      "basePath": "workflow-guide",
+      "title": "Workflow Reference",
+      "basePath": "",
       "chapters": [
-        { "id": "wf-p1", "title": "Part I: Foundation", "href": "part1-foundation.html" },
-        { "id": "wf-p2", "title": "Part II: Project Setup", "href": "part2-project-setup.html" },
-        { "id": "wf-p3", "title": "Part III: Tasks", "href": "part3-task-decomposition.html" },
-        { "id": "wf-p4", "title": "Part IV: Context", "href": "part4-context-management.html" },
-        { "id": "wf-p5", "title": "Part V: Agentic", "href": "part5-agentic-patterns.html" },
-        { "id": "wf-p6", "title": "Part VI: Build Integration", "href": "part6-build-integration.html" },
-        { "id": "wf-app", "title": "Appendices", "href": "appendices.html" }
+        { "id": "wf", "title": "Workflow Guide", "href": "workflow-guide-v1.html" }
       ]
     }
   },
   "pageOrder": [
-    "handbook/part1/chapter-01-introduction.html",
-    "handbook/part1/chapter-02-quality-crisis.html",
-    "handbook/part1/chapter-03-quality-framework.html",
-    "handbook/part1/chapter-04-claude-tools.html",
-    "handbook/part1/chapter-05-research.html",
-    "handbook/part1/chapter-06-one-pager.html",
-    "handbook/part1/chapter-07-design-brief.html",
-    "handbook/part1/chapter-08-design-philosophy.html",
-    "handbook/part1/chapter-09-ux-package.html",
-    "handbook/part1/chapter-10-ux-critique.html",
-    "handbook/part1/chapter-11-ui-system.html",
-    "handbook/part1/chapter-12-visual-direction.html",
-    "handbook/part2/chapter-13-architecture.html",
-    "handbook/part2/chapter-14-database-schema.html",
-    "handbook/part2/chapter-15-github-setup.html",
-    "handbook/part2/chapter-16-supabase-setup.html",
-    "handbook/part2/chapter-17-vercel-setup.html",
-    "handbook/part2/chapter-18-multi-environment.html",
-    "handbook/part2/chapter-19-build-contract-intro.html",
-    "handbook/part2/chapter-20-build-contract-structure.html",
-    "handbook/part2/chapter-21-generating-contract.html",
-    "handbook/part2/chapter-22-dev-environment.html",
-    "handbook/part3/chapter-23-moai-overview.html",
-    "handbook/part3/chapter-24-spec-first.html",
-    "handbook/part3/chapter-25-tdd-workflow.html",
-    "handbook/part3/chapter-26-tech-debt.html",
-    "handbook/part3/chapter-27-build-milestones.html",
-    "handbook/part3/chapter-28-qa-launch.html",
-    "handbook/part3/chapter-29-file-structure.html",
-    "handbook/part3/appendix-a-spec-template.html",
-    "handbook/part3/appendix-b-quality-gates.html",
-    "build-guide/part1-foundation.html",
-    "build-guide/part2-core-milestones.html",
-    "build-guide/part3-admin-console.html",
-    "build-guide/part4-remaining-milestones.html",
-    "build-guide/part5-quality-tools.html",
-    "build-guide/appendix-a-admin-roadmap.html",
-    "build-guide/appendix-b-admin-schema.html",
-    "build-guide/appendix-c-prompt-usage.html",
-    "workflow-guide/part1-foundation.html",
-    "workflow-guide/part2-project-setup.html",
-    "workflow-guide/part3-task-decomposition.html",
-    "workflow-guide/part4-context-management.html",
-    "workflow-guide/part5-agentic-patterns.html",
-    "workflow-guide/part6-build-integration.html",
-    "workflow-guide/appendices.html"
+    "handbook/phase1/chapter-01-introduction.html",
+    "handbook/phase1/chapter-02-quality-crisis.html",
+    "handbook/phase1/chapter-03-quality-framework.html",
+    "handbook/phase1/chapter-04-claude-tools.html",
+    "handbook/phase1/chapter-05-research.html",
+    "handbook/phase1/chapter-06-one-pager.html",
+    "handbook/phase1/chapter-07-design-brief.html",
+    "handbook/phase2/chapter-08-design-philosophy.html",
+    "handbook/phase2/chapter-09-ux-package.html",
+    "handbook/phase2/chapter-10-ux-critique.html",
+    "handbook/phase2/chapter-11-ui-system.html",
+    "handbook/phase2/chapter-12-visual-direction.html",
+    "handbook/phase3/chapter-13-architecture.html",
+    "handbook/phase3/chapter-14-database-schema.html",
+    "handbook/phase3/chapter-15-github-setup.html",
+    "handbook/phase3/chapter-16-supabase-setup.html",
+    "handbook/phase3/chapter-17-vercel-setup.html",
+    "handbook/phase3/chapter-18-multi-environment.html",
+    "handbook/phase3/chapter-19-build-contract-intro.html",
+    "handbook/phase3/chapter-20-build-contract-structure.html",
+    "handbook/phase3/chapter-21-generating-contract.html",
+    "handbook/phase3/chapter-22-dev-environment.html",
+    "handbook/phase4/chapter-23-moai-overview.html",
+    "handbook/phase4/chapter-24-spec-first.html",
+    "handbook/phase4/chapter-25-tdd-workflow.html",
+    "handbook/phase4/chapter-26-tech-debt.html",
+    "handbook/phase4/chapter-27-build-milestones.html",
+    "handbook/phase4/chapter-28-m1-project-setup.html",
+    "handbook/phase4/chapter-29-m2-design-system.html",
+    "handbook/phase4/chapter-30-m3-database.html",
+    "handbook/phase4/chapter-31-checkpoint-a.html",
+    "handbook/phase4/chapter-32-m4-layouts.html",
+    "handbook/phase4/chapter-33-m5-authentication.html",
+    "handbook/phase4/chapter-34-m6-core-feature.html",
+    "handbook/phase4/chapter-35-checkpoint-b.html",
+    "handbook/phase4/chapter-36-m7-admin-console.html",
+    "handbook/phase4/chapter-37-m8-supporting-features.html",
+    "handbook/phase4/chapter-38-m9-payments.html",
+    "handbook/phase4/chapter-39-m10-polish.html",
+    "handbook/phase4/chapter-40-checkpoint-c.html",
+    "handbook/phase4/chapter-41-m11-testing.html",
+    "handbook/phase5/chapter-42-qa-deployment.html",
+    "handbook/phase5/chapter-43-file-structure.html",
+    "handbook/phase4/appendix-a-spec-template.html",
+    "handbook/phase4/appendix-b-quality-gates.html"
   ],
   "sectionMapping": {
-    "handbook/part1": "handbook-part1",
-    "handbook/part2": "handbook-part2",
-    "handbook/part3": "handbook-part3",
-    "build-guide": "build-guide",
-    "workflow-guide": "workflow-guide"
+    "handbook/phase1": "handbook-phase1",
+    "handbook/phase2": "handbook-phase2",
+    "handbook/phase3": "handbook-phase3",
+    "handbook/phase4": "handbook-phase4",
+    "handbook/phase5": "handbook-phase5"
   }
 }

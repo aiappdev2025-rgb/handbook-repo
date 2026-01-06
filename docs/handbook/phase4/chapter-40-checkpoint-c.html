@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 40: Checkpoint C - Pre-Launch Audit - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-40">Chapter 40: Checkpoint C - Pre-Launch Audit</h1>
+
+<p class="chapter-intro">This is the final checkpoint before launch. Verify security, performance, and completeness before going live with real users.</p>
+
+<div class="checkpoint-box" style="background: #ede9fe; border: 2px solid #8b5cf6; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+  <h2 style="color: #6d28d9; margin-top: 0;">Checkpoint C: Pre-Launch Audit</h2>
+  <p><strong>When:</strong> After completing Milestone 10 (Polish)</p>
+  <p><strong>Purpose:</strong> Final verification of security, performance, and production readiness</p>
+  <p><strong>Outcome:</strong> Git tag <code>checkpoint-c</code> marks launch-ready state</p>
+</div>
+
+<h2 id="section-40-1">40.1 Security Verification</h2>
+
+<div class="checklist">
+  <h4>Security Checklist</h4>
+  <ul>
+    <li>RLS enabled on ALL database tables</li>
+    <li>RLS policies tested with different user roles</li>
+    <li>No hardcoded secrets in code</li>
+    <li>Environment variables properly configured</li>
+    <li><code>npm audit</code> shows no critical vulnerabilities</li>
+    <li>Admin routes properly protected</li>
+    <li>Stripe webhooks verify signature</li>
+    <li>Input validation on all user inputs</li>
+    <li>CORS configured properly</li>
+    <li>Rate limiting on sensitive endpoints</li>
+  </ul>
+</div>
+
+<h2 id="section-40-2">40.2 Performance Verification</h2>
+
+<div class="code-block"># Run Lighthouse audit
+# Open Chrome DevTools → Lighthouse → Generate report
+
+# Target scores:
+# - Performance: >= 90
+# - Accessibility: >= 90
+# - Best Practices: >= 90
+# - SEO: >= 90</div>
+
+<div class="checklist">
+  <h4>Performance Checklist</h4>
+  <ul>
+    <li>Lighthouse Performance >= 90</li>
+    <li>Core Web Vitals passing</li>
+    <li>Bundle size analyzed and optimized</li>
+    <li>Images optimized (Next.js Image component)</li>
+    <li>No layout shift on page load</li>
+    <li>Database queries optimized (no N+1)</li>
+  </ul>
+</div>
+
+<h2 id="section-40-3">40.3 Functionality Verification</h2>
+
+<div class="checklist">
+  <h4>Functionality Checklist</h4>
+  <ul>
+    <li>All features complete and tested</li>
+    <li>Error boundaries catch errors gracefully</li>
+    <li>Loading states on all async operations</li>
+    <li>Empty states are helpful</li>
+    <li>Mobile responsive verified (320px to 1440px)</li>
+    <li>Payment flow tested end-to-end</li>
+    <li>Email notifications working</li>
+    <li>Admin console functioning</li>
+  </ul>
+</div>
+
+<h2 id="section-40-4">40.4 Accessibility Verification</h2>
+
+<div class="checklist">
+  <h4>Accessibility Checklist</h4>
+  <ul>
+    <li>WCAG 2.1 AA compliance verified</li>
+    <li>Keyboard navigation works throughout</li>
+    <li>Screen reader tested on key flows</li>
+    <li>Color contrast ratios passing</li>
+    <li>Focus indicators visible</li>
+    <li>axe DevTools shows no critical issues</li>
+  </ul>
+</div>
+
+<h2 id="section-40-5">40.5 Technical Debt Assessment</h2>
+
+<div class="checklist">
+  <h4>Technical Debt Checklist</h4>
+  <ul>
+    <li>Technical debt score >= 7.0</li>
+    <li>No critical bugs in backlog</li>
+    <li>Test coverage >= 80%</li>
+    <li>All tests passing</li>
+    <li>No TODO comments for launch-critical items</li>
+    <li>Documentation updated</li>
+  </ul>
+</div>
+
+<h2 id="section-40-6">40.6 Production Readiness</h2>
+
+<div class="checklist">
+  <h4>Production Checklist</h4>
+  <ul>
+    <li>Production environment configured</li>
+    <li>Environment variables set in production</li>
+    <li>Database migrations run in production</li>
+    <li>Stripe in live mode (when ready)</li>
+    <li>Error monitoring configured (Sentry, etc.)</li>
+    <li>Analytics configured</li>
+    <li>Backup strategy in place</li>
+    <li>SSL/HTTPS verified</li>
+  </ul>
+</div>
+
+<h2 id="section-40-7">40.7 Tag the Checkpoint</h2>
+
+<div class="code-block"># Commit any pending changes
+git add .
+git commit -m "Complete Checkpoint C: Pre-launch audit passed"
+
+# Tag the checkpoint
+git tag -a checkpoint-c -m "Checkpoint C: Pre-launch audit complete - ready for launch"
+
+# Push tag to remote
+git push origin checkpoint-c</div>
+
+<h2 id="section-40-8">40.8 Checkpoint Summary</h2>
+
+<div class="success">
+  <h4>Checkpoint C Complete - Ready to Launch</h4>
+  <p>Your application is verified for production:</p>
+  <ul>
+    <li>Security audit passed</li>
+    <li>Performance targets met</li>
+    <li>All features functional</li>
+    <li>Accessibility compliant</li>
+    <li>Technical debt acceptable</li>
+    <li>Production environment ready</li>
+    <li>Git tagged: <code>checkpoint-c</code></li>
+  </ul>
+</div>
+
+<p><strong>Next:</strong> Chapter 41 (Milestone 11) - Comprehensive testing before launch.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

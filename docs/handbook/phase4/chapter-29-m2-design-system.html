@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 29: M2 - Design System - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-29">Chapter 29: Milestone 2 - Design System</h1>
+
+<p class="chapter-intro">In this chapter, you'll configure shadcn/ui with design tokens and install core components. By the end, you'll have a consistent component library ready for building your UI.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> This milestone works well with Claude Code's agentic mode. See <a href="../workflow-guide-v1.html#agentic-patterns">Agentic Patterns</a> in the Workflow Reference.
+</div>
+
+<h2 id="section-29-1">29.1 Overview</h2>
+
+<p>Establishing a design system early ensures visual consistency throughout your application. shadcn/ui provides accessible, customizable components that integrate seamlessly with Tailwind CSS.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 1 complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 1</p>
+  <p><strong>Deliverables:</strong> Component library, design tokens, test page rendering correctly.</p>
+</div>
+
+<h2 id="section-29-2">29.2 Implementation Prompt</h2>
+
+<p>Configure shadcn/ui with design tokens. Install core components (button, card, input, label, form, toast, dropdown-menu, avatar, skeleton). Create test page to verify styling.</p>
+
+<div class="prompt-box">
+<h4>Prompt 2.1: Design System Setup</h4>
+<pre>ROLE
+Frontend Developer configuring the design system.
+
+CONTEXT
+Project: {{productName}}
+Next.js project initialized (Milestone 1 complete).
+Tailwind CSS already configured.
+
+OBJECTIVE
+Set up shadcn/ui component library with design tokens.
+
+REQUIREMENTS
+
+1. Initialize shadcn/ui:
+   - Run npx shadcn-ui@latest init
+   - Choose: TypeScript, Default style, CSS variables
+   - Configure components.json with @/components path
+
+2. Configure design tokens in globals.css:
+   - Primary color (brand color)
+   - Secondary color
+   - Accent color
+   - Background and foreground
+   - Muted colors for secondary text
+   - Destructive color for errors/warnings
+   - Border radius scale
+
+3. Install core components:
+   - button (primary actions)
+   - card (content containers)
+   - input, label (form fields)
+   - form (react-hook-form integration)
+   - toast (notifications)
+   - dropdown-menu (navigation, actions)
+   - avatar (user display)
+   - skeleton (loading states)
+
+4. Create test page (src/app/design-test/page.tsx):
+   - Display all installed components
+   - Show color palette with design tokens
+   - Test light/dark mode if applicable
+   - NOTE: Remove this page before production
+
+5. Add utility styles:
+   - cn() helper function (lib/utils.ts)
+   - Common spacing/layout utilities if needed
+
+VERIFICATION
+Visit /design-test — all components render correctly
+Colors match design tokens in CSS variables
+Run: npm run build — no TypeScript errors</pre>
+</div>
+
+<h2 id="section-29-3">29.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> shadcn/ui initialized with design tokens configured, core components installed (button, card, input, label, form, toast, dropdown-menu, avatar, skeleton), and a test page displaying all components.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Visit <code>/design-test</code> - all components render with correct colors and styling</li>
+    <li><code>npm run build</code> completes without errors</li>
+    <li>Design tokens visible in globals.css</li>
+  </ul>
+</div>
+
+<h2 id="section-29-4">29.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 2. Your project now has:</p>
+<ul>
+  <li>shadcn/ui initialized and configured</li>
+  <li>Design tokens defined in CSS variables</li>
+  <li>Core components installed</li>
+  <li>Test page verifying component rendering</li>
+  <li>cn() utility function</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 30 (Milestone 3) - Create your database schema with RLS policies.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

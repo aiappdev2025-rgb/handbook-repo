@@ -82,6 +82,55 @@
     .decision-box { background: #f0fdf4; border: 2px solid var(--success); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
     .decision-box h4 { color: #166534; margin-top: 0; }
     
+    .success {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border: 2px solid var(--success);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .success h4 { margin: 0 0 1rem 0; color: #065f46; font-size: 1.1rem; }
+    .success p { margin: 0.5rem 0; }
+    .success p:last-child { margin-bottom: 0; }
+
+    .chapter-intro {
+      font-size: 1.1rem;
+      color: var(--text);
+      background: #faf5ff;
+      padding: 1rem 1.5rem;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0 2rem 0;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .chapter-summary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .chapter-summary h3 { margin-top: 0; color: var(--primary-dark); }
+    .chapter-summary ul { margin-bottom: 0; }
+
+    .toc {
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .toc h3 { margin-top: 0; color: var(--primary-dark); }
+    .toc-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+    .toc-links a { color: var(--secondary); text-decoration: none; padding: 0.25rem 0.5rem; border-radius: 4px; transition: background 0.2s; }
+    .toc-links a:hover { background: var(--surface); }
+
     @media (max-width: 768px) {
       .timeline::before { left: 15px; }
       .phase { margin-left: 40px; }
@@ -113,9 +162,21 @@
   <p style="margin-bottom: 0;">The Workflow Guide explains <em>how</em> to manage context, set up CLAUDE.md, and structure sessions. But <strong>when</strong> do these activities happen in the overall process? This document maps every Claude Code setup step to specific points in the handbook methodology.</p>
 </div>
 
-<h1>The Complete Timeline</h1>
+<p class="chapter-intro">In this guide, you'll learn exactly when to set up and use Claude Code during your project lifecycle. By the end, you'll have a clear map of which workflow activities belong at each phase and how to avoid common timing mistakes.</p>
 
-<p>The handbook methodology has distinct phases, and Claude Code setup activities are concentrated at specific transition points. Here's exactly when each happens:</p>
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h3>On This Page</h3>
+  <div class="toc-links">
+    <a href="#section-1-1">1.1 Complete Timeline</a>
+    <a href="#section-1-2">1.2 Quick Reference</a>
+    <a href="#section-1-3">1.3 Critical Setup Moment</a>
+    <a href="#section-1-4">1.4 Common Mistakes</a>
+  </div>
+</div>
+
+<h2 id="section-1-1">1.1 The Complete Timeline</h2>
+<p class="section-intro">The handbook methodology has distinct phases, and Claude Code setup activities are concentrated at specific transition points. Understanding this timeline prevents you from setting up Claude Code too early or missing critical configuration steps.</p>
 
 <div class="timeline">
   
@@ -268,7 +329,8 @@
   
 </div>
 
-<h1>Quick Reference: When to Do What</h1>
+<h2 id="section-1-2">1.2 Quick Reference: When to Do What</h2>
+<p class="section-intro">Use this table for quick lookups when you need to know exactly when a specific activity should happen and which tool to use.</p>
 
 <table class="summary-table">
   <tr>
@@ -333,9 +395,8 @@
   </tr>
 </table>
 
-<h1>The Critical Setup Moment</h1>
-
-<p>The single most important setup moment happens at the transition between Phase 3 (Architecture) and Phase 4 (Build). This is when you:</p>
+<h2 id="section-1-3">1.3 The Critical Setup Moment</h2>
+<p class="section-intro">The single most important setup moment happens at the transition between Phase 3 (Architecture) and Phase 4 (Build). Getting this right sets the foundation for efficient development sessions.</p>
 
 <div class="decision-box">
   <h4>Setup Checklist: Before Starting Milestone 1</h4>
@@ -375,7 +436,8 @@ git commit -m "Initial project setup with CLAUDE.md and Build Contract"</div>
   <strong>Using Claude Projects?</strong> If you've been using Claude Chat's Projects feature to store your design artifacts, this is when you export them to your repository's docs/ folder. See <a href="handbook-v3-part2-setup.html#chapter-23-8">Handbook Chapter 23.8</a> for the complete Projects-to-Code workflow.
 </div>
 
-<h1>Common Mistakes to Avoid</h1>
+<h2 id="section-1-4">1.4 Common Mistakes to Avoid</h2>
+<p class="section-intro">These timing mistakes are the most common causes of friction when integrating Claude Code into your workflow. Avoid them to maximize productivity.</p>
 
 <h3>❌ Starting Claude Code too early</h3>
 <p>Don't jump into Claude Code during research or design phases. Use Claude Chat for document generation — it's better for exploratory, creative work. Claude Code is optimized for implementation.</p>
@@ -388,6 +450,26 @@ git commit -m "Initial project setup with CLAUDE.md and Build Contract"</div>
 
 <h3>❌ Ignoring context limits during long milestones</h3>
 <p>M5 (Auth) and M6 (Core Feature) are large. Plan for multiple sessions. Use task state files to track progress. Clear context at natural checkpoints.</p>
+
+<!-- EXPECTED OUTCOME -->
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A clear understanding of when each Claude Code workflow activity belongs in your project timeline.</p>
+  <p><strong>How to validate:</strong> You can answer "What should I have set up before starting Milestone X?" for any milestone.</p>
+  <p><strong>Next:</strong> If starting a new project, complete <a href="handbook-v3-part1-strategy.html">Handbook Parts I-III</a> first. If ready to set up Claude Code, follow the checklist in <a href="#section-1-3">Section 1.3</a>.</p>
+</div>
+
+<!-- CHAPTER SUMMARY -->
+<div class="chapter-summary">
+  <h3>Key Takeaways</h3>
+  <ul>
+    <li><strong>Phases 1-2</strong> (Research, Design) use Claude Chat — Claude Code setup hasn't started yet</li>
+    <li><strong>Phase 3</strong> (Architecture) is the critical transition — create CLAUDE.md and docs/ folder here</li>
+    <li><strong>Phases 4-6</strong> (Build) use Claude Code exclusively — context management becomes critical</li>
+    <li>The <strong>Setup Checklist</strong> in Section 1.3 is your pre-M1 verification</li>
+    <li>Don't start Claude Code too early — use the right tool for each phase</li>
+  </ul>
+</div>
 
 <div style="text-align: center; color: var(--muted); margin-top: 3rem; padding: 2rem 0; border-top: 2px solid var(--border);">
   <p>

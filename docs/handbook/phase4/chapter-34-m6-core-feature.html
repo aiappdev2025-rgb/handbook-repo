@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 34: M6 - Core Feature - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-34">Chapter 34: Milestone 6 - Core Feature</h1>
+
+<p class="chapter-intro">In this chapter, you'll build your primary feature using the four-prompt pattern. By the end, you'll have a complete user journey with data persistence, validation, and UI components.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> This is the largest milestone. Use <a href="../workflow-guide-v1.html#task-decomposition">Task Decomposition</a> to break it into focused sessions.
+</div>
+
+<h2 id="section-34-1">34.1 Overview</h2>
+
+<p>Your core feature is the primary value your application delivers. The four-prompt pattern (Data Layer → Server Actions → UI Components → Page Assembly) ensures clean architecture and separation of concerns that will scale with your application.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 5 complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 4</p>
+  <p><strong>Deliverables:</strong> Core feature complete, tests passing, user journey functional.</p>
+</div>
+
+<h2 id="section-34-2">34.2 The Four-Prompt Pattern</h2>
+
+<p>Build your feature in layers, each building on the previous:</p>
+
+<div class="code-block">1. Data Layer    → Queries and mutations (src/lib/queries/, src/lib/mutations/)
+2. Server Actions → Business logic and validation (src/app/.../actions.ts)
+3. UI Components  → Reusable display components (src/components/{{feature}}/)
+4. Page Assembly  → Wire everything together (src/app/(app)/{{feature}}/)</div>
+
+<h2 id="section-34-3">34.3 Implementation Prompts</h2>
+
+<h3>Prompt 6.1: Data Layer</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.1: Data Layer</h4>
+<pre>ROLE
+Backend Developer creating the data access layer.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Database schema exists (Milestone 3).
+Auth working (Milestone 5).
+
+OBJECTIVE
+Create typed query and mutation functions for the core feature.
+
+REQUIREMENTS
+
+1. Create queries file (src/lib/queries/{{feature}}.ts):
+   - get{{Entity}}ById(id): Fetch single item
+   - get{{Entity}}List(options): Paginated list with filters
+   - search{{Entity}}(query): Search functionality
+   - get{{Entity}}Stats(): Aggregate data for dashboards
+
+2. Create mutations file (src/lib/mutations/{{feature}}.ts):
+   - create{{Entity}}(data): Insert new record
+   - update{{Entity}}(id, data): Update existing record
+   - delete{{Entity}}(id): Remove record
+
+3. TypeScript types (src/types/{{feature}}.ts):
+   - {{Entity}} type matching database schema
+   - Create{{Entity}}Input for creation
+   - Update{{Entity}}Input for updates
+   - {{Entity}}ListOptions for query params
+
+4. Query patterns:
+   - Use Supabase server client
+   - Return typed responses
+   - Handle errors with meaningful messages
+   - Include created_by/updated_by where appropriate
+
+VERIFICATION
+All functions compile without TypeScript errors
+Test each query/mutation manually with Supabase dashboard</pre>
+</div>
+
+<h3>Prompt 6.2: Server Actions</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.2: Server Actions</h4>
+<pre>ROLE
+Full-Stack Developer implementing business logic.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Data layer exists (Prompt 6.1).
+
+OBJECTIVE
+Create server actions with validation and business logic.
+
+REQUIREMENTS
+
+1. Create actions file (src/app/(app)/{{feature}}/actions.ts):
+   - 'use server' directive at top
+   - create{{Entity}}Action(formData)
+   - update{{Entity}}Action(id, formData)
+   - delete{{Entity}}Action(id)
+
+2. Input validation with Zod:
+   - Define schemas for each action input
+   - Parse and validate formData
+   - Return structured validation errors
+
+3. Authorization checks:
+   - Verify user is authenticated
+   - Verify user owns the resource (for updates/deletes)
+   - Check any feature-specific permissions
+
+4. Business logic:
+   - Apply any business rules before data operations
+   - Handle related data updates if needed
+   - Maintain data consistency
+
+5. Response handling:
+   - Return { success: true, data } on success
+   - Return { success: false, error } on failure
+   - revalidatePath after mutations
+
+VERIFICATION
+Actions reject invalid input with clear errors
+Unauthorized access attempts are blocked
+Successful operations update the UI (via revalidation)</pre>
+</div>
+
+<h3>Prompt 6.3: UI Components</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.3: UI Components</h4>
+<pre>ROLE
+Frontend Developer building feature components.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Design system available (Milestone 2).
+Server actions ready (Prompt 6.2).
+
+OBJECTIVE
+Create reusable UI components for the feature.
+
+REQUIREMENTS
+
+1. List component (src/components/{{feature}}/{{entity}}-list.tsx):
+   - Display items in cards or table format
+   - Pagination controls
+   - Empty state when no items
+   - Loading skeleton
+
+2. Card component (src/components/{{feature}}/{{entity}}-card.tsx):
+   - Display single item summary
+   - Action buttons (edit, delete)
+   - Link to detail view
+
+3. Form component (src/components/{{feature}}/{{entity}}-form.tsx):
+   - Works for both create and edit modes
+   - Uses react-hook-form with zod validation
+   - Loading state during submission
+   - Error display for validation/server errors
+   - Success feedback (toast or redirect)
+
+4. Detail component (src/components/{{feature}}/{{entity}}-detail.tsx):
+   - Full item information display
+   - Related data if applicable
+   - Actions (edit, delete, other)
+
+5. Delete confirmation:
+   - Modal or alert dialog for confirmation
+   - Loading state during deletion
+   - Error handling
+
+VERIFICATION
+Components render correctly with sample data
+Forms validate and submit properly
+Loading and error states display correctly</pre>
+</div>
+
+<h3>Prompt 6.4: Page Assembly</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.4: Page Assembly</h4>
+<pre>ROLE
+Full-Stack Developer assembling the feature pages.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Components ready (Prompt 6.3).
+
+OBJECTIVE
+Wire components together into complete pages.
+
+REQUIREMENTS
+
+1. List page (src/app/(app)/{{feature}}/page.tsx):
+   - Server Component fetching data
+   - Render list component with data
+   - "Create new" button linking to create page
+   - Search/filter controls if needed
+
+2. Create page (src/app/(app)/{{feature}}/new/page.tsx):
+   - Render form in create mode
+   - Pass create action to form
+   - Redirect to list or detail after success
+
+3. Detail page (src/app/(app)/{{feature}}/[id]/page.tsx):
+   - Server Component fetching single item
+   - Handle not found (notFound())
+   - Render detail component
+   - Edit and delete actions
+
+4. Edit page (src/app/(app)/{{feature}}/[id]/edit/page.tsx):
+   - Fetch existing data
+   - Render form in edit mode with data
+   - Pass update action to form
+   - Redirect after success
+
+5. Navigation integration:
+   - Add feature to sidebar navigation
+   - Breadcrumbs for nested pages
+   - Page titles and meta
+
+VERIFICATION
+Complete user journey works: Create → View → Edit → Delete
+Navigation flows are intuitive
+Run: npm run build — no errors
+Test with real data in development</pre>
+</div>
+
+<h2 id="section-34-4">34.4 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Complete data layer with typed queries/mutations, server actions with validation and authorization, reusable UI components for your core entity, and fully assembled pages for list, create, detail, and edit views.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Complete user journey works: Create → View → Edit → Delete</li>
+    <li>All operations persist to database</li>
+    <li>Navigation flows are intuitive</li>
+    <li><code>npm run build</code> passes without errors</li>
+  </ul>
+</div>
+
+<div class="warning">
+  <h4>Quality Check Required</h4>
+  <p>After completing this milestone, you MUST complete <strong>Checkpoint B</strong> (next chapter) before proceeding to Milestone 7.</p>
+</div>
+
+<h2 id="section-34-5">34.5 Chapter Summary</h2>
+
+<p>You've completed Milestone 6. Your project now has:</p>
+<ul>
+  <li>Data layer with typed queries and mutations</li>
+  <li>Server actions with validation and authorization</li>
+  <li>Reusable UI components (list, card, form, detail)</li>
+  <li>Complete pages for CRUD operations</li>
+  <li>Working user journey end-to-end</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 35 (Checkpoint B) - Feature complete audit before proceeding.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

@@ -158,33 +158,40 @@
   <div class="toc-section">
     <strong>Part V: Build Phase with MOAI <span class="new-badge">ENHANCED</span></strong>
     <div class="toc-items">
-      <a href="#chapter-24">24. MOAI-ADK Overview</a> |
-      <a href="#chapter-25">25. SPEC-First Development</a> |
-      <a href="#chapter-26">26. TDD Workflow</a> |
-      <a href="#chapter-27">27. Technical Debt Scoring Framework</a> |
-      <a href="#chapter-28">28. Build Milestones</a>
+      <a href="#chapter-23">23. MOAI-ADK Overview</a>
+      (<a href="#section-23-1">23.1</a> | <a href="#section-23-2">23.2</a>) |
+      <a href="#chapter-24">24. SPEC-First Development</a>
+      (<a href="#section-24-1">24.1</a> | <a href="#section-24-2">24.2</a> | <a href="#section-24-3">24.3</a>) |
+      <a href="#chapter-25">25. TDD Workflow</a>
+      (<a href="#section-25-1">25.1</a> | <a href="#section-25-2">25.2</a>) |
+      <a href="#chapter-26">26. Technical Debt Scoring</a>
+      (<a href="#section-26-1">26.1</a> | <a href="#section-26-2">26.2</a> | <a href="#section-26-3">26.3</a> | <a href="#section-26-4">26.4</a> | <a href="#section-26-5">26.5</a> | <a href="#section-26-6">26.6</a> | <a href="#section-26-7">26.7</a>) |
+      <a href="#chapter-27">27. Build Milestones</a>
+      (<a href="#section-27-1">27.1</a> | <a href="#section-27-2">27.2</a>)
     </div>
   </div>
 
   <div class="toc-section">
     <strong>Part VI: Launch</strong>
     <div class="toc-items">
-      <a href="#chapter-30">30. QA and Launch Checklist</a>
+      <a href="#chapter-28">28. QA and Launch Checklist</a>
+      (<a href="#section-28-1">28.1</a> | <a href="#section-28-2">28.2</a> | <a href="#section-28-3">28.3</a> | <a href="#section-28-4">28.4</a> | <a href="#section-28-5">28.5</a>)
     </div>
   </div>
 
   <div class="toc-section">
     <strong>Part VII: File Control System <span class="new-badge">NEW</span></strong>
     <div class="toc-items">
-      <a href="#chapter-32">32. Project File Structure</a>
+      <a href="#chapter-29">29. Project File Structure</a>
+      (<a href="#section-29-1">29.1</a> | <a href="#section-29-2">29.2</a> | <a href="#section-29-3">29.3</a> | <a href="#section-29-4">29.4</a> | <a href="#section-29-5">29.5</a> | <a href="#section-29-6">29.6</a>)
     </div>
   </div>
 
   <div class="toc-section">
     <strong>Appendices</strong>
     <div class="toc-items">
-      <a href="#appendix-b">B. SPEC Template</a> |
-      <a href="#appendix-c">C. Quality Gate Checklists</a>
+      <a href="#appendix-a">A. SPEC Template</a> |
+      <a href="#appendix-b">B. Quality Gate Checklists</a>
     </div>
   </div>
 
@@ -213,11 +220,15 @@
   <p style="margin-bottom: 0;"><strong>Time:</strong> ~30 minutes to read. Do not start coding yet.</p>
 </div>
 
-<h1 id="chapter-24">Chapter 24: MOAI-ADK Overview</h1>
+<h1 id="chapter-23">Chapter 23: MOAI-ADK Overview</h1>
+
+<p>In this chapter, you'll learn the MOAI-ADK methodology—how design artifacts flow into implementation through SPECs and TDD. Understanding this flow is essential before executing any milestones. By the end of this chapter, you'll know how all the pieces connect.</p>
 
 <div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
   <strong>📖 Read for Understanding</strong> &mdash; This chapter explains the MOAI methodology. No action required yet. You'll apply these concepts when executing milestones in the Build Guide.
 </div>
+
+<h2 id="section-23-1">23.1 The Integration Flow</h2>
 
 <p>MOAI-ADK (Methodology for Organized AI-Driven Development Kit) structures AI-assisted implementation through SPEC-First Development, EARS Requirements, TDD Workflow, and Documentation Sync.</p>
 
@@ -244,13 +255,39 @@ Architecture      ----+                              v
   </ol>
 </div>
 
-<h1 id="chapter-25">Chapter 25: SPEC-First Development</h1>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> How design artifacts (Design Brief, UX Package, UI System, Architecture) flow through the Build Contract into SPECs and finally into tested code.</p>
+  <p><strong>What you should have ready:</strong> Build Contract created, docs/specs/ folder created, testing framework installed, CLAUDE.md configured.</p>
+  <p><strong>Next:</strong> Chapter 25 — Learn the SPEC-First Development approach and EARS requirements format.</p>
+</div>
+
+<h2 id="section-23-2">23.2 Chapter Summary</h2>
+
+<p>You've learned the MOAI-ADK integration methodology. Key takeaways:</p>
+
+<ul>
+  <li>Design artifacts feed into the Build Contract</li>
+  <li>Build Contract informs SPEC documents</li>
+  <li>SPECs drive TDD implementation</li>
+  <li>The result is tested, documented code</li>
+</ul>
+
+<p>In the next chapter, you'll learn the SPEC-First Development approach that ensures every feature starts with requirements and test cases.</p>
+
+<hr class="divider">
+
+<h1 id="chapter-24">Chapter 24: SPEC-First Development</h1>
+
+<p>In this chapter, you'll learn the SPEC-First Development approach—writing requirements and test cases before any code. You'll master the EARS requirements format and GIVEN-WHEN-THEN test case structure. By the end of this chapter, you'll be able to write clear, testable specifications.</p>
 
 <div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
   <strong>📖 Read for Understanding</strong> &mdash; Learn the EARS requirements format and test case structure. You'll write SPECs using these patterns for each feature before coding.
 </div>
 
-<h2>25.1 EARS Requirements Format</h2>
+<h2 id="section-24-1">24.1 EARS Requirements Format</h2>
+
+<p>EARS (Easy Approach to Requirements Syntax) provides five patterns for writing unambiguous requirements. Using these patterns ensures your requirements are testable and clear.</p>
 
 <table class="comparison-table">
   <tr><th>Type</th><th>Pattern</th><th>Example</th></tr>
@@ -261,7 +298,9 @@ Architecture      ----+                              v
   <tr><td>Unwanted</td><td>The [system] shall not [action]</td><td>The system shall not store raw API keys.</td></tr>
 </table>
 
-<h2>25.2 Test Case Format</h2>
+<h2 id="section-24-2">24.2 Test Case Format</h2>
+
+<p>Test cases use the GIVEN-WHEN-THEN format, which clearly separates preconditions, actions, and expected outcomes. This format maps directly to test code structure.</p>
 
 <div class="code-block">### TC-PHOTO-001: Valid image upload
 
@@ -292,11 +331,40 @@ touch docs/specs/SPEC-AUTH-001.md
 Reference Build Contract section 2.3 for authentication requirements"</div>
 </div>
 
-<h1 id="chapter-26">Chapter 26: TDD Workflow</h1>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The five EARS requirement patterns and how to write GIVEN-WHEN-THEN test cases that map to each requirement.</p>
+  <p><strong>What you should be able to do:</strong> Write a SPEC document with properly formatted requirements and test cases for any feature.</p>
+  <p><strong>Next:</strong> Chapter 26 — Learn the TDD workflow that implements your SPECs.</p>
+</div>
+
+<h2 id="section-24-3">24.3 Chapter Summary</h2>
+
+<p>You've learned SPEC-First Development. Key takeaways:</p>
+
+<ul>
+  <li>Write SPECs before any code—requirements and test cases first</li>
+  <li>Use EARS format for unambiguous, testable requirements</li>
+  <li>Use GIVEN-WHEN-THEN format for clear test cases</li>
+  <li>Every SPEC references relevant Build Contract sections</li>
+  <li>At minimum, one test case per requirement</li>
+</ul>
+
+<p>In the next chapter, you'll learn the TDD workflow that transforms your SPECs into tested, working code.</p>
+
+<hr class="divider">
+
+<h1 id="chapter-25">Chapter 25: TDD Workflow</h1>
+
+<p>In this chapter, you'll learn the TDD (Test-Driven Development) workflow—the RED → GREEN → REFACTOR cycle that ensures every feature is properly tested. This workflow is the core of MOAI implementation. By the end of this chapter, you'll know exactly how to transform SPECs into working code.</p>
 
 <div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
   <strong>📖 Read for Understanding</strong> &mdash; Understand the RED → GREEN → REFACTOR cycle. You'll follow this exact workflow for every feature during milestone execution.
 </div>
+
+<h2 id="section-25-1">25.1 The TDD Cycle</h2>
+
+<p>TDD follows a strict three-phase cycle. Each phase has a specific purpose and discipline.</p>
 
 <div class="file-structure">
 TDD CYCLE: RED --> GREEN --> REFACTOR --> DONE
@@ -364,15 +432,40 @@ npm run lint</div>
 <strong>Detailed TDD prompts and milestone guides are in the Build Phase Guide v3.</strong>
 </div>
 
-<h1 id="chapter-27">Chapter 27: Technical Debt Scoring Framework <span class="new-badge">NEW</span></h1>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The RED → GREEN → REFACTOR cycle and how each phase contributes to code quality.</p>
+  <p><strong>What you should be able to do:</strong> Execute the TDD workflow for any SPEC—write failing tests, implement to pass, then refactor while keeping tests green.</p>
+  <p><strong>Next:</strong> Chapter 27 — Learn the Technical Debt Scoring Framework to monitor code health.</p>
+</div>
+
+<h2 id="section-25-2">25.2 Chapter Summary</h2>
+
+<p>You've learned the TDD workflow. Key takeaways:</p>
+
+<ul>
+  <li><strong>RED:</strong> Write failing tests from SPEC test cases first</li>
+  <li><strong>GREEN:</strong> Write minimum code to make tests pass</li>
+  <li><strong>REFACTOR:</strong> Improve code quality while tests stay green</li>
+  <li>Run tests after every change to verify progress</li>
+  <li>Quality gates ensure code meets standards before moving on</li>
+</ul>
+
+<p>In the next chapter, you'll learn how to measure and manage technical debt throughout the build phase.</p>
+
+<hr class="divider">
+
+<h1 id="chapter-26">Chapter 26: Technical Debt Scoring Framework <span class="new-badge">NEW</span></h1>
+
+<p>In this chapter, you'll learn the Technical Debt Scoring Framework—a systematic way to measure and manage code quality degradation. Understanding technical debt helps you make informed decisions about when to incur debt and when to pay it down. By the end of this chapter, you'll have automated tools to track debt throughout your project.</p>
 
 <div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
   <strong>📖 Read + Setup</strong> &mdash; Understand the scoring methodology, then copy the automation templates to your project. You'll run debt audits at each checkpoint during the build phase.
 </div>
 
-<p>Technical debt is inevitable during rapid development. The difference between successful projects and troubled ones is not the absence of debt &mdash; it's the <strong>awareness and management</strong> of that debt. This framework provides objective measurement so you can make informed decisions about when to incur debt, when to pay it down, and when to stop and remediate.</p>
+<p>Technical debt is inevitable during rapid development. The difference between successful projects and troubled ones is not the absence of debt—it's the <strong>awareness and management</strong> of that debt. This framework provides objective measurement so you can make informed decisions about when to incur debt, when to pay it down, and when to stop and remediate.</p>
 
-<h2>27.1 Why Measure Technical Debt</h2>
+<h2 id="section-26-1">26.1 Why Measure Technical Debt</h2>
 
 <p>Without measurement, debt accumulates invisibly until it blocks progress. Common symptoms of unmanaged debt:</p>
 
@@ -386,7 +479,9 @@ npm run lint</div>
 
 <p>The scoring framework makes debt visible and actionable. Run it at every checkpoint to catch problems early.</p>
 
-<h2>27.2 The Six Debt Categories</h2>
+<h2 id="section-26-2">26.2 The Six Debt Categories</h2>
+
+<p>Technical debt is measured across six categories, each with a specific weight reflecting its impact on long-term maintainability.</p>
 
 <table class="comparison-table">
   <tr>
@@ -433,7 +528,9 @@ npm run lint</div>
   </tr>
 </table>
 
-<h2>27.3 Scoring Each Category (1-10 Scale)</h2>
+<h2 id="section-26-3">26.3 Scoring Each Category (1-10 Scale)</h2>
+
+<p>Each category is scored on a 1-10 scale using automated tools where possible. Consistent scoring criteria ensure objective measurement across checkpoints.</p>
 
 <h3>Code Complexity Score</h3>
 <div class="code-block"># Run ESLint with complexity rules
@@ -550,7 +647,9 @@ npm outdated
 # 4-5: 3-5 high vulnerabilities or 1 critical
 # 1-3: Multiple critical vulnerabilities</div>
 
-<h2>27.4 Calculating the Overall Score</h2>
+<h2 id="section-26-4">26.4 Calculating the Overall Score</h2>
+
+<p>The weighted formula combines all category scores into a single number that represents overall code health. This makes it easy to track trends and make go/no-go decisions at checkpoints.</p>
 
 <div class="code-block">Overall Score = (Complexity x 0.25) + (ErrorHandling x 0.20) +
                (TypeSafety x 0.20) + (TestCoverage x 0.20) +
@@ -566,7 +665,9 @@ Example:
   ----------------------------
   Overall Score:         7.90</div>
 
-<h2>27.5 Score Thresholds and Actions</h2>
+<h2 id="section-26-5">26.5 Score Thresholds and Actions</h2>
+
+<p>Knowing your score is only useful if you know what action to take. These thresholds define clear decision criteria for each checkpoint.</p>
 
 <table class="comparison-table">
   <tr>
@@ -605,7 +706,9 @@ Example:
   <strong>Checkpoint Gate:</strong> At Checkpoint A and B, a score below 6.0 is a hard stop. Do not proceed to the next milestone until debt is remediated to at least 6.0.
 </div>
 
-<h2>27.6 Generating and Updating TECH-DEBT.md</h2>
+<h2 id="section-26-6">26.6 Generating and Updating TECH-DEBT.md</h2>
+
+<p>Manual debt tracking is error-prone and often forgotten. Automating the audit process ensures consistent measurement and creates a historical record you can reference to understand trends.</p>
 
 <p>At each checkpoint, use Claude Code to run all debt checks and generate/update <code>TECH-DEBT.md</code>:</p>
 
@@ -694,20 +797,57 @@ Current checkpoint: [CHECKPOINT_A | CHECKPOINT_B | CHECKPOINT_C]</div>
   <p>The GitHub Action runs on every PR and blocks merges if score falls below threshold.</p>
 </div>
 
-<h1 id="chapter-28">Chapter 28: Build Milestones</h1>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The six debt categories, how to score each, and what actions to take at each threshold.</p>
+  <p><strong>What you should have:</strong> TECH-DEBT.md created in your project root, ESLint debt config installed, and GitHub Action configured.</p>
+  <p><strong>Next:</strong> Chapter 28 — Overview of Build Milestones and checkpoints.</p>
+</div>
+
+<h2 id="section-26-7">26.7 Chapter Summary</h2>
+
+<p>You've learned the Technical Debt Scoring Framework. Key takeaways:</p>
+
+<ul>
+  <li>Technical debt is inevitable—the key is awareness and management</li>
+  <li>Six categories measure different aspects of code health</li>
+  <li>Score 8.0+ is excellent, 6.0-7.9 is acceptable, below 6.0 requires action</li>
+  <li>Run debt audits at every checkpoint (A, B, C)</li>
+  <li>Automated tools catch problems early</li>
+</ul>
+
+<p>In the next chapter, you'll see an overview of all build milestones and checkpoints.</p>
+
+<hr class="divider">
+
+<h1 id="chapter-27">Chapter 27: Build Milestones</h1>
+
+<p>In this chapter, you'll see the complete milestone structure for building your SaaS product. This overview shows what gets built when and where quality checkpoints occur. By the end of this chapter, you'll understand the full build journey.</p>
 
 <div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
   <strong>📖 Reference</strong> &mdash; This is an overview of all milestones and checkpoints. For detailed prompts and step-by-step instructions, open the <a href="build-guide-v3.html">Build Phase Guide</a>.
 </div>
 
+<h2 id="section-27-1">27.1 Milestone Overview</h2>
+
+<p>The build phase is structured into 11 milestones with three quality checkpoints. Each milestone has clear deliverables, and checkpoints ensure you don't accumulate debt that will slow you down later.</p>
+
 <table class="comparison-table">
-  <tr><th>Milestone</th><th>Focus</th><th>Deliverables</th></tr>
-  <tr><td>M1-M4</td><td>Setup, Design System, Database, Layouts</td><td>Foundation ready</td></tr>
-  <tr><td>M5</td><td>Authentication</td><td>Sign up, login, sessions</td></tr>
-  <tr style="background: #ede9fe;"><td colspan="3"><strong>CHECKPOINT A</strong> - Code Audit</td></tr>
-  <tr><td>M6</td><td>Core Feature</td><td>Primary value delivery</td></tr>
-  <tr style="background: #ede9fe;"><td colspan="3"><strong>CHECKPOINT B</strong> - Feature Complete</td></tr>
-  <tr><td>M7-M11</td><td>Admin, Edge Cases, Billing, Performance, Launch</td><td>Production ready</td></tr>
+  <tr><th>Milestone</th><th>Name</th><th>Focus</th><th>Deliverables</th></tr>
+  <tr><td><strong>M1</strong></td><td>Project Setup</td><td>Next.js, TypeScript, Tailwind, folder structure</td><td>Configured project</td></tr>
+  <tr><td><strong>M2</strong></td><td>Design System</td><td>shadcn/ui, design tokens, core components</td><td>Component library</td></tr>
+  <tr><td><strong>M3</strong></td><td>Database</td><td>Schema, RLS policies, indexes, admin tables</td><td>Secure data layer</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>⬥ CHECKPOINT A</strong> — Foundation Audit (security, RLS, schema review)</td></tr>
+  <tr><td><strong>M4</strong></td><td>Layouts</td><td>Root, marketing, app layouts, navigation</td><td>Page structure</td></tr>
+  <tr><td><strong>M5</strong></td><td>Authentication</td><td>Auth clients, login/signup, middleware, context</td><td>User sessions</td></tr>
+  <tr><td><strong>M6</strong></td><td>Core Feature</td><td>Data layer, server actions, UI, page assembly</td><td>Primary value</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>⬥ CHECKPOINT B</strong> — Feature Complete Audit (code quality, tests, debt score)</td></tr>
+  <tr><td><strong>M7</strong></td><td>Admin Console</td><td>Role access, user management, error logs</td><td>Operational control</td></tr>
+  <tr><td><strong>M8</strong></td><td>Supporting Features</td><td>Secondary features using M6 pattern</td><td>Extended functionality</td></tr>
+  <tr><td><strong>M9</strong></td><td>Payments</td><td>Stripe, webhooks, checkout, subscriptions</td><td>Revenue system</td></tr>
+  <tr><td><strong>M10</strong></td><td>Polish</td><td>Error boundaries, loading states, accessibility</td><td>Production quality</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>⬥ CHECKPOINT C</strong> — Pre-Launch Audit (full security, performance, debt)</td></tr>
+  <tr><td><strong>M11</strong></td><td>Testing</td><td>E2E tests, unit tests, integration tests</td><td>Test coverage</td></tr>
 </table>
 
 <div class="moai-box">
@@ -746,6 +886,30 @@ npm test -- --coverage
 git tag -a checkpoint-a -m "Checkpoint A: Foundation complete"</div>
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The complete milestone structure (M1-M11) and when each checkpoint (A, B, C) occurs.</p>
+  <p><strong>What you should be ready for:</strong> Opening the Build Phase Guide and starting Milestone 1.</p>
+  <p><strong>Next:</strong> Open the Build Phase Guide and begin implementation!</p>
+</div>
+
+<h2 id="section-27-2">27.2 Chapter Summary</h2>
+
+<p>You've seen the complete Build Milestones overview. Key takeaways:</p>
+
+<ul>
+  <li>11 milestones from setup (M1) to testing (M11)</li>
+  <li>Three checkpoints for quality verification:
+    <ul>
+      <li><strong>Checkpoint A</strong> after M3 (Database) — Foundation security audit</li>
+      <li><strong>Checkpoint B</strong> after M6 (Core Feature) — Feature complete audit</li>
+      <li><strong>Checkpoint C</strong> after M10 (Polish) — Pre-launch audit</li>
+    </ul>
+  </li>
+  <li>Each milestone follows SPEC-First and TDD workflow</li>
+  <li>Build Phase Guide has detailed step-by-step instructions</li>
+</ul>
+
 <!-- TRANSITION TO BUILD GUIDE -->
 <div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; color: white;">
   <h2 style="color: white; margin-top: 0; border: none;">🚀 Ready to Start Building</h2>
@@ -781,13 +945,15 @@ git tag -a checkpoint-a -m "Checkpoint A: Foundation complete"</div>
   <p style="color: var(--muted); margin-top: 0.5rem;">Production Readiness and Go-Live</p>
 </div>
 
-<h1 id="chapter-30">Chapter 30: QA and Launch Checklist</h1>
+<h1 id="chapter-28">Chapter 28: QA and Launch Checklist</h1>
 
-<h2>30.1 Why the Launch Phase Matters</h2>
+<p>In this chapter, you'll learn the QA and launch checklist that ensures your application is production-ready. This is the final quality gate before real users see your product. By the end of this chapter, you'll have a complete launch verification workflow.</p>
+
+<h2 id="section-28-1">28.1 Why the Launch Phase Matters</h2>
 
 <p>The Launch phase ensures your application is production-ready. Skipping these checks leads to embarrassing bugs in front of real users, security vulnerabilities, and poor performance that drives users away. This phase connects all previous work &mdash; your design, architecture, and implementation &mdash; into a verified, deployable product.</p>
 
-<h2>30.2 How Launch Supports the Process</h2>
+<h2 id="section-28-2">28.2 How Launch Supports the Process</h2>
 
 <p>Launch is not just "pushing to production." It's the final quality gate that validates:</p>
 <ul>
@@ -797,7 +963,9 @@ git tag -a checkpoint-a -m "Checkpoint A: Foundation complete"</div>
   <li><strong>Security is enforced</strong> &mdash; RLS policies, auth, and data protection verified</li>
 </ul>
 
-<h2>30.3 Pre-Launch Workflow</h2>
+<h2 id="section-28-3">28.3 Pre-Launch Workflow</h2>
+
+<p>The pre-launch workflow ensures nothing critical is missed before users see your product. Work through each category systematically—rushing this phase creates embarrassing bugs and security vulnerabilities.</p>
 
 <div class="checklist">
   <h4>Pre-Launch Checklist</h4>
@@ -1015,7 +1183,9 @@ npm run build
   </ol>
 </div>
 
-<h2>30.4 Launch Day Actions</h2>
+<h2 id="section-28-4">28.4 Launch Day Actions</h2>
+
+<p>Launch day has its own checklist separate from pre-launch verification. These are the final infrastructure and team coordination steps that must happen right before going live.</p>
 
 <div class="checklist">
   <h4>Launch Day Checklist</h4>
@@ -1033,6 +1203,25 @@ npm run build
   <strong>Post-Launch Monitoring:</strong> Monitor error rates and user behavior closely for the first 48 hours. Be prepared to roll back if critical issues emerge.
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete QA and launch checklist to verify before going live.</p>
+  <p><strong>What you should do:</strong> Execute every item in the pre-launch and launch day checklists before announcing to users.</p>
+  <p><strong>Next:</strong> Chapter 30 — Learn the project file structure for AI-assisted development.</p>
+</div>
+
+<h2 id="section-28-5">28.5 Chapter Summary</h2>
+
+<p>You've learned the QA and Launch workflow. Key takeaways:</p>
+
+<ul>
+  <li>Launch is a quality gate, not just a deployment</li>
+  <li>Pre-launch checklist covers code, security, performance, and UX</li>
+  <li>Launch day checklist covers infrastructure and team readiness</li>
+  <li>Monitor closely for 48 hours post-launch</li>
+  <li>Be prepared to roll back if critical issues emerge</li>
+</ul>
+
 <hr class="divider">
 
 <!-- PART VII: FILE CONTROL SYSTEM -->
@@ -1041,9 +1230,11 @@ npm run build
   <p style="color: var(--muted); margin-top: 0.5rem;">Artifact Organization for AI-Assisted Development</p>
 </div>
 
-<h1 id="chapter-32">Chapter 32: Project File Structure</h1>
+<h1 id="chapter-29">Chapter 29: Project File Structure</h1>
 
-<h2>32.1 Why File Control Matters</h2>
+<p>In this chapter, you'll learn the standard file structure for AI-assisted development. This structure enables the MOAI workflow by establishing clear locations for every artifact. By the end of this chapter, your project will be organized for efficient AI-assisted development.</p>
+
+<h2 id="section-29-1">29.1 Why File Control Matters</h2>
 
 <p>The File Control System enables MOAI workflow by establishing clear locations for every artifact. When Claude Code or any AI assistant needs to reference your design decisions, architecture, or requirements, it knows exactly where to look. Without this structure:</p>
 
@@ -1054,7 +1245,9 @@ npm run build
   <li>Test files get scattered, making coverage reports inaccurate</li>
 </ul>
 
-<h2>32.2 The Standard Structure</h2>
+<h2 id="section-29-2">29.2 The Standard Structure</h2>
+
+<p>This structure balances simplicity with the needs of AI-assisted development. Every location has a clear purpose, making it easy for both humans and AI tools to navigate.</p>
 
 <div class="file-structure">
 project-root/
@@ -1072,7 +1265,9 @@ project-root/
 +-- README.md
 </div>
 
-<h2>32.3 What's Required from You</h2>
+<h2 id="section-29-3">29.3 What's Required from You</h2>
+
+<p>Setting up the file structure takes about 10 minutes at the start of your project. These actions create the foundation that all MOAI workflows depend on.</p>
 
 <div class="moai-box">
   <h4>Initial Setup Actions</h4>
@@ -1122,7 +1317,9 @@ mkdir -p src/__tests__
 mv src/**/*.test.ts src/__tests__/</div>
 </div>
 
-<h2>32.4 File Naming Conventions</h2>
+<h2 id="section-29-4">29.4 File Naming Conventions</h2>
+
+<p>Consistent naming makes files discoverable and self-documenting. AI tools can find and reference files more accurately when naming follows predictable patterns.</p>
 
 <table class="comparison-table">
   <tr><th>File Type</th><th>Location</th><th>Naming Pattern</th><th>Example</th></tr>
@@ -1135,7 +1332,9 @@ mv src/**/*.test.ts src/__tests__/</div>
   <tr><td>Debt tracking</td><td>project root</td><td>TECH-DEBT.md</td><td>TECH-DEBT.md</td></tr>
 </table>
 
-<h2>32.5 When to Update Files</h2>
+<h2 id="section-29-5">29.5 When to Update Files</h2>
+
+<p>Documentation that doesn't evolve with your code becomes misleading. These triggers help you maintain documentation as a habit rather than a chore you forget about.</p>
 
 <div class="checklist">
   <h4>File Maintenance Triggers</h4>
@@ -1152,6 +1351,27 @@ mv src/**/*.test.ts src/__tests__/</div>
   <strong>Keep Documentation in Sync:</strong> Outdated documentation is worse than no documentation. When you make significant changes, update the relevant files immediately. Add this to your commit checklist.
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A properly organized project with docs/, docs/specs/, src/__tests__/, CLAUDE.md, and TECH-DEBT.md in place.</p>
+  <p><strong>How to validate:</strong> Run <code>ls -la</code> at project root—you should see CLAUDE.md, TECH-DEBT.md, docs/, and src/. Run <code>ls docs/</code>—you should see build-contract.md and specs/.</p>
+  <p><strong>Next:</strong> Appendices — Reference materials for SPECs and quality gates.</p>
+</div>
+
+<h2 id="section-29-6">29.6 Chapter Summary</h2>
+
+<p>You've learned the File Control System. Key takeaways:</p>
+
+<ul>
+  <li>Standard structure enables AI assistants to find and reference artifacts</li>
+  <li>docs/ holds design artifacts, docs/specs/ holds SPEC documents</li>
+  <li>CLAUDE.md provides project context, TECH-DEBT.md tracks debt</li>
+  <li>Consistent naming conventions make files discoverable</li>
+  <li>Keep documentation in sync with code changes</li>
+</ul>
+
+<p>Congratulations! You've completed the main handbook content. The appendices below provide reference templates for ongoing use.</p>
+
 <hr class="divider">
 
 <!-- APPENDICES -->
@@ -1159,7 +1379,9 @@ mv src/**/*.test.ts src/__tests__/</div>
   <h2>APPENDICES</h2>
 </div>
 
-<h1 id="appendix-b">Appendix B: SPEC Template</h1>
+<h1 id="appendix-a">Appendix A: SPEC Template</h1>
+
+<p>Use this template for every SPEC document. Copy it to <code>docs/specs/SPEC-[PREFIX]-[NNN].md</code> and fill in the bracketed placeholders.</p>
 
 <div class="code-block"># SPEC-[PREFIX]-[NNN]: [Feature Name]
 
@@ -1186,7 +1408,9 @@ mv src/**/*.test.ts src/__tests__/</div>
 - [ ] All test cases pass
 - [ ] Code meets quality standards</div>
 
-<h1 id="appendix-c">Appendix C: Quality Gate Checklists</h1>
+<h1 id="appendix-b">Appendix B: Quality Gate Checklists</h1>
+
+<p>Use these checklists at quality gates throughout the build phase. Every item must pass before proceeding.</p>
 
 <div class="checklist">
   <h4>SPEC Ready</h4>

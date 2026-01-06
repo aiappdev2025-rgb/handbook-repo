@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 33: M5 - Authentication - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-33">Chapter 33: Milestone 5 - Authentication</h1>
+
+<p class="chapter-intro">In this chapter, you'll implement authentication with Supabase Auth. By the end, you'll have secure login, signup, protected routes, and user session management.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Auth involves both client and server code. Review <a href="../workflow-guide-v1.html#agentic-patterns">Agentic Patterns</a> for handling multi-file changes.
+</div>
+
+<h2 id="section-33-1">33.1 Overview</h2>
+
+<p>Authentication is the gateway to your application. Proper implementation with Supabase Auth gives you secure sessions, token refresh, and protected routes - without building auth from scratch.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 4 complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 2</p>
+  <p><strong>Deliverables:</strong> Auth flows working, protected routes, user session management.</p>
+</div>
+
+<h2 id="section-33-2">33.2 Implementation Prompts</h2>
+
+<h3>Prompt 5.1: Supabase Auth Configuration</h3>
+
+<div class="prompt-box">
+<h4>Prompt 5.1: Supabase Auth Configuration</h4>
+<pre>ROLE
+Full-Stack Developer implementing authentication.
+
+CONTEXT
+Project: {{productName}}
+Layouts complete (Milestone 4).
+Using Supabase Auth with email/password.
+
+OBJECTIVE
+Set up Supabase auth clients and middleware.
+
+REQUIREMENTS
+
+1. Install Supabase packages:
+   - @supabase/supabase-js
+   - @supabase/ssr
+
+2. Create Supabase clients (src/lib/supabase/):
+   - client.ts: Browser client for client components
+   - server.ts: Server client for server components/actions
+   - middleware.ts: Client for middleware (token refresh)
+
+3. Create middleware (src/middleware.ts):
+   - Refresh auth tokens on each request
+   - Protect /dashboard/* and /app/* routes
+   - Redirect unauthenticated users to /login
+   - Redirect authenticated users away from /login, /signup
+
+4. Create auth context provider (src/components/providers/):
+   - UserProvider: Wraps app with user context
+   - useUser hook: Access current user
+   - Subscribe to auth state changes
+
+5. Create auth utility functions (src/lib/auth.ts):
+   - getCurrentUser(): Get user from server
+   - requireUser(): Throw if not authenticated
+   - signOut(): Server action for logout
+
+VERIFICATION
+Protected routes redirect to login when not authenticated
+Auth routes redirect to dashboard when authenticated</pre>
+</div>
+
+<h3>Prompt 5.2: Login and Signup Pages</h3>
+
+<div class="prompt-box">
+<h4>Prompt 5.2: Login and Signup Pages</h4>
+<pre>ROLE
+Frontend Developer creating authentication UI.
+
+CONTEXT
+Project: {{productName}}
+Supabase auth configured (Prompt 5.1).
+Design system available.
+
+OBJECTIVE
+Create login and signup pages with proper validation.
+
+REQUIREMENTS
+
+1. Login page (src/app/(auth)/login/page.tsx):
+   - Email and password fields
+   - "Remember me" checkbox (optional)
+   - "Forgot password" link
+   - Link to signup page
+   - Loading state during submission
+   - Error display for invalid credentials
+
+2. Signup page (src/app/(auth)/signup/page.tsx):
+   - Email, password, confirm password fields
+   - Full name field (optional)
+   - Terms acceptance checkbox
+   - Link to login page
+   - Loading state during submission
+   - Success message (check email for verification)
+
+3. Form validation (using react-hook-form + zod):
+   - Email: Valid email format
+   - Password: Minimum 8 characters
+   - Confirm password: Must match password
+   - Show validation errors inline
+
+4. Server actions (src/app/(auth)/actions.ts):
+   - signInAction: Handle login form submission
+   - signUpAction: Handle signup form submission
+   - Return proper error messages
+
+5. Password reset flow (optional for MVP):
+   - Forgot password page with email input
+   - Reset password page (from email link)
+
+VERIFICATION
+Can create new account and receive verification email
+Can log in with valid credentials
+Validation errors display correctly
+Redirects to dashboard after successful login</pre>
+</div>
+
+<h2 id="section-33-3">33.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Supabase auth clients configured for browser and server, login and signup pages with form validation, middleware protecting authenticated routes, and user context provider.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Create new account (receive verification email)</li>
+    <li>Log in with valid credentials</li>
+    <li>Protected routes redirect to login when unauthenticated</li>
+    <li>Auth routes redirect to dashboard when logged in</li>
+  </ul>
+</div>
+
+<h2 id="section-33-4">33.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 5. Your project now has:</p>
+<ul>
+  <li>Supabase auth clients (browser, server, middleware)</li>
+  <li>Middleware for route protection and token refresh</li>
+  <li>Login page with validation</li>
+  <li>Signup page with validation</li>
+  <li>User context provider and useUser hook</li>
+  <li>Auth utility functions</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 34 (Milestone 6) - Build your core feature using the four-prompt pattern.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 36: M7 - Admin Console - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-36">Chapter 36: Milestone 7 - Admin Console</h1>
+
+<p class="chapter-intro">In this chapter, you'll build an operational admin console for managing your SaaS. By the end, you'll have user management, subscription viewing, and error log access.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Admin features require careful access control. Review <a href="../workflow-guide-v1.html#context-management">Context Management</a> for maintaining security focus.
+</div>
+
+<h2 id="section-36-1">36.1 Overview</h2>
+
+<p>Building the admin console as Milestone 7 (after core feature, before additional features) is intentional. By this point, you have real data structures to manage and real functionality to monitor. Building it now means you have operational visibility while you're still actively developing.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 6 complete, Checkpoint B passed</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 5</p>
+  <p><strong>Deliverables:</strong> Admin role system, user management, subscription viewing, error logs.</p>
+</div>
+
+<div class="note">
+  <strong>Phase 1 Admin Features (This Milestone):</strong> These are the essential features you need from day one. User management (list, search, view), subscription viewing, and error log integration. Everything else can wait until after launch.
+</div>
+
+<h2 id="section-36-2">36.2 Admin Database Setup</h2>
+
+<p>First, add admin-specific tables to your database. Create this migration:</p>
+
+<div class="prompt-box">
+<h4>Prompt 7.1: Admin Schema</h4>
+<pre>ROLE
+Database Engineer adding admin functionality.
+
+CONTEXT
+Project: {{productName}}
+Core schema exists (Milestone 3).
+Need admin role system and audit logging.
+
+OBJECTIVE
+Create database tables and functions for admin features.
+
+REQUIREMENTS
+
+1. Add role column to profiles table:
+   - role: text default 'user' check (role in ('user', 'admin', 'super_admin'))
+
+2. Create admin_audit_logs table:
+   - id, admin_user_id, action, target_type, target_id
+   - metadata (jsonb), created_at
+   - Enable RLS
+
+3. Create error_logs table:
+   - id, user_id (nullable), error_type, message
+   - stack_trace, url, user_agent, created_at
+   - Enable RLS
+
+4. Update is_admin() function:
+   - Check if current user has admin or super_admin role
+
+5. Create RLS policies:
+   - Admin audit logs: admins can read all, insert own
+   - Error logs: admins can read all, service role can insert
+
+OUTPUT
+Migration file: YYYYMMDDHHMMSS_add_admin_tables.sql</pre>
+</div>
+
+<h2 id="section-36-3">36.3 Implementation Prompts</h2>
+
+<h3>Prompt 7.2: Admin Layout and Access</h3>
+
+<div class="prompt-box">
+<h4>Prompt 7.2: Admin Layout and Access</h4>
+<pre>ROLE
+Full-Stack Developer implementing admin access control.
+
+CONTEXT
+Project: {{productName}}
+Admin schema created (Prompt 7.1).
+Need protected admin area.
+
+OBJECTIVE
+Create admin layout with role-based access.
+
+REQUIREMENTS
+
+1. Admin layout (src/app/(admin)/layout.tsx):
+   - Check user role before rendering
+   - Redirect non-admins to dashboard
+   - Admin navigation sidebar
+   - Different styling from main app
+
+2. Admin middleware update:
+   - Protect /admin/* routes
+   - Verify admin role from database
+   - Log admin page access
+
+3. Admin navigation:
+   - Dashboard (overview stats)
+   - Users (list, search, view)
+   - Subscriptions (view only)
+   - Error Logs (recent errors)
+   - Audit Log (admin actions)
+
+VERIFICATION
+Non-admin users redirected from /admin
+Admin sidebar shows all sections
+Role check happens server-side</pre>
+</div>
+
+<h3>Prompt 7.3: User Management</h3>
+
+<div class="prompt-box">
+<h4>Prompt 7.3: User Management</h4>
+<pre>ROLE
+Full-Stack Developer building user management.
+
+CONTEXT
+Project: {{productName}}
+Admin layout ready (Prompt 7.2).
+Need user list and detail views.
+
+OBJECTIVE
+Create user management interface for admins.
+
+REQUIREMENTS
+
+1. Users list page (src/app/(admin)/admin/users/page.tsx):
+   - Paginated user list
+   - Search by email, name
+   - Filter by role, status
+   - Sort by created_at, email
+
+2. User detail page (src/app/(admin)/admin/users/[id]/page.tsx):
+   - Profile information
+   - Subscription status
+   - Activity summary
+   - Related data overview
+
+3. User actions (admin only):
+   - View user details
+   - Change user role (with audit log)
+   - NOTE: No edit/delete of user data for privacy
+
+4. Audit logging:
+   - Log all admin views of user data
+   - Log role changes with before/after
+
+VERIFICATION
+User list loads with pagination
+Search and filters work
+User detail shows correct data
+Actions are logged</pre>
+</div>
+
+<h3>Prompt 7.4: Error Logs</h3>
+
+<div class="prompt-box">
+<h4>Prompt 7.4: Error Logs</h4>
+<pre>ROLE
+Full-Stack Developer implementing error logging.
+
+CONTEXT
+Project: {{productName}}
+Admin layout ready.
+Need error visibility for debugging.
+
+OBJECTIVE
+Create error logging and viewing system.
+
+REQUIREMENTS
+
+1. Error logging utility (src/lib/error-logger.ts):
+   - logError(error, context): Log to database
+   - Include: message, stack, url, user_id, user_agent
+   - Works in server components and API routes
+
+2. Global error handler:
+   - Catch unhandled errors
+   - Log to database automatically
+   - Show user-friendly error page
+
+3. Error logs page (src/app/(admin)/admin/errors/page.tsx):
+   - Recent errors list
+   - Filter by type, date range
+   - Error detail view with stack trace
+   - Mark as resolved
+
+4. Error alert (optional):
+   - Notification for critical errors
+   - Daily digest email
+
+VERIFICATION
+Errors logged to database
+Admin can view error list
+Stack traces visible in detail view</pre>
+</div>
+
+<h2 id="section-36-4">36.4 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Protected admin area with role-based access, user management with search and filtering, subscription status viewing, error log viewing, and audit logging of admin actions.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Non-admin users redirected from /admin</li>
+    <li>User list with search and pagination works</li>
+    <li>Admin actions are logged</li>
+    <li>Error logs show recent errors</li>
+  </ul>
+</div>
+
+<h2 id="section-36-5">36.5 Chapter Summary</h2>
+
+<p>You've completed Milestone 7. Your project now has:</p>
+<ul>
+  <li>Admin role system in database</li>
+  <li>Protected admin area with layout</li>
+  <li>User management interface</li>
+  <li>Subscription viewing</li>
+  <li>Error logging and viewing</li>
+  <li>Audit logging of admin actions</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 37 (Milestone 8) - Build supporting features using the four-prompt pattern.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

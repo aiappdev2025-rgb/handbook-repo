@@ -164,28 +164,36 @@
   <div class="toc-section">
     <strong>Part I: Foundation</strong>
     <div class="toc-items">
-      <a href="#chapter-1">1. Introduction and Philosophy</a> |
-      <a href="#chapter-2">2. The Code Quality Crisis</a> |
-      <a href="#chapter-3">3. The Quality Framework: Five Pillars</a> |
-      <a href="#chapter-4">4. Claude Tools Guide: Chat vs Code CLI</a> |
-      <a href="#section-4-4">4.4 Setting Up Claude Projects</a>
+      <a href="#chapter-1">1. Introduction and Philosophy</a>
+      (<a href="#section-1-1">1.1</a> | <a href="#section-1-2">1.2</a> | <a href="#section-1-3">1.3</a> | <a href="#section-1-4">1.4</a>) |
+      <a href="#chapter-2">2. The Code Quality Crisis</a>
+      (<a href="#section-2-1">2.1</a> | <a href="#section-2-2">2.2</a> | <a href="#section-2-3">2.3</a> | <a href="#section-2-4">2.4</a>) |
+      <a href="#chapter-3">3. The Quality Framework: Five Pillars</a>
+      (<a href="#section-3-1">3.1</a> | <a href="#section-3-2">3.2</a> | <a href="#section-3-3">3.3</a> | <a href="#section-3-4">3.4</a> | <a href="#section-3-5">3.5</a> | <a href="#section-3-6">3.6</a> | <a href="#section-3-7">3.7</a>) |
+      <a href="#chapter-4">4. Claude Tools Guide</a>
+      (<a href="#section-4-1">4.1</a> | <a href="#section-4-2">4.2</a> | <a href="#section-4-3">4.3</a> | <a href="#section-4-4">4.4</a> | <a href="#section-4-5">4.5</a>)
     </div>
   </div>
 
   <div class="toc-section">
     <strong>Part II: Documentation Stages</strong>
     <div class="toc-items">
-      <a href="#stage-0">5. Stage 0.1: Research and Opportunity Assessment</a> |
-      <a href="#stage-1">6. Stage 1.0: Business One-Pager</a> |
-      <a href="#stage-2">7. Stage 2.0: Shared Design Brief</a>
+      <a href="#chapter-5">5. Research and Opportunity Assessment</a>
+      (<a href="#section-5-1">5.1</a> | <a href="#section-5-2">5.2</a> | <a href="#section-5-3">5.3</a> | <a href="#section-5-4">5.4</a>) |
+      <a href="#chapter-6">6. Business One-Pager</a>
+      (<a href="#section-6-1">6.1</a> | <a href="#section-6-2">6.2</a> | <a href="#section-6-3">6.3</a> | <a href="#section-6-4">6.4</a>) |
+      <a href="#chapter-7">7. Shared Design Brief</a>
+      (<a href="#section-7-1">7.1</a> | <a href="#section-7-2">7.2</a> | <a href="#section-7-3">7.3</a> | <a href="#section-7-4">7.4</a>)
     </div>
   </div>
 
   <div class="toc-section">
     <strong>Part III: Design Excellence</strong>
     <div class="toc-items">
-      <a href="#stage-3">8-10. UX Package and Validation</a> |
-      <a href="#stage-4">11-13. UI System</a>
+      <a href="#chapter-8">8-10. UX Package and Validation</a>
+      (<a href="#section-8-1">8.1</a> | <a href="#section-9-1">9.1</a> | <a href="#section-9-2">9.2</a> | <a href="#section-9-3">9.3</a> | <a href="#section-10-1">10.1</a> | <a href="#section-10-2">10.2</a> | <a href="#section-10-3">10.3</a>) |
+      <a href="#chapter-11">11-12. UI System</a>
+      (<a href="#section-11-1">11.1</a> | <a href="#section-11-2">11.2</a> | <a href="#section-11-3">11.3</a> | <a href="#section-12-1">12.1</a> | <a href="#section-12-2">12.2</a>)
     </div>
   </div>
 
@@ -208,7 +216,11 @@
 
 <h1 id="chapter-1">Chapter 1: Introduction and Philosophy</h1>
 
-<h2>1.1 The Vision</h2>
+<p>In this chapter, you'll learn the foundational philosophy behind this handbook—why documentation-first development matters, what quality standards we enforce, and how the complete workflow transforms ideas into production-ready products. By the end of this chapter, you'll understand the principles that guide every subsequent stage.</p>
+
+<h2 id="section-1-1">1.1 The Vision</h2>
+
+<p>Understanding the vision helps you make decisions when the handbook doesn't cover a specific scenario. Every choice in this methodology traces back to these fundamental goals.</p>
 
 <p>This handbook presents a methodology for building production-quality SaaS products using AI-assisted development. The goal is not just working code, but code that is secure, maintainable, testable, and ready for scale.</p>
 
@@ -219,7 +231,9 @@
   <p><strong>Specification Before Implementation.</strong> Every feature, no matter how small, starts with a SPEC that defines requirements, test cases, and acceptance criteria. Implementation follows the TDD cycle: write failing tests (RED), implement to pass (GREEN), improve code quality (REFACTOR).</p>
 </div>
 
-<h2>1.2 Core Principles</h2>
+<h2 id="section-1-2">1.2 Core Principles</h2>
+
+<p>These four principles guide every decision in this handbook. They're not aspirational—they're requirements that shape how you'll work through each stage.</p>
 
 <h3>Documentation Before Code</h3>
 <p>The most expensive bugs are architectural bugs. They compound over time and eventually require rewrites. The solution is to invest in documentation before writing code. This handbook enforces a documentation-first workflow where design decisions are made explicit before implementation begins.</p>
@@ -233,7 +247,9 @@
 <h3>Right Tool for the Task</h3>
 <p>Claude Chat and Claude Code CLI have different strengths. Using the right tool for each task dramatically improves outcomes. This handbook specifies which tool to use at each stage and why.</p>
 
-<h2>1.3 The Complete Workflow</h2>
+<h2 id="section-1-3">1.3 The Complete Workflow</h2>
+
+<p>The handbook follows a structured progression from research through deployment. Each phase builds on the previous, and each has specific tools and artifacts. Understanding this flow helps you know where you are and what's coming next.</p>
 
 <table class="comparison-table">
   <tr>
@@ -274,19 +290,42 @@
   </tr>
 </table>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The four core principles (Documentation Before Code, Quality Is Non-Negotiable, Verification at Every Step, Right Tool for the Task) and how they apply throughout the workflow.</p>
+  <p><strong>Key insight:</strong> This handbook optimizes for production-quality code, not speed. The upfront investment in documentation and planning pays dividends during implementation.</p>
+  <p><strong>Next:</strong> Chapter 2 — Understand the code quality problems we're solving.</p>
+</div>
+
+<h2 id="section-1-4">1.4 Chapter Summary</h2>
+
+<p>You've learned the foundational philosophy of this handbook. Key takeaways:</p>
+
+<ul>
+  <li>The goal is production-quality code: secure, maintainable, testable, and scalable</li>
+  <li>Documentation-first workflow prevents expensive architectural bugs</li>
+  <li>Quality standards are requirements, not aspirations</li>
+  <li>Every artifact must be verified before feeding into subsequent stages</li>
+  <li>Claude Chat and Claude Code each have specific roles in the workflow</li>
+</ul>
+
+<p>In the next chapter, you'll learn about the "vibe coding" problem and why explicit quality standards matter.</p>
+
 <hr class="divider">
 
 <h1 id="chapter-2">Chapter 2: The Code Quality Crisis</h1>
 
-<h2>2.1 Understanding Vibe Coding</h2>
+<p>In this chapter, you'll learn about "vibe coding"—a common failure mode when using AI for development—and the six predictable patterns that lead to maintenance nightmares. Understanding these patterns helps you recognize and prevent them. By the end of this chapter, you'll know exactly what quality problems we're solving.</p>
+
+<h2 id="section-2-1">2.1 Understanding Vibe Coding</h2>
 
 <p>"Vibe coding" is a phenomenon where AI-generated code appears to work but fails to meet professional quality standards. The code passes visual inspection. It runs without errors in the happy path. But underneath, it is a maintenance nightmare waiting to happen.</p>
 
 <p>The term captures the essence of the problem: the developer "goes with the vibe" rather than verifying the substance. The AI produced something that looks right, so it must be right. This assumption is dangerous.</p>
 
-<h2>2.2 The Six Failure Patterns</h2>
+<h2 id="section-2-2">2.2 The Six Failure Patterns</h2>
 
-<p>These patterns are predictable. Understanding them is the first step to preventing them.</p>
+<p>These patterns are predictable. Understanding them is the first step to preventing them. Watch for these in any AI-generated code:</p>
 
 <h3>Pattern 1: Monolithic Function Syndrome</h3>
 <p>The AI generates a single function that handles an entire feature: fetching data, transforming it, validating it, updating state, handling errors, and rendering output. This function might be 150 lines long. It technically works. But it cannot be tested in isolation, is impossible to understand at a glance, and any change risks breaking unrelated behavior.</p>
@@ -306,18 +345,38 @@
 <h3>Pattern 6: Error Handling Inconsistency</h3>
 <p>Some functions have try-catch blocks. Others do not. Some errors are logged. Others are silently swallowed. There is no coherent strategy.</p>
 
-<h2>2.3 The Solution: Explicit Quality Standards</h2>
+<h2 id="section-2-3">2.3 The Solution: Explicit Quality Standards</h2>
 
 <p>The solution is not to use AI less. It is to use AI more precisely. AI is incredibly responsive to guidance. When you provide explicit quality criteria, the AI will meet them. When you do not, the AI will optimize for what it can infer: something that looks complete.</p>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The six failure patterns (Monolithic Functions, Copy-Paste Proliferation, Implicit Coupling, Security Afterthought, Performance Blindness, Error Handling Inconsistency) and how they manifest in AI-generated code.</p>
+  <p><strong>Key insight:</strong> AI doesn't produce bad code because it's incapable—it produces what you ask for. Explicit quality standards produce quality code.</p>
+  <p><strong>Next:</strong> Chapter 3 — Learn the Five Pillars quality framework that prevents these patterns.</p>
+</div>
+
+<h2 id="section-2-4">2.4 Chapter Summary</h2>
+
+<p>You've learned about the vibe coding crisis. Key takeaways:</p>
+
+<ul>
+  <li>Vibe coding produces code that looks right but fails professional standards</li>
+  <li>Six predictable patterns cause most quality problems</li>
+  <li>AI responds to guidance—explicit criteria produce quality results</li>
+  <li>Prevention requires systematic quality standards, not avoiding AI</li>
+</ul>
+
+<p>In the next chapter, you'll learn the Five Pillars framework that provides concrete quality standards for every piece of code.</p>
 
 <hr class="divider">
 
 <h1 id="chapter-3">Chapter 3: The Quality Framework - Five Pillars</h1>
 
-<p>The quality framework provides concrete standards for evaluating code. It is organized into five pillars: Structure, Simplicity, Safety, Speed, and Stability.</p>
+<p>In this chapter, you'll learn the Five Pillars quality framework—concrete standards for evaluating every piece of code. These pillars (Structure, Simplicity, Safety, Speed, Stability) provide specific criteria that prevent the vibe coding patterns from Chapter 2. By the end of this chapter, you'll have a checklist for evaluating code quality.</p>
 
-<h2>3.1 Structure</h2>
-<p>Structure is about organizing code so that each piece has a clear purpose and location.</p>
+<h2 id="section-3-1">3.1 Structure</h2>
+<p>Structure is about organizing code so that each piece has a clear purpose and location. Good structure makes code navigable and maintainable.</p>
 
 <h3>Key Principles</h3>
 <ul>
@@ -327,8 +386,8 @@
   <li><strong>Cohesive Modules:</strong> Group related functionality. Separate unrelated functionality.</li>
 </ul>
 
-<h2>3.2 Simplicity</h2>
-<p>Simplicity is about minimizing cognitive load.</p>
+<h2 id="section-3-2">3.2 Simplicity</h2>
+<p>Simplicity is about minimizing cognitive load. Simple code is easier to understand, test, and modify.</p>
 
 <h3>Key Principles</h3>
 <ul>
@@ -338,8 +397,8 @@
   <li><strong>No Magic Values:</strong> Named constants for all numbers and strings in logic.</li>
 </ul>
 
-<h2>3.3 Safety</h2>
-<p>Safety encompasses security and correctness. Security is not an afterthought &mdash; it must be built into every layer from the start.</p>
+<h2 id="section-3-3">3.3 Safety</h2>
+<p>Safety encompasses security and correctness. Security is not an afterthought—it must be built into every layer from the start. This pillar has the most detailed requirements because security failures are the most damaging.</p>
 
 <h3>Key Principles</h3>
 <ul>
@@ -372,8 +431,8 @@
   </ul>
 </div>
 
-<h2>3.4 Speed</h2>
-<p>Speed is about performance and efficiency.</p>
+<h2 id="section-3-4">3.4 Speed</h2>
+<p>Speed is about performance and efficiency. Fast applications feel professional and respect users' time.</p>
 
 <h3>Key Principles</h3>
 <ul>
@@ -383,8 +442,8 @@
   <li><strong>Measure Before Optimizing:</strong> Profile real performance. Optimize actual bottlenecks.</li>
 </ul>
 
-<h2>3.5 Stability</h2>
-<p>Stability is about reliability and maintainability.</p>
+<h2 id="section-3-5">3.5 Stability</h2>
+<p>Stability is about reliability and maintainability. Stable code works consistently and can be safely modified.</p>
 
 <h3>Key Principles</h3>
 <ul>
@@ -394,7 +453,9 @@
   <li><strong>Observable Behavior:</strong> Sufficient logging and metrics for production debugging.</li>
 </ul>
 
-<h2>3.6 Quality Gate Definitions</h2>
+<h2 id="section-3-6">3.6 Quality Gate Definitions</h2>
+
+<p>Quality gates are checkpoints that code must pass before proceeding. These gates enforce the Five Pillars by making quality requirements explicit and measurable.</p>
 
 <div class="checklist">
   <h4>SPEC Quality Gate (Before Implementation)</h4>
@@ -420,11 +481,37 @@
   </ul>
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The Five Pillars (Structure, Simplicity, Safety, Speed, Stability) and how to evaluate code against each pillar's criteria.</p>
+  <p><strong>What you should have:</strong> A mental checklist for reviewing any piece of code for quality issues.</p>
+  <p><strong>Next:</strong> Chapter 4 — Learn when to use Claude Chat vs Claude Code.</p>
+</div>
+
+<h2 id="section-3-7">3.7 Chapter Summary</h2>
+
+<p>You've learned the Five Pillars quality framework. Key takeaways:</p>
+
+<ul>
+  <li><strong>Structure:</strong> Single responsibility, explicit dependencies, cohesive modules</li>
+  <li><strong>Simplicity:</strong> Short functions, minimal nesting, clear naming</li>
+  <li><strong>Safety:</strong> Input validation, defense in depth, fail securely, OWASP-aligned security</li>
+  <li><strong>Speed:</strong> Avoid unnecessary work, efficient data access, measure before optimizing</li>
+  <li><strong>Stability:</strong> Test coverage, consistent patterns, observable behavior</li>
+  <li><strong>Quality Gates:</strong> Explicit checkpoints before and after implementation</li>
+</ul>
+
+<p>In the next chapter, you'll learn about the two Claude tools and when to use each one.</p>
+
 <hr class="divider">
 
 <h1 id="chapter-4">Chapter 4: Claude Tools Guide</h1>
 
-<h2>4.1 Two Tools, Different Purposes</h2>
+<p>In this chapter, you'll learn about the two Claude tools—Claude Chat and Claude Code—and when to use each one. Understanding their different strengths is critical for efficient workflow. By the end of this chapter, you'll know exactly which tool to reach for at each stage of development.</p>
+
+<h2 id="section-4-1">4.1 Two Tools, Different Purposes</h2>
+
+<p>Claude Chat and Claude Code CLI are optimized for different tasks. Using the right tool dramatically improves outcomes.</p>
 
 <table class="comparison-table">
   <tr>
@@ -454,7 +541,9 @@
   </tr>
 </table>
 
-<h2>4.2 The Handoff Pattern</h2>
+<h2 id="section-4-2">4.2 The Handoff Pattern</h2>
+
+<p>Design artifacts flow from Claude Chat to Claude Code in a structured handoff. Understanding this pattern helps you maintain context across the transition.</p>
 
 <div class="file-structure">
 HANDOFF PATTERN
@@ -474,7 +563,9 @@ Claude Chat                          Claude Code CLI
 7. Create Next SPEC           --->   8. Implement Next SPEC
 </div>
 
-<h2>4.3 Tool Selection by Stage</h2>
+<h2 id="section-4-3">4.3 Tool Selection by Stage</h2>
+
+<p>This table provides a quick reference for which tool to use at each stage. Bookmark this for quick reference as you work through the handbook.</p>
 
 <table class="comparison-table">
   <tr>
@@ -593,6 +684,27 @@ Claude Chat                          Claude Code CLI
   <strong>Not using Projects?</strong> You can still follow the handbook. Save your artifacts locally as markdown files and paste relevant sections when Claude needs context. The workflow remains the same—Projects just makes it more convenient.
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The strengths of each tool (Chat for exploration/design, Code for implementation), the handoff pattern, and when to use each at each stage.</p>
+  <p><strong>What you should have:</strong> A clear mental model of which tool to reach for at any point in the workflow.</p>
+  <p><strong>Next:</strong> Part II — Start creating your design artifacts with the Research phase.</p>
+</div>
+
+<h2 id="section-4-5">4.5 Chapter Summary</h2>
+
+<p>You've learned about the two Claude tools. Key takeaways:</p>
+
+<ul>
+  <li>Claude Chat excels at exploration, strategy, design, and document generation</li>
+  <li>Claude Code excels at implementation, file operations, and TDD workflows</li>
+  <li>Artifacts flow from Chat to Code through a structured handoff</li>
+  <li>Using the right tool for each stage dramatically improves outcomes</li>
+  <li>Claude Projects (optional) makes artifact management convenient</li>
+</ul>
+
+<p>You've now completed Part I: Foundation. You understand the philosophy, the quality problems we're solving, the Five Pillars framework, and the tools we'll use. In Part II, you'll begin creating your product's design artifacts.</p>
+
 <hr class="divider">
 
 <!-- PART II: DOCUMENTATION STAGES -->
@@ -601,12 +713,19 @@ Claude Chat                          Claude Code CLI
   <p style="color: var(--muted); margin-top: 0.5rem;">Research, Business Planning, and Design Brief</p>
 </div>
 
-<h1 id="stage-0">Chapter 5: Stage 0.1 - Research and Opportunity Assessment</h1>
+<h1 id="chapter-5">Chapter 5: Stage 0.1 - Research and Opportunity Assessment</h1>
 
-<h2>5.1 Purpose</h2>
-<p>Research is the foundation. This stage validates that a real market opportunity exists before investing in design and development. The output is a clear understanding of market size, competitive landscape, and customer pain points.</p>
+<p>In this chapter, you'll conduct market research to validate your product opportunity before investing time in design and development. Research is the foundation of every successful SaaS product—it ensures you're building something people actually need and will pay for. By the end of this chapter, you'll have documented evidence of market demand, competitive positioning, and customer pain points.</p>
 
-<h2>5.2 Research Prompt</h2>
+<h2 id="section-5-1">5.1 Purpose</h2>
+
+<p>Research validates that a real market opportunity exists. Many products fail not because they're poorly built, but because they solve problems nobody has or compete in markets too crowded to enter. This stage forces you to gather evidence before committing resources.</p>
+
+<p><strong>What you'll accomplish:</strong> Generate comprehensive market research covering market size, competitive landscape, customer pain points, trends, and barriers to entry.</p>
+
+<h2 id="section-5-2">5.2 Research Prompt</h2>
+
+<p>This prompt uses Claude Chat's web search capabilities to gather current market data. Start a fresh chat to give Claude full context for exploring your market opportunity. Be specific about your angle or differentiator to get targeted insights.</p>
 
 <div class="prompt-indicator">
   <span class="tool-badge badge-chat">Claude Chat</span>
@@ -625,7 +744,16 @@ Please search for recent data (within the last 2 years) and cite sources.
 
 My specific angle is: [YOUR DIFFERENTIATOR OR APPROACH]</div>
 
-<h2>5.3 Validation Criteria</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A comprehensive research document (typically 1,000-2,000 words) covering all five areas: market size, competitive landscape, customer pain points, trends, and barriers to entry.</p>
+  <p><strong>How to validate:</strong> The research should include specific numbers (TAM/SAM/SOM), at least 5 named competitors with analysis, and customer quotes or review excerpts showing real pain points.</p>
+  <p><strong>Next:</strong> Validate your research against the criteria below.</p>
+</div>
+
+<h2 id="section-5-3">5.3 Validation Criteria</h2>
+
+<p>Before proceeding to the Business One-Pager, validate your research against this checklist. Each criterion ensures you have sufficient evidence to make informed product decisions. If any item is missing, ask Claude for additional research on that specific area.</p>
 
 <div class="checklist">
   <h4>Research Complete Checklist</h4>
@@ -638,14 +766,41 @@ My specific angle is: [YOUR DIFFERENTIATOR OR APPROACH]</div>
   </ul>
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> All checklist items verified, giving you confidence that a real market opportunity exists.</p>
+  <p><strong>How to validate:</strong> You can articulate in one sentence: the market size, your top 3 competitors, your key differentiator, and the primary customer pain point you're solving.</p>
+  <p><strong>Next:</strong> Chapter 6 — Create your Business One-Pager based on this research.</p>
+</div>
+
+<h2 id="section-5-4">5.4 Chapter Summary</h2>
+
+<p>You've completed the Research and Opportunity Assessment phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Gathered market size data with credible sources</li>
+  <li>Analyzed competitive landscape and identified gaps</li>
+  <li>Documented customer pain points with real evidence</li>
+  <li>Validated your differentiator and entry strategy</li>
+</ul>
+
+<p>Your research foundation is ready. In the next chapter, you'll synthesize these findings into a Business One-Pager that clarifies your business model and go-to-market strategy.</p>
+
 <hr class="divider">
 
-<h1 id="stage-1">Chapter 6: Stage 1.0 - Business One-Pager</h1>
+<h1 id="chapter-6">Chapter 6: Stage 1.0 - Business One-Pager</h1>
 
-<h2>6.1 Purpose</h2>
-<p>The Business One-Pager forces clarity on the business model before design begins. It answers: What are we building? For whom? Why will they pay? How will we reach them?</p>
+<p>In this chapter, you'll create your Business One-Pager—a concise document that forces clarity on your business model before design begins. This document synthesizes your research into actionable business decisions: pricing, positioning, target customer, and go-to-market strategy. By the end of this chapter, you'll have a single page that anyone can read to understand what you're building and why it will succeed.</p>
 
-<h2>6.2 One-Pager Prompt</h2>
+<h2 id="section-6-1">6.1 Purpose</h2>
+
+<p>The Business One-Pager forces clarity on the business model before design begins. Many products fail because founders skip this step and jump straight into building. They end up with a product nobody wants to pay for, or one that's priced wrong, or one that reaches the wrong audience.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a comprehensive business summary covering problem, solution, target customer, value proposition, pricing, go-to-market strategy, success metrics, and key risks.</p>
+
+<h2 id="section-6-2">6.2 One-Pager Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you conducted research. This gives Claude full context of your market findings, which it will use to inform realistic business decisions. The output should be a standalone document that makes sense without needing to read the research.</p>
 
 <div class="prompt-indicator">
   <span class="tool-badge badge-chat">Claude Chat</span>
@@ -671,7 +826,18 @@ The one-pager should cover:
 
 Output in markdown format, ready to save as docs/one-pager.md.</div>
 
-<h2>6.3 Save the One-Pager</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A Business One-Pager document (typically 500-1,000 words) covering all eight sections: problem, solution, target customer, value proposition, pricing, go-to-market, success metrics, and key risks.</p>
+  <p><strong>How to validate:</strong> Each section should be specific and actionable. Pricing should include actual numbers. Go-to-market should name specific channels. Success metrics should be measurable.</p>
+  <p><strong>Next:</strong> Save the One-Pager to your project.</p>
+</div>
+
+<h2 id="section-6-3">6.3 Save the One-Pager</h2>
+
+<p>The One-Pager must be saved as a file so it can be referenced by all subsequent stages. This document becomes the business foundation that design, architecture, and implementation all trace back to.</p>
+
+<h3>Instructions</h3>
 
 <ol>
   <li>Create a <code>docs/</code> folder in your project directory (if it doesn't exist)</li>
@@ -679,18 +845,46 @@ Output in markdown format, ready to save as docs/one-pager.md.</div>
   <li>Save as <code>docs/one-pager.md</code></li>
 </ol>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/one-pager.md</code> containing your complete Business One-Pager.</p>
+  <p><strong>How to validate:</strong> Open the file and verify all eight sections are present. The file should be readable in 2-3 minutes by someone unfamiliar with your project.</p>
+  <p><strong>Next:</strong> Chapter 7 — Create the Shared Design Brief that will guide all design decisions.</p>
+</div>
+
+<h2 id="section-6-4">6.4 Chapter Summary</h2>
+
+<p>You've completed the Business One-Pager phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Synthesized research findings into business decisions</li>
+  <li>Defined your target customer and value proposition</li>
+  <li>Established pricing strategy and go-to-market approach</li>
+  <li>Identified success metrics and key risks</li>
+  <li>Saved the document for reference in subsequent stages</li>
+</ul>
+
+<p>Your business foundation is ready. In the next chapter, you'll create the Shared Design Brief—the single source of truth that establishes vocabulary and requirements for your product.</p>
+
 <hr class="divider">
 
-<h1 id="stage-2">Chapter 7: Stage 2.0 - Shared Design Brief</h1>
+<h1 id="chapter-7">Chapter 7: Stage 2.0 - Shared Design Brief</h1>
 
-<h2>7.1 Purpose</h2>
+<p>In this chapter, you'll create the Shared Design Brief—the single source of truth for your product. This document establishes the vocabulary, user types, core flows, and scope boundaries that every subsequent artifact will reference. By the end of this chapter, you'll have a comprehensive brief that ensures everyone (including AI tools) speaks the same language about your product.</p>
+
+<h2 id="section-7-1">7.1 Purpose</h2>
+
 <p>The Design Brief is the single source of truth for the product. It establishes vocabulary that becomes canonical throughout all subsequent stages. Every term defined here will be used consistently in UX, UI, architecture, and code.</p>
 
 <div class="warning">
 <strong>Critical:</strong> Vocabulary established in the Design Brief must be used exactly and consistently in all subsequent documents. Inconsistent terminology is the #1 source of design-to-code translation errors.
 </div>
 
-<h2>7.2 Design Brief Prompt</h2>
+<p><strong>What you'll accomplish:</strong> Create a comprehensive design brief covering product vision, canonical vocabulary, user types, core flows, non-functional requirements, and scope boundaries.</p>
+
+<h2 id="section-7-2">7.2 Design Brief Prompt</h2>
+
+<p>Start a fresh chat for design work. This gives Claude a clean context focused on design decisions rather than business/research context. Attach or summarize your Business One-Pager so Claude understands the business foundation.</p>
 
 <div class="prompt-indicator">
   <span class="tool-badge badge-chat">Claude Chat</span>
@@ -740,7 +934,18 @@ For each user type:
 
 Output in markdown format, ready to save as docs/design-brief.md.</div>
 
-<h2>7.3 Save the Design Brief</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A Design Brief document (typically 1,500-3,000 words) covering all six sections: product vision, vocabulary, user types, core flows, non-functional requirements, and scope boundaries.</p>
+  <p><strong>How to validate:</strong> Section 2 (Vocabulary) should define at least 10-15 canonical terms. Section 4 (Core Flows) should describe 3+ distinct user journeys. Section 6 (Scope) should have clear in-scope and out-of-scope lists.</p>
+  <p><strong>Next:</strong> Save the Design Brief to your project.</p>
+</div>
+
+<h2 id="section-7-3">7.3 Save the Design Brief</h2>
+
+<p>The Design Brief must be saved as a file because it's referenced by every subsequent stage. UX design, UI system, architecture, and implementation all trace back to the vocabulary and requirements defined here.</p>
+
+<h3>Instructions</h3>
 
 <ol>
   <li>Copy the complete Design Brief output from Claude Chat</li>
@@ -751,6 +956,27 @@ Output in markdown format, ready to save as docs/design-brief.md.</div>
   <strong>Vocabulary is Code:</strong> The terms defined in Section 2 will become variable names, function names, and database columns. Ensure they are clear, unambiguous, and follow naming conventions (no spaces, consistent casing).
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/design-brief.md</code> containing your complete Design Brief with canonical vocabulary.</p>
+  <p><strong>How to validate:</strong> Open the file and verify the Vocabulary section (Section 2) exists with clear definitions. These terms should be usable as code identifiers (e.g., "Listing" not "listing item").</p>
+  <p><strong>Next:</strong> Chapters 8-10 — Create the UX Package that defines every screen and flow.</p>
+</div>
+
+<h2 id="section-7-4">7.4 Chapter Summary</h2>
+
+<p>You've completed the Shared Design Brief phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Established canonical vocabulary for your product</li>
+  <li>Defined user types with their goals and frustrations</li>
+  <li>Outlined core user flows that deliver value</li>
+  <li>Set non-functional requirements (performance, security, accessibility)</li>
+  <li>Defined clear scope boundaries for MVP</li>
+</ul>
+
+<p>Your product definition is complete. In the next chapters, you'll transform this brief into a detailed UX Package that specifies every screen, state, and interaction.</p>
+
 <hr class="divider">
 
 <!-- PART III: DESIGN EXCELLENCE -->
@@ -759,9 +985,13 @@ Output in markdown format, ready to save as docs/design-brief.md.</div>
   <p style="color: var(--muted); margin-top: 0.5rem;">UX Package, UX Critique, and UI System</p>
 </div>
 
-<h1 id="stage-3">Chapter 8-10: UX Package and Validation</h1>
+<h1 id="chapter-8">Chapters 8-10: UX Package and Validation</h1>
 
-<h2>8.1 Design Philosophy</h2>
+<p>In these chapters, you'll create the UX Package—a comprehensive document that defines every screen, flow, and interaction state in your application. You'll then validate it through a UX critique process to catch usability issues before building. By the end of these chapters, you'll have a complete user experience blueprint that serves as the foundation for UI design and development.</p>
+
+<h2 id="section-8-1">8.1 Design Philosophy</h2>
+
+<p>Before diving into screen specifications, it's important to establish the design philosophy that guides all UX decisions. These principles ensure consistency and quality across your entire application.</p>
 
 <p>Good design is invisible. Users should accomplish their goals without thinking about the interface. Every screen should have a clear purpose, every element should earn its place, and every interaction should feel natural.</p>
 
@@ -774,10 +1004,15 @@ Output in markdown format, ready to save as docs/design-brief.md.</div>
   <li><strong>Performance as Feature:</strong> Fast feels professional</li>
 </ul>
 
-<h2>9.1 UX Package Purpose</h2>
-<p>The UX Package defines the complete user experience: all screens, all flows, all states. It serves as the blueprint for UI design and development.</p>
+<h2 id="section-9-1">9.1 UX Package Purpose</h2>
 
-<h2>9.2 UX Package Prompt</h2>
+<p>The UX Package defines the complete user experience: all screens, all flows, all states. It serves as the blueprint for UI design and development. This document answers every question a developer might have about "what happens when..." scenarios.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a comprehensive UX specification covering information architecture, screen inventory, user flows, component behaviors, and responsive behavior.</p>
+
+<h2 id="section-9-2">9.2 UX Package Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you created the Design Brief. This ensures the UX Package uses the exact vocabulary and flows defined in your brief. Claude will expand on the core flows to define every screen and state.</p>
 
 <div class="prompt-indicator">
   <span class="tool-badge badge-chat">Claude Chat</span>
@@ -828,16 +1063,34 @@ For each core flow from Design Brief:
 
 Output in markdown format, ready to save as docs/ux-package.md.</div>
 
-<h2>9.3 Save the UX Package</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A comprehensive UX Package document (typically 2,000-4,000 words) covering all five sections: information architecture, screen inventory, user flows, component behaviors, and responsive behavior.</p>
+  <p><strong>How to validate:</strong> The Screen Inventory should list every screen in your app with all states defined (loading, empty, error). User Flows should trace complete paths from entry to success.</p>
+  <p><strong>Next:</strong> Save the UX Package, then critique it for issues.</p>
+</div>
+
+<h2 id="section-9-3">9.3 Save the UX Package</h2>
+
+<p>Save the initial UX Package before the critique phase. You'll update this same file after incorporating feedback from the critique.</p>
+
+<h3>Instructions</h3>
 
 <ol>
   <li>Copy the complete UX Package output from Claude Chat</li>
   <li>Save as <code>docs/ux-package.md</code></li>
 </ol>
 
-<h2>10.1 UX Critique</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/ux-package.md</code> containing your initial UX Package.</p>
+  <p><strong>How to validate:</strong> Open the file and verify all five sections are present. Count the screens in your Screen Inventory—a typical MVP has 8-15 screens.</p>
+  <p><strong>Next:</strong> Run the UX Critique to identify issues before they become implementation problems.</p>
+</div>
 
-<p>Before proceeding to UI, the UX Package should be critiqued for usability issues, missing states, and flow problems.</p>
+<h2 id="section-10-1">10.1 UX Critique</h2>
+
+<p>Before proceeding to UI design, the UX Package should be critiqued for usability issues, missing states, and flow problems. This step catches design flaws that are expensive to fix during implementation. A 10-minute critique now saves hours of rework later.</p>
 
 <div class="prompt-indicator">
   <span class="tool-badge badge-chat">Claude Chat</span>
@@ -856,9 +1109,18 @@ For each issue, suggest a specific improvement.
 
 [ATTACH UX PACKAGE]</div>
 
-<h2>10.2 Update the UX Package</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A critique report identifying specific issues across the five categories: usability, missing states, edge cases, accessibility, and mobile considerations.</p>
+  <p><strong>How to validate:</strong> The critique should identify at least 5-10 issues with specific, actionable improvement suggestions for each.</p>
+  <p><strong>Next:</strong> Incorporate the feedback into your UX Package.</p>
+</div>
 
-<p>After receiving the critique, incorporate the improvements into your UX Package:</p>
+<h2 id="section-10-2">10.2 Update the UX Package</h2>
+
+<p>After receiving the critique, incorporate the improvements into your UX Package. This iterative refinement is what separates good UX from great UX. Don't skip improvements just because the original version "works."</p>
+
+<h3>Instructions</h3>
 
 <ol>
   <li>Review each identified issue and suggested improvement</li>
@@ -870,14 +1132,43 @@ For each issue, suggest a specific improvement.
   <strong>Iterate as Needed:</strong> You may run multiple critique cycles until the UX Package is solid. Always update the same file rather than creating separate versions.
 </div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> An updated <code>docs/ux-package.md</code> that addresses all identified issues from the critique.</p>
+  <p><strong>How to validate:</strong> Review the updated file against the critique. Each issue should now have a corresponding fix or explicit rationale for why it wasn't addressed.</p>
+  <p><strong>Next:</strong> Chapters 11-13 — Create the UI System that defines visual design.</p>
+</div>
+
+<h2 id="section-10-3">10.3 Chapter Summary</h2>
+
+<p>You've completed the UX Package and Validation phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Established design philosophy principles for your product</li>
+  <li>Created information architecture with site map and navigation</li>
+  <li>Defined every screen with all states (loading, empty, error)</li>
+  <li>Documented complete user flows with error recovery paths</li>
+  <li>Specified component behaviors and responsive breakpoints</li>
+  <li>Critiqued and refined the UX Package for quality</li>
+</ul>
+
+<p>Your user experience is fully specified. In the next chapters, you'll define the visual design language—colors, typography, and components—that bring this experience to life.</p>
+
 <hr class="divider">
 
-<h1 id="stage-4">Chapter 11-13: UI System</h1>
+<h1 id="chapter-11">Chapters 11-12: UI System</h1>
 
-<h2>11.1 UI System Purpose</h2>
-<p>The UI System defines the visual language: colors, typography, spacing, components. It ensures visual consistency across the entire application.</p>
+<p>In these chapters, you'll create the UI System—your application's visual design language. This document defines colors, typography, spacing, and component specifications that ensure visual consistency across every screen. By the end of these chapters, you'll have a complete design system ready to guide implementation.</p>
 
-<h2>11.2 UI System Prompt</h2>
+<h2 id="section-11-1">11.1 UI System Purpose</h2>
+
+<p>The UI System defines the visual language: colors, typography, spacing, components. It ensures visual consistency across the entire application. Without a defined system, each screen risks becoming visually inconsistent, making the product feel unprofessional.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a comprehensive UI System covering design tokens, component library, layout system, and visual direction.</p>
+
+<h2 id="section-11-2">11.2 UI System Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you created the UX Package. This ensures the UI components align with the screens and flows you've already defined. Claude will create visual specifications for every component your UX requires.</p>
 
 <div class="prompt-indicator">
   <span class="tool-badge badge-chat">Claude Chat</span>
@@ -930,16 +1221,34 @@ Components needed:
 
 Output in markdown format, ready to save as docs/ui-system.md.</div>
 
-<h2>11.3 Save the UI System</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A comprehensive UI System document (typically 1,500-3,000 words) covering all four sections: design tokens, component library, layout system, and visual direction.</p>
+  <p><strong>How to validate:</strong> Design tokens should include specific values (hex codes, pixel sizes). Component library should define all states for each component (default, hover, active, disabled, error).</p>
+  <p><strong>Next:</strong> Save the UI System to your project.</p>
+</div>
+
+<h2 id="section-11-3">11.3 Save the UI System</h2>
+
+<p>Save the UI System so it can be referenced during implementation. Developers will use these specifications to build components that match your design vision exactly.</p>
+
+<h3>Instructions</h3>
 
 <ol>
   <li>Copy the complete UI System output from Claude Chat</li>
   <li>Save as <code>docs/ui-system.md</code></li>
 </ol>
 
-<h2>12.1 Visual Direction Options (Optional)</h2>
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/ui-system.md</code> containing your complete UI System.</p>
+  <p><strong>How to validate:</strong> Open the file and verify all four sections are present. Design tokens should have copy-pasteable values (e.g., <code>#1a365d</code>, <code>16px</code>, <code>1.5rem</code>).</p>
+  <p><strong>Next:</strong> Optionally explore visual direction alternatives, or proceed to Part 2.</p>
+</div>
 
-<p>For important projects, explore multiple visual directions before committing:</p>
+<h2 id="section-12-1">12.1 Visual Direction Options (Optional)</h2>
+
+<p>For important projects, exploring multiple visual directions before committing helps ensure you choose the right aesthetic for your audience. This step is optional but recommended for products where visual appeal is a key differentiator.</p>
 
 <div class="prompt-indicator">
   <span class="tool-badge badge-chat">Claude Chat</span>
@@ -959,7 +1268,28 @@ For each direction, provide:
 - Mood/feeling conveyed
 - Best suited for which audience</div>
 
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Three distinct visual direction options, each with color palettes, typography, and sample components.</p>
+  <p><strong>How to validate:</strong> Each direction should feel noticeably different. If they all look similar, ask Claude to make the differences more pronounced.</p>
+  <p><strong>Next:</strong> Choose a direction and regenerate your UI System, or keep the original if you're satisfied.</p>
+</div>
+
 <p>If you explore multiple directions and choose one, ask Claude to regenerate the UI System with the chosen direction. Then update <code>docs/ui-system.md</code> with the new version.</p>
+
+<h2 id="section-12-2">12.2 Chapter Summary</h2>
+
+<p>You've completed the UI System phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Defined design tokens for colors, typography, spacing, and shadows</li>
+  <li>Created a component library with specifications for all UI elements</li>
+  <li>Established a layout system with grid and breakpoints</li>
+  <li>Set visual direction for the overall aesthetic</li>
+  <li>Optionally explored alternative visual directions</li>
+</ul>
+
+<p>Your design system is complete. You now have all the design artifacts needed to move into technical implementation: Research, Business One-Pager, Design Brief, UX Package, and UI System. In Part 2, you'll use these documents to create the technical architecture and set up your development infrastructure.</p>
 
 <hr class="divider">
 

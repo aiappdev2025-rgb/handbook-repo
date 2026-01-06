@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 38: M9 - Payments - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-38">Chapter 38: Milestone 9 - Payments</h1>
+
+<p class="chapter-intro">In this chapter, you'll integrate Stripe for subscription billing. By the end, you'll have a complete payment system with checkout, webhooks, and billing management.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Payment code requires extra security attention. See <a href="../workflow-guide-v1.html#context-management">Context Management</a> for focused security review.
+</div>
+
+<h2 id="section-38-1">38.1 Overview</h2>
+
+<p>Payment integration is where your SaaS becomes a business. Stripe handles the complexity of payment processing, but proper webhook handling and subscription state management are critical for reliable billing.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 8 complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 4</p>
+  <p><strong>Deliverables:</strong> Stripe integration, webhooks, checkout flow, billing UI, subscription management.</p>
+</div>
+
+<h2 id="section-38-2">38.2 Implementation Prompts</h2>
+
+<h3>Prompt 9.1: Stripe Configuration</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.1: Stripe Configuration</h4>
+<pre>ROLE
+Full-Stack Developer setting up Stripe integration.
+
+CONTEXT
+Project: {{productName}}
+Core features complete (Milestone 6).
+Setting up Stripe for subscription billing.
+
+OBJECTIVE
+Configure Stripe SDK and database tables for payments.
+
+REQUIREMENTS
+
+1. Install Stripe packages:
+   - stripe (server SDK)
+   - @stripe/stripe-js (client SDK)
+
+2. Configure environment variables:
+   - STRIPE_SECRET_KEY (server only)
+   - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+   - STRIPE_WEBHOOK_SECRET
+
+3. Create Stripe client (src/lib/stripe.ts):
+   - Server-side Stripe instance
+   - Client-side loadStripe helper
+
+4. Create database tables (migration):
+   - subscriptions: user_id, stripe_customer_id, stripe_subscription_id,
+     status, plan, current_period_end
+   - prices: id, product_id, active, unit_amount, currency, interval
+   - Enable RLS on both tables
+
+5. Create Stripe helper functions:
+   - getOrCreateCustomer(userId, email)
+   - getSubscription(userId)
+   - syncSubscriptionFromStripe(subscriptionId)
+
+VERIFICATION
+Stripe SDK connects successfully (test mode)
+Database tables created with RLS</pre>
+</div>
+
+<h3>Prompt 9.2: Webhook Handler</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.2: Webhook Handler</h4>
+<pre>ROLE
+Backend Developer implementing Stripe webhooks.
+
+CONTEXT
+Project: {{productName}}
+Stripe configured (Prompt 9.1).
+Need webhook handler for subscription events.
+
+OBJECTIVE
+Create secure webhook endpoint for Stripe events.
+
+REQUIREMENTS
+
+1. Create webhook route (src/app/api/webhooks/stripe/route.ts):
+   - POST handler only
+   - Verify webhook signature (CRITICAL for security)
+   - Parse event from request body
+
+2. Handle subscription events:
+   - customer.subscription.created: Create subscription record
+   - customer.subscription.updated: Update status, plan, period
+   - customer.subscription.deleted: Mark as canceled
+   - invoice.payment_succeeded: Update current_period_end
+   - invoice.payment_failed: Mark status as past_due
+
+3. Handle checkout events:
+   - checkout.session.completed: Link customer to user
+
+4. Error handling:
+   - Log errors with context for debugging
+   - Return 200 even on errors (Stripe will retry)
+   - Idempotent handlers (safe to process same event twice)
+
+SECURITY
+ALWAYS verify webhook signature before processing
+NEVER trust event data without signature verification
+
+VERIFICATION
+Use Stripe CLI: stripe listen --forward-to localhost:3000/api/webhooks/stripe
+Trigger test events and verify database updates</pre>
+</div>
+
+<h3>Prompt 9.3: Checkout Flow</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.3: Checkout Flow</h4>
+<pre>ROLE
+Full-Stack Developer implementing the checkout flow.
+
+CONTEXT
+Project: {{productName}}
+Webhooks ready (Prompt 9.2).
+Plans: {{list your pricing plans}}
+
+OBJECTIVE
+Create pricing page and Stripe Checkout integration.
+
+REQUIREMENTS
+
+1. Pricing page (src/app/(marketing)/pricing/page.tsx):
+   - Display all available plans
+   - Feature comparison table
+   - Monthly/annual toggle if applicable
+   - CTA buttons for each plan
+
+2. Checkout API route (src/app/api/checkout/route.ts):
+   - POST: Create Stripe Checkout session
+   - Get or create Stripe customer
+   - Set success_url and cancel_url
+   - Return session URL for redirect
+
+3. Checkout action (src/lib/actions/checkout.ts):
+   - createCheckoutSession(priceId): Server action
+   - Verify user is authenticated
+   - Redirect to Stripe Checkout
+
+4. Success and cancel pages:
+   - /checkout/success: Thank you, redirect to dashboard
+   - /checkout/cancel: Return to pricing with message
+
+VERIFICATION
+Complete checkout in Stripe test mode
+Verify subscription created in database
+User redirected properly after checkout</pre>
+</div>
+
+<h3>Prompt 9.4: Billing Management</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.4: Billing Management</h4>
+<pre>ROLE
+Full-Stack Developer building billing management UI.
+
+CONTEXT
+Project: {{productName}}
+Checkout working (Prompt 9.3).
+Users need to manage their subscriptions.
+
+OBJECTIVE
+Create billing settings page for subscription management.
+
+REQUIREMENTS
+
+1. Billing page (src/app/(app)/settings/billing/page.tsx):
+   - Current plan display
+   - Next billing date
+   - Usage statistics if applicable
+   - Manage subscription button
+
+2. Customer portal integration:
+   - Create portal session API route
+   - Link to Stripe Customer Portal
+   - Portal handles: update payment, cancel, view invoices
+
+3. Subscription status handling:
+   - Active: Full access
+   - Past due: Show warning, allow limited access
+   - Canceled: Show reactivation option
+   - Trialing: Show trial end date
+
+4. Access control middleware:
+   - Check subscription status for premium features
+   - Graceful degradation for expired subscriptions
+   - Clear upgrade prompts
+
+VERIFICATION
+Billing page shows correct subscription status
+Customer portal opens and works
+Canceled users see appropriate messaging</pre>
+</div>
+
+<h2 id="section-38-3">38.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Stripe configured with webhook handler, checkout flow creating subscriptions, billing management page showing subscription status, and Customer Portal integration for self-service.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Complete checkout in Stripe test mode</li>
+    <li>Verify subscription created in database</li>
+    <li>Billing page shows correct status</li>
+    <li>Customer Portal opens and works</li>
+  </ul>
+</div>
+
+<h2 id="section-38-4">38.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 9. Your project now has:</p>
+<ul>
+  <li>Stripe SDK configured</li>
+  <li>Webhook handler for subscription events</li>
+  <li>Pricing page with checkout</li>
+  <li>Billing management page</li>
+  <li>Customer Portal integration</li>
+  <li>Subscription access control</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 39 (Milestone 10) - Polish the application with error handling and accessibility.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

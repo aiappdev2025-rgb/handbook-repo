@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 32: M4 - Layouts - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-32">Chapter 32: Milestone 4 - Layouts</h1>
+
+<p class="chapter-intro">In this chapter, you'll create the layout architecture for your application. By the end, you'll have marketing and app layouts with responsive navigation.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Layouts involve multiple files. Use <a href="../workflow-guide-v1.html#context-management">Context Management</a> to keep Claude Code focused on related components.
+</div>
+
+<h2 id="section-32-1">32.1 Overview</h2>
+
+<p>Layouts define the visual structure that users experience on every page. Separating marketing and authenticated layouts ensures appropriate navigation and styling for each context while maintaining code reusability.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 2-3 complete, Checkpoint A passed</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 1</p>
+  <p><strong>Deliverables:</strong> Layout components, navigation, responsive design verified.</p>
+</div>
+
+<h2 id="section-32-2">32.2 Implementation Prompt</h2>
+
+<p>Create root layout, marketing layout (public pages), and app layout (authenticated pages). Build navigation components with responsive behavior.</p>
+
+<div class="prompt-box">
+<h4>Prompt 4.1: Application Layouts</h4>
+<pre>ROLE
+Frontend Developer creating the layout architecture.
+
+CONTEXT
+Project: {{productName}}
+Design system ready (Milestone 2 complete).
+Database schema ready (Milestone 3 complete).
+
+OBJECTIVE
+Create layout components for marketing and authenticated pages.
+
+REQUIREMENTS
+
+1. Root layout (src/app/layout.tsx):
+   - HTML lang attribute
+   - Meta tags for SEO
+   - Font configuration
+   - Toast provider (for notifications)
+   - Theme provider if using dark mode
+
+2. Marketing layout (src/app/(marketing)/layout.tsx):
+   - Header with logo and navigation
+   - Navigation links: Features, Pricing, Login, Sign Up
+   - Footer with links and copyright
+   - Max-width container for content
+
+3. App layout (src/app/(app)/layout.tsx):
+   - Sidebar navigation (collapsible on mobile)
+   - Header with user menu and notifications
+   - Main content area with proper padding
+   - Protected route wrapper (checks auth)
+
+4. Navigation components:
+   - MarketingNav: Public navigation bar
+   - AppNav: Authenticated sidebar/header
+   - UserMenu: Dropdown with profile, settings, logout
+   - MobileNav: Hamburger menu for mobile
+
+5. Responsive behavior:
+   - Mobile: Hamburger menu, stacked layout
+   - Tablet: Collapsible sidebar
+   - Desktop: Full sidebar, expanded navigation
+
+VERIFICATION
+Test at 320px, 768px, 1024px, 1440px widths
+Navigation works on mobile (tap, no hover)
+Run: npm run build — no errors</pre>
+</div>
+
+<h2 id="section-32-3">32.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Root layout with providers, marketing layout with header/footer, app layout with sidebar navigation, responsive navigation components working at all breakpoints.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Test navigation at 320px, 768px, 1024px, and 1440px widths</li>
+    <li>Mobile navigation opens/closes properly</li>
+    <li>All layouts render without errors</li>
+    <li><code>npm run build</code> completes successfully</li>
+  </ul>
+</div>
+
+<h2 id="section-32-4">32.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 4. Your project now has:</p>
+<ul>
+  <li>Root layout with providers</li>
+  <li>Marketing layout with header/footer</li>
+  <li>App layout with sidebar navigation</li>
+  <li>Responsive navigation components</li>
+  <li>Mobile-friendly hamburger menu</li>
+  <li>User menu with dropdown</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 33 (Milestone 5) - Implement authentication with Supabase Auth.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>
