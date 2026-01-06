@@ -188,6 +188,15 @@ const sidebars: SidebarsConfig = {
         'templates/tech-debt',
       ],
     },
+    {
+      type: 'category',
+      label: 'Interactive Tools',
+      collapsible: true,
+      collapsed: false,
+      items: [
+        'tools/prompt-builder',
+      ],
+    },
   ],
 };
 

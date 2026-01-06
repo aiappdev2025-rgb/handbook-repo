@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
+import ProgressTracker from '@site/src/components/ProgressTracker';
 
 import styles from './index.module.css';
 
@@ -73,6 +74,18 @@ export default function Home(): ReactNode {
               link="/phase-5-launch"
               color="#f59e0b"
             />
+          </div>
+
+          <div style={{marginTop: '2rem', maxWidth: '600px'}}>
+            <ProgressTracker />
+          </div>
+
+          <div style={{marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
+            <Link
+              className="button button--outline button--primary"
+              to="/tools/prompt-builder">
+              Prompt Builder
+            </Link>
           </div>
         </div>
       </main>
