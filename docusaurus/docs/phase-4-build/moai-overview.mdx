@@ -4,13 +4,53 @@ title: "MOAI Overview"
 description: "Introduction to the Milestone-Oriented AI Integration (MOAI) framework for the Build phase"
 ---
 
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
 # MOAI Overview
+
+<span className="reading-time">15 min read</span>
+
+<TldrBox
+  what="Understand the MOAI (Milestone-Oriented AI Integration) methodology for structuring AI-assisted development."
+  why="Large implementation projects fail from scope creep, context loss, and quality drift. MOAI addresses these with fixed-scope milestones and quality gates."
+  outcome="Clear understanding of how design artifacts flow into implementation through SPECs and TDD."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Starting implementation after completing Architecture phase",
+    "First time using Claude Code for a project",
+    "Need to understand how MOAI structures the Build phase"
+  ]}
+  notYetIf={[
+    "Build Contract is not complete",
+    "Development environment is not set up",
+    "You haven't completed Phase 3 (Architect)"
+  ]}
+  skipIf="You're already familiar with MOAI and just need to reference specific milestones"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Build Contract complete", link: "/phase-3-architect/build-contract" },
+    { text: "Dev Environment set up", link: "/phase-3-architect/dev-environment" },
+    { text: "Architecture documentation ready", link: "/phase-3-architect/solution-architecture" }
+  ]}
+/>
+
+## What is MOAI?
 
 The **Milestone-Oriented AI Integration (MOAI)** framework structures the Build phase into manageable, verifiable milestones. Each milestone has clear deliverables, quality gates, and acceptance criteria.
 
-<details>
-<summary>💡 Learn More: Why Milestones Matter</summary>
-
+:::info Why Milestones Matter
 Large implementation projects fail for predictable reasons:
 - **Scope creep** — features grow beyond what was planned
 - **Context loss** — AI loses track of the bigger picture over long sessions
@@ -20,9 +60,137 @@ MOAI addresses these by:
 1. **Fixed scope per milestone** — Each milestone has explicit, unchanging deliverables
 2. **Fresh context per milestone** — Start each milestone with clean context and the Build Contract
 3. **Quality gates** — No milestone is complete until all quality criteria pass
+:::
 
-The 11-milestone structure (M1-M11) is designed so each can be completed in 1-3 focused sessions.
+## The Integration Flow
 
-</details>
+MOAI-ADK (Methodology for Organized AI-Driven Development Kit) structures AI-assisted implementation through SPEC-First Development, EARS Requirements, TDD Workflow, and Documentation Sync.
 
-*Content to be migrated*
+```
+HANDBOOK + MOAI INTEGRATION
+===========================
+
+Design Brief      ----+
+UX Package        ----|---> Build Contract ---> SPEC ---> TDD Cycle
+UI System         ----|                              |
+Architecture      ----+                              v
+                                              Tested Code + Docs
+```
+
+## The 11-Milestone Structure
+
+The Build phase is organized into 11 milestones across three checkpoints:
+
+### Foundation (M1-M4)
+| Milestone | Focus | Deliverables |
+|-----------|-------|--------------|
+| M1 | Project Foundation | Project structure, tooling, configuration |
+| M2 | Database Schema | Data model, RLS policies, migrations |
+| M3 | Core API | API routes, validation, error handling |
+| M4 | UI Shell | Layout components, navigation, routing |
+
+**Checkpoint 1** — Verify foundation before building features
+
+### Features (M5-M7)
+| Milestone | Focus | Deliverables |
+|-----------|-------|--------------|
+| M5 | Authentication | Auth flows, protected routes, sessions |
+| M6 | Core Feature | Your product's main functionality |
+| M7 | Admin Console | Admin dashboard, user management |
+
+**Checkpoint 2** — Verify features before polish
+
+### Polish (M8-M11)
+| Milestone | Focus | Deliverables |
+|-----------|-------|--------------|
+| M8 | Advanced Features | Secondary features, integrations |
+| M9 | Payments | Stripe integration, subscriptions |
+| M10 | Polish | UX refinements, performance |
+| M11 | Pre-launch | Testing, documentation, deployment prep |
+
+## Core Principles
+
+### 1. SPEC-First Development
+
+Every feature starts with a SPEC document that defines:
+- Requirements in EARS format
+- Test cases in GIVEN-WHEN-THEN format
+- Acceptance criteria
+- Build Contract references
+
+### 2. TDD Workflow
+
+Implementation follows the RED → GREEN → REFACTOR cycle:
+- **RED:** Write failing tests from SPEC test cases
+- **GREEN:** Write minimum code to pass tests
+- **REFACTOR:** Improve code quality while tests stay green
+
+### 3. Quality Gates
+
+Each milestone ends with verification:
+- All tests pass
+- No TypeScript errors
+- Linting passes
+- Security requirements met
+
+## Getting Started
+
+Before starting any milestone:
+
+1. **Create the Build Contract** — Use the Build Contract prompt (Chapter 21) to synthesize your design artifacts
+2. **Set up SPEC folder structure** — Create `docs/specs/` in your project root
+3. **Configure testing framework** — Install Jest and React Testing Library:
+   ```bash
+   npm install -D jest @testing-library/react @testing-library/jest-dom
+   ```
+4. **Create CLAUDE.md** — Set up your AI context file following the template
+
+<ExpectedOutput
+  items={[
+    { type: "Understanding", description: "How design artifacts flow through Build Contract into SPECs and tested code" },
+    { type: "Preparation", description: "Build Contract created, docs/specs/ folder created, testing framework installed" },
+    { type: "Capability", description: "Ready to execute milestones using MOAI methodology" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Understand the 11-milestone structure and three checkpoints",
+    "Know the SPEC-First → TDD workflow",
+    "Build Contract is created and accessible",
+    "Testing framework is installed and configured",
+    "docs/specs/ folder exists for SPEC documents"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 24,
+    title: "SPEC-First Development",
+    path: "/phase-4-build/spec-first"
+  }}
+  previous={{
+    chapter: 22,
+    title: "Dev Environment",
+    path: "/phase-3-architect/dev-environment"
+  }}
+  related={[
+    { title: "Build Contract", path: "/phase-3-architect/build-contract" },
+    { title: "TDD Workflow", path: "/phase-4-build/tdd-workflow" }
+  ]}
+/>
+
+<ChapterNav
+  current={23}
+  total={43}
+  previous={{
+    chapter: 22,
+    title: "Dev Environment",
+    path: "/phase-3-architect/dev-environment"
+  }}
+  next={{
+    chapter: 24,
+    title: "SPEC-First Development",
+    path: "/phase-4-build/spec-first"
+  }}
+/>

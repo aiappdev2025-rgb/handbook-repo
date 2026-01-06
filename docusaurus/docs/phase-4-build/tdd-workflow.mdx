@@ -1,6 +1,308 @@
 ---
 sidebar_position: 3
-title: "tdd workflow"
+title: "TDD Workflow"
+description: "Red-Green-Refactor cycle for reliable, tested code"
 ---
-# tdd workflow
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# TDD Workflow
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Follow the RED → GREEN → REFACTOR cycle to transform SPECs into tested, working code."
+  why="TDD ensures every feature is properly tested and prevents regression bugs. Tests serve as living documentation."
+  outcome="Ability to execute the TDD workflow for any SPEC—write failing tests, implement to pass, then refactor."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Writing tests for a feature",
+    "Implementing features from a SPEC",
+    "After completing a SPEC document"
+  ]}
+  notYetIf={[
+    "SPEC document is not ready",
+    "Testing framework is not configured",
+    "You don't understand the SPEC-First approach"
+  ]}
+  skipIf="You're doing exploratory prototyping that will be thrown away"
+/>
+
+<Prerequisites
+  items={[
+    { text: "SPEC-First Development understood", link: "/phase-4-build/spec-first" },
+    { text: "SPEC document complete for the feature", link: "/phase-4-build/spec-first" },
+    { text: "Testing framework installed (Jest + RTL)", link: "/phase-4-build/moai-overview" }
+  ]}
+/>
+
+## The TDD Cycle
+
+TDD (Test-Driven Development) follows a strict three-phase cycle. Each phase has a specific purpose and discipline.
+
+```
+TDD CYCLE: RED --> GREEN --> REFACTOR --> DONE
+
+RED:      Write failing tests from SPEC test cases
+GREEN:    Write minimum code to pass tests
+REFACTOR: Improve code quality, tests still pass
+DONE:     All tests pass, quality gate passed
+```
+
+:::info The RED-GREEN-REFACTOR Discipline
+- **RED:** Tests MUST fail first. This confirms you're testing the right thing.
+- **GREEN:** Write the MINIMUM code to pass. No extras, no "while I'm here" additions.
+- **REFACTOR:** Improve code quality ONLY while tests stay green. If tests break, you've changed behavior.
+:::
+
+## RED Phase: Write Failing Tests
+
+The RED phase creates the safety net for your implementation. Tests define what "working" means.
+
+### Steps
+
+1. Take test cases from your SPEC document
+2. Create test file in `src/__tests__/` following naming convention: `[feature].test.ts`
+3. Write tests that describe expected behavior
+4. Run tests — they should FAIL (this confirms you're testing the right thing)
+
+### Manual Steps
+
+```bash
+# Create test file
+touch src/__tests__/auth.test.ts
+
+# Write tests based on SPEC test cases
+# Run tests to confirm failure
+npm test
+```
+
+### With Claude Code
+
+```bash
+claude "Write failing tests for SPEC-AUTH-001. Create src/__tests__/auth.test.ts
+Use the test cases defined in the SPEC. Do not write implementation yet."
+```
+
+### Example: RED Phase Test
+
+From SPEC test case TC-AUTH-001:
+
+```typescript
+// src/__tests__/auth.test.ts
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import LoginPage from '@/app/(auth)/login/page';
+
+describe('User Login', () => {
+  it('TC-AUTH-001: redirects to dashboard on successful login', async () => {
+    // GIVEN a registered user
+    const mockUser = {
+      email: 'test@example.com',
+      password: 'SecurePass123!'
+    };
+
+    render(<LoginPage />);
+
+    // WHEN the user enters credentials and clicks login
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: mockUser.email }
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: mockUser.password }
+    });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    // THEN the system redirects to dashboard
+    await waitFor(() => {
+      expect(window.location.pathname).toBe('/dashboard');
+    });
+  });
+
+  it('TC-AUTH-002: shows error on invalid password', async () => {
+    // GIVEN a registered user
+    // WHEN the user enters wrong password
+    // THEN the system shows error
+    render(<LoginPage />);
+
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'test@example.com' }
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: 'wrongpassword' }
+    });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/invalid email or password/i)).toBeInTheDocument();
+    });
+  });
+});
+```
+
+When you run `npm test`, these tests should **FAIL** because the implementation doesn't exist yet. This is expected and correct.
+
+## GREEN Phase: Make Tests Pass
+
+The GREEN phase is about making tests pass with the minimum necessary code.
+
+### Steps
+
+1. Write the minimum code needed to pass each test
+2. Do not over-engineer — just make the test pass
+3. Run tests after each change to verify progress
+
+### With Claude Code
+
+```bash
+claude "Implement the minimum code to make auth.test.ts pass.
+Follow the requirements in SPEC-AUTH-001."
+```
+
+### Key Principles
+
+- **Minimum viable implementation** — If the test passes, stop
+- **One test at a time** — Make one test green, then the next
+- **No premature optimization** — "Make it work" before "make it right"
+- **Commit when green** — Each passing state is a safe checkpoint
+
+## REFACTOR Phase: Improve Code Quality
+
+The REFACTOR phase improves code without changing behavior.
+
+### Steps
+
+1. Clean up code while keeping tests green
+2. Extract reusable functions, improve naming, add types
+3. Run tests after each refactor to ensure nothing breaks
+
+### Refactoring Targets
+
+| What to Refactor | Example |
+|-----------------|---------|
+| Duplicate code | Extract to shared function |
+| Long functions | Split into smaller functions (≤30 lines) |
+| Unclear names | Rename for clarity |
+| Missing types | Add TypeScript types |
+| Complex conditionals | Simplify or extract |
+
+### Quality Gate Check
+
+After refactoring, verify all quality criteria pass:
+
+```bash
+# All tests must pass
+npm test
+
+# No TypeScript errors
+npm run build
+
+# No linting errors
+npm run lint
+```
+
+## Complete TDD Cycle Example
+
+```typescript
+// 1. RED: Write failing test
+it('should hash password before storing', async () => {
+  const result = await signUp('user@example.com', 'password123');
+  expect(result.passwordHash).not.toBe('password123');
+  expect(result.passwordHash).toMatch(/^\$2[aby]\$/); // bcrypt pattern
+});
+
+// Run test: FAILS (signUp doesn't exist)
+
+// 2. GREEN: Minimum implementation
+async function signUp(email: string, password: string) {
+  const passwordHash = await bcrypt.hash(password, 12);
+  return { email, passwordHash };
+}
+
+// Run test: PASSES
+
+// 3. REFACTOR: Improve without breaking tests
+const BCRYPT_ROUNDS = 12;
+
+async function signUp(email: string, password: string): Promise<User> {
+  const normalizedEmail = email.toLowerCase().trim();
+  const passwordHash = await hashPassword(password);
+
+  return createUser({ email: normalizedEmail, passwordHash });
+}
+
+async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, BCRYPT_ROUNDS);
+}
+
+// Run test: STILL PASSES
+```
+
+## Common TDD Mistakes
+
+| Mistake | Problem | Solution |
+|---------|---------|----------|
+| Writing tests after code | Tests become influenced by implementation | Always RED first |
+| Testing too much at once | Hard to isolate failures | One test at a time |
+| Over-engineering in GREEN | Wasted effort, harder to refactor | Minimum code only |
+| Skipping REFACTOR | Technical debt accumulates | Always refactor when green |
+| Not running tests frequently | Late discovery of breaks | Run after every change |
+
+<ExpectedOutput
+  items={[
+    { type: "Understanding", description: "The RED → GREEN → REFACTOR cycle and how each phase contributes to code quality" },
+    { type: "Capability", description: "Execute the TDD workflow for any SPEC" },
+    { type: "Quality", description: "All tests pass, no TypeScript errors, linting passes" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Can explain the purpose of each TDD phase",
+    "Know how to translate SPEC test cases into Jest tests",
+    "Understand 'minimum code to pass' in GREEN phase",
+    "Know when and how to refactor safely",
+    "Quality gate commands memorized: npm test, npm run build, npm run lint"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 26,
+    title: "Quality Gates",
+    path: "/phase-4-build/quality-gates"
+  }}
+  previous={{
+    chapter: 24,
+    title: "SPEC-First Development",
+    path: "/phase-4-build/spec-first"
+  }}
+  related={[
+    { title: "Quality Checklist Template", path: "/templates/quality-checklist" },
+    { title: "M1: Project Foundation", path: "/phase-4-build/m1-foundation" }
+  ]}
+/>
+
+<ChapterNav
+  current={25}
+  total={43}
+  previous={{
+    chapter: 24,
+    title: "SPEC-First Development",
+    path: "/phase-4-build/spec-first"
+  }}
+  next={{
+    chapter: 26,
+    title: "Quality Gates",
+    path: "/phase-4-build/quality-gates"
+  }}
+/>

@@ -1,6 +1,271 @@
 ---
 sidebar_position: 5
-title: "m1 foundation"
+title: "M1: Project Foundation"
+description: "Set up project structure, tooling, and configuration"
 ---
-# m1 foundation
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# M1: Project Foundation
+
+<span className="reading-time">25 min read</span>
+
+<TldrBox
+  what="Set up Next.js project with TypeScript strict mode, proper folder structure, and development tooling."
+  why="A properly configured project foundation prevents cascading issues. TypeScript strict mode catches bugs before production."
+  outcome="Working project scaffold with all tooling configured and verified."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Starting a new project after Build Contract is complete",
+    "Development environment is set up",
+    "Ready to begin implementation"
+  ]}
+  notYetIf={[
+    "Build Contract is not complete",
+    "Development environment not configured",
+    "Architecture decisions not finalized"
+  ]}
+  skipIf="Project scaffold already exists and meets all criteria"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Build Contract complete", link: "/phase-3-architect/build-contract" },
+    { text: "Dev Environment ready", link: "/phase-3-architect/dev-environment" },
+    { text: "MOAI methodology understood", link: "/phase-4-build/moai-overview" }
+  ]}
+/>
+
+## Overview
+
+Milestone 1 creates the project foundation. This is pure scaffolding—no features, no business logic. Just a solid, properly configured starting point.
+
+| Aspect | Details |
+|--------|---------|
+| **Tool** | Claude Code CLI |
+| **Prompts** | 1 |
+| **Deliverables** | Configured project, folder structure, environment template, Git initialized |
+
+## Project Structure
+
+Before running the main prompt, ensure you understand the target folder structure:
+
+```
+your-saas-project/
+├── CLAUDE.md                    # Project conventions for Claude Code
+├── docs/
+│   ├── specs/                   # SPEC documents
+│   │   └── SPEC-template.md
+│   ├── contracts/               # Build Contract
+│   │   └── build-contract.md
+│   ├── architecture/            # ADRs and diagrams
+│   │   └── decisions/
+│   └── checklists/              # Quality gate checklists
+│       ├── checkpoint-1.md
+│       ├── checkpoint-2.md
+│       └── checkpoint-3.md
+├── src/
+│   ├── app/                     # Next.js App Router pages
+│   ├── components/              # UI components
+│   ├── lib/                     # Utilities, helpers, clients
+│   ├── types/                   # TypeScript type definitions
+│   └── hooks/                   # Custom React hooks
+└── ...
+```
+
+## Implementation Prompt
+
+Use this prompt with Claude Code to set up the project:
+
+```markdown
+ROLE
+Full-Stack Developer setting up a new Next.js project.
+
+CONTEXT
+Project: {{productName}}
+Description: {{brief product description}}
+Stack: Next.js 14+, TypeScript strict, Tailwind CSS, Supabase.
+
+OBJECTIVE
+Initialize a production-ready Next.js project with proper configuration.
+
+REQUIREMENTS
+
+1. Create Next.js project with these options:
+   - TypeScript: Yes (strict mode enabled)
+   - ESLint: Yes (with recommended rules)
+   - Tailwind CSS: Yes
+   - App Router: Yes (src/ directory)
+   - Import alias: @/* for src/*
+
+2. Create folder structure inside src/:
+   - app/ (pages and layouts)
+   - components/ (UI components, organized by feature)
+   - lib/ (utilities, helpers, Supabase clients)
+   - types/ (TypeScript type definitions)
+   - hooks/ (custom React hooks)
+
+3. Configure TypeScript (tsconfig.json):
+   - strict: true
+   - noUncheckedIndexedAccess: true
+   - forceConsistentCasingInFileNames: true
+
+4. Create environment template (.env.local.example):
+   - NEXT_PUBLIC_SUPABASE_URL=
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY=
+   - SUPABASE_SERVICE_ROLE_KEY=
+   - Add .env.local to .gitignore
+
+5. Initialize Git and create initial commit:
+   - git init
+   - Create meaningful .gitignore
+   - Initial commit with message "Initial project setup"
+
+6. Create project docs folder structure:
+   - docs/specs/ (for SPEC documents)
+   - docs/contracts/ (for Build Contract)
+   - docs/architecture/decisions/ (for ADRs)
+   - docs/checklists/ (for quality gates)
+   - Copy SPEC template to docs/specs/
+
+VERIFICATION
+Run: npm run dev — app should start without errors on localhost:3000
+Run: npm run build — should complete with no TypeScript errors
+Run: npm run lint — should pass with no warnings
+```
+
+## TypeScript Configuration
+
+Ensure your `tsconfig.json` includes these strict settings:
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}
+```
+
+:::warning TypeScript Strict Mode
+`noUncheckedIndexedAccess: true` is particularly important. It forces you to handle the case where array/object access might return `undefined`. This catches many bugs at compile time.
+:::
+
+## Environment Variables
+
+Create `.env.local.example` as a template:
+
+```bash
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Add other required variables here
+```
+
+:::danger Never Commit Secrets
+- `.env.local` must be in `.gitignore`
+- Only commit `.env.local.example` (without real values)
+- Never put production secrets in the repository
+:::
+
+## Verification Steps
+
+After running the prompt, verify the setup:
+
+```bash
+# Start development server
+npm run dev
+# → Should start without errors on localhost:3000
+
+# Build for production
+npm run build
+# → Should complete with no TypeScript errors
+
+# Run linting
+npm run lint
+# → Should pass with no warnings
+```
+
+### Folder Structure Check
+
+Verify these folders exist:
+- `src/app/`
+- `src/components/`
+- `src/lib/`
+- `src/types/`
+- `src/hooks/`
+- `docs/specs/`
+- `docs/contracts/`
+- `docs/architecture/decisions/`
+- `docs/checklists/`
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "Next.js 14+ project with TypeScript strict mode" },
+    { type: "Configuration", description: "Tailwind CSS, ESLint configured" },
+    { type: "Structure", description: "Standard folder structure (src/app, components, lib, types, hooks)" },
+    { type: "Documentation", description: "docs/ folder with specs/, contracts/, architecture/, checklists/" },
+    { type: "Git", description: "Repository initialized with initial commit" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "npm run dev starts without errors",
+    "npm run build completes with no TypeScript errors",
+    "npm run lint passes with no warnings",
+    "docs/ folder exists with correct subfolders",
+    "TypeScript strict mode is enabled",
+    ".env.local.example exists with Supabase variables",
+    "Git initialized with initial commit"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 28,
+    title: "M2: Database Schema",
+    path: "/phase-4-build/m2-database"
+  }}
+  previous={{
+    chapter: 26,
+    title: "Quality Gates",
+    path: "/phase-4-build/quality-gates"
+  }}
+  related={[
+    { title: "CLAUDE.md Template", path: "/templates/claude-md" },
+    { title: "Dev Environment", path: "/phase-3-architect/dev-environment" }
+  ]}
+/>
+
+<ChapterNav
+  current={27}
+  total={43}
+  previous={{
+    chapter: 26,
+    title: "Quality Gates",
+    path: "/phase-4-build/quality-gates"
+  }}
+  next={{
+    chapter: 28,
+    title: "M2: Database Schema",
+    path: "/phase-4-build/m2-database"
+  }}
+/>

@@ -1,6 +1,339 @@
 ---
 sidebar_position: 7
-title: "m3 api"
+title: "M3: Core API"
+description: "Build API routes and server-side logic with validation and error handling"
 ---
-# m3 api
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# M3: Core API
+
+<span className="reading-time">30 min read</span>
+
+<TldrBox
+  what="Build API routes, server actions, and data fetching patterns with proper validation and error handling."
+  why="A well-structured API layer ensures consistent data access, proper validation, and meaningful error responses."
+  outcome="Working API endpoints with tests, validation, and error handling."
+/>
+
+<WhenToUse
+  useWhen={[
+    "After M2 is complete",
+    "Database schema and RLS policies are ready",
+    "Ready to build server-side logic"
+  ]}
+  notYetIf={[
+    "M2 Database Schema not complete",
+    "RLS policies not verified",
+    "API specification not designed"
+  ]}
+  skipIf="API layer already exists with proper error handling"
+/>
+
+<Prerequisites
+  items={[
+    { text: "M2: Database Schema complete", link: "/phase-4-build/m2-database" },
+    { text: "API Specification designed", link: "/phase-3-architect/api-specification" },
+    { text: "Supabase clients configured", link: "/phase-4-build/m1-foundation" }
+  ]}
+/>
+
+## Overview
+
+The Core API milestone establishes patterns for all server-side data access. This includes Server Actions (for mutations), Route Handlers (for API endpoints), and data fetching patterns.
+
+| Aspect | Details |
+|--------|---------|
+| **Prerequisites** | M2 complete |
+| **Tool** | Claude Code CLI |
+| **Prompts** | 3 |
+| **Deliverables** | API routes, Server Actions, validation schemas, error handling |
+
+## Implementation Prompts
+
+### Prompt 1: Supabase Client Setup
+
+Create properly typed Supabase clients:
+
+```markdown
+ROLE
+Backend Developer setting up Supabase client layer.
+
+CONTEXT
+Project: {{productName}}
+Database schema complete (M2).
+Need typed Supabase clients for server and client.
+
+OBJECTIVE
+Create type-safe Supabase clients.
+
+REQUIREMENTS
+
+1. Generate database types from Supabase:
+   - Run: npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/types/database.ts
+
+2. Create browser client (src/lib/supabase/client.ts):
+   - Use createBrowserClient from @supabase/ssr
+   - Export typed client with Database generic
+   - Singleton pattern for client reuse
+
+3. Create server client (src/lib/supabase/server.ts):
+   - Use createServerClient from @supabase/ssr
+   - Handle cookies properly for Next.js App Router
+   - Export function for creating client in server components
+
+4. Create middleware client (src/lib/supabase/middleware.ts):
+   - For use in Next.js middleware
+   - Handle token refresh
+
+OUTPUT
+- src/types/database.ts (generated)
+- src/lib/supabase/client.ts
+- src/lib/supabase/server.ts
+- src/lib/supabase/middleware.ts
+```
+
+### Prompt 2: Server Actions
+
+Create server actions for CRUD operations:
+
+```markdown
+ROLE
+Backend Developer implementing server actions.
+
+CONTEXT
+Project: {{productName}}
+Supabase clients configured.
+Need server actions for {{main entity}}.
+
+OBJECTIVE
+Create type-safe server actions with validation.
+
+REQUIREMENTS
+
+1. Install validation library:
+   - npm install zod
+
+2. Create validation schemas (src/lib/validations/{{entity}}.ts):
+   - Create schema for form input
+   - Create schema for database row
+   - Export types from schemas
+
+3. Create server actions (src/app/actions/{{entity}}.ts):
+   - 'use server' directive at top
+   - createEntity: Insert new row
+   - updateEntity: Update existing row
+   - deleteEntity: Remove row
+   - Each action validates input with Zod
+
+4. Error handling pattern:
+   - Return { success: boolean, data?: T, error?: string }
+   - Never expose internal errors to client
+   - Log errors server-side
+
+5. Revalidate paths after mutations:
+   - Use revalidatePath() for affected routes
+   - Use revalidateTag() for cached data
+
+EXAMPLE
+export async function createProject(formData: FormData) {
+  'use server'
+
+  const parsed = projectSchema.safeParse({
+    name: formData.get('name'),
+    description: formData.get('description'),
+  })
+
+  if (!parsed.success) {
+    return { success: false, error: 'Invalid input' }
+  }
+
+  const supabase = createServerClient()
+  const { data, error } = await supabase
+    .from('projects')
+    .insert(parsed.data)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Create project error:', error)
+    return { success: false, error: 'Failed to create project' }
+  }
+
+  revalidatePath('/projects')
+  return { success: true, data }
+}
+```
+
+### Prompt 3: API Route Handlers
+
+Create API routes for external access:
+
+```markdown
+ROLE
+Backend Developer creating API endpoints.
+
+CONTEXT
+Project: {{productName}}
+Server actions created.
+Need API routes for {{use cases that need HTTP endpoints}}.
+
+OBJECTIVE
+Create RESTful API route handlers.
+
+REQUIREMENTS
+
+1. Create route structure:
+   - src/app/api/{{entity}}/route.ts (collection)
+   - src/app/api/{{entity}}/[id]/route.ts (single item)
+
+2. Implement handlers:
+   - GET: Fetch data with pagination
+   - POST: Create new entity
+   - PUT/PATCH: Update entity
+   - DELETE: Remove entity
+
+3. Request validation:
+   - Parse and validate body with Zod
+   - Validate query parameters
+   - Return 400 for invalid input
+
+4. Response format:
+   - Success: { data: T } or { data: T[], pagination: {...} }
+   - Error: { error: string, code?: string }
+   - Use appropriate HTTP status codes
+
+5. Authentication check:
+   - Verify user is authenticated
+   - Return 401 for unauthenticated
+   - Return 403 for unauthorized
+
+EXAMPLE
+// src/app/api/projects/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase/server'
+
+export async function GET(request: NextRequest) {
+  const supabase = createServerClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 })
+  }
+
+  return NextResponse.json({ data })
+}
+```
+
+## Validation Schema Example
+
+```typescript
+// src/lib/validations/project.ts
+import { z } from 'zod'
+
+export const createProjectSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100),
+  description: z.string().max(500).optional(),
+  status: z.enum(['draft', 'active', 'archived']).default('draft'),
+})
+
+export const updateProjectSchema = createProjectSchema.partial()
+
+export type CreateProjectInput = z.infer<typeof createProjectSchema>
+export type UpdateProjectInput = z.infer<typeof updateProjectSchema>
+```
+
+## Error Handling Pattern
+
+```typescript
+// src/lib/errors.ts
+export class AppError extends Error {
+  constructor(
+    message: string,
+    public code: string,
+    public statusCode: number = 500
+  ) {
+    super(message)
+    this.name = 'AppError'
+  }
+}
+
+export function handleError(error: unknown): { error: string; code?: string } {
+  if (error instanceof AppError) {
+    return { error: error.message, code: error.code }
+  }
+
+  console.error('Unexpected error:', error)
+  return { error: 'An unexpected error occurred' }
+}
+```
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "Type-safe Supabase clients (browser, server, middleware)" },
+    { type: "Artifact", description: "Validation schemas with Zod" },
+    { type: "Artifact", description: "Server Actions for CRUD operations" },
+    { type: "Artifact", description: "API Route Handlers (if needed)" },
+    { type: "Quality", description: "Consistent error handling pattern" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Database types generated from Supabase",
+    "Supabase clients work in browser and server contexts",
+    "Server actions validate input before database operations",
+    "Error messages don't expose internal details",
+    "API routes return appropriate HTTP status codes",
+    "All tests pass for API layer"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 30,
+    title: "M4: UI Shell",
+    path: "/phase-4-build/m4-ui-shell"
+  }}
+  previous={{
+    chapter: 28,
+    title: "M2: Database Schema",
+    path: "/phase-4-build/m2-database"
+  }}
+  related={[
+    { title: "API Specification", path: "/phase-3-architect/api-specification" },
+    { title: "Test Strategy", path: "/phase-3-architect/test-strategy" }
+  ]}
+/>
+
+<ChapterNav
+  current={29}
+  total={43}
+  previous={{
+    chapter: 28,
+    title: "M2: Database Schema",
+    path: "/phase-4-build/m2-database"
+  }}
+  next={{
+    chapter: 30,
+    title: "M4: UI Shell",
+    path: "/phase-4-build/m4-ui-shell"
+  }}
+/>

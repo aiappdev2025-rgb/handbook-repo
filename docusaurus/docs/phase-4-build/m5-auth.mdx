@@ -1,6 +1,408 @@
 ---
 sidebar_position: 10
-title: "m5 auth"
+title: "M5: Authentication"
+description: "Implement user authentication and authorization with Supabase Auth"
 ---
-# m5 auth
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# M5: Authentication
+
+<span className="reading-time">30 min read</span>
+
+<TldrBox
+  what="Implement user authentication with Supabase Auth—login, signup, protected routes, and session management."
+  why="Authentication is the gateway to your application. Proper implementation gives you secure sessions, token refresh, and protected routes."
+  outcome="Working auth flow with signup, login, logout, and protected routes."
+/>
+
+<WhenToUse
+  useWhen={[
+    "After Checkpoint 1 is passed",
+    "Foundation (M1-M4) is verified",
+    "Ready to add user authentication"
+  ]}
+  notYetIf={[
+    "Checkpoint 1 not passed",
+    "RLS policies not verified",
+    "UI Shell not complete"
+  ]}
+  skipIf="Authentication already implemented and working"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Checkpoint 1 passed", link: "/phase-4-build/checkpoint-1" },
+    { text: "Supabase project configured", link: "/phase-3-architect/dev-environment" },
+    { text: "UI Shell complete", link: "/phase-4-build/m4-ui-shell" }
+  ]}
+/>
+
+## Overview
+
+Authentication is the gateway to your application. Proper implementation with Supabase Auth gives you secure sessions, token refresh, and protected routes—without building auth from scratch.
+
+| Aspect | Details |
+|--------|---------|
+| **Prerequisites** | Checkpoint 1 passed |
+| **Tool** | Claude Code CLI |
+| **Prompts** | 2 |
+| **Deliverables** | Auth flows working, protected routes, user session management |
+
+## Implementation Prompts
+
+### Prompt 1: Supabase Auth Configuration
+
+```markdown
+ROLE
+Full-Stack Developer implementing authentication.
+
+CONTEXT
+Project: {{productName}}
+Layouts complete (M4).
+Using Supabase Auth with email/password.
+
+OBJECTIVE
+Set up Supabase auth clients and middleware.
+
+REQUIREMENTS
+
+1. Install Supabase packages:
+   - @supabase/supabase-js
+   - @supabase/ssr
+
+2. Create Supabase clients (src/lib/supabase/):
+   - client.ts: Browser client for client components
+   - server.ts: Server client for server components/actions
+   - middleware.ts: Client for middleware (token refresh)
+
+3. Create middleware (src/middleware.ts):
+   - Refresh auth tokens on each request
+   - Protect /dashboard/* and /app/* routes
+   - Redirect unauthenticated users to /login
+   - Redirect authenticated users away from /login, /signup
+
+4. Create auth context provider (src/components/providers/):
+   - UserProvider: Wraps app with user context
+   - useUser hook: Access current user
+   - Subscribe to auth state changes
+
+5. Create auth utility functions (src/lib/auth.ts):
+   - getCurrentUser(): Get user from server
+   - requireUser(): Throw if not authenticated
+   - signOut(): Server action for logout
+
+VERIFICATION
+Protected routes redirect to login when not authenticated
+Auth routes redirect to dashboard when authenticated
+```
+
+### Prompt 2: Login and Signup Pages
+
+```markdown
+ROLE
+Frontend Developer creating authentication UI.
+
+CONTEXT
+Project: {{productName}}
+Supabase auth configured (Prompt 1).
+Design system available.
+
+OBJECTIVE
+Create login and signup pages with proper validation.
+
+REQUIREMENTS
+
+1. Login page (src/app/(auth)/login/page.tsx):
+   - Email and password fields
+   - "Remember me" checkbox (optional)
+   - "Forgot password" link
+   - Link to signup page
+   - Loading state during submission
+   - Error display for invalid credentials
+
+2. Signup page (src/app/(auth)/signup/page.tsx):
+   - Email, password, confirm password fields
+   - Full name field (optional)
+   - Terms acceptance checkbox
+   - Link to login page
+   - Loading state during submission
+   - Success message (check email for verification)
+
+3. Form validation (using react-hook-form + zod):
+   - Email: Valid email format
+   - Password: Minimum 8 characters
+   - Confirm password: Must match password
+   - Show validation errors inline
+
+4. Server actions (src/app/(auth)/actions.ts):
+   - signInAction: Handle login form submission
+   - signUpAction: Handle signup form submission
+   - Return proper error messages
+
+5. Password reset flow (optional for MVP):
+   - Forgot password page with email input
+   - Reset password page (from email link)
+
+VERIFICATION
+Can create new account and receive verification email
+Can log in with valid credentials
+Validation errors display correctly
+Redirects to dashboard after successful login
+```
+
+## Middleware Example
+
+```typescript
+// src/middleware.ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options: any) {
+          response.cookies.set({ name, value: '', ...options })
+        },
+      },
+    }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Protected routes
+  if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // Auth routes - redirect if already authenticated
+  if (user && (
+    request.nextUrl.pathname === '/login' ||
+    request.nextUrl.pathname === '/signup'
+  )) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  return response
+}
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/login', '/signup'],
+}
+```
+
+## Login Page Example
+
+```tsx
+// src/app/(auth)/login/page.tsx
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { signInAction } from './actions'
+
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+})
+
+type LoginForm = z.infer<typeof loginSchema>
+
+export default function LoginPage() {
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+  })
+
+  async function onSubmit(data: LoginForm) {
+    setError(null)
+    const result = await signInAction(data)
+
+    if (result.error) {
+      setError(result.error)
+    } else {
+      router.push('/dashboard')
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md p-8 space-y-6">
+        <h1 className="text-2xl font-bold text-center">Log in</h1>
+
+        {error && (
+          <div className="p-3 text-sm text-red-500 bg-red-50 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              {...register('email')}
+              className="w-full p-2 border rounded"
+            />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              {...register('password')}
+              className="w-full p-2 border rounded"
+            />
+            {errors.password && (
+              <p className="text-sm text-red-500">{errors.password.message}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-2 px-4 bg-primary text-white rounded disabled:opacity-50"
+          >
+            {isSubmitting ? 'Signing in...' : 'Sign in'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+```
+
+## Server Action Example
+
+```typescript
+// src/app/(auth)/actions.ts
+'use server'
+
+import { createServerClient } from '@/lib/supabase/server'
+
+export async function signInAction(data: { email: string; password: string }) {
+  const supabase = createServerClient()
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: data.email,
+    password: data.password,
+  })
+
+  if (error) {
+    return { error: 'Invalid email or password' }
+  }
+
+  return { success: true }
+}
+
+export async function signUpAction(data: {
+  email: string
+  password: string
+  fullName?: string
+}) {
+  const supabase = createServerClient()
+
+  const { error } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: {
+      data: {
+        full_name: data.fullName,
+      },
+    },
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: true }
+}
+```
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "Supabase auth clients (browser, server, middleware)" },
+    { type: "Artifact", description: "Middleware for route protection and token refresh" },
+    { type: "Artifact", description: "Login page with validation" },
+    { type: "Artifact", description: "Signup page with validation" },
+    { type: "Artifact", description: "User context provider and useUser hook" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Can create new account (receive verification email)",
+    "Can log in with valid credentials",
+    "Protected routes redirect to login when unauthenticated",
+    "Auth routes redirect to dashboard when logged in",
+    "Validation errors display correctly",
+    "Logout works and redirects to home/login"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 33,
+    title: "M5: Implementation Details",
+    path: "/phase-4-build/m5-implementation"
+  }}
+  previous={{
+    chapter: 31,
+    title: "Checkpoint 1",
+    path: "/phase-4-build/checkpoint-1"
+  }}
+  related={[
+    { title: "Security", path: "/phase-3-architect/security" },
+    { title: "Quality Gates", path: "/phase-4-build/quality-gates" }
+  ]}
+/>
+
+<ChapterNav
+  current={32}
+  total={43}
+  previous={{
+    chapter: 31,
+    title: "Checkpoint 1",
+    path: "/phase-4-build/checkpoint-1"
+  }}
+  next={{
+    chapter: 33,
+    title: "M5: Implementation Details",
+    path: "/phase-4-build/m5-implementation"
+  }}
+/>

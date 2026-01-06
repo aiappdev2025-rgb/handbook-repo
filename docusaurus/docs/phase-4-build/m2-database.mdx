@@ -1,6 +1,294 @@
 ---
 sidebar_position: 6
-title: "m2 datauase"
+title: "M2: Database Schema"
+description: "Design and implement your data model with Row Level Security"
 ---
-# m2 datauase
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# M2: Database Schema
+
+<span className="reading-time">30 min read</span>
+
+<TldrBox
+  what="Create your database schema with Row Level Security (RLS) policies using Supabase."
+  why="RLS policies are your last line of defense against unauthorized data access, even if application-level checks fail."
+  outcome="Database with all tables, RLS policies, migrations, and seed data."
+/>
+
+<WhenToUse
+  useWhen={[
+    "After M1 is complete",
+    "Ready to define data structures",
+    "Architecture data model is finalized"
+  ]}
+  notYetIf={[
+    "M1 Project Foundation not complete",
+    "Data model not yet designed",
+    "Supabase project not created"
+  ]}
+  skipIf="Database schema already exists and has RLS enabled"
+/>
+
+<Prerequisites
+  items={[
+    { text: "M1: Project Foundation complete", link: "/phase-4-build/m1-foundation" },
+    { text: "Data Model designed", link: "/phase-3-architect/data-model" },
+    { text: "Supabase project created", link: "/phase-3-architect/dev-environment" }
+  ]}
+/>
+
+## Overview
+
+Your database schema is the foundation of your application's data integrity. Row Level Security (RLS) policies are non-negotiable—they're your last line of defense against unauthorized data access.
+
+| Aspect | Details |
+|--------|---------|
+| **Prerequisites** | M1 complete |
+| **Tool** | Claude Code CLI |
+| **Prompts** | 2 |
+| **Deliverables** | Database schema, RLS policies, indexes, migration files |
+
+## Implementation Prompts
+
+### Prompt 1: Core Database Schema
+
+Create the core schema with profiles table and main entities:
+
+```markdown
+ROLE
+Database Engineer designing the application schema.
+
+CONTEXT
+Project: {{productName}}
+Database: Supabase (PostgreSQL)
+Core feature: {{describe your main feature and data it needs}}
+
+OBJECTIVE
+Create the database schema with proper security.
+
+REQUIREMENTS
+
+1. Create profiles table (extends auth.users):
+   - id: uuid references auth.users(id) on delete cascade
+   - email: text not null
+   - full_name: text
+   - avatar_url: text
+   - created_at: timestamptz default now()
+   - updated_at: timestamptz default now()
+
+2. Create core entity tables for your feature:
+   - Define tables based on your product's data model
+   - Include user_id foreign key on user-owned data
+   - Add created_at, updated_at timestamps
+   - Use appropriate data types (uuid, text, jsonb, etc.)
+
+3. Create trigger for profile creation:
+   - Function: handle_new_user()
+   - Trigger: on auth.users insert, create profile
+
+4. Create updated_at trigger:
+   - Function: update_updated_at_column()
+   - Apply to all tables with updated_at
+
+5. Add indexes for common queries:
+   - Index on user_id for user-owned tables
+   - Index on commonly filtered/sorted columns
+   - Index on foreign keys
+
+OUTPUT
+Create migration file in supabase/migrations/
+Use descriptive filename: YYYYMMDDHHMMSS_create_core_schema.sql
+```
+
+### Prompt 2: Row Level Security Policies
+
+Enable RLS on every table with appropriate policies:
+
+```markdown
+ROLE
+Security Engineer implementing database access control.
+
+CONTEXT
+Project: {{productName}}
+Schema created in Prompt 1.
+Need RLS policies for all tables.
+
+OBJECTIVE
+Implement Row Level Security on all tables.
+
+REQUIREMENTS
+
+1. Enable RLS on EVERY table:
+   - ALTER TABLE tablename ENABLE ROW LEVEL SECURITY;
+   - No exceptions — every table must have RLS enabled
+
+2. Profiles table policies:
+   - SELECT: Users can read their own profile
+   - UPDATE: Users can update their own profile
+   - INSERT: Handled by trigger (service role only)
+
+3. User-owned data policies:
+   - SELECT: WHERE user_id = auth.uid()
+   - INSERT: WITH CHECK user_id = auth.uid()
+   - UPDATE: WHERE user_id = auth.uid()
+   - DELETE: WHERE user_id = auth.uid()
+
+4. Shared/public data policies (if applicable):
+   - SELECT: Allow authenticated users to read
+   - INSERT/UPDATE/DELETE: Restrict to owners
+
+5. Create helper functions:
+   - is_admin(): Check if current user has admin role
+   - Use in admin policies created in M7
+
+SECURITY RULES
+NEVER use policies that allow anon access to sensitive data
+ALWAYS check auth.uid() in policies
+TEST policies by attempting unauthorized access
+
+OUTPUT
+Create migration file: YYYYMMDDHHMMSS_add_rls_policies.sql
+```
+
+## Example Schema
+
+```sql
+-- Profiles table (extends auth.users)
+CREATE TABLE public.profiles (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  email TEXT NOT NULL,
+  full_name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+-- Example user-owned table
+CREATE TABLE public.projects (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'active', 'archived')),
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+-- Indexes
+CREATE INDEX idx_projects_user_id ON public.projects(user_id);
+CREATE INDEX idx_projects_status ON public.projects(status);
+```
+
+## RLS Policy Examples
+
+```sql
+-- Enable RLS on all tables
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
+
+-- Profiles policies
+CREATE POLICY "Users can view own profile"
+  ON public.profiles FOR SELECT
+  USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile"
+  ON public.profiles FOR UPDATE
+  USING (auth.uid() = id);
+
+-- Projects policies
+CREATE POLICY "Users can view own projects"
+  ON public.projects FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create projects"
+  ON public.projects FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own projects"
+  ON public.projects FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own projects"
+  ON public.projects FOR DELETE
+  USING (auth.uid() = user_id);
+```
+
+## Testing RLS Policies
+
+Verify policies work by attempting unauthorized access:
+
+```sql
+-- Test as anonymous user (should return 0 rows)
+SET LOCAL ROLE anon;
+SELECT * FROM profiles;
+
+-- Test as authenticated user (should return only their data)
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub": "test-user-id"}';
+SELECT * FROM projects;
+```
+
+:::danger Security Critical
+After completing this milestone, you MUST complete **Checkpoint 1** before proceeding to M3. RLS verification is mandatory.
+:::
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "Profiles table extending auth.users" },
+    { type: "Artifact", description: "Core entity tables for your feature" },
+    { type: "Configuration", description: "RLS enabled on ALL tables" },
+    { type: "Security", description: "Security policies for each access pattern" },
+    { type: "Performance", description: "Indexes for query optimization" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All tables have RLS enabled (query pg_tables for rowsecurity)",
+    "RLS policies tested with unauthorized access attempts",
+    "Profile creation trigger works on signup",
+    "Migrations run successfully",
+    "Indexes exist on foreign keys and commonly queried columns"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 29,
+    title: "M3: Core API",
+    path: "/phase-4-build/m3-api"
+  }}
+  previous={{
+    chapter: 27,
+    title: "M1: Project Foundation",
+    path: "/phase-4-build/m1-foundation"
+  }}
+  related={[
+    { title: "Data Model", path: "/phase-3-architect/data-model" },
+    { title: "Security", path: "/phase-3-architect/security" }
+  ]}
+/>
+
+<ChapterNav
+  current={28}
+  total={43}
+  previous={{
+    chapter: 27,
+    title: "M1: Project Foundation",
+    path: "/phase-4-build/m1-foundation"
+  }}
+  next={{
+    chapter: 29,
+    title: "M3: Core API",
+    path: "/phase-4-build/m3-api"
+  }}
+/>

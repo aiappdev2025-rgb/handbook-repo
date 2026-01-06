@@ -1,6 +1,231 @@
 ---
 sidebar_position: 9
-title: "checkpoint 1"
+title: "Checkpoint 1"
+description: "Quality gate after foundation milestones M1-M4"
 ---
-# checkpoint 1
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Checkpoint 1: Foundation Audit
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Quality gate verifying your foundation (M1-M4) is solid before building features."
+  why="Skipping this risks security vulnerabilities and technical debt that compound as you build."
+  outcome="Verified foundation ready for feature development, Git tagged checkpoint-1."
+/>
+
+<WhenToUse
+  useWhen={[
+    "After completing M1, M2, M3, and M4",
+    "Before starting M5 (Authentication)",
+    "All milestones pass their individual verification"
+  ]}
+  notYetIf={[
+    "Any of M1-M4 is incomplete",
+    "Individual milestone verifications haven't passed",
+    "RLS policies haven't been tested"
+  ]}
+  skipIf="You've already passed Checkpoint 1 and tagged the commit"
+/>
+
+<Prerequisites
+  gate={true}
+  items={[
+    { text: "M1: Project Foundation complete", link: "/phase-4-build/m1-foundation" },
+    { text: "M2: Database Schema complete", link: "/phase-4-build/m2-database" },
+    { text: "M3: Core API complete", link: "/phase-4-build/m3-api" },
+    { text: "M4: UI Shell complete", link: "/phase-4-build/m4-ui-shell" }
+  ]}
+/>
+
+## Why This Checkpoint Matters
+
+This checkpoint ensures your foundation is solid before building features on top. Skipping this risks security vulnerabilities and technical debt that compound as you build.
+
+| Checkpoint | When | Purpose | Outcome |
+|------------|------|---------|---------|
+| **Checkpoint 1** | After M4 | Verify security, schema integrity, code quality | Git tag `checkpoint-1` |
+
+## Security Verification
+
+### RLS Policy Audit
+
+Every table must have Row Level Security enabled. Run this query to verify:
+
+```sql
+-- List all tables and their RLS status
+SELECT schemaname, tablename, rowsecurity
+FROM pg_tables
+WHERE schemaname = 'public';
+
+-- All tables should show rowsecurity = true
+```
+
+### Policy Testing
+
+Test that policies actually block unauthorized access:
+
+```sql
+-- Test as anonymous user (should return 0 rows)
+SET LOCAL ROLE anon;
+SELECT * FROM profiles;
+
+-- Test as authenticated user (should return only their data)
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub": "test-user-id"}';
+SELECT * FROM user_owned_table;
+```
+
+### RLS Checklist
+
+- [ ] RLS enabled on ALL tables (no exceptions)
+- [ ] Profiles table: users can only read/update their own
+- [ ] User-owned tables: CRUD restricted to owner (auth.uid())
+- [ ] No policies allow anon access to sensitive data
+- [ ] is_admin() helper function created
+
+## Schema Review
+
+### Data Integrity Check
+
+- [ ] Profiles table references auth.users with ON DELETE CASCADE
+- [ ] All user-owned tables have user_id foreign key
+- [ ] created_at and updated_at on all tables
+- [ ] updated_at trigger applied to all relevant tables
+- [ ] Appropriate indexes on foreign keys and query patterns
+- [ ] No nullable columns that should be required
+
+## Code Quality Check
+
+Run all quality checks before proceeding:
+
+```bash
+# Build - should complete with no errors
+npm run build
+
+# Lint - should pass with no warnings
+npm run lint
+
+# Type check (if separate from build)
+npx tsc --noEmit
+
+# Check for security vulnerabilities
+npm audit
+```
+
+### Code Quality Checklist
+
+- [ ] `npm run build` completes with no errors
+- [ ] `npm run lint` passes with no warnings
+- [ ] No TypeScript errors
+- [ ] `npm audit` shows no critical vulnerabilities
+
+## API Layer Verification
+
+- [ ] Supabase clients work in browser and server contexts
+- [ ] Server actions validate input before database operations
+- [ ] Error messages don't expose internal details
+- [ ] Database types generated from Supabase schema
+
+## UI Shell Verification
+
+- [ ] Root layout includes all providers (theme, toast)
+- [ ] Marketing layout has header and footer
+- [ ] App layout redirects unauthenticated users
+- [ ] Navigation works at all breakpoints (320px, 768px, 1024px)
+- [ ] Mobile navigation opens/closes properly
+
+## Tag the Checkpoint
+
+Once all checks pass, tag this checkpoint in Git:
+
+```bash
+# Commit any pending changes
+git add .
+git commit -m "Complete Checkpoint 1: Foundation verified"
+
+# Tag the checkpoint
+git tag -a checkpoint-1 -m "Checkpoint 1: Foundation audit complete - M1-M4 verified"
+
+# Push tag to remote
+git push origin checkpoint-1
+```
+
+:::tip Checkpoint Tag
+The `checkpoint-1` tag creates a safe rollback point. If you encounter issues in later milestones, you can return to this verified state.
+:::
+
+## Checkpoint Summary
+
+Your foundation is now verified:
+
+| Component | Status |
+|-----------|--------|
+| Project structure and tooling (M1) | Verified |
+| Secure database with RLS (M2) | Verified |
+| API layer with validation (M3) | Verified |
+| Responsive UI shell (M4) | Verified |
+| All quality checks | Passing |
+| Git tag | `checkpoint-1` |
+
+<ExpectedOutput
+  items={[
+    { type: "Security", description: "RLS enabled and tested on all tables" },
+    { type: "Quality", description: "All builds, tests, and linting pass" },
+    { type: "Git", description: "Tagged checkpoint-1 marking verified foundation" },
+    { type: "State", description: "Ready for feature development (M5+)" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "RLS enabled on ALL tables (query pg_tables confirms)",
+    "Unauthorized access attempts blocked by RLS policies",
+    "npm run build completes without errors",
+    "npm run lint passes with no warnings",
+    "npm audit shows no critical vulnerabilities",
+    "Git tagged: checkpoint-1"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 32,
+    title: "M5: Authentication",
+    path: "/phase-4-build/m5-auth"
+  }}
+  previous={{
+    chapter: 30,
+    title: "M4: UI Shell",
+    path: "/phase-4-build/m4-ui-shell"
+  }}
+  related={[
+    { title: "Quality Gates", path: "/phase-4-build/quality-gates" },
+    { title: "Security", path: "/phase-3-architect/security" }
+  ]}
+/>
+
+<ChapterNav
+  current={31}
+  total={43}
+  previous={{
+    chapter: 30,
+    title: "M4: UI Shell",
+    path: "/phase-4-build/m4-ui-shell"
+  }}
+  next={{
+    chapter: 32,
+    title: "M5: Authentication",
+    path: "/phase-4-build/m5-auth"
+  }}
+/>

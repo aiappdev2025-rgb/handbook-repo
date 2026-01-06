@@ -1,17 +1,290 @@
 ---
 sidebar_position: 4
 title: "Quality Gates"
-description: "Verification checkpoints that ensure code quality throughout development"
+description: "Checkpoints ensuring code quality at each milestone"
 ---
 
-import { TemplateDownload } from '@site/src/components/ChapterComponents';
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  TemplateDownload,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
 
 # Quality Gates
 
-<TemplateDownload
-  name="Quality Checklist Template"
-  file="quality-checklist"
-  description="Code quality verification checklist for each feature"
+<span className="reading-time">15 min read</span>
+
+<TldrBox
+  what="Checkpoints that verify code quality before proceeding to the next milestone."
+  why="Quality gates prevent technical debt accumulation and catch issues early when they're cheap to fix."
+  outcome="Understanding of gate criteria and ability to verify code meets standards before commits."
 />
 
-*Content to be migrated*
+<WhenToUse
+  useWhen={[
+    "Completing a milestone",
+    "Before committing code",
+    "At checkpoint boundaries (1, 2, 3)"
+  ]}
+  notYetIf={[
+    "Feature implementation is incomplete",
+    "Tests are not yet written",
+    "You're still in the middle of a TDD cycle"
+  ]}
+  skipIf="You're doing exploratory work that won't be committed"
+/>
+
+<Prerequisites
+  items={[
+    { text: "TDD Workflow understood", link: "/phase-4-build/tdd-workflow" },
+    { text: "Feature implementation complete", link: "/phase-4-build/tdd-workflow" },
+    { text: "All tests passing", link: "/phase-4-build/tdd-workflow" }
+  ]}
+/>
+
+<TemplateDownload
+  name="Quality Checklist"
+  file="quality-checklist"
+  description="Complete quality gate checklist for milestone verification"
+/>
+
+## What are Quality Gates?
+
+Quality gates are mandatory checkpoints that verify your code meets defined standards before proceeding. Every item must pass—no exceptions, no "we'll fix it later."
+
+:::info Gate Philosophy
+Quality gates exist because **technical debt compounds**. A small shortcut in M1 becomes a significant problem in M6. Gates force you to address issues when they're cheap to fix.
+:::
+
+## SPEC Ready Gate
+
+Before starting implementation, verify the SPEC meets these criteria:
+
+| Criteria | Verification |
+|----------|--------------|
+| Overview section complete | Problem and Solution clearly stated |
+| Build Contract references included | Section numbers cited |
+| At least one requirement (EARS format) | Follows pattern correctly |
+| At least one test case per requirement | GIVEN-WHEN-THEN format |
+| All placeholders replaced | No `[PLACEHOLDER]` text remains |
+| Status set to "Ready" | Marked for implementation |
+
+## Implementation Done Gate
+
+Before marking a feature complete, verify these criteria:
+
+```bash
+# All tests must pass
+npm test
+
+# No TypeScript errors
+npm run build
+
+# No linting errors
+npm run lint
+
+# Check for security vulnerabilities
+npm audit
+```
+
+| Criteria | Threshold |
+|----------|-----------|
+| Tests pass | 100% |
+| Test coverage for new code | ≥ 80% |
+| Functions | ≤ 30 lines |
+| Files | ≤ 200 lines |
+| Nesting depth | ≤ 3 levels |
+| TypeScript errors | 0 |
+| Linting errors | 0 |
+| SPEC status | Updated to "Done" |
+
+## Checkpoint Gates
+
+### Checkpoint 1: Foundation Audit
+
+After completing M1-M4, verify:
+
+| Criteria | Verification Method |
+|----------|---------------------|
+| RLS enabled on ALL tables | Query pg_tables for rowsecurity |
+| RLS policies tested | Attempt unauthorized access (should fail) |
+| No security vulnerabilities | `npm audit` clean |
+| Schema matches architecture | Compare to data model doc |
+| Technical debt score | ≥ 6.0 |
+| All M1-M4 tests passing | `npm test` |
+| Git tagged | `checkpoint-1` |
+
+### Checkpoint 2: Feature Complete Audit
+
+After completing M5-M7, verify:
+
+| Criteria | Verification Method |
+|----------|---------------------|
+| Core feature fully functional | Manual testing against SPEC |
+| User flows match UX Package | Side-by-side comparison |
+| Test coverage | ≥ 80% |
+| Performance (Lighthouse) | ≥ 80 |
+| Technical debt score | ≥ 6.0 |
+| No critical bugs in backlog | Review issue tracker |
+| All M1-M7 tests passing | `npm test` |
+| Git tagged | `checkpoint-2` |
+
+### Checkpoint 3: Pre-Launch Audit
+
+After completing M8-M11, verify:
+
+| Criteria | Verification Method |
+|----------|---------------------|
+| All features complete | Review against Design Brief |
+| Security verification | OWASP checklist |
+| Performance (Lighthouse) | ≥ 90 |
+| Accessibility | WCAG 2.1 AA compliance |
+| Technical debt score | ≥ 7.0 |
+| Error boundaries | Present on all async operations |
+| Loading states | All async operations covered |
+| Mobile responsive | Tested at 320px, 768px, 1024px |
+| All tests passing | `npm test` |
+| Git tagged | `checkpoint-3` |
+
+## Code Review Gate
+
+Before merging any PR:
+
+| Criteria | Check |
+|----------|-------|
+| PR linked to SPEC | Reference included |
+| Tests cover new functionality | Coverage verified |
+| No console.log statements | Search codebase |
+| No hardcoded secrets | Review for credentials |
+| Error handling in place | Try/catch, error boundaries |
+| TypeScript types defined | No `any` types |
+| Follows project conventions | CLAUDE.md rules followed |
+| Documentation updated | If API or usage changed |
+
+## Quality Score Thresholds
+
+| Score | Rating | Gate Decision |
+|-------|--------|---------------|
+| ≥ 8.0 | Excellent | **PASS** — Proceed |
+| 7.0 - 7.9 | Good | **PASS** — Document debt |
+| 6.0 - 6.9 | Acceptable | **PASS** — Create remediation plan |
+| 5.0 - 5.9 | Concerning | **CONDITIONAL** — Address before next milestone |
+| < 5.0 | Critical | **BLOCK** — Remediation required |
+
+## Using Quality Gates
+
+### Manual Verification
+
+Copy the relevant checklist into your SPEC or PR description and check off items:
+
+```markdown
+## Quality Gate: Implementation Done
+
+- [x] All tests pass (npm test)
+- [x] Test coverage >= 80%
+- [x] Functions <= 30 lines
+- [x] Files <= 200 lines
+- [x] No TypeScript errors (npm run build)
+- [x] No linting errors (npm run lint)
+- [ ] SPEC status updated to "Done"
+```
+
+### Automated Verification
+
+Many checks can be automated via CI/CD:
+
+```yaml
+# .github/workflows/quality-gate.yml
+name: Quality Gate
+
+on: [pull_request]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --coverage
+
+      - name: Check coverage threshold
+        run: npm run test:coverage -- --coverageThreshold='{"global":{"branches":80,"functions":80,"lines":80}}'
+
+      - name: Type check
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+```
+
+## Common Gate Failures
+
+| Failure | Root Cause | Solution |
+|---------|------------|----------|
+| Tests failing | Incomplete implementation | Complete TDD cycle |
+| Low coverage | Tests not written first | Write tests before code |
+| TypeScript errors | Missing types | Add proper type definitions |
+| Lint errors | Style violations | Run `npm run lint -- --fix` |
+| Large functions | Over-engineering | Extract to smaller functions |
+| Security vulnerabilities | Outdated packages | Update dependencies |
+
+<ExpectedOutput
+  items={[
+    { type: "Understanding", description: "Quality gate criteria for each milestone type" },
+    { type: "Capability", description: "Ability to verify code meets standards before commits" },
+    { type: "Process", description: "Know when and how to apply each gate type" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Know the three checkpoint gate types and their criteria",
+    "Can run all quality gate commands (npm test, build, lint, audit)",
+    "Understand quality score thresholds and gate decisions",
+    "Know how to document gate results in PRs/SPECs"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 27,
+    title: "M1: Project Foundation",
+    path: "/phase-4-build/m1-foundation"
+  }}
+  previous={{
+    chapter: 25,
+    title: "TDD Workflow",
+    path: "/phase-4-build/tdd-workflow"
+  }}
+  related={[
+    { title: "Quality Checklist Template", path: "/templates/quality-checklist" },
+    { title: "Tech Debt Template", path: "/templates/tech-debt" }
+  ]}
+/>
+
+<ChapterNav
+  current={26}
+  total={43}
+  previous={{
+    chapter: 25,
+    title: "TDD Workflow",
+    path: "/phase-4-build/tdd-workflow"
+  }}
+  next={{
+    chapter: 27,
+    title: "M1: Project Foundation",
+    path: "/phase-4-build/m1-foundation"
+  }}
+/>
