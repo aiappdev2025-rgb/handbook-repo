@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appendix A: SPEC Template - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="appendix-a">Appendix A: SPEC Template</h1>
+
+<p>Use this template for every SPEC document. Copy it to <code>docs/specs/SPEC-[PREFIX]-[NNN].md</code> and fill in the bracketed placeholders.</p>
+
+<h2>SPEC Document Template</h2>
+
+<div class="code-block"># SPEC-[PREFIX]-[NNN]: [Feature Name]
+
+**Status**: [Draft | Ready | In Progress | Review | Done]
+**Milestone**: [Number and Name]
+
+## Overview
+**Problem**: [What problem does this solve?]
+**Solution**: [How does this feature solve it?]
+
+## Source References
+- Build Contract Section [X.X]: [Name]
+
+## Requirements
+**REQ-001** [EARS-format requirement]
+
+## Test Cases
+### TC-[PREFIX]-001: [Name]
+**GIVEN** [precondition]
+**WHEN** [action]
+**THEN** [outcome]
+
+## Acceptance Criteria
+- [ ] All test cases pass
+- [ ] Code meets quality standards</div>
+
+<h2>Status Definitions</h2>
+
+<table class="comparison-table">
+  <tr><th>Status</th><th>Definition</th></tr>
+  <tr><td><strong>Draft</strong></td><td>Initial creation, requirements not finalized</td></tr>
+  <tr><td><strong>Ready</strong></td><td>Requirements complete, ready for implementation</td></tr>
+  <tr><td><strong>In Progress</strong></td><td>Currently being implemented</td></tr>
+  <tr><td><strong>Review</strong></td><td>Implementation complete, under review</td></tr>
+  <tr><td><strong>Done</strong></td><td>All acceptance criteria met, merged</td></tr>
+</table>
+
+<h2>PREFIX Conventions</h2>
+
+<table class="comparison-table">
+  <tr><th>Prefix</th><th>Domain</th><th>Example</th></tr>
+  <tr><td>AUTH</td><td>Authentication</td><td>SPEC-AUTH-001</td></tr>
+  <tr><td>USER</td><td>User Management</td><td>SPEC-USER-001</td></tr>
+  <tr><td>CORE</td><td>Core Feature</td><td>SPEC-CORE-001</td></tr>
+  <tr><td>PAY</td><td>Payments</td><td>SPEC-PAY-001</td></tr>
+  <tr><td>ADMIN</td><td>Admin Console</td><td>SPEC-ADMIN-001</td></tr>
+  <tr><td>UI</td><td>UI Components</td><td>SPEC-UI-001</td></tr>
+</table>
+
+<h2>EARS Requirements Reference</h2>
+
+<p>Every requirement must follow one of these EARS patterns:</p>
+
+<ul>
+  <li><strong>Ubiquitous</strong>: The [system] shall [action]</li>
+  <li><strong>State-Driven</strong>: While [state], the [system] shall [action]</li>
+  <li><strong>Event-Driven</strong>: When [event], the [system] shall [action]</li>
+  <li><strong>Optional</strong>: Where [condition], the [system] shall [action]</li>
+  <li><strong>Unwanted</strong>: The [system] shall not [action]</li>
+</ul>
+
+<h2>Test Case Reference</h2>
+
+<p>Test cases use GIVEN-WHEN-THEN format:</p>
+
+<div class="code-block">### TC-AUTH-001: Valid login
+**GIVEN** a registered user with email "test@example.com"
+  AND the user has password "ValidPass123"
+**WHEN** the user submits the login form
+**THEN** the user is redirected to /dashboard
+  AND the user session is established</div>
+
+<h2>Test File Linking Convention</h2>
+
+<p>Test files must include a comment linking to their SPEC:</p>
+
+<div class="code-block">// SPEC: SPEC-AUTH-001
+describe('User Authentication', () => {
+  // TC-001: User can log in with valid credentials
+  it('should authenticate user with valid email and password', () => {
+    // Test implementation
+  });
+});</div>
+
+<p>This linking enables automated verification that SPECs match implementation.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

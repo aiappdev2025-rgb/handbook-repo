@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 18: Multi-Environment Configuration - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-18">Chapter 18: Multi-Environment Configuration</h1>
+
+<p>This chapter provides a comprehensive guide to configuring your development and deployment environments. You'll learn how to structure your environments for data isolation, configure services correctly, and establish workflows for testing and deployment. By the end of this chapter, you'll have a complete, professional environment setup.</p>
+
+<div class="note">
+  <h4>Choose Your Environment Setup</h4>
+  <p>This handbook supports two configurations based on your Supabase plan:</p>
+  <ul>
+    <li><strong>2-Environment Setup</strong> (Supabase Free tier): Development + Production — uses 2 Supabase projects</li>
+    <li><strong>3-Environment Setup</strong> (Supabase Pro or multiple orgs): Development + Staging + Production — uses 3 Supabase projects</li>
+  </ul>
+  <p>If you completed Chapters 16-17 and already created your Supabase projects, continue with the setup you chose. This chapter provides detailed guidance for both paths.</p>
+</div>
+
+<h2 id="section-18-1">18.1 Environment Strategy Overview</h2>
+
+<p>A proper multi-environment strategy isolates your development work from production users. This section explains both environment configurations, helps you choose the right one, and outlines the architecture for each.</p>
+
+<h3>Choosing Your Configuration</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Factor</th>
+    <th>2-Environment</th>
+    <th>3-Environment</th>
+  </tr>
+  <tr>
+    <td><strong>Supabase projects needed</strong></td>
+    <td>2 (Dev + Prod)</td>
+    <td>3 (Dev + Staging + Prod)</td>
+  </tr>
+  <tr>
+    <td><strong>Free tier compatible</strong></td>
+    <td>Yes</td>
+    <td>No (requires Pro or 2nd org)</td>
+  </tr>
+  <tr>
+    <td><strong>Preview deployment data</strong></td>
+    <td>Shares Dev database</td>
+    <td>Isolated Staging database</td>
+  </tr>
+  <tr>
+    <td><strong>Best for</strong></td>
+    <td>Solo developers, early stage</td>
+    <td>Teams, external testers, pre-launch</td>
+  </tr>
+  <tr>
+    <td><strong>Can upgrade later</strong></td>
+    <td>Yes → 3-env</td>
+    <td>N/A</td>
+  </tr>
+</table>
+
+<h3>2-Environment Architecture</h3>
+
+<div class="file-structure">
+Developer Machine                              Vercel Production
+      |                                              |
+      v                                              v
+[Next.js Dev Server]                         [Production Deploy]
+      |                                              |
+      +--- Vercel Preview Deploys ---+               |
+      |                              |               |
+      v                              v               v
+[Supabase DEV] <---- shared -----> [Supabase DEV]  [Supabase PROD]
+      |                                              |
+      v                                              v
+[Stripe TEST mode]                           [Stripe LIVE mode]
+</div>
+
+<p><em>In this setup, local development and Vercel preview deployments share the Dev Supabase project. Production is fully isolated.</em></p>
+
+<h3>3-Environment Architecture</h3>
+
+<div class="file-structure">
+Developer Machine          Vercel Preview           Vercel Production
+      |                         |                         |
+      v                         v                         v
+[Next.js Dev Server]    [Preview Deploy]          [Production Deploy]
+      |                         |                         |
+      v                         v                         v
+[Supabase DEV]          [Supabase STAGING]        [Supabase PROD]
+      |                         |                         |
+      v                         v                         v
+[Stripe TEST mode]      [Stripe TEST mode]        [Stripe LIVE mode]
+</div>
+
+<p><em>In this setup, each environment has its own isolated Supabase project. Preview testers don't affect development data.</em></p>
+
+<h3>Cost Comparison</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Service</th>
+    <th>2-Environment Cost</th>
+    <th>3-Environment Cost</th>
+  </tr>
+  <tr>
+    <td><strong>Supabase</strong></td>
+    <td>$0 (2 free projects) + $25/mo Prod at launch</td>
+    <td>$25/mo (need Pro for 3rd project) or $0 with 2nd org</td>
+  </tr>
+  <tr>
+    <td><strong>Vercel</strong></td>
+    <td>$0 Hobby tier</td>
+    <td>$0-20/mo (Pro for password-protected previews)</td>
+  </tr>
+  <tr>
+    <td><strong>Stripe</strong></td>
+    <td>2.9% + 30¢ per transaction</td>
+    <td>2.9% + 30¢ per transaction</td>
+  </tr>
+</table>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A clear understanding of which environment configuration fits your needs.</p>
+  <p><strong>Decision made:</strong> You've chosen either 2-environment or 3-environment setup based on your Supabase plan and collaboration needs.</p>
+  <p><strong>Next:</strong> Review your Supabase project configuration (if already created in Ch 16) or set up projects following the appropriate path below.</p>
+</div>
+
+<h2 id="section-18-2">18.2 Supabase Project Configuration Reference</h2>
+
+<p>This section provides detailed reference for Supabase project configuration. If you already created projects in Chapter 16, use this to verify your setup. If you skipped Chapter 16 or need to reconfigure, follow the steps for your chosen environment setup.</p>
+
+<h3>Project Structure by Setup</h3>
+
+<h4>2-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Purpose</th>
+    <th>Used By</th>
+  </tr>
+  <tr>
+    <td><code>[project]-dev</code></td>
+    <td>Development + Preview testing</td>
+    <td>localhost:3000, Vercel previews</td>
+  </tr>
+  <tr>
+    <td><code>[project]-prod</code></td>
+    <td>Production users</td>
+    <td>Vercel production only</td>
+  </tr>
+</table>
+
+<h4>3-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Purpose</th>
+    <th>Used By</th>
+  </tr>
+  <tr>
+    <td><code>[project]-dev</code></td>
+    <td>Local development only</td>
+    <td>localhost:3000</td>
+  </tr>
+  <tr>
+    <td><code>[project]-staging</code></td>
+    <td>Preview/PR testing</td>
+    <td>Vercel preview deploys</td>
+  </tr>
+  <tr>
+    <td><code>[project]-prod</code></td>
+    <td>Production users</td>
+    <td>Vercel production only</td>
+  </tr>
+</table>
+
+<h3>Row Level Security (Required)</h3>
+
+<div class="warning">
+  <h4>Critical Security Requirement</h4>
+  <p>RLS must be enabled on ALL tables in ALL environments. This is your primary data access control layer. Never disable RLS in production.</p>
+</div>
+
+<div class="code-block">-- Enable RLS on every table you create
+ALTER TABLE your_table_name ENABLE ROW LEVEL SECURITY;
+
+-- Example: Enable RLS on user_profiles
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;</div>
+
+<h2 id="section-18-3">18.3 Local Development Setup</h2>
+
+<p>Your local development environment runs Next.js on your machine while connecting to the cloud Development Supabase project. This section walks through setting up your local environment from scratch or joining an existing project.</p>
+
+<h3>Prerequisites</h3>
+
+<p>Before proceeding, ensure you have these tools installed:</p>
+
+<ul>
+  <li><strong>Node.js 20+</strong> — Check with <code>node --version</code></li>
+  <li><strong>npm or pnpm</strong> — Package manager</li>
+  <li><strong>Supabase CLI</strong> — Install: <code>npm install -g supabase</code></li>
+  <li><strong>Vercel CLI</strong> — Install: <code>npm install -g vercel</code></li>
+  <li><strong>Git</strong> — Configured with your credentials</li>
+</ul>
+
+<h3>Instructions</h3>
+
+<h4>Step 1: Clone and Install Dependencies</h4>
+
+<div class="code-block">git clone [your-repo-url]
+cd [project-name]
+npm install</div>
+
+<h4>Step 2: Link to Your Vercel Project</h4>
+
+<div class="code-block">vercel link
+# Follow prompts to connect to your Vercel project
+# Select your team/account and project when prompted</div>
+
+<h4>Step 3: Pull Environment Variables</h4>
+
+<div class="code-block">vercel env pull .env.local
+# This creates .env.local with Development-scoped environment variables</div>
+
+<h4>Step 4: Verify the Application Runs</h4>
+
+<div class="code-block">npm run dev
+# Open http://localhost:3000
+# Verify the app loads without errors</div>
+
+<h4>Step 5: Link Supabase CLI (for Migrations)</h4>
+
+<div class="code-block">supabase login
+supabase link --project-ref [your-dev-project-ref]
+# Find your project ref in Supabase Dashboard URL:
+# supabase.com/dashboard/project/[ref]</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A working local development environment connected to your Dev Supabase project.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li><code>npm run dev</code> starts without errors</li>
+    <li>App loads at localhost:3000</li>
+    <li>Can sign up / sign in (creates user in Dev Supabase)</li>
+    <li>Database queries work (check browser console for errors)</li>
+    <li>Stripe checkout opens in test mode</li>
+  </ul>
+  <p><strong>Next:</strong> Review Vercel environment configuration.</p>
+</div>
+
+<h2 id="section-18-4">18.4 Vercel Environment Configuration Reference</h2>
+
+<p>This section provides detailed reference for Vercel environment variable configuration. If you completed Chapter 17, verify your setup matches the tables below. Vercel's three scopes (Development, Preview, Production) must map correctly to your Supabase projects.</p>
+
+<h3>Environment Scope Mapping</h3>
+
+<h4>For 2-Environment Setup</h4>
+
+<p>Both Development and Preview scopes use the Dev Supabase project:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Vercel Scope</th>
+    <th>When Used</th>
+    <th>Supabase Project</th>
+    <th>Stripe Mode</th>
+  </tr>
+  <tr>
+    <td><strong>Development</strong></td>
+    <td><code>vercel dev</code>, <code>vercel env pull</code></td>
+    <td>Dev</td>
+    <td>Test</td>
+  </tr>
+  <tr>
+    <td><strong>Preview</strong></td>
+    <td>All preview deployments (PRs, branches)</td>
+    <td>Dev (shared)</td>
+    <td>Test</td>
+  </tr>
+  <tr>
+    <td><strong>Production</strong></td>
+    <td>Production deployment only</td>
+    <td>Prod</td>
+    <td>Live</td>
+  </tr>
+</table>
+
+<h4>For 3-Environment Setup</h4>
+
+<p>Each scope connects to its own dedicated Supabase project:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Vercel Scope</th>
+    <th>When Used</th>
+    <th>Supabase Project</th>
+    <th>Stripe Mode</th>
+  </tr>
+  <tr>
+    <td><strong>Development</strong></td>
+    <td><code>vercel dev</code>, <code>vercel env pull</code></td>
+    <td>Dev</td>
+    <td>Test</td>
+  </tr>
+  <tr>
+    <td><strong>Preview</strong></td>
+    <td>All preview deployments (PRs, branches)</td>
+    <td>Staging</td>
+    <td>Test</td>
+  </tr>
+  <tr>
+    <td><strong>Production</strong></td>
+    <td>Production deployment only</td>
+    <td>Prod</td>
+    <td>Live</td>
+  </tr>
+</table>
+
+<h2 id="section-18-5">18.5 Preview Deployments</h2>
+
+<p>Vercel automatically creates preview deployments for every push to a non-production branch. These are useful for PR review, testing features before merge, and sharing with stakeholders. This section explains how preview deployments work and how they differ between 2-env and 3-env setups.</p>
+
+<h3>How Preview Deployments Work</h3>
+
+<ol>
+  <li>Push a branch or open a pull request</li>
+  <li>Vercel automatically creates a preview deployment</li>
+  <li>URL format: <code>[project]-[branch]-[username].vercel.app</code></li>
+  <li>Preview uses environment variables scoped to "Preview"</li>
+  <li>Each subsequent push updates the same preview URL</li>
+</ol>
+
+<h3>Preview Data Behavior by Setup</h3>
+
+<h4>2-Environment Setup</h4>
+
+<div class="warning">
+  <h4>Preview Shares Dev Database</h4>
+  <p>In 2-environment setup, preview deployments connect to your Dev Supabase project. This means:</p>
+  <ul>
+    <li>Test data created in previews appears in your local development</li>
+    <li>Changes you make locally are visible in previews</li>
+    <li>You cannot give external testers isolated test environments</li>
+  </ul>
+  <p>This is fine for solo development but limits external testing capabilities.</p>
+</div>
+
+<h4>3-Environment Setup</h4>
+
+<div class="note">
+  <h4>Preview Has Isolated Staging Database</h4>
+  <p>In 3-environment setup, preview deployments connect to the Staging Supabase project:</p>
+  <ul>
+    <li>External testers get isolated data that doesn't affect your development</li>
+    <li>You can share previews with stakeholders safely</li>
+    <li>Periodically reset Staging data when it becomes cluttered</li>
+  </ul>
+</div>
+
+<h2 id="section-18-6">18.6 Stripe Environment Configuration</h2>
+
+<p>Stripe provides separate Test and Live modes for payment processing. This section covers configuring Stripe across your environments, setting up webhooks, and preparing for production launch. Test mode allows you to simulate payments without real charges.</p>
+
+<h3>Understanding Stripe Modes</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Mode</th>
+    <th>API Keys</th>
+    <th>When to Use</th>
+    <th>Real Charges?</th>
+  </tr>
+  <tr>
+    <td><strong>Test</strong></td>
+    <td><code>pk_test_*</code>, <code>sk_test_*</code></td>
+    <td>Local development, Preview/Staging</td>
+    <td>No (use test cards)</td>
+  </tr>
+  <tr>
+    <td><strong>Live</strong></td>
+    <td><code>pk_live_*</code>, <code>sk_live_*</code></td>
+    <td>Production only</td>
+    <td>Yes (real money)</td>
+  </tr>
+</table>
+
+<h3>Local Webhook Testing with Stripe CLI</h3>
+
+<div class="code-block"># Install Stripe CLI (macOS)
+brew install stripe/stripe-cli/stripe
+
+# Login to Stripe
+stripe login
+
+# Forward webhooks to local server
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+
+# This outputs a webhook signing secret (whsec_...)
+# Use this value for STRIPE_WEBHOOK_SECRET in .env.local</div>
+
+<h2 id="section-18-7">18.7 Database Migration Workflow</h2>
+
+<p>Migrations are version-controlled SQL files that evolve your database schema. This section covers creating migrations, applying them across environments, and best practices for safe schema changes. Following this workflow ensures your database changes are reproducible and coordinated.</p>
+
+<h3>Setting Up Supabase CLI for Migrations</h3>
+
+<div class="code-block"># Initialize Supabase in your project (if not done)
+supabase init
+
+# Link to your Development project
+supabase link --project-ref [your-dev-project-ref]
+# Project ref is found in: supabase.com/dashboard/project/[ref]</div>
+
+<h3>Creating a New Migration</h3>
+
+<div class="code-block"># Create a new migration file
+supabase migration new add_user_profiles_table
+
+# This creates: supabase/migrations/[timestamp]_add_user_profiles_table.sql</div>
+
+<h3>Applying Migrations</h3>
+
+<h4>To Development (remote)</h4>
+
+<div class="code-block">supabase db push
+# Applies all pending migrations to your linked (Dev) project</div>
+
+<h3>Migration Best Practices</h3>
+
+<div class="checklist">
+  <h4>Migration Checklist</h4>
+  <ul>
+    <li>Each migration should be atomic (one logical change)</li>
+    <li>Consider rollback strategy for each migration</li>
+    <li>Always enable RLS on new tables</li>
+    <li>Test migration on Dev before Staging</li>
+    <li>Test migration on Staging before Production</li>
+    <li>Create production backup before applying</li>
+    <li>Commit migration files to version control</li>
+  </ul>
+</div>
+
+<h2 id="section-18-8">18.8 Troubleshooting Common Issues</h2>
+
+<p>This section covers common problems you may encounter with your multi-environment setup and how to resolve them. Keep this as a reference when debugging connection or configuration issues.</p>
+
+<h3>Issue: "Invalid API key" errors</h3>
+<ul>
+  <li><strong>Cause:</strong> Wrong Supabase environment variables</li>
+  <li><strong>Fix:</strong> Verify you're using the correct project's keys for each environment</li>
+  <li><strong>Check:</strong> Ensure <code>NEXT_PUBLIC_SUPABASE_URL</code> matches the expected project</li>
+</ul>
+
+<h3>Issue: Auth redirects to wrong URL</h3>
+<ul>
+  <li><strong>Cause:</strong> Site URL not configured in Supabase Auth settings</li>
+  <li><strong>Fix:</strong> Add the deployment URL to Supabase → Authentication → URL Configuration → Redirect URLs</li>
+  <li><strong>For Preview:</strong> Add wildcard pattern <code>https://*-[your-vercel-username].vercel.app/**</code></li>
+</ul>
+
+<h3>Issue: RLS blocking all queries</h3>
+<ul>
+  <li><strong>Cause:</strong> Missing or incorrect RLS policies</li>
+  <li><strong>Fix:</strong> Check policies in Supabase → Authentication → Policies</li>
+  <li><strong>Debug:</strong> Temporarily use service role key (server-side only) to verify data exists</li>
+</ul>
+
+<h3>Issue: Stripe webhooks failing</h3>
+<ul>
+  <li><strong>Cause:</strong> Wrong webhook secret or URL</li>
+  <li><strong>Fix:</strong> Verify <code>STRIPE_WEBHOOK_SECRET</code> matches the endpoint's signing secret</li>
+  <li><strong>Debug:</strong> Check Stripe Dashboard → Webhooks → Recent events for error details</li>
+</ul>
+
+<h3>Issue: Environment variables not updating</h3>
+<ul>
+  <li><strong>Cause:</strong> Vercel caches environment variables per deployment</li>
+  <li><strong>Fix:</strong> Trigger a new deployment after changing env vars</li>
+  <li><strong>Quick fix:</strong> Vercel Dashboard → Deployments → Redeploy</li>
+</ul>
+
+<h2 id="section-18-9">18.9 Environment Setup Checklist</h2>
+
+<p>Use these checklists to verify your environment setup is complete. Choose the checklist that matches your chosen configuration (2-environment or 3-environment).</p>
+
+<h3>For 2-Environment Setup</h3>
+
+<div class="checklist">
+  <h4>Supabase Setup (2-Environment)</h4>
+  <ul>
+    <li>Development project created (<code>[project]-dev</code>)</li>
+    <li>Production project created (<code>[project]-prod</code>)</li>
+    <li>Auth URL Configuration set for each project (Dev includes preview URLs)</li>
+    <li>Auth providers enabled for each project</li>
+    <li>RLS enabled on all tables in all projects</li>
+    <li>All credentials recorded securely (6 values total)</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Vercel Setup (2-Environment)</h4>
+  <ul>
+    <li>Project imported from GitHub</li>
+    <li>Development env vars added (pointing to Dev Supabase)</li>
+    <li>Preview env vars added (pointing to Dev Supabase — shared)</li>
+    <li>Production env vars added (pointing to Prod Supabase)</li>
+    <li>Custom domain configured (optional until launch)</li>
+  </ul>
+</div>
+
+<h3>Common to Both Setups</h3>
+
+<div class="checklist">
+  <h4>Local Development</h4>
+  <ul>
+    <li>Repository cloned</li>
+    <li>Dependencies installed (<code>npm install</code>)</li>
+    <li>Vercel CLI linked (<code>vercel link</code>)</li>
+    <li>Environment variables pulled (<code>vercel env pull .env.local</code>)</li>
+    <li>Dev server runs without errors (<code>npm run dev</code>)</li>
+    <li>Can authenticate via the app (sign up/sign in works)</li>
+    <li>Can read/write to database</li>
+    <li>Stripe checkout works in test mode</li>
+  </ul>
+</div>
+
+<h2 id="section-18-10">18.10 Automating Setup with Claude Code</h2>
+
+<p>Many of the local setup tasks in this chapter can be automated using Claude Code. This section describes a two-stage workflow: use Claude Chat to generate your configuration, then Claude Code to execute the setup.</p>
+
+<h2 id="section-18-11">18.11 Upgrading from 2-Environment to 3-Environment</h2>
+
+<p>If you started with a 2-environment setup (Dev + Prod) and later decide you need a dedicated Staging environment for isolated preview testing, this section guides you through the upgrade process. This is typically done when you need to share previews with external testers without affecting your development database.</p>
+
+<h3>When to Upgrade</h3>
+
+<p>Consider upgrading to 3-environment when:</p>
+<ul>
+  <li>You're sharing preview URLs with external stakeholders or clients</li>
+  <li>Preview test data is polluting your development database</li>
+  <li>You want isolated environments for QA testing</li>
+  <li>You've upgraded to Supabase Pro or can use a second organization</li>
+</ul>
+
+<h2 id="section-18-12">18.12 Chapter Summary</h2>
+
+<p>You've completed the multi-environment configuration. Here's what you accomplished:</p>
+
+<ul>
+  <li>Chose between 2-environment and 3-environment setups based on your needs</li>
+  <li>Configured Supabase projects with proper auth URLs and RLS</li>
+  <li>Set up local development connected to cloud infrastructure</li>
+  <li>Configured Vercel environment variables for each deployment scope</li>
+  <li>Learned how preview deployments work in your chosen setup</li>
+  <li>Configured Stripe for test and production modes</li>
+  <li>Established database migration workflows</li>
+  <li>Have troubleshooting knowledge for common issues</li>
+</ul>
+
+<p>Your development and deployment infrastructure is now professional-grade. You can develop locally, test via preview deployments, and deploy to production with confidence.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

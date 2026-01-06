@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 10: UX Critique and Validation - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-10">Chapter 10: UX Critique and Validation</h1>
+
+<p>In this chapter, you'll validate your UX Package through a structured critique process to catch usability issues before building. A 10-minute critique now saves hours of rework later. By the end of this chapter, you'll have a refined UX Package that's ready for UI design and implementation.</p>
+
+<h2 id="section-10-1">10.1 UX Critique</h2>
+
+<p>Before proceeding to UI design, the UX Package should be critiqued for usability issues, missing states, and flow problems. This step catches design flaws that are expensive to fix during implementation.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(critique in same chat)</span>
+</div>
+<div class="prompt-block">Review this UX Package as a UX expert. Identify:
+
+1. **Usability Issues**: Friction points, confusing flows, cognitive overload
+2. **Missing States**: Empty states, error states, loading states not defined
+3. **Edge Cases**: Scenarios not covered
+4. **Accessibility Gaps**: Issues for users with disabilities
+5. **Mobile Considerations**: Touch targets, thumb zones, scrolling
+
+For each issue, suggest a specific improvement.
+
+[ATTACH UX PACKAGE]</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A critique report identifying specific issues across the five categories: usability, missing states, edge cases, accessibility, and mobile considerations.</p>
+  <p><strong>How to validate:</strong> The critique should identify at least 5-10 issues with specific, actionable improvement suggestions for each.</p>
+  <p><strong>Next:</strong> Incorporate the feedback into your UX Package.</p>
+</div>
+
+<h2 id="section-10-2">10.2 Update the UX Package</h2>
+
+<p>After receiving the critique, incorporate the improvements into your UX Package. This iterative refinement is what separates good UX from great UX. Don't skip improvements just because the original version "works."</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Review each identified issue and suggested improvement</li>
+  <li>Ask Claude to generate an updated UX Package with the fixes incorporated</li>
+  <li>Replace <code>docs/ux-package.md</code> with the updated version</li>
+</ol>
+
+<div class="note">
+  <strong>Iterate as Needed:</strong> You may run multiple critique cycles until the UX Package is solid. Always update the same file rather than creating separate versions.
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> An updated <code>docs/ux-package.md</code> that addresses all identified issues from the critique.</p>
+  <p><strong>How to validate:</strong> Review the updated file against the critique. Each issue should now have a corresponding fix or explicit rationale for why it wasn't addressed.</p>
+  <p><strong>Next:</strong> Chapter 11 — Create the UI System that defines visual design.</p>
+</div>
+
+<h2 id="section-10-3">10.3 Chapter Summary</h2>
+
+<p>You've completed the UX validation phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Critiqued UX Package for usability issues</li>
+  <li>Identified missing states and edge cases</li>
+  <li>Reviewed accessibility and mobile considerations</li>
+  <li>Incorporated improvements into the UX Package</li>
+</ul>
+
+<p>Your user experience is fully specified and validated. In the next chapter, you'll define the visual design language that brings this experience to life.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 15: GitHub Repository Setup - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-15">Chapter 15: GitHub Repository Setup</h1>
+
+<p>In this chapter, you'll create your GitHub repository and initialize the project structure using Claude Code. This is where your architecture and schema documents come together into an actual codebase. By the end of this chapter, you'll have a fully structured Next.js project connected to GitHub and ready for development.</p>
+
+<h2 id="section-15-1">15.1 Purpose</h2>
+
+<p>The GitHub repository is the foundation for all development work. It stores your code, tracks changes, and integrates with Vercel for automatic deployments. Setting it up correctly from the start—with proper folder structure, configuration files, and branching strategy—prevents organizational debt that's painful to fix later.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a GitHub repository, initialize a Next.js project with your architecture's folder structure, and establish a branching strategy.</p>
+
+<h2 id="section-15-2">15.2 Repository Creation</h2>
+
+<p>First, create an empty repository on GitHub. You'll initialize the actual project locally and push it to this remote. Creating the repo first ensures you have the remote URL ready for the initialization step.</p>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (GitHub Website) - Repository creation requires the GitHub interface.
+</div>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Go to <a href="https://github.com/new">github.com/new</a></li>
+  <li>Repository name: <code>[your-project-name]</code> (lowercase, hyphens, e.g., <code>my-saas-app</code>)</li>
+  <li>Visibility: <strong>Private</strong> (recommended until launch)</li>
+  <li>Initialize with README: <strong>No</strong> (we'll create our own)</li>
+  <li>Add .gitignore: <strong>None</strong> (Claude Code will create a comprehensive one)</li>
+  <li>Click "Create repository"</li>
+  <li>Copy the repository URL (e.g., <code>https://github.com/username/my-saas-app.git</code>)</li>
+</ol>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> An empty GitHub repository with the URL copied.</p>
+  <p><strong>How to validate:</strong> The GitHub page shows "Quick setup" instructions because the repository is empty.</p>
+  <p><strong>Next:</strong> Initialize the project using Claude Code.</p>
+</div>
+
+<h2 id="section-15-3">15.3 Project Initialization with Claude Code</h2>
+
+<p>Now you'll use Claude Code to create the actual project. This is your first time using Claude Code in this workflow. The prompt references your architecture document, so Claude Code will read it and set up the folder structure exactly as you designed it.</p>
+
+<div class="warning">
+  <h4>Prerequisites</h4>
+  <p>Before running this prompt, ensure <code>docs/architecture.md</code> exists in your project directory (created in Chapter 14). Claude Code will read this file to determine the folder structure.</p>
+</div>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-new">New Session</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(first time using Claude Code)</span>
+</div>
+<div class="prompt-block">Initialize a new Next.js project for [PROJECT_NAME].
+
+**Reference**: Read docs/architecture.md and use the Project Structure section.
+
+1. Create the project with:
+   - Next.js 14+ with App Router
+   - TypeScript (strict mode)
+   - Tailwind CSS
+   - ESLint
+
+2. Set up the folder structure as defined in docs/architecture.md, including:
+   - All route groups from the Architecture
+   - Feature-specific component folders for each domain entity
+   - Service integration folders (supabase/, stripe/, etc.)
+   - Any domain-specific lib/ folders
+
+3. Create a comprehensive .gitignore for Next.js + Supabase + env files
+
+4. Create initial README.md with project name and setup instructions
+
+5. Initialize git and make initial commit
+
+6. Connect to GitHub remote: [REPO_URL]</div>
+
+<div class="note">
+  <h4>Replace Placeholders</h4>
+  <p>Replace <code>[PROJECT_NAME]</code> with your project name and <code>[REPO_URL]</code> with the GitHub URL you copied in the previous step.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete Next.js project with your architecture's folder structure, connected to GitHub.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Run <code>npm run dev</code> — app starts at localhost:3000</li>
+    <li>Folder structure matches your architecture document</li>
+    <li><code>git remote -v</code> shows your GitHub repository</li>
+    <li>GitHub repository shows the initial commit</li>
+  </ul>
+  <p><strong>Next:</strong> Understand the branching strategy for development.</p>
+</div>
+
+<h2 id="section-15-4">15.4 Branch Strategy</h2>
+
+<p>A consistent branching strategy keeps your codebase organized and integrates cleanly with Vercel's deployment model. This strategy maps branch types to deployment environments.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Branch</th>
+    <th>Purpose</th>
+    <th>Deploys To</th>
+  </tr>
+  <tr>
+    <td><code>main</code></td>
+    <td>Production-ready code</td>
+    <td>Production (Vercel)</td>
+  </tr>
+  <tr>
+    <td><code>develop</code></td>
+    <td>Integration branch (optional)</td>
+    <td>Preview</td>
+  </tr>
+  <tr>
+    <td><code>feature/*</code></td>
+    <td>New features</td>
+    <td>Preview</td>
+  </tr>
+  <tr>
+    <td><code>fix/*</code></td>
+    <td>Bug fixes</td>
+    <td>Preview</td>
+  </tr>
+</table>
+
+<div class="note">
+  <h4>Solo Developer Simplification</h4>
+  <p>For solo development, you can skip the <code>develop</code> branch and merge feature branches directly to <code>main</code>. The key principle: <code>main</code> should always be deployable.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Understanding of how branches map to deployments.</p>
+  <p><strong>How to validate:</strong> You know that pushing to <code>main</code> deploys to production, and all other branches create preview deployments.</p>
+  <p><strong>Next:</strong> Chapter 16 — Set up your Supabase projects.</p>
+</div>
+
+<h2 id="section-15-5">15.5 Chapter Summary</h2>
+
+<p>You've completed the GitHub Repository Setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Created a GitHub repository for your project</li>
+  <li>Initialized a Next.js project with your architecture's folder structure</li>
+  <li>Set up TypeScript, Tailwind CSS, and ESLint</li>
+  <li>Connected local repository to GitHub remote</li>
+  <li>Understand the branching strategy for development</li>
+</ul>
+
+<p>Your codebase is initialized and version-controlled. In the next chapter, you'll set up Supabase projects for your development and production environments.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

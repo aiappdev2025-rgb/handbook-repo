@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 28: QA and Launch Checklist - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-28">Chapter 28: QA and Launch Checklist</h1>
+
+<p>In this chapter, you'll learn the QA and launch checklist that ensures your application is production-ready. This is the final quality gate before real users see your product. By the end of this chapter, you'll have a complete launch verification workflow.</p>
+
+<h2 id="section-28-1">28.1 Why the Launch Phase Matters</h2>
+
+<p>The Launch phase ensures your application is production-ready. Skipping these checks leads to embarrassing bugs in front of real users, security vulnerabilities, and poor performance that drives users away. This phase connects all previous work — your design, architecture, and implementation — into a verified, deployable product.</p>
+
+<h2 id="section-28-2">28.2 How Launch Supports the Process</h2>
+
+<p>Launch is not just "pushing to production." It's the final quality gate that validates:</p>
+<ul>
+  <li><strong>Design intentions are realized</strong> — UX flows work as specified</li>
+  <li><strong>Architecture is sound</strong> — Performance meets requirements</li>
+  <li><strong>Implementation is complete</strong> — All features work, all tests pass</li>
+  <li><strong>Security is enforced</strong> — RLS policies, auth, and data protection verified</li>
+</ul>
+
+<h2 id="section-28-3">28.3 Pre-Launch Workflow</h2>
+
+<p>The pre-launch workflow ensures nothing critical is missed before users see your product. Work through each category systematically.</p>
+
+<div class="checklist">
+  <h4>Pre-Launch Checklist</h4>
+  <ul>
+    <li>All tests passing, no TypeScript errors, no linting errors</li>
+    <li>Environment variables secured, RLS policies tested</li>
+    <li>Lighthouse score >= 90, Core Web Vitals passing</li>
+    <li>All user flows tested, mobile responsive verified</li>
+    <li>Error monitoring configured, analytics configured</li>
+    <li>Database backups enabled, domain configured</li>
+  </ul>
+</div>
+
+<h3>Security Verification (OWASP-Based)</h3>
+
+<div class="warning">
+  <strong>Critical:</strong> Do not skip security verification. A single vulnerability can compromise all user data and destroy trust.
+</div>
+
+<h4>Authentication & Session Management</h4>
+<div class="code-block"># Verify password policies (Supabase Auth settings)
+# Dashboard -> Authentication -> Policies
+# - Minimum 8 characters
+# - Require mix of letters/numbers recommended
+
+# Test session expiry
+# Verify secure cookie settings (check browser DevTools)
+# - HttpOnly: true
+# - Secure: true (HTTPS only)
+# - SameSite: Lax or Strict</div>
+
+<h4>Authorization & Access Control</h4>
+<div class="code-block"># Test RLS policies by attempting unauthorized access
+# In Supabase SQL Editor, run as different roles:
+SET LOCAL ROLE anon;
+SELECT * FROM profiles; -- Should return empty or error
+
+SET LOCAL ROLE authenticated;
+SELECT * FROM profiles; -- Should only return own profile
+
+# Test horizontal and vertical privilege escalation</div>
+
+<h4>Input Validation & Injection Prevention</h4>
+<div class="code-block"># Test for SQL injection (should be prevented by Supabase client)
+# Try entering in form fields:
+# ' OR '1'='1
+# '; DROP TABLE users; --
+
+# Test for XSS (Cross-Site Scripting)
+# Try entering in any text field:
+# &lt;script&gt;alert('XSS')&lt;/script&gt;
+# Verify scripts do NOT execute</div>
+
+<h4>Security Headers</h4>
+<p><strong>Add to next.config.js:</strong></p>
+<div class="code-block">// next.config.js
+const securityHeaders = [
+  { key: 'X-DNS-Prefetch-Control', value: 'on' },
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+];
+
+module.exports = {
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
+  },
+};</div>
+
+<h3>Performance Verification</h3>
+<div class="code-block"># Run Lighthouse audit
+npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html
+
+# Check bundle size
+npm run build
+
+# Verify Core Web Vitals in Chrome DevTools
+# Performance tab -> Largest Contentful Paint < 2.5s
+# First Input Delay < 100ms
+# Cumulative Layout Shift < 0.1</div>
+
+<h3>User Flow Testing</h3>
+<ol>
+  <li>Sign up with a new email → verify email flow works</li>
+  <li>Log in with credentials → redirects to dashboard</li>
+  <li>Complete core feature flow → data persists correctly</li>
+  <li>Test on mobile device or Chrome DevTools mobile view</li>
+  <li>Test error states (wrong password, network offline, etc.)</li>
+</ol>
+
+<h2 id="section-28-4">28.4 Launch Day Actions</h2>
+
+<p>Launch day has its own checklist separate from pre-launch verification.</p>
+
+<div class="checklist">
+  <h4>Launch Day Checklist</h4>
+  <ul>
+    <li>DNS configured and propagated (can take up to 48 hours)</li>
+    <li>SSL certificate active and verified</li>
+    <li>Production environment variables set in Vercel/hosting</li>
+    <li>Stripe webhooks configured for production URL</li>
+    <li>All team members have access to monitoring dashboards</li>
+    <li>Support channels ready (email, chat, etc.)</li>
+  </ul>
+</div>
+
+<div class="note">
+  <strong>Post-Launch Monitoring:</strong> Monitor error rates and user behavior closely for the first 48 hours. Be prepared to roll back if critical issues emerge.
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete QA and launch checklist to verify before going live.</p>
+  <p><strong>What you should do:</strong> Execute every item in the pre-launch and launch day checklists before announcing to users.</p>
+  <p><strong>Next:</strong> Chapter 29 — Learn the project file structure for AI-assisted development.</p>
+</div>
+
+<h2 id="section-28-5">28.5 Chapter Summary</h2>
+
+<p>You've learned the QA and Launch workflow. Key takeaways:</p>
+
+<ul>
+  <li>Launch is a quality gate, not just a deployment</li>
+  <li>Pre-launch checklist covers code, security, performance, and UX</li>
+  <li>Launch day checklist covers infrastructure and team readiness</li>
+  <li>Monitor closely for 48 hours post-launch</li>
+  <li>Be prepared to roll back if critical issues emerge</li>
+</ul>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

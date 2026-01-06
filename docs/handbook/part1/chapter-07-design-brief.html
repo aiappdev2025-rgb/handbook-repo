@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 7: Shared Design Brief - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-7">Chapter 7: Stage 2.0 - Shared Design Brief</h1>
+
+<p>In this chapter, you'll create the Shared Design Brief—the single source of truth for your product. This document establishes the vocabulary, user types, core flows, and scope boundaries that every subsequent artifact will reference. By the end of this chapter, you'll have a comprehensive brief that ensures everyone (including AI tools) speaks the same language about your product.</p>
+
+<h2 id="section-7-1">7.1 Purpose</h2>
+
+<p>The Design Brief is the single source of truth for the product. It establishes vocabulary that becomes canonical throughout all subsequent stages. Every term defined here will be used consistently in UX, UI, architecture, and code.</p>
+
+<div class="warning">
+<strong>Critical:</strong> Vocabulary established in the Design Brief must be used exactly and consistently in all subsequent documents. Inconsistent terminology is the #1 source of design-to-code translation errors.
+</div>
+
+<p><strong>What you'll accomplish:</strong> Create a comprehensive design brief covering product vision, canonical vocabulary, user types, core flows, non-functional requirements, and scope boundaries.</p>
+
+<h2 id="section-7-2">7.2 Design Brief Prompt</h2>
+
+<p>Start a fresh chat for design work. This gives Claude a clean context focused on design decisions rather than business/research context. Attach or summarize your Business One-Pager so Claude understands the business foundation.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-new">New Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(fresh context for design work)</span>
+</div>
+<div class="prompt-block">Create a Shared Design Brief for [PRODUCT NAME].
+
+**Business Context**: [ATTACH ONE-PAGER OR SUMMARIZE]
+
+The Design Brief should establish:
+
+**SECTION 1: Product Vision**
+- One-sentence product description
+- Primary user outcome (what do they achieve?)
+- Key differentiator (why us?)
+
+**SECTION 2: Vocabulary (CRITICAL)**
+Define canonical terms for:
+- User roles (e.g., "User", "Admin", "Guest")
+- Core entities (e.g., "Listing", "Property", "Description")
+- Key actions (e.g., "Generate", "Edit", "Publish")
+- States (e.g., "Draft", "Processing", "Complete")
+
+**SECTION 3: User Types**
+For each user type:
+- Who they are
+- What they need to accomplish
+- What frustrates them
+- Success criteria
+
+**SECTION 4: Core User Flows**
+- Flow 1: [Primary value delivery]
+- Flow 2: [Secondary flow]
+- Flow 3: [Admin/management flow]
+
+**SECTION 5: Non-Functional Requirements**
+- Performance targets
+- Security requirements
+- Accessibility requirements
+- Browser/device support
+
+**SECTION 6: Scope Boundaries**
+- In scope for MVP
+- Out of scope (future phases)
+- Explicit anti-goals
+
+Output in markdown format, ready to save as docs/design-brief.md.</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A Design Brief document (typically 1,500-3,000 words) covering all six sections: product vision, vocabulary, user types, core flows, non-functional requirements, and scope boundaries.</p>
+  <p><strong>How to validate:</strong> Section 2 (Vocabulary) should define at least 10-15 canonical terms. Section 4 (Core Flows) should describe 3+ distinct user journeys. Section 6 (Scope) should have clear in-scope and out-of-scope lists.</p>
+  <p><strong>Next:</strong> Save the Design Brief to your project.</p>
+</div>
+
+<h2 id="section-7-3">7.3 Save the Design Brief</h2>
+
+<p>The Design Brief must be saved as a file because it's referenced by every subsequent stage. UX design, UI system, architecture, and implementation all trace back to the vocabulary and requirements defined here.</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Copy the complete Design Brief output from Claude Chat</li>
+  <li>Save as <code>docs/design-brief.md</code></li>
+</ol>
+
+<div class="note">
+  <strong>Vocabulary is Code:</strong> The terms defined in Section 2 will become variable names, function names, and database columns. Ensure they are clear, unambiguous, and follow naming conventions (no spaces, consistent casing).
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/design-brief.md</code> containing your complete Design Brief with canonical vocabulary.</p>
+  <p><strong>How to validate:</strong> Open the file and verify the Vocabulary section (Section 2) exists with clear definitions. These terms should be usable as code identifiers (e.g., "Listing" not "listing item").</p>
+  <p><strong>Next:</strong> Chapters 8-10 — Create the UX Package that defines every screen and flow.</p>
+</div>
+
+<h2 id="section-7-4">7.4 Chapter Summary</h2>
+
+<p>You've completed the Shared Design Brief phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Established canonical vocabulary for your product</li>
+  <li>Defined user types with their goals and frustrations</li>
+  <li>Outlined core user flows that deliver value</li>
+  <li>Set non-functional requirements (performance, security, accessibility)</li>
+  <li>Defined clear scope boundaries for MVP</li>
+</ul>
+
+<p>Your product definition is complete. In the next chapters, you'll transform this brief into a detailed UX Package that specifies every screen, state, and interaction.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

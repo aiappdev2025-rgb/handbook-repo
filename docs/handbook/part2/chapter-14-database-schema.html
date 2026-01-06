@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 14: Database Schema Design - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-14">Chapter 14: Database Schema Design</h1>
+
+<p>In this chapter, you'll generate the detailed, SQL-ready database schema from your architecture document. The output will be a complete migration file you can run directly in Supabase, including tables, relationships, indexes, and Row Level Security policies. By the end of this chapter, you'll have production-ready SQL that enforces your data model and security requirements.</p>
+
+<h2 id="section-14-1">14.1 Purpose</h2>
+
+<p>The architecture document outlines your data model conceptually. Now you need concrete SQL that Supabase can execute. This step translates table descriptions into CREATE TABLE statements, defines relationships through foreign keys, and implements security through RLS policies. Generating this schema before setting up infrastructure ensures your database design is complete and reviewed before any data is created.</p>
+
+<p><strong>What you'll accomplish:</strong> Generate a complete SQL migration file with tables, constraints, indexes, RLS policies, and triggers.</p>
+
+<h2 id="section-14-2">14.2 Database Schema Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you created the architecture. This gives Claude full context of your data model and relationships. The output will be a single SQL file you can run in Supabase's SQL Editor.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues from Architecture)</span>
+</div>
+<div class="prompt-block">Based on the Architecture document we just created, generate a complete database schema for Supabase.
+
+For each table, provide:
+1. **CREATE TABLE statement** with all columns, types, and constraints
+2. **RLS policies** for SELECT, INSERT, UPDATE, DELETE
+3. **Indexes** for frequently queried columns
+4. **Triggers** for updated_at timestamps
+
+Required tables based on our architecture:
+- user_profiles (extends auth.users)
+- [LIST YOUR DOMAIN TABLES FROM ARCHITECTURE]
+- subscriptions (Stripe sync)
+- usage_logs (if applicable)
+
+For each RLS policy, explain the security rationale.
+
+Output as a single SQL migration file that can be run in Supabase SQL Editor.</div>
+
+<div class="note">
+  <h4>Customize the Table List</h4>
+  <p>Replace <code>[LIST YOUR DOMAIN TABLES FROM ARCHITECTURE]</code> with the specific tables from your architecture document. For example: projects, documents, comments, or whatever domain entities your application needs.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete SQL migration file (typically 200-500 lines) with CREATE TABLE statements, RLS policies, indexes, and triggers.</p>
+  <p><strong>How to validate:</strong> The SQL should include: RLS enabled on every table, policies for all CRUD operations, foreign key constraints with ON DELETE behavior, and updated_at triggers.</p>
+  <p><strong>Next:</strong> Validate the schema and save it.</p>
+</div>
+
+<h2 id="section-14-3">14.3 Schema Validation</h2>
+
+<p>Before saving your schema, validate it against this checklist. These standards ensure your database is secure, maintainable, and follows Supabase best practices. Missing any of these items can lead to security vulnerabilities or application errors.</p>
+
+<div class="checklist">
+  <h4>Schema Validation Checklist</h4>
+  <ul>
+    <li>All tables have <code>id</code> (UUID), <code>created_at</code>, <code>updated_at</code></li>
+    <li>Foreign keys reference correct tables with ON DELETE behavior</li>
+    <li>RLS is enabled on ALL tables (no exceptions)</li>
+    <li>RLS policies cover all CRUD operations (SELECT, INSERT, UPDATE, DELETE)</li>
+    <li>Indexes exist for foreign keys and frequently filtered columns</li>
+    <li>No sensitive data exposed without proper policy checks</li>
+    <li><code>user_profiles</code> table links to <code>auth.users(id)</code> with ON DELETE CASCADE</li>
+  </ul>
+</div>
+
+<p>If any items are missing, ask Claude to add them before proceeding.</p>
+
+<h2 id="section-14-4">14.4 Save the Schema File</h2>
+
+<p>Save the generated SQL so it can be used during Supabase setup (Chapter 17) and tracked in version control. This file becomes your initial migration.</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Create <code>supabase/migrations/</code> folder in your project (if it doesn't exist)</li>
+  <li>Copy the complete SQL output from Claude Chat</li>
+  <li>Save as <code>supabase/migrations/00001_initial_schema.sql</code></li>
+</ol>
+
+<div class="note">
+  <h4>Migration Naming Convention</h4>
+  <p>Supabase migrations use timestamp or sequential prefixes. Using <code>00001_</code> ensures this runs first. Later migrations will use <code>00002_</code>, <code>00003_</code>, etc.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A SQL file at <code>supabase/migrations/00001_initial_schema.sql</code> containing your complete schema.</p>
+  <p><strong>How to validate:</strong> Open the file and verify it contains CREATE TABLE statements for all your domain tables, RLS policies, and indexes.</p>
+  <p><strong>Next:</strong> Chapter 15 — Set up your GitHub repository and initialize the project.</p>
+</div>
+
+<h2 id="section-14-5">14.5 Chapter Summary</h2>
+
+<p>You've completed the Database Schema Design phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Generated SQL-ready schema from your architecture document</li>
+  <li>Defined tables with proper columns, types, and constraints</li>
+  <li>Implemented Row Level Security policies for all tables</li>
+  <li>Created indexes for query performance</li>
+  <li>Saved the migration file for version control</li>
+</ul>
+
+<p>Your database design is complete and ready to apply. In the next chapter, you'll create your GitHub repository and initialize the project structure.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 22: The Critical Transition - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-22">Chapter 22: The Critical Transition</h1>
+
+<p>In this chapter, you'll transition from design exploration to implementation. This is the most important setup moment in the entire project—you'll configure your development environment, create the CLAUDE.md file, set up your documentation structure, and verify everything is ready for Claude Code. By the end of this chapter, you'll be ready to begin the Build Phase.</p>
+
+<p>You've completed all planning artifacts: Design Brief, UX Package, UI System, Architecture Document, and Build Contract. <strong>Now you're transitioning from exploration to implementation.</strong></p>
+
+<div class="warning">
+  <h4>Tool Transition Point</h4>
+  <p>Everything before this point was done in <strong>Claude Chat</strong> (web interface) — it's optimized for exploration, iteration, and document generation.</p>
+  <p>Everything after this point will be done in <strong>Claude Code</strong> (CLI tool) — it's optimized for implementation, file editing, and test execution.</p>
+  <p><strong>Do not skip this setup.</strong> Without proper environment configuration, Claude Code won't have the context it needs to implement your design correctly.</p>
+</div>
+
+<div class="note">
+  <strong>See Also:</strong> <a href="../../claude-code-integration.html">Claude Code Integration Timeline</a> — A visual guide showing exactly when each Claude Code setup activity happens across all phases of the methodology.
+</div>
+
+<h2 id="section-22-1">22.1 What You Should Have Ready</h2>
+
+<p>Before proceeding with environment setup, verify you have all the artifacts from previous chapters. Missing artifacts will cause problems during implementation. Confirm you have these artifacts saved in your <code>docs/</code> folder:</p>
+
+<div class="checklist">
+  <h4>Pre-Implementation Checklist</h4>
+  <ul>
+    <li><code>docs/one-pager.md</code> — Business One-Pager (Chapter 6)</li>
+    <li><code>docs/design-brief.md</code> — Design Brief with Vocabulary section (Chapter 7)</li>
+    <li><code>docs/ux-package.md</code> — UX Package with user flows and screens (Chapters 9-10)</li>
+    <li><code>docs/ui-system.md</code> — UI System with component specs (Chapters 11-12)</li>
+    <li><code>docs/architecture.md</code> — Architecture with schema and API design (Chapter 13)</li>
+    <li><code>docs/build-contract.md</code> — Build Contract (Chapter 21)</li>
+  </ul>
+</div>
+
+<div class="code-block">docs/
+├── one-pager.md        # Business model and strategy
+├── design-brief.md     # Product vision and vocabulary
+├── ux-package.md       # User flows and screen inventory
+├── ui-system.md        # Visual design system
+├── architecture.md     # Technical architecture
+└── build-contract.md   # Implementation reference</div>
+
+<p>If any of these are missing or incomplete, go back to the relevant chapter and complete them. The Build Phase assumes all design decisions have been made.</p>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> All six design artifacts saved in your docs/ folder, ready to be referenced by Claude Code.</p>
+  <p><strong>How to validate:</strong> Run <code>ls docs/</code> in your project directory. You should see all six .md files listed.</p>
+  <p><strong>Next:</strong> Create the project repository if you haven't already.</p>
+</div>
+
+<h2 id="section-22-2">22.2 Project Repository Setup</h2>
+
+<p>In this section, you'll create the Next.js project and initialize Git. If you already completed Chapter 15 (GitHub Repository Setup), you can skip to section 22.3.</p>
+
+<h3>Step 1: Create the Project</h3>
+
+<p>Open your terminal and create a new Next.js project with the recommended stack:</p>
+
+<div class="code-block">npx create-next-app@latest my-saas-project --typescript --tailwind --eslint --app --src-dir
+cd my-saas-project</div>
+
+<p>When prompted, accept the defaults. This gives you Next.js 14+ with App Router, TypeScript, Tailwind CSS, and ESLint — the stack recommended throughout this handbook.</p>
+
+<h3>Step 2: Initialize Git</h3>
+
+<div class="code-block">git init
+git add .
+git commit -m "Initial Next.js project setup"</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A Next.js project with TypeScript, Tailwind CSS, and App Router, with an initial Git commit.</p>
+  <p><strong>How to validate:</strong> Run <code>npm run dev</code> — the app should start at localhost:3000. Run <code>git log</code> — you should see your initial commit.</p>
+  <p><strong>Next:</strong> Create the CLAUDE.md file that provides context to Claude Code.</p>
+</div>
+
+<h2 id="section-22-3">22.3 The CLAUDE.md File</h2>
+
+<p>In this section, you'll create the CLAUDE.md file—Claude Code's primary context file. This file tells Claude about your project's architecture, conventions, and quality standards. <strong>Without this file, every Claude Code session starts from scratch with no project knowledge.</strong></p>
+
+<h3>Why CLAUDE.md Matters</h3>
+
+<table class="comparison-table">
+  <tr><th>Without CLAUDE.md</th><th>With CLAUDE.md</th></tr>
+  <tr><td>Claude guesses at conventions</td><td>Claude follows your established patterns</td></tr>
+  <tr><td>You repeat context every session</td><td>Context persists across sessions</td></tr>
+  <tr><td>Inconsistent code style</td><td>Consistent with your standards</td></tr>
+  <tr><td>No awareness of your architecture</td><td>Knows your stack, schema, API patterns</td></tr>
+</table>
+
+<h3>Generate CLAUDE.md</h3>
+
+<p>Rather than manually creating CLAUDE.md, generate it from your design artifacts. This ensures consistency between your documentation and Claude Code's context.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-new">New Session</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(first Claude Code task)</span>
+</div>
+<div class="prompt-block">Generate a CLAUDE.md file for this project by reading the design artifacts in docs/.
+
+Read these files:
+- docs/design-brief.md (for vocabulary, user types, product overview)
+- docs/architecture.md (for tech stack, folder structure, API patterns, database conventions)
+- docs/build-contract.md (for quality standards, component specs)
+
+Generate CLAUDE.md at project root with these sections:
+
+1. **Project Overview**: Brief description from design-brief.md
+2. **Technology Stack**: Extract from architecture.md
+3. **Project Structure**: Folder layout from architecture.md Project Structure section
+4. **Code Standards**: Quality requirements from build-contract.md
+5. **Database Conventions**: Naming, RLS policies from architecture.md
+6. **API Conventions**: Route patterns, validation from architecture.md
+7. **Key Commands**: Standard npm scripts (dev, build, test, lint, type-check)
+8. **Vocabulary**: Canonical terms from design-brief.md Section 2
+9. **Current Sprint Focus**: Set to "M1 - Project Setup"
+10. **Project Artifacts**: List all docs/*.md files with descriptions
+11. **SPEC Convention**: Note that test files must include `// SPEC: SPEC-XXX-NNN` comment
+
+Keep the file concise (~2-5K tokens). Focus on actionable context, not prose.</div>
+
+<h3>CLAUDE.md Structure</h3>
+
+<p>The generated file should follow this structure:</p>
+
+<div class="code-block"># CLAUDE.md
+
+## Project Overview
+[Generated from design-brief.md]
+
+## Technology Stack
+[Generated from architecture.md]
+
+## Project Structure
+[Generated from architecture.md Project Structure section]
+
+## Code Standards
+[Generated from build-contract.md Quality Standards]
+
+## Database Conventions
+[Generated from architecture.md]
+
+## API Conventions
+[Generated from architecture.md]
+
+## Key Commands
+- `npm run dev` - Start development server
+- `npm run build` - Production build
+- `npm run test` - Run tests
+- `npm run lint` - Run ESLint
+- `npm run type-check` - TypeScript check
+
+## Vocabulary
+[Generated from design-brief.md Section 2 - canonical terms]
+
+## Current Sprint Focus
+- Currently working on: M1 - Project Setup
+- Next milestone: M2 - Design System
+
+## Project Artifacts
+- `docs/design-brief.md` - Canonical vocabulary and product definition
+- `docs/ux-package.md` - User flows and screen descriptions
+- `docs/ui-system.md` - Component specs and visual direction
+- `docs/architecture.md` - Database schema and API design
+- `docs/build-contract.md` - Implementation reference
+
+## SPEC Convention
+Test files must include a comment linking to their SPEC:
+`// SPEC: SPEC-AUTH-001`
+This enables automated verification that SPECs match implementation.</div>
+
+<div class="note">
+  <strong>Keep CLAUDE.md Updated:</strong> As your project evolves, update this file. Add new patterns you establish, document decisions, and update the "Current Sprint Focus" section when you change milestones.
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A CLAUDE.md file at your project root containing project-specific context generated from your design artifacts.</p>
+  <p><strong>How to validate:</strong> Run <code>claude "Read CLAUDE.md and summarize the project"</code> — Claude should correctly describe your project's purpose, tech stack, and key terminology.</p>
+  <p><strong>Next:</strong> Set up the documentation folder structure.</p>
+</div>
+
+<h2 id="section-22-4">22.4 Documentation Folder Structure</h2>
+
+<p>In this section, you'll organize your documentation folder to house design artifacts and SPECs. This structure keeps implementation-relevant documents where Claude Code can access them. Create the folders with:</p>
+
+<div class="code-block">mkdir -p docs/specs</div>
+
+<h3>Place Your Artifacts</h3>
+
+<p>Copy your design artifacts into the docs folder. You can use markdown exports or keep the key sections:</p>
+
+<div class="file-structure">
+docs/
+├── build-contract.md      # The bridge document (REQUIRED)
+├── architecture.md        # Technical architecture reference
+├── design-brief.md        # Vocabulary and product vision (optional)
+├── ux-summary.md          # Key user flows (optional)
+└── specs/                 # SPEC documents go here
+    └── (empty for now)
+
+project-root/
+├── CLAUDE.md              # AI context (REQUIRED)
+├── TECH-DEBT.md           # Technical debt tracking (RECOMMENDED)
+└── ...
+</div>
+
+<div class="note">
+  <strong>TECH-DEBT.md:</strong> Create this file at project root to track technical debt throughout development. Update at each checkpoint with debt scores and active debt items.
+</div>
+
+<div class="moai-box">
+  <h4>Why Build Contract in docs/?</h4>
+  <p>SPECs reference the Build Contract: "See Build Contract Section 2.1 for User Model." If the Build Contract isn't in your project filesystem, Claude Code can't look up these references. Place it in docs/ so references work correctly.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A docs/ folder containing your design artifacts and an empty specs/ subfolder for future SPEC documents.</p>
+  <p><strong>How to validate:</strong> Run <code>ls -la docs/</code> — you should see build-contract.md and other artifacts. Run <code>ls docs/specs/</code> — the folder should exist (empty for now).</p>
+  <p><strong>Next:</strong> Commit your documentation structure.</p>
+</div>
+
+<h2 id="section-22-5">22.5 Initial Commit</h2>
+
+<p>In this section, you'll create a foundation commit that captures your project structure and documentation. This commit marks the official start of your implementation phase. With your structure in place, create a foundation commit:</p>
+
+<div class="code-block">git add .
+git commit -m "Add CLAUDE.md, TECH-DEBT.md, and documentation structure
+
+- CLAUDE.md with project context and standards
+- TECH-DEBT.md for technical debt tracking
+- docs/ folder with Build Contract
+- Ready for Milestone 1"</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A clean commit containing CLAUDE.md, TECH-DEBT.md, and your docs/ folder structure.</p>
+  <p><strong>How to validate:</strong> Run <code>git log --oneline</code> — you should see your commit message. Run <code>git status</code> — working tree should be clean.</p>
+  <p><strong>Next:</strong> Install and configure Claude Code.</p>
+</div>
+
+<h2 id="section-22-6">22.6 Claude Code Configuration</h2>
+
+<p>In this section, you'll install Claude Code and verify it's configured correctly for your project. Claude Code reads your CLAUDE.md automatically, providing project context without manual setup. Configure it for optimal development workflow:</p>
+
+<h3>Install Claude Code</h3>
+
+<div class="code-block">npm install -g @anthropic-ai/claude-code</div>
+
+<h3>Verify Installation</h3>
+
+<div class="code-block">claude --version</div>
+
+<h3>Key Configuration Options</h3>
+
+<p>Claude Code reads your CLAUDE.md automatically. For large projects, you may also want to configure:</p>
+
+<table class="comparison-table">
+  <tr><th>Setting</th><th>Purpose</th><th>Recommendation</th></tr>
+  <tr><td>Auto-compact</td><td>Automatically compresses context when full</td><td>Enable for long sessions</td></tr>
+  <tr><td>Token warnings</td><td>Warns when approaching context limits</td><td>Enable</td></tr>
+  <tr><td>File exclusions</td><td>Ignores node_modules, .git, etc.</td><td>Use defaults</td></tr>
+</table>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Claude Code installed globally with version number confirmed.</p>
+  <p><strong>How to validate:</strong> Run <code>claude --version</code> — it should display a version number. Run <code>claude</code> from your project directory — it should start a session.</p>
+  <p><strong>Next:</strong> Complete the verification checklist to confirm everything is ready.</p>
+</div>
+
+<h2 id="section-22-7">22.7 Verification Checklist</h2>
+
+<p>In this section, you'll verify your entire environment setup is complete. Every item must pass before starting Milestone 1—skipping verification risks implementation problems that are hard to debug later. Verify your environment is ready:</p>
+
+<div class="checklist">
+  <h4>Environment Ready Checklist</h4>
+  <ul>
+    <li><strong>Project created</strong>: Next.js app with TypeScript, Tailwind, App Router</li>
+    <li><strong>Git initialized</strong>: At least one commit with clean working tree</li>
+    <li><strong>CLAUDE.md exists</strong>: At project root with your project details filled in</li>
+    <li><strong>TECH-DEBT.md exists</strong>: At project root for tracking technical debt</li>
+    <li><strong>docs/ folder exists</strong>: Contains build-contract.md at minimum</li>
+    <li><strong>docs/specs/ folder exists</strong>: Empty, ready for SPECs</li>
+    <li><strong>Claude Code installed</strong>: `claude --version` returns version number</li>
+    <li><strong>Test Claude Code</strong>: Run `claude "Read CLAUDE.md and summarize the project"` — it should correctly describe your project</li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Ready for Build Phase</h4>
+  <p>If all items are checked, you're ready to begin Milestone 1. Open your terminal in the project directory and start Claude Code. Your first task will be writing SPEC-SETUP-001 for project initialization.</p>
+</div>
+
+<h3>Quick Reference: Tool Usage by Phase</h3>
+
+<table class="comparison-table">
+  <tr><th>Phase</th><th>Primary Tool</th><th>What You're Doing</th></tr>
+  <tr><td>Parts I-III (Research, Design)</td><td>Claude Chat</td><td>Exploration, document generation, iteration</td></tr>
+  <tr><td>Part IV (Architecture)</td><td>Claude Chat</td><td>Technical design, schema planning</td></tr>
+  <tr><td>Part IV-B (Build Contract)</td><td>Claude Chat</td><td>Compressing design into implementation reference</td></tr>
+  <tr style="background: var(--warning-bg);"><td><strong>Part IV-C (Environment Setup)</strong></td><td><strong>Terminal + Claude Code</strong></td><td><strong>Repository creation, CLAUDE.md, folder structure</strong></td></tr>
+  <tr><td>Part V (Build Phase)</td><td>Claude Code</td><td>SPEC writing, TDD implementation, coding</td></tr>
+  <tr><td>Part VI (Launch)</td><td>Claude Code + Terminal</td><td>Deployment, monitoring setup</td></tr>
+</table>
+
+<h2 id="section-22-8">22.8 Using Claude Projects Effectively</h2>
+
+<p>In this section, you'll learn how to leverage Claude Chat Projects throughout the handbook workflow and connect them to Claude Code. If you're using Claude Chat with <strong>Projects</strong> (the feature that lets you add persistent Project Knowledge), this workflow makes artifact management easier and maintains consistency across design sessions.</p>
+
+<div class="moai-box">
+  <h4>The Complete Flow</h4>
+  <p>Claude Projects and Claude Code serve different phases but work together:</p>
+  <div class="file-structure" style="font-size: 0.85rem;">
+Claude Chat Projects          Your Repository           Claude Code
+┌─────────────────┐          ┌─────────────────┐       ┌─────────────────┐
+│ Project Knowledge│   ──►   │ docs/           │  ──►  │ Reads CLAUDE.md │
+│ - Design Brief   │  Export │ - design-brief.md│       │ which points to │
+│ - UX Package     │   as    │ - ux-package.md │       │ docs/ files     │
+│ - UI System      │   .md   │ - ui-system.md  │       │                 │
+│ - Architecture   │  files  │ - architecture.md│       │ Full context    │
+│ - Build Contract │         │ - build-contract.md│    │ for impl work   │
+└─────────────────┘          └─────────────────┘       └─────────────────┘
+  </div>
+</div>
+
+<h3>Setting Up Your Project</h3>
+
+<p>Create a Claude Project for your SaaS product at the start of the handbook workflow:</p>
+
+<ol>
+  <li>Go to <strong>claude.ai</strong> and create a new Project</li>
+  <li>Name it after your product (e.g., "MyApp SaaS Development")</li>
+  <li>Add artifacts to <strong>Project Knowledge</strong> as you complete each stage</li>
+</ol>
+
+<h3>The Handoff: Projects to Claude Code</h3>
+
+<p>At the Critical Transition (this chapter), you export artifacts from Claude Projects to your repository:</p>
+
+<ol>
+  <li><strong>Export each artifact</strong> — Copy content from Project Knowledge into markdown files</li>
+  <li><strong>Place in docs/ folder</strong> — Follow the structure in Section 22.4</li>
+  <li><strong>Update CLAUDE.md</strong> — Add the Project Artifacts section so Claude Code knows where to find them</li>
+  <li><strong>Commit to git</strong> — These files are now part of your codebase</li>
+</ol>
+
+<div class="note">
+  <strong>Why Export?</strong> Claude Code can only read files in your repository. It cannot access Claude Chat's Project Knowledge. The export bridges this gap.
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> How to use Claude Projects to manage artifacts during design, and how to export them for Claude Code implementation.</p>
+  <p><strong>Key insight:</strong> Claude Projects helps during design exploration. Claude Code needs files in your repository. The export step bridges these two worlds.</p>
+  <p><strong>Next:</strong> You're ready for Part 3: Build & Launch!</p>
+</div>
+
+<h2 id="section-22-9">22.9 Chapter Summary</h2>
+
+<p>You've completed the Critical Transition and Development Environment Setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Verified all design artifacts are ready for implementation</li>
+  <li>Created the Next.js project with recommended stack</li>
+  <li>Generated CLAUDE.md to provide project context to Claude Code</li>
+  <li>Set up the documentation folder structure for artifacts and SPECs</li>
+  <li>Committed your foundation structure</li>
+  <li>Installed and configured Claude Code</li>
+  <li>Verified your environment passes all readiness checks</li>
+  <li>Learned how to integrate Claude Projects with Claude Code workflow</li>
+</ul>
+
+<p>Your development environment is fully configured. You're now ready to begin the Build Phase in Part 3, starting with Milestone 1: Project Setup and your first SPECs.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

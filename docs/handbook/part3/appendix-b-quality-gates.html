@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appendix B: Quality Gate Checklists - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="appendix-b">Appendix B: Quality Gate Checklists</h1>
+
+<p>Use these checklists at quality gates throughout the build phase. Every item must pass before proceeding.</p>
+
+<h2>SPEC Ready Gate</h2>
+
+<p>Before starting implementation, verify the SPEC meets these criteria:</p>
+
+<div class="checklist">
+  <h4>SPEC Ready Checklist</h4>
+  <ul>
+    <li>Overview section complete with Problem and Solution</li>
+    <li>Build Contract references included</li>
+    <li>At least one requirement (EARS format)</li>
+    <li>At least one test case per requirement</li>
+    <li>All placeholders replaced with actual values</li>
+    <li>Status set to "Ready"</li>
+  </ul>
+</div>
+
+<h2>Implementation Done Gate</h2>
+
+<p>Before marking a feature complete, verify these criteria:</p>
+
+<div class="checklist">
+  <h4>Implementation Done Checklist</h4>
+  <ul>
+    <li>All tests pass (npm test)</li>
+    <li>Test coverage >= 80% for new code</li>
+    <li>Functions <= 30 lines</li>
+    <li>Files <= 200 lines</li>
+    <li>Nesting depth <= 3</li>
+    <li>No TypeScript errors (npm run build)</li>
+    <li>No linting errors (npm run lint)</li>
+    <li>SPEC status updated to "Done"</li>
+  </ul>
+</div>
+
+<h2>Checkpoint A: Foundation Audit</h2>
+
+<p>After completing M3 (Database), verify:</p>
+
+<div class="checklist">
+  <h4>Checkpoint A Checklist</h4>
+  <ul>
+    <li>RLS enabled on ALL tables</li>
+    <li>RLS policies tested with different user roles</li>
+    <li>No security vulnerabilities (npm audit)</li>
+    <li>Schema matches architecture document</li>
+    <li>Technical debt score >= 6.0</li>
+    <li>All M1-M3 tests passing</li>
+    <li>Git tagged: checkpoint-a</li>
+  </ul>
+</div>
+
+<h2>Checkpoint B: Feature Complete Audit</h2>
+
+<p>After completing M6 (Core Feature), verify:</p>
+
+<div class="checklist">
+  <h4>Checkpoint B Checklist</h4>
+  <ul>
+    <li>Core feature fully functional</li>
+    <li>User flows match UX Package specifications</li>
+    <li>Test coverage >= 80%</li>
+    <li>Performance: Lighthouse >= 80</li>
+    <li>Technical debt score >= 6.0</li>
+    <li>No critical bugs in backlog</li>
+    <li>All M1-M6 tests passing</li>
+    <li>Git tagged: checkpoint-b</li>
+  </ul>
+</div>
+
+<h2>Checkpoint C: Pre-Launch Audit</h2>
+
+<p>After completing M10 (Polish), verify:</p>
+
+<div class="checklist">
+  <h4>Checkpoint C Checklist</h4>
+  <ul>
+    <li>All features complete and tested</li>
+    <li>Security verification complete (OWASP checks)</li>
+    <li>Performance: Lighthouse >= 90</li>
+    <li>Accessibility: WCAG 2.1 AA compliance</li>
+    <li>Technical debt score >= 7.0</li>
+    <li>Error boundaries in place</li>
+    <li>Loading states on all async operations</li>
+    <li>Mobile responsive verified</li>
+    <li>All M1-M10 tests passing</li>
+    <li>Git tagged: checkpoint-c</li>
+  </ul>
+</div>
+
+<h2>Code Review Gate</h2>
+
+<p>Before merging any PR, verify:</p>
+
+<div class="checklist">
+  <h4>Code Review Checklist</h4>
+  <ul>
+    <li>PR linked to relevant SPEC</li>
+    <li>Tests cover new functionality</li>
+    <li>No console.log statements</li>
+    <li>No hardcoded secrets or credentials</li>
+    <li>Error handling in place</li>
+    <li>TypeScript types properly defined</li>
+    <li>Code follows project conventions (CLAUDE.md)</li>
+    <li>Documentation updated if needed</li>
+  </ul>
+</div>
+
+<h2>Quality Score Thresholds</h2>
+
+<table class="comparison-table">
+  <tr>
+    <th>Score</th>
+    <th>Rating</th>
+    <th>Gate Decision</th>
+  </tr>
+  <tr style="background: #d1fae5;">
+    <td>>= 8.0</td>
+    <td>Excellent</td>
+    <td>PASS - Proceed</td>
+  </tr>
+  <tr style="background: #dbeafe;">
+    <td>7.0 - 7.9</td>
+    <td>Good</td>
+    <td>PASS - Document debt</td>
+  </tr>
+  <tr style="background: #fef3c7;">
+    <td>6.0 - 6.9</td>
+    <td>Acceptable</td>
+    <td>PASS - Create remediation plan</td>
+  </tr>
+  <tr style="background: #fed7aa;">
+    <td>5.0 - 5.9</td>
+    <td>Concerning</td>
+    <td>CONDITIONAL - Address before next milestone</td>
+  </tr>
+  <tr style="background: #fecaca;">
+    <td>< 5.0</td>
+    <td>Critical</td>
+    <td>BLOCK - Remediation required</td>
+  </tr>
+</table>
+
+<h2>Using These Checklists</h2>
+
+<p>Copy the relevant checklist into your SPEC or PR description and check off items as you verify them. This creates a documented audit trail and ensures nothing is missed.</p>
+
+<div class="note">
+  <strong>Automation Tip:</strong> Many of these checks can be automated via CI/CD. Set up GitHub Actions to run tests, linting, and type checks on every PR.
+</div>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

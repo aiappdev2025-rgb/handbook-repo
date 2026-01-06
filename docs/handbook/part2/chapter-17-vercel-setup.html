@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 17: Vercel Project Setup - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-17">Chapter 17: Vercel Project Setup</h1>
+
+<p>In this chapter, you'll connect your Next.js application to Vercel for deployment. Vercel handles building, hosting, and serving your application with automatic deployments triggered by Git pushes. By the end of this chapter, your application will be deployed and connected to Supabase.</p>
+
+<h2 id="section-17-1">17.1 Purpose</h2>
+
+<p>Vercel provides three deployment environments that map to your Git workflow: Development (for local work), Preview (for pull request testing), and Production (for live users). Each environment can have its own set of environment variables, allowing you to connect different Supabase projects to different deployment contexts.</p>
+
+<p><strong>What you'll accomplish:</strong> Import your repository to Vercel, configure environment variables for each deployment scope, and verify your application deploys correctly.</p>
+
+<h2 id="section-17-2">17.2 Import Project</h2>
+
+<p>Vercel automatically detects Next.js projects and configures the build settings. The initial import creates the project and sets up the Git integration—any future pushes to your repository will trigger automatic deployments.</p>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (Vercel Dashboard) - Initial setup requires the dashboard.
+</div>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Go to <a href="https://vercel.com/new">vercel.com/new</a></li>
+  <li>Click "Import" next to your GitHub repository</li>
+  <li>Verify the settings:
+    <ul>
+      <li>Framework Preset: <strong>Next.js</strong> (auto-detected)</li>
+      <li>Root Directory: <code>./</code></li>
+    </ul>
+  </li>
+  <li>Click "Deploy"</li>
+</ol>
+
+<div class="note">
+  <h4>Expected: Initial Deploy Will Fail</h4>
+  <p>The first deployment will fail because environment variables aren't configured yet. This is normal—you'll add them in the next section and redeploy.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A Vercel project created, visible in your Vercel dashboard, linked to your GitHub repository.</p>
+  <p><strong>How to validate:</strong> You should see your project in the Vercel dashboard with a failed deployment (red status). The Git integration should show your repository name.</p>
+  <p><strong>Next:</strong> Configure environment variables for each deployment scope.</p>
+</div>
+
+<h2 id="section-17-3">17.3 Environment Variables</h2>
+
+<p>Vercel environment variables have three scopes: Development (used with <code>vercel dev</code>), Preview (for branch/PR deployments), and Production (for your main branch). You'll configure each scope to connect to the appropriate Supabase project from Chapter 16.</p>
+
+<h3>Instructions</h3>
+
+<p>Go to <strong>Project Settings → Environment Variables</strong> and add the following variables. For each variable, select the appropriate checkboxes for which environments it applies to.</p>
+
+<h4>For 2-Environment Setup</h4>
+
+<p>In this setup, both Development and Preview scopes use the Dev Supabase project:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Variable</th>
+    <th>Development</th>
+    <th>Preview</th>
+    <th>Production</th>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_URL</code></td>
+    <td>Dev URL</td>
+    <td>Dev URL</td>
+    <td>Prod URL</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td>
+    <td>Dev key</td>
+    <td>Dev key</td>
+    <td>Prod key</td>
+  </tr>
+  <tr>
+    <td><code>SUPABASE_SERVICE_ROLE_KEY</code></td>
+    <td>Dev service key</td>
+    <td>Dev service key</td>
+    <td>Prod service key</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td>
+    <td>Test key</td>
+    <td>Test key</td>
+    <td>Live key</td>
+  </tr>
+  <tr>
+    <td><code>STRIPE_SECRET_KEY</code></td>
+    <td>Test secret</td>
+    <td>Test secret</td>
+    <td>Live secret</td>
+  </tr>
+</table>
+
+<p><em>Note: Preview deployments share the Dev database, so test data created during PR reviews will appear in your development environment.</em></p>
+
+<h4>For 3-Environment Setup</h4>
+
+<p>In this setup, each scope connects to its dedicated Supabase project:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Variable</th>
+    <th>Development</th>
+    <th>Preview</th>
+    <th>Production</th>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_URL</code></td>
+    <td>Dev URL</td>
+    <td>Staging URL</td>
+    <td>Prod URL</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td>
+    <td>Dev key</td>
+    <td>Staging key</td>
+    <td>Prod key</td>
+  </tr>
+  <tr>
+    <td><code>SUPABASE_SERVICE_ROLE_KEY</code></td>
+    <td>Dev service key</td>
+    <td>Staging service key</td>
+    <td>Prod service key</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td>
+    <td>Test key</td>
+    <td>Test key</td>
+    <td>Live key</td>
+  </tr>
+  <tr>
+    <td><code>STRIPE_SECRET_KEY</code></td>
+    <td>Test secret</td>
+    <td>Test secret</td>
+    <td>Live secret</td>
+  </tr>
+</table>
+
+<div class="note">
+  <h4>Adding Variables by Scope</h4>
+  <p>When adding a variable in Vercel, you can either: (1) add the same value for all environments by checking all three boxes, or (2) add the variable multiple times with different values and different scope checkboxes. For Supabase variables that differ per environment, use approach (2).</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> 5 environment variables configured, each with values for Development, Preview, and Production scopes.</p>
+  <p><strong>How to validate:</strong> In Project Settings → Environment Variables, you should see all variables listed. Click on each to verify the values per environment are correct.</p>
+  <p><strong>Next:</strong> Verify the deployment works with your new configuration.</p>
+</div>
+
+<h2 id="section-17-4">17.4 Verify Deployment</h2>
+
+<p>With environment variables configured, you need to trigger a new deployment and verify everything connects correctly. You'll also set up your local environment to use the same variables.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">Same Session</span>
+</div>
+<div class="prompt-block">Verify the Vercel deployment is working correctly.
+
+1. Trigger a redeployment in Vercel Dashboard:
+   - Go to Deployments tab
+   - Click the three dots on the failed deployment
+   - Select "Redeploy"
+
+2. While that deploys, pull environment variables for local development:
+   vercel link
+   vercel env pull .env.local
+
+3. Start the development server:
+   npm run dev
+
+4. Verify locally:
+   - App loads at localhost:3000
+   - No console errors about missing env vars
+   - Open browser DevTools → Network tab
+   - Look for requests to your Supabase URL (should return 200)
+
+5. Verify the Vercel deployment:
+   - Check the deployment completed successfully (green status)
+   - Click the deployment URL to open the preview
+   - Verify the app loads without errors</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A successful Vercel deployment (green status) and a working local development environment.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Vercel dashboard shows green "Ready" status on the latest deployment</li>
+    <li>Clicking the deployment URL loads your application</li>
+    <li>Local <code>npm run dev</code> runs without environment variable errors</li>
+    <li><code>.env.local</code> file exists in your project root with Supabase variables</li>
+  </ul>
+  <p><strong>Next:</strong> Configure your custom domain (optional until launch).</p>
+</div>
+
+<h2 id="section-17-5">17.5 Domain Configuration (Production)</h2>
+
+<p>Your production deployment is initially available at a <code>.vercel.app</code> subdomain. When you're ready to launch, you'll add your custom domain. This step is optional during development—you can complete it later before going live.</p>
+
+<h3>Instructions (When Ready for Launch)</h3>
+
+<ol>
+  <li>Go to <strong>Project Settings → Domains</strong></li>
+  <li>Enter your custom domain (e.g., <code>myapp.com</code>)</li>
+  <li>Vercel will display DNS configuration instructions:
+    <ul>
+      <li>For apex domains: Add an A record pointing to Vercel's IP</li>
+      <li>For subdomains: Add a CNAME record pointing to <code>cname.vercel-dns.com</code></li>
+    </ul>
+  </li>
+  <li>Update your domain's DNS settings at your registrar</li>
+  <li>Wait for DNS propagation (usually minutes, sometimes up to 48 hours)</li>
+  <li>Vercel automatically provisions an SSL certificate</li>
+</ol>
+
+<div class="note">
+  <h4>Remember to Update Supabase</h4>
+  <p>When you add a custom domain, go back to your Production Supabase project and update the Site URL and Redirect URLs in Authentication → URL Configuration to use your new domain.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Your custom domain resolving to your Vercel deployment with HTTPS enabled.</p>
+  <p><strong>How to validate:</strong> Visit <code>https://yourdomain.com</code> in a browser. The page should load with a valid SSL certificate (padlock icon).</p>
+  <p><strong>Next:</strong> Chapter 18 covers advanced multi-environment configuration and workflows.</p>
+</div>
+
+<h2 id="section-17-6">17.6 Chapter Summary</h2>
+
+<p>You've completed the Vercel deployment setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Imported your GitHub repository to Vercel with automatic deployments</li>
+  <li>Configured environment variables for Development, Preview, and Production scopes</li>
+  <li>Verified both local development and cloud deployment work correctly</li>
+  <li>Learned how to add a custom domain when ready for launch</li>
+</ul>
+
+<p>Your application is now deployed and connected to Supabase. Chapter 18 provides detailed guidance on managing multiple environments, including database migrations, preview deployment workflows, and troubleshooting common issues.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

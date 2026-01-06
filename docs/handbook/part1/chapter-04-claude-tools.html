@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 4: Claude Tools Guide - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-4">Chapter 4: Claude Tools Guide</h1>
+
+<p>In this chapter, you'll learn about the two Claude tools—Claude Chat and Claude Code—and when to use each one. Understanding their different strengths is critical for efficient workflow. By the end of this chapter, you'll know exactly which tool to reach for at each stage of development.</p>
+
+<h2 id="section-4-1">4.1 Two Tools, Different Purposes</h2>
+
+<p>Claude Chat and Claude Code CLI are optimized for different tasks. Using the right tool dramatically improves outcomes.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Aspect</th>
+    <th><span class="tool-badge badge-chat">Claude Chat</span></th>
+    <th><span class="tool-badge badge-code">Claude Code CLI</span></th>
+  </tr>
+  <tr>
+    <td><strong>Best For</strong></td>
+    <td>Strategy, design, documentation, analysis</td>
+    <td>Implementation, file operations, testing</td>
+  </tr>
+  <tr>
+    <td><strong>Context</strong></td>
+    <td>Conversation-based, can reference attachments</td>
+    <td>File system access, can read/write code</td>
+  </tr>
+  <tr>
+    <td><strong>Output</strong></td>
+    <td>Documents, plans, designs, artifacts</td>
+    <td>Code files, test files, configuration</td>
+  </tr>
+  <tr>
+    <td><strong>Iteration</strong></td>
+    <td>Back-and-forth discussion</td>
+    <td>Execute &rarr; verify &rarr; adjust</td>
+  </tr>
+</table>
+
+<h2 id="section-4-2">4.2 The Handoff Pattern</h2>
+
+<p>Design artifacts flow from Claude Chat to Claude Code in a structured handoff. Understanding this pattern helps you maintain context across the transition.</p>
+
+<div class="file-structure">
+HANDOFF PATTERN
+===============
+
+Claude Chat                          Claude Code CLI
+-----------                          ---------------
+
+1. Create Design Artifacts    --->
+2. Create Architecture Doc    --->
+3. Generate Build Contract    --->
+4. Create SPEC Document       --->   5. Implement SPEC (TDD)
+                                        - Write failing tests
+                                        - Implement to pass
+                                        - Refactor
+6. Review Implementation      <---
+7. Create Next SPEC           --->   8. Implement Next SPEC
+</div>
+
+<h2 id="section-4-3">4.3 Tool Selection by Stage</h2>
+
+<p>This table provides a quick reference for which tool to use at each stage. Bookmark this for quick reference as you work through the handbook.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Stage</th>
+    <th>Task</th>
+    <th>Recommended Tool</th>
+    <th>Why</th>
+  </tr>
+  <tr>
+    <td>Research (0.1)</td>
+    <td>Market analysis</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Web search, iterative exploration</td>
+  </tr>
+  <tr>
+    <td>Business (1.0)</td>
+    <td>Business strategy</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Discussion, clarifying questions</td>
+  </tr>
+  <tr>
+    <td>Design (2.0-4.0)</td>
+    <td>Design documents</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Iteration, exploration</td>
+  </tr>
+  <tr>
+    <td>Architecture (5.0)</td>
+    <td>Technical planning</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Diagrams, trade-off analysis</td>
+  </tr>
+  <tr style="background: var(--moai-bg);">
+    <td>Build Contract</td>
+    <td>Bridge document</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Synthesis of design artifacts</td>
+  </tr>
+  <tr>
+    <td>Build (SPECs)</td>
+    <td>Write SPECs</td>
+    <td><span class="tool-badge badge-chat">Chat</span></td>
+    <td>Requirements analysis</td>
+  </tr>
+  <tr>
+    <td>Build (Code)</td>
+    <td>Implementation</td>
+    <td><span class="tool-badge badge-code">Code</span></td>
+    <td>File operations, TDD cycle</td>
+  </tr>
+</table>
+
+<h2 id="section-4-4">4.4 Setting Up Claude Projects (Recommended)</h2>
+
+<p>Before starting the prompts in Part II, we recommend setting up a <strong>Claude Project</strong> to organize your work. Claude Projects lets you store artifacts in persistent "Project Knowledge" that's available across all chats within that project.</p>
+
+<div class="moai-box">
+  <h4>Why Use Claude Projects?</h4>
+  <ul>
+    <li><strong>No re-pasting:</strong> Artifacts in Project Knowledge are automatically available - no need to paste your Design Brief into every chat</li>
+    <li><strong>Context preserved:</strong> Start new chats without losing access to previous work</li>
+    <li><strong>Organized workflow:</strong> All your SaaS project artifacts in one place</li>
+  </ul>
+</div>
+
+<h3>Before Starting the Prompts</h3>
+
+<ol>
+  <li>Go to <strong>claude.ai</strong> and create a new Project</li>
+  <li>Name it after your product (e.g., "MyApp - SaaS Development")</li>
+  <li>Add artifacts to Project Knowledge as you complete each stage (see table below)</li>
+</ol>
+
+<h3>When to Add Artifacts</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>After Completing...</th>
+    <th>Add to Project Knowledge</th>
+  </tr>
+  <tr>
+    <td>Stage 0.1 (Chapter 5)</td>
+    <td>Research findings</td>
+  </tr>
+  <tr>
+    <td>Stage 1.0 (Chapter 6)</td>
+    <td>Business One-Pager</td>
+  </tr>
+  <tr>
+    <td>Stage 2.0 (Chapter 7)</td>
+    <td>Design Brief</td>
+  </tr>
+  <tr>
+    <td>Stage 3.0 (Chapters 8-10)</td>
+    <td>UX Package</td>
+  </tr>
+  <tr>
+    <td>Stage 4.0 (Chapters 11-13)</td>
+    <td>UI System</td>
+  </tr>
+  <tr>
+    <td>Part IV (Architecture)</td>
+    <td>Architecture Document</td>
+  </tr>
+  <tr>
+    <td>Part IV-B (Build Contract)</td>
+    <td>Build Contract</td>
+  </tr>
+</table>
+
+<div class="note">
+  <strong>Full Guide:</strong> For the complete Claude Projects workflow—including when to start new chats, how to transition artifacts to Claude Code, and the Projects-to-Code handoff—see Chapter 22.8: Using Claude Projects Effectively in Part 2.
+</div>
+
+<div class="checklist">
+  <strong>Not using Projects?</strong> You can still follow the handbook. Save your artifacts locally as markdown files and paste relevant sections when Claude needs context. The workflow remains the same—Projects just makes it more convenient.
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The strengths of each tool (Chat for exploration/design, Code for implementation), the handoff pattern, and when to use each at each stage.</p>
+  <p><strong>What you should have:</strong> A clear mental model of which tool to reach for at any point in the workflow.</p>
+  <p><strong>Next:</strong> Part II — Start creating your design artifacts with the Research phase.</p>
+</div>
+
+<h2 id="section-4-5">4.5 Chapter Summary</h2>
+
+<p>You've learned about the two Claude tools. Key takeaways:</p>
+
+<ul>
+  <li>Claude Chat excels at exploration, strategy, design, and document generation</li>
+  <li>Claude Code excels at implementation, file operations, and TDD workflows</li>
+  <li>Artifacts flow from Chat to Code through a structured handoff</li>
+  <li>Using the right tool for each stage dramatically improves outcomes</li>
+  <li>Claude Projects (optional) makes artifact management convenient</li>
+</ul>
+
+<p>You've now completed Part I: Foundation. You understand the philosophy, the quality problems we're solving, the Five Pillars framework, and the tools we'll use. In Part II, you'll begin creating your product's design artifacts.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

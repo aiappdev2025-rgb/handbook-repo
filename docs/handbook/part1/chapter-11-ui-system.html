@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 11: UI System - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-11">Chapter 11: UI System</h1>
+
+<p>In this chapter, you'll create the UI System—your application's visual design language. This document defines colors, typography, spacing, and component specifications that ensure visual consistency across every screen. By the end of this chapter, you'll have a complete design system ready to guide implementation.</p>
+
+<h2 id="section-11-1">11.1 UI System Purpose</h2>
+
+<p>The UI System defines the visual language: colors, typography, spacing, components. It ensures visual consistency across the entire application. Without a defined system, each screen risks becoming visually inconsistent, making the product feel unprofessional.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a comprehensive UI System covering design tokens, component library, layout system, and visual direction.</p>
+
+<h2 id="section-11-2">11.2 UI System Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you created the UX Package. This ensures the UI components align with the screens and flows you've already defined. Claude will create visual specifications for every component your UX requires.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues UX/UI work)</span>
+</div>
+<div class="prompt-block">Create a UI System for [PRODUCT NAME].
+
+**Design Brief**: [ATTACH]
+**UX Package**: [ATTACH]
+
+The UI System should define:
+
+**SECTION 1: Design Tokens**
+- Color palette (primary, secondary, semantic, neutrals)
+- Typography scale (font families, sizes, weights, line heights)
+- Spacing scale (4px base recommended)
+- Border radius scale
+- Shadow scale
+
+**SECTION 2: Component Library**
+For each component:
+- Visual design (all states)
+- Variants (sizes, styles)
+- Behavior specifications
+- Accessibility requirements
+
+Components needed:
+- Button (primary, secondary, ghost, destructive)
+- Input (text, email, password, textarea)
+- Select
+- Checkbox, Radio
+- Card
+- Modal
+- Toast/Notification
+- Table
+- Form field (with label, error, helper text)
+
+**SECTION 3: Layout System**
+- Grid system
+- Container widths
+- Page layouts
+- Responsive breakpoints
+
+**SECTION 4: Visual Direction**
+- Overall aesthetic (minimal, bold, playful, professional)
+- Photography/illustration style
+- Icon style
+- Motion principles
+
+Output in markdown format, ready to save as docs/ui-system.md.</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A comprehensive UI System document (typically 1,500-3,000 words) covering all four sections: design tokens, component library, layout system, and visual direction.</p>
+  <p><strong>How to validate:</strong> Design tokens should include specific values (hex codes, pixel sizes). Component library should define all states for each component (default, hover, active, disabled, error).</p>
+  <p><strong>Next:</strong> Save the UI System to your project.</p>
+</div>
+
+<h2 id="section-11-3">11.3 Save the UI System</h2>
+
+<p>Save the UI System so it can be referenced during implementation. Developers will use these specifications to build components that match your design vision exactly.</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Copy the complete UI System output from Claude Chat</li>
+  <li>Save as <code>docs/ui-system.md</code></li>
+</ol>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/ui-system.md</code> containing your complete UI System.</p>
+  <p><strong>How to validate:</strong> Open the file and verify all four sections are present. Design tokens should have copy-pasteable values (e.g., <code>#1a365d</code>, <code>16px</code>, <code>1.5rem</code>).</p>
+  <p><strong>Next:</strong> Chapter 12 — Optionally explore visual direction alternatives.</p>
+</div>
+
+<h2 id="section-11-4">11.4 Chapter Summary</h2>
+
+<p>You've created your UI System. What you accomplished:</p>
+
+<ul>
+  <li>Defined design tokens for colors, typography, spacing, and shadows</li>
+  <li>Created component library with specifications for all UI elements</li>
+  <li>Established layout system with grid and breakpoints</li>
+  <li>Set visual direction for overall aesthetic</li>
+</ul>
+
+<p>In the next chapter, you can optionally explore alternative visual directions before committing to a final design.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

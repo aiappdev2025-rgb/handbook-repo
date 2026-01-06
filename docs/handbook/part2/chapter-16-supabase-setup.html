@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 16: Supabase Project Setup - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-16">Chapter 16: Supabase Project Setup</h1>
+
+<p>In this chapter, you'll create and configure your Supabase cloud projects. Supabase provides your database, authentication, and backend services. By the end of this chapter, you'll have your Supabase infrastructure ready to connect to your Next.js application.</p>
+
+<div class="warning">
+  <h4>Supabase Free Tier Limitation</h4>
+  <p>The Supabase Free tier allows only <strong>2 active projects</strong> per organization. This handbook supports two environment configurations:</p>
+  <ul>
+    <li><strong>2-Environment Setup</strong> (Free tier compatible): Development + Production</li>
+    <li><strong>3-Environment Setup</strong> (requires Pro or additional org): Development + Staging + Production</li>
+  </ul>
+  <p>Chapter 18 covers both configurations in detail. For now, create the projects based on your chosen setup.</p>
+</div>
+
+<h2 id="section-16-1">16.1 Purpose</h2>
+
+<p>Before writing any code, you need cloud infrastructure to store data and handle authentication. Supabase projects are created through their web dashboard—this cannot be automated. Each environment (local development, staging, production) connects to its own isolated Supabase project to prevent test data from mixing with real user data.</p>
+
+<p><strong>What you'll accomplish:</strong> Create 2 or 3 Supabase projects (depending on your environment setup) and configure basic settings for each.</p>
+
+<h2 id="section-16-2">16.2 Create Projects</h2>
+
+<p>Each Supabase project is a complete backend instance with its own database, authentication, and API endpoints. Creating separate projects per environment ensures complete data isolation—your development experiments won't affect production users.</p>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (Supabase Dashboard) - These steps cannot be automated.
+</div>
+
+<h3>Instructions</h3>
+
+<p>Go to <a href="https://supabase.com/dashboard">supabase.com/dashboard</a> and create your projects:</p>
+
+<h4>For 2-Environment Setup (Free Tier)</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project Name</th>
+    <th>Purpose</th>
+    <th>Region</th>
+  </tr>
+  <tr>
+    <td><code>[project]-dev</code></td>
+    <td>Local development + Preview deployments</td>
+    <td>Closest to you</td>
+  </tr>
+  <tr>
+    <td><code>[project]-prod</code></td>
+    <td>Production users</td>
+    <td>Closest to your target users</td>
+  </tr>
+</table>
+
+<h4>For 3-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project Name</th>
+    <th>Purpose</th>
+    <th>Region</th>
+  </tr>
+  <tr>
+    <td><code>[project]-dev</code></td>
+    <td>Local development</td>
+    <td>Closest to you</td>
+  </tr>
+  <tr>
+    <td><code>[project]-staging</code></td>
+    <td>Preview deployments</td>
+    <td>Same as production</td>
+  </tr>
+  <tr>
+    <td><code>[project]-prod</code></td>
+    <td>Production users</td>
+    <td>Closest to your target users</td>
+  </tr>
+</table>
+
+<p>For each project:</p>
+<ol>
+  <li>Click "New Project"</li>
+  <li>Enter the project name following the naming convention above</li>
+  <li>Generate a strong database password and <strong>save it in your password manager</strong></li>
+  <li>Select the appropriate region</li>
+  <li>Click "Create new project" and wait ~2 minutes for provisioning</li>
+</ol>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> 2 or 3 projects visible in your Supabase dashboard, each showing a green "Active" status.</p>
+  <p><strong>How to validate:</strong> Click into each project—you should see the Project Dashboard with the Table Editor, Authentication, and other sections available in the sidebar.</p>
+  <p><strong>Next:</strong> Configure authentication URLs for each project.</p>
+</div>
+
+<h2 id="section-16-3">16.3 Configure Authentication</h2>
+
+<p>Supabase authentication requires knowing which URLs are legitimate for your application. Without proper URL configuration, login redirects will fail and users won't be able to sign in. Each project needs URLs matching the environment it serves.</p>
+
+<h3>Instructions</h3>
+
+<p>For each project, navigate to <strong>Authentication → URL Configuration</strong> in the sidebar and configure:</p>
+
+<h4>For 2-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Site URL</th>
+    <th>Redirect URLs</th>
+  </tr>
+  <tr>
+    <td><strong>Dev</strong></td>
+    <td><code>http://localhost:3000</code></td>
+    <td><code>http://localhost:3000/**</code><br><code>https://*-[username].vercel.app/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Prod</strong></td>
+    <td><code>https://[your-domain].com</code></td>
+    <td><code>https://[your-domain].com/**</code></td>
+  </tr>
+</table>
+
+<p><em>Note: In the 2-environment setup, the Dev project handles both local development and Vercel preview deployments.</em></p>
+
+<h4>For 3-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Site URL</th>
+    <th>Redirect URLs</th>
+  </tr>
+  <tr>
+    <td><strong>Dev</strong></td>
+    <td><code>http://localhost:3000</code></td>
+    <td><code>http://localhost:3000/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Staging</strong></td>
+    <td><code>https://*-[username].vercel.app</code></td>
+    <td><code>https://*-[username].vercel.app/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Prod</strong></td>
+    <td><code>https://[your-domain].com</code></td>
+    <td><code>https://[your-domain].com/**</code></td>
+  </tr>
+</table>
+
+<div class="note">
+  <h4>About Redirect URLs</h4>
+  <p>The <code>/**</code> wildcard allows any path on your domain to receive auth callbacks. Replace <code>[username]</code> with your Vercel username and <code>[your-domain].com</code> with your actual production domain (you can update this later before launch).</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Each project's URL Configuration page showing your Site URL and Redirect URLs saved.</p>
+  <p><strong>How to validate:</strong> After saving, refresh the page and confirm the values persisted correctly.</p>
+  <p><strong>Next:</strong> Apply your database schema to the development project.</p>
+</div>
+
+<h2 id="section-16-4">16.4 Apply Schema Migration</h2>
+
+<p>Your database schema (designed in Chapter 14) needs to be applied to your Supabase projects. You'll use the Supabase CLI to manage migrations—this ensures your schema is version-controlled and can be consistently applied across all environments.</p>
+
+<p>Start by applying the schema to your development project. You'll migrate staging and production later when you're ready to deploy.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">Same Session</span>
+</div>
+<div class="prompt-block">Set up Supabase CLI and apply the initial schema migration.
+
+1. Initialize Supabase in the project:
+   supabase init
+
+2. Link to the development project:
+   supabase link --project-ref [DEV_PROJECT_REF]
+
+   (Find your project ref in Supabase Dashboard → Project Settings → General)
+
+3. Create a migration file from the schema we designed in Chapter 14:
+   supabase migration new initial_schema
+
+4. Apply the migration:
+   supabase db push
+
+5. Verify the tables were created correctly.</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Your database tables created in the Dev project, visible in the Supabase Table Editor.</p>
+  <p><strong>How to validate:</strong> In Supabase Dashboard, go to <strong>Table Editor</strong>. You should see all the tables defined in your schema. Click on a table to verify it has the expected columns.</p>
+  <p><strong>Next:</strong> Record your project credentials for use in your application.</p>
+</div>
+
+<h2 id="section-16-5">16.5 Record Credentials</h2>
+
+<p>Your Next.js application needs credentials to connect to Supabase. Each project has unique credentials that you'll configure as environment variables. Record these now—you'll need them in Chapter 17 when setting up Vercel.</p>
+
+<h3>Instructions</h3>
+
+<p>For each project, go to <strong>Settings → API</strong> and record:</p>
+<ul>
+  <li><strong>Project URL</strong> — The base URL for API requests (e.g., <code>https://xxxxx.supabase.co</code>)</li>
+  <li><strong>Anon (public) key</strong> — Safe to expose in browser, used for client-side operations</li>
+  <li><strong>Service role key</strong> — Full database access, server-side only, <strong>keep secret!</strong></li>
+</ul>
+
+<p>Create a secure note in your password manager with this structure:</p>
+
+<div class="file-structure">
+SUPABASE CREDENTIALS
+
+[project]-dev:
+  URL: https://xxxxx.supabase.co
+  ANON_KEY: eyJhbGc...
+  SERVICE_ROLE_KEY: eyJhbGc...
+
+[project]-prod:
+  URL: https://yyyyy.supabase.co
+  ANON_KEY: eyJhbGc...
+  SERVICE_ROLE_KEY: eyJhbGc...
+
+(Add staging section if using 3-environment setup)
+</div>
+
+<div class="warning">
+  <h4>Security</h4>
+  <p>The <strong>service role key</strong> bypasses Row Level Security and has full database access. Never expose it in client-side code or commit it to your repository. Treat it like a database password.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> 6 credential values (for 2-env) or 9 values (for 3-env) saved securely in your password manager.</p>
+  <p><strong>How to validate:</strong> Open your password manager and confirm you have URL, anon key, and service role key for each project.</p>
+  <p><strong>Next:</strong> Chapter 17 — Connect your Vercel deployment to these Supabase projects.</p>
+</div>
+
+<h2 id="section-16-6">16.6 Chapter Summary</h2>
+
+<p>You've completed the Supabase infrastructure setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Created isolated Supabase projects for each environment</li>
+  <li>Configured authentication URLs to allow sign-in from your application</li>
+  <li>Applied your database schema to the development project</li>
+  <li>Securely recorded credentials for application configuration</li>
+</ul>
+
+<p>Your Supabase backend is now ready. In the next chapter, you'll connect it to Vercel so your deployed application can access these services.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

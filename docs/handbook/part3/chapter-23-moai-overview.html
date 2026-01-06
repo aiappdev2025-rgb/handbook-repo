@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 23: MOAI-ADK Overview - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-23">Chapter 23: MOAI-ADK Overview</h1>
+
+<p>In this chapter, you'll learn the MOAI-ADK methodology—how design artifacts flow into implementation through SPECs and TDD. Understanding this flow is essential before executing any milestones. By the end of this chapter, you'll know how all the pieces connect.</p>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>Read for Understanding</strong> — This chapter explains the MOAI methodology. No action required yet. You'll apply these concepts when executing milestones in the Build Guide.
+</div>
+
+<h2 id="section-23-1">23.1 The Integration Flow</h2>
+
+<p>MOAI-ADK (Methodology for Organized AI-Driven Development Kit) structures AI-assisted implementation through SPEC-First Development, EARS Requirements, TDD Workflow, and Documentation Sync.</p>
+
+<div class="file-structure">
+HANDBOOK + MOAI INTEGRATION
+===========================
+
+Design Brief      ----+
+UX Package        ----|---> Build Contract ---> SPEC ---> TDD Cycle
+UI System         ----|                              |
+Architecture      ----+                              v
+                                              Tested Code + Docs
+</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <ol>
+    <li><strong>Create the Build Contract</strong> — Use the Build Contract prompt (Chapter 21) to synthesize your design artifacts into a single reference document</li>
+    <li><strong>Set up SPEC folder structure</strong> — Create <code>docs/specs/</code> in your project root</li>
+    <li><strong>Configure testing framework</strong> — Install Jest and React Testing Library:
+      <div class="code-block">npm install -D jest @testing-library/react @testing-library/jest-dom</div>
+    </li>
+    <li><strong>Create CLAUDE.md</strong> — Set up your AI context file following Chapter 22</li>
+  </ol>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> How design artifacts (Design Brief, UX Package, UI System, Architecture) flow through the Build Contract into SPECs and finally into tested code.</p>
+  <p><strong>What you should have ready:</strong> Build Contract created, docs/specs/ folder created, testing framework installed, CLAUDE.md configured.</p>
+  <p><strong>Next:</strong> Chapter 24 — Learn the SPEC-First Development approach and EARS requirements format.</p>
+</div>
+
+<h2 id="section-23-2">23.2 Chapter Summary</h2>
+
+<p>You've learned the MOAI-ADK integration methodology. Key takeaways:</p>
+
+<ul>
+  <li>Design artifacts feed into the Build Contract</li>
+  <li>Build Contract informs SPEC documents</li>
+  <li>SPECs drive TDD implementation</li>
+  <li>The result is tested, documented code</li>
+</ul>
+
+<p>In the next chapter, you'll learn the SPEC-First Development approach that ensures every feature starts with requirements and test cases.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

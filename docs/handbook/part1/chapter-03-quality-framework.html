@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 3: The Quality Framework - Five Pillars - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-3">Chapter 3: The Quality Framework - Five Pillars</h1>
+
+<p>In this chapter, you'll learn the Five Pillars quality framework—concrete standards for evaluating every piece of code. These pillars (Structure, Simplicity, Safety, Speed, Stability) provide specific criteria that prevent the vibe coding patterns from Chapter 2. By the end of this chapter, you'll have a checklist for evaluating code quality.</p>
+
+<h2 id="section-3-1">3.1 Structure</h2>
+<p>Structure is about organizing code so that each piece has a clear purpose and location. Good structure makes code navigable and maintainable.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Single Responsibility:</strong> Every function, component, and module should do one thing.</li>
+  <li><strong>Appropriate Abstraction:</strong> Code at the same level should operate at the same abstraction level.</li>
+  <li><strong>Explicit Dependencies:</strong> No reaching into global state. Dependencies come through parameters, props, or imports.</li>
+  <li><strong>Cohesive Modules:</strong> Group related functionality. Separate unrelated functionality.</li>
+</ul>
+
+<h2 id="section-3-2">3.2 Simplicity</h2>
+<p>Simplicity is about minimizing cognitive load. Simple code is easier to understand, test, and modify.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Function Length:</strong> Functions should rarely exceed 20-30 lines.</li>
+  <li><strong>Nesting Depth:</strong> Maximum 3 levels. Use early returns to reduce nesting.</li>
+  <li><strong>Naming Clarity:</strong> Names should reveal intent. "userSubscriptionStatus" beats "data".</li>
+  <li><strong>No Magic Values:</strong> Named constants for all numbers and strings in logic.</li>
+</ul>
+
+<h2 id="section-3-3">3.3 Safety</h2>
+<p>Safety encompasses security and correctness. Security is not an afterthought—it must be built into every layer from the start. This pillar has the most detailed requirements because security failures are the most damaging.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Input Validation at Boundaries:</strong> All external data validated once, at entry. Use Zod schemas for type-safe validation.</li>
+  <li><strong>Defense in Depth:</strong> Multiple layers of security checks. API routes validate AND RLS enforces. Never rely on a single layer.</li>
+  <li><strong>Fail Securely:</strong> Errors should not expose sensitive information. Log details server-side, show generic messages client-side.</li>
+  <li><strong>Explicit Error Handling:</strong> Every operation that can fail should have explicit handling. No silent failures.</li>
+</ul>
+
+<h3>Security Requirements (OWASP-Aligned)</h3>
+<ul>
+  <li><strong>Authentication:</strong> Use Supabase Auth. Never roll custom auth. Enforce password policies.</li>
+  <li><strong>Authorization:</strong> RLS on every table. Check permissions in API routes AND database. Test with different user roles.</li>
+  <li><strong>Injection Prevention:</strong> Use parameterized queries (Supabase client does this). Never concatenate user input into queries.</li>
+  <li><strong>XSS Prevention:</strong> React escapes by default. Never use <code>dangerouslySetInnerHTML</code> with user content. Sanitize if you must render HTML.</li>
+  <li><strong>CSRF Protection:</strong> Use Server Actions (built-in protection) or validate Origin headers on API routes.</li>
+  <li><strong>Secrets Management:</strong> Environment variables only. Never commit secrets. Never expose server keys to client.</li>
+  <li><strong>Security Headers:</strong> Configure HSTS, X-Frame-Options, CSP in next.config.js.</li>
+  <li><strong>Dependency Security:</strong> Run <code>npm audit</code> before every release. No high/critical vulnerabilities in production.</li>
+</ul>
+
+<h3>Security Checklist for Every Feature</h3>
+<div class="checklist">
+  <ul>
+    <li>Does this feature accept user input? &rarr; Validate with Zod</li>
+    <li>Does this feature display user content? &rarr; Ensure proper escaping</li>
+    <li>Does this feature access data? &rarr; RLS policy in place and tested</li>
+    <li>Does this feature have admin-only actions? &rarr; Role check in code AND RLS</li>
+    <li>Does this feature handle sensitive data? &rarr; Never log, never expose in errors</li>
+  </ul>
+</div>
+
+<h2 id="section-3-4">3.4 Speed</h2>
+<p>Speed is about performance and efficiency. Fast applications feel professional and respect users' time.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Avoid Unnecessary Work:</strong> Do not compute, fetch, or render what is not needed.</li>
+  <li><strong>Appropriate Data Structures:</strong> Choose structures that match access patterns.</li>
+  <li><strong>Database Efficiency:</strong> No N+1 queries. Select only needed columns. Use indexes.</li>
+  <li><strong>Measure Before Optimizing:</strong> Profile real performance. Optimize actual bottlenecks.</li>
+</ul>
+
+<h2 id="section-3-5">3.5 Stability</h2>
+<p>Stability is about reliability and maintainability. Stable code works consistently and can be safely modified.</p>
+
+<h3>Key Principles</h3>
+<ul>
+  <li><strong>Test Coverage:</strong> Critical paths have automated tests.</li>
+  <li><strong>Consistent Patterns:</strong> Similar problems solved similarly throughout.</li>
+  <li><strong>Documentation at Decision Points:</strong> Comments explain "why" for non-obvious choices.</li>
+  <li><strong>Observable Behavior:</strong> Sufficient logging and metrics for production debugging.</li>
+</ul>
+
+<h2 id="section-3-6">3.6 Quality Gate Definitions</h2>
+
+<p>Quality gates are checkpoints that code must pass before proceeding. These gates enforce the Five Pillars by making quality requirements explicit and measurable.</p>
+
+<div class="checklist">
+  <h4>SPEC Quality Gate (Before Implementation)</h4>
+  <ul>
+    <li>At least one requirement defined</li>
+    <li>Each requirement has at least one test case</li>
+    <li>Requirements use EARS format</li>
+    <li>Test cases use GIVEN-WHEN-THEN format</li>
+    <li>Build Contract sections referenced</li>
+    <li>Acceptance criteria defined</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Implementation Quality Gate (After Implementation)</h4>
+  <ul>
+    <li>All test cases pass</li>
+    <li>Code meets structure standards (functions &lt;30 lines, files &lt;200 lines)</li>
+    <li>Security checks present</li>
+    <li>No TypeScript errors</li>
+    <li>Linting passes</li>
+    <li>Coverage &gt;= 80%</li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The Five Pillars (Structure, Simplicity, Safety, Speed, Stability) and how to evaluate code against each pillar's criteria.</p>
+  <p><strong>What you should have:</strong> A mental checklist for reviewing any piece of code for quality issues.</p>
+  <p><strong>Next:</strong> Chapter 4 — Learn when to use Claude Chat vs Claude Code.</p>
+</div>
+
+<h2 id="section-3-7">3.7 Chapter Summary</h2>
+
+<p>You've learned the Five Pillars quality framework. Key takeaways:</p>
+
+<ul>
+  <li><strong>Structure:</strong> Single responsibility, explicit dependencies, cohesive modules</li>
+  <li><strong>Simplicity:</strong> Short functions, minimal nesting, clear naming</li>
+  <li><strong>Safety:</strong> Input validation, defense in depth, fail securely, OWASP-aligned security</li>
+  <li><strong>Speed:</strong> Avoid unnecessary work, efficient data access, measure before optimizing</li>
+  <li><strong>Stability:</strong> Test coverage, consistent patterns, observable behavior</li>
+  <li><strong>Quality Gates:</strong> Explicit checkpoints before and after implementation</li>
+</ul>
+
+<p>In the next chapter, you'll learn about the two Claude tools and when to use each one.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

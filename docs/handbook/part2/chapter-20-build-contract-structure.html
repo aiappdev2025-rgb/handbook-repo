@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 20: Build Contract Structure - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-20">Chapter 20: Build Contract Structure</h1>
+
+<p>In this chapter, you'll learn the seven standard sections that every Build Contract contains. Understanding this structure helps you know what to expect and how to reference specific sections during implementation. By the end of this chapter, you'll know exactly what information each section provides.</p>
+
+<h2 id="section-20-1">20.1 The Seven Sections</h2>
+
+<p>Every Build Contract contains these seven standard sections, each serving a specific implementation purpose:</p>
+
+<ol>
+  <li><strong>Vocabulary</strong>: Canonical terms used throughout the product — ensures consistent naming in code</li>
+  <li><strong>User Model</strong>: User types, permissions, authentication, core flows — defines auth requirements</li>
+  <li><strong>Screen Inventory</strong>: Complete list of screens with routes — maps UI to file structure</li>
+  <li><strong>Component Specifications</strong>: Key component behaviors and states — guides component implementation</li>
+  <li><strong>Data Model</strong>: Database entities, columns, types, constraints — defines schema</li>
+  <li><strong>API Surface</strong>: All API routes with methods and auth requirements — specifies endpoints</li>
+  <li><strong>Quality Standards</strong>: Code structure, security, testing requirements — sets implementation bar</li>
+</ol>
+
+<h2 id="section-20-2">20.2 How SPECs Reference Sections</h2>
+
+<p>During implementation, SPECs reference specific Build Contract sections. For example:</p>
+
+<ul>
+  <li>"User authentication flow per Build Contract Section 2 (User Model)"</li>
+  <li>"Database schema per Build Contract Section 5 (Data Model)"</li>
+  <li>"API endpoint structure per Build Contract Section 6 (API Surface)"</li>
+</ul>
+
+<p>This targeted referencing keeps SPECs concise while maintaining full traceability to design decisions.</p>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The seven sections of a Build Contract and how each supports implementation work.</p>
+  <p><strong>How to validate:</strong> You can explain what information you'd find in each of the seven sections.</p>
+  <p><strong>Next:</strong> Chapter 21 — Generate your Build Contract from your design artifacts.</p>
+</div>
+
+<h2 id="section-20-3">20.3 Chapter Summary</h2>
+
+<p>You've learned the Build Contract structure. Key takeaways:</p>
+
+<ul>
+  <li>Seven standard sections cover all implementation needs</li>
+  <li>Each section extracts specific information from design artifacts</li>
+  <li>SPECs reference sections by number for efficient lookup</li>
+  <li>Consistent structure makes navigation predictable</li>
+</ul>
+
+<p>In the next chapter, you'll generate your Build Contract by prompting Claude Chat to synthesize your design artifacts.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

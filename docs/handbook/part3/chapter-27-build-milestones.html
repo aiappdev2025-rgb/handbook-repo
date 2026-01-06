@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 27: Build Milestones - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-27">Chapter 27: Build Milestones</h1>
+
+<p>In this chapter, you'll see the complete milestone structure for building your SaaS product. This overview shows what gets built when and where quality checkpoints occur. By the end of this chapter, you'll understand the full build journey.</p>
+
+<div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
+  <strong>Reference</strong> — This is an overview of all milestones and checkpoints. For detailed prompts and step-by-step instructions, open the <a href="../../build-guide-v3.html">Build Phase Guide</a>.
+</div>
+
+<h2 id="section-27-1">27.1 Milestone Overview</h2>
+
+<p>The build phase is structured into 11 milestones with three quality checkpoints. Each milestone has clear deliverables, and checkpoints ensure you don't accumulate debt that will slow you down later.</p>
+
+<table class="comparison-table">
+  <tr><th>Milestone</th><th>Name</th><th>Focus</th><th>Deliverables</th></tr>
+  <tr><td><strong>M1</strong></td><td>Project Setup</td><td>Next.js, TypeScript, Tailwind, folder structure</td><td>Configured project</td></tr>
+  <tr><td><strong>M2</strong></td><td>Design System</td><td>shadcn/ui, design tokens, core components</td><td>Component library</td></tr>
+  <tr><td><strong>M3</strong></td><td>Database</td><td>Schema, RLS policies, indexes, admin tables</td><td>Secure data layer</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>CHECKPOINT A</strong> — Foundation Audit (security, RLS, schema review)</td></tr>
+  <tr><td><strong>M4</strong></td><td>Layouts</td><td>Root, marketing, app layouts, navigation</td><td>Page structure</td></tr>
+  <tr><td><strong>M5</strong></td><td>Authentication</td><td>Auth clients, login/signup, middleware, context</td><td>User sessions</td></tr>
+  <tr><td><strong>M6</strong></td><td>Core Feature</td><td>Data layer, server actions, UI, page assembly</td><td>Primary value</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>CHECKPOINT B</strong> — Feature Complete Audit (code quality, tests, debt score)</td></tr>
+  <tr><td><strong>M7</strong></td><td>Admin Console</td><td>Role access, user management, error logs</td><td>Operational control</td></tr>
+  <tr><td><strong>M8</strong></td><td>Supporting Features</td><td>Secondary features using M6 pattern</td><td>Extended functionality</td></tr>
+  <tr><td><strong>M9</strong></td><td>Payments</td><td>Stripe, webhooks, checkout, subscriptions</td><td>Revenue system</td></tr>
+  <tr><td><strong>M10</strong></td><td>Polish</td><td>Error boundaries, loading states, accessibility</td><td>Production quality</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>CHECKPOINT C</strong> — Pre-Launch Audit (full security, performance, debt)</td></tr>
+  <tr><td><strong>M11</strong></td><td>Testing</td><td>E2E tests, unit tests, integration tests</td><td>Test coverage</td></tr>
+</table>
+
+<div class="moai-box">
+  <h4>How to Execute Each Milestone</h4>
+
+  <p><strong>Before Starting Any Milestone:</strong></p>
+  <ol>
+    <li>Review the milestone's requirements in Build Phase Guide v3</li>
+    <li>Create SPEC documents for each feature in the milestone</li>
+    <li>Verify previous milestone is complete and committed</li>
+  </ol>
+
+  <p><strong>During Each Milestone:</strong></p>
+  <ol>
+    <li>Follow TDD workflow for each feature (RED → GREEN → REFACTOR)</li>
+    <li>Run quality checks after each feature completion</li>
+    <li>Commit working code frequently with descriptive messages</li>
+  </ol>
+
+  <p><strong>At Checkpoints (A, B, C):</strong></p>
+  <ol>
+    <li>Run the Refactoring Audit prompt from Build Phase Guide v3</li>
+    <li>Address all critical issues before proceeding</li>
+    <li>Run full test suite and verify 100% pass rate</li>
+    <li>Create a git tag for the checkpoint: <code>git tag -a checkpoint-a -m "Checkpoint A complete"</code></li>
+  </ol>
+
+  <p><strong>Manual Verification:</strong></p>
+  <div class="code-block"># Run all quality checks
+npm run build && npm run lint && npm test
+
+# Check test coverage (aim for >= 80%)
+npm test -- --coverage
+
+# Tag checkpoint
+git tag -a checkpoint-a -m "Checkpoint A: Foundation complete"</div>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The complete milestone structure (M1-M11) and when each checkpoint (A, B, C) occurs.</p>
+  <p><strong>What you should be ready for:</strong> Opening the Build Phase Guide and starting Milestone 1.</p>
+  <p><strong>Next:</strong> Open the Build Phase Guide and begin implementation!</p>
+</div>
+
+<h2 id="section-27-2">27.2 Chapter Summary</h2>
+
+<p>You've seen the complete Build Milestones overview. Key takeaways:</p>
+
+<ul>
+  <li>11 milestones from setup (M1) to testing (M11)</li>
+  <li>Three checkpoints for quality verification:
+    <ul>
+      <li><strong>Checkpoint A</strong> after M3 (Database) — Foundation security audit</li>
+      <li><strong>Checkpoint B</strong> after M6 (Core Feature) — Feature complete audit</li>
+      <li><strong>Checkpoint C</strong> after M10 (Polish) — Pre-launch audit</li>
+    </ul>
+  </li>
+  <li>Each milestone follows SPEC-First and TDD workflow</li>
+  <li>Build Phase Guide has detailed step-by-step instructions</li>
+</ul>
+
+<!-- TRANSITION TO BUILD GUIDE -->
+<div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; color: white;">
+  <h2 style="color: white; margin-top: 0; border: none;">Ready to Start Building</h2>
+
+  <p>You now understand the MOAI methodology:</p>
+  <ul style="margin-bottom: 1.5rem;">
+    <li><strong>SPEC-First</strong> — Define features with EARS requirements before coding</li>
+    <li><strong>TDD Workflow</strong> — RED → GREEN → REFACTOR for every feature</li>
+    <li><strong>Technical Debt</strong> — Measure and manage debt at each checkpoint</li>
+  </ul>
+
+  <p style="margin-bottom: 1.5rem;"><strong>Next Step:</strong> Open the Build Phase Guide and start Milestone 1. The Build Guide contains the detailed prompts, step-by-step instructions, and quality checks for all 11 milestones.</p>
+
+  <a href="../../build-guide-v3.html" style="display: inline-block; background: white; color: #7c3aed; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 0.5rem;">Open Build Phase Guide →</a>
+</div>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

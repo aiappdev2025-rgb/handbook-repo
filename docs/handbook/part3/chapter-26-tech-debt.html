@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 26: Technical Debt Scoring Framework - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-26">Chapter 26: Technical Debt Scoring Framework</h1>
+
+<p>In this chapter, you'll learn the Technical Debt Scoring Framework—a systematic way to measure and manage code quality degradation. Understanding technical debt helps you make informed decisions about when to incur debt and when to pay it down. By the end of this chapter, you'll have automated tools to track debt throughout your project.</p>
+
+<div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
+  <strong>Read + Setup</strong> — Understand the scoring methodology, then copy the automation templates to your project. You'll run debt audits at each checkpoint during the build phase.
+</div>
+
+<p>Technical debt is inevitable during rapid development. The difference between successful projects and troubled ones is not the absence of debt—it's the <strong>awareness and management</strong> of that debt. This framework provides objective measurement so you can make informed decisions about when to incur debt, when to pay it down, and when to stop and remediate.</p>
+
+<h2 id="section-26-1">26.1 Why Measure Technical Debt</h2>
+
+<p>Without measurement, debt accumulates invisibly until it blocks progress. Common symptoms of unmanaged debt:</p>
+
+<ul>
+  <li>Simple changes require touching many files</li>
+  <li>New developers take weeks to understand the codebase</li>
+  <li>Bugs keep appearing in the same areas</li>
+  <li>Fear of refactoring because "it might break something"</li>
+  <li>Test suite takes too long or provides false confidence</li>
+</ul>
+
+<p>The scoring framework makes debt visible and actionable. Run it at every checkpoint to catch problems early.</p>
+
+<h2 id="section-26-2">26.2 The Six Debt Categories</h2>
+
+<p>Technical debt is measured across six categories, each with a specific weight reflecting its impact on long-term maintainability.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Category</th>
+    <th>Weight</th>
+    <th>What It Measures</th>
+    <th>Automated?</th>
+  </tr>
+  <tr>
+    <td><strong>Code Complexity</strong></td>
+    <td>25%</td>
+    <td>Function length, nesting depth, cyclomatic complexity</td>
+    <td>Yes (ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Error Handling</strong></td>
+    <td>20%</td>
+    <td>No empty catches, consistent patterns, explicit handling</td>
+    <td>Yes (ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Type Safety</strong></td>
+    <td>20%</td>
+    <td>Zero <code>any</code> types, strict mode, explicit returns</td>
+    <td>Yes (TypeScript + ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Test Coverage</strong></td>
+    <td>20%</td>
+    <td>Line coverage percentage for business logic</td>
+    <td>Yes (Jest/Vitest)</td>
+  </tr>
+  <tr>
+    <td><strong>Documentation Sync</strong></td>
+    <td>10%</td>
+    <td>CLAUDE.md current, SPECs match implementation</td>
+    <td>Partial</td>
+  </tr>
+  <tr>
+    <td><strong>Dependency Health</strong></td>
+    <td>5%</td>
+    <td>npm audit clean, dependencies up to date</td>
+    <td>Yes (npm audit)</td>
+  </tr>
+</table>
+
+<h2 id="section-26-3">26.3 Scoring Each Category (1-10 Scale)</h2>
+
+<p>Each category is scored on a 1-10 scale using automated tools where possible. Consistent scoring criteria ensure objective measurement across checkpoints.</p>
+
+<h3>Code Complexity Score</h3>
+<div class="code-block"># Run ESLint with complexity rules
+npm run lint
+
+# Scoring:
+# 10: Zero complexity violations
+# 8-9: Only warnings, no errors
+# 6-7: 1-5 complexity errors
+# 4-5: 6-15 complexity errors
+# 1-3: 16+ complexity errors or ignored rules</div>
+
+<h3>Type Safety Score</h3>
+<div class="code-block"># Check for any types
+grep -r ": any" src/ --include="*.ts" --include="*.tsx" | wc -l
+
+# Check TypeScript strict mode
+grep "strict" tsconfig.json
+
+# Scoring:
+# 10: Zero any types, strict mode enabled
+# 8-9: 1-3 any types with justification
+# 6-7: 4-10 any types
+# 4-5: 11-25 any types or strict mode disabled
+# 1-3: 26+ any types or no TypeScript</div>
+
+<h3>Test Coverage Score</h3>
+<div class="code-block"># Run tests with coverage
+npm test -- --coverage
+
+# Scoring:
+# 10: 90%+ coverage
+# 9: 80-89% coverage
+# 8: 70-79% coverage
+# 7: 60-69% coverage
+# 6: 50-59% coverage
+# 1-5: Below 50% coverage</div>
+
+<h2 id="section-26-4">26.4 Calculating the Overall Score</h2>
+
+<p>The weighted formula combines all category scores into a single number that represents overall code health.</p>
+
+<div class="code-block">Overall Score = (Complexity x 0.25) + (ErrorHandling x 0.20) +
+               (TypeSafety x 0.20) + (TestCoverage x 0.20) +
+               (DocSync x 0.10) + (Dependencies x 0.05)
+
+Example:
+  Complexity:    8 x 0.25 = 2.00
+  ErrorHandling: 7 x 0.20 = 1.40
+  TypeSafety:    9 x 0.20 = 1.80
+  TestCoverage:  8 x 0.20 = 1.60
+  DocSync:       6 x 0.10 = 0.60
+  Dependencies: 10 x 0.05 = 0.50
+  ----------------------------
+  Overall Score:         7.90</div>
+
+<h2 id="section-26-5">26.5 Score Thresholds and Actions</h2>
+
+<p>Knowing your score is only useful if you know what action to take. These thresholds define clear decision criteria for each checkpoint.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Score</th>
+    <th>Rating</th>
+    <th>Action</th>
+  </tr>
+  <tr style="background: #d1fae5;">
+    <td><strong>>= 8.0</strong></td>
+    <td>Excellent</td>
+    <td>Proceed confidently. Debt is well-managed.</td>
+  </tr>
+  <tr style="background: #dbeafe;">
+    <td><strong>7.0 - 7.9</strong></td>
+    <td>Good</td>
+    <td>Minor debt exists. Document in TECH-DEBT.md and proceed.</td>
+  </tr>
+  <tr style="background: #fef3c7;">
+    <td><strong>6.0 - 6.9</strong></td>
+    <td>Acceptable</td>
+    <td>Create remediation plan. Proceed with awareness. Address before next checkpoint.</td>
+  </tr>
+  <tr style="background: #fed7aa;">
+    <td><strong>5.0 - 5.9</strong></td>
+    <td>Concerning</td>
+    <td>Address high-priority items before proceeding. Allocate time in next milestone.</td>
+  </tr>
+  <tr style="background: #fecaca;">
+    <td><strong>< 5.0</strong></td>
+    <td>Critical</td>
+    <td><strong>STOP.</strong> Do not proceed until score reaches 6.0+. Remediation is now the priority.</td>
+  </tr>
+</table>
+
+<div class="warning">
+  <strong>Checkpoint Gate:</strong> At Checkpoint A and B, a score below 6.0 is a hard stop. Do not proceed to the next milestone until debt is remediated to at least 6.0.
+</div>
+
+<h2 id="section-26-6">26.6 Generating TECH-DEBT.md</h2>
+
+<p>At each checkpoint, use Claude Code to run all debt checks and generate/update <code>TECH-DEBT.md</code>:</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">At Checkpoints</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(run at Checkpoint A, B, and C)</span>
+</div>
+<div class="prompt-block">Run a comprehensive technical debt audit and update TECH-DEBT.md.
+
+**Step 1: Run Automated Checks**
+Execute these commands and capture results:
+- `npm run lint -- --format json` (complexity, error handling, type safety)
+- `npm test -- --coverage` (test coverage percentage)
+- `npm audit --json` (security vulnerabilities)
+- `npm outdated --json` (dependency health)
+
+**Step 2: Calculate Scores**
+For each category (weights in parentheses):
+- Complexity (25%): Score based on ESLint violations
+- Error Handling (20%): Score based on empty catches, unhandled errors
+- Type Safety (20%): Score based on `any` types, strict mode
+- Test Coverage (20%): Score based on line coverage percentage
+- Documentation Sync (10%): Score from manual review
+- Dependencies (5%): Score based on audit + outdated
+
+**Step 3: Update TECH-DEBT.md**
+Generate/update TECH-DEBT.md at project root with:
+1. Current checkpoint name and date
+2. Overall score and category breakdown
+3. Comparison to previous checkpoint (if exists)
+4. Active debt items with severity (Critical/High/Medium/Low)
+5. Recommended actions for items below threshold
+
+Current checkpoint: [CHECKPOINT_A | CHECKPOINT_B | CHECKPOINT_C]</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The six debt categories, how to score each, and what actions to take at each threshold.</p>
+  <p><strong>What you should have:</strong> TECH-DEBT.md created in your project root, ESLint debt config installed.</p>
+  <p><strong>Next:</strong> Chapter 27 — Overview of Build Milestones and checkpoints.</p>
+</div>
+
+<h2 id="section-26-7">26.7 Chapter Summary</h2>
+
+<p>You've learned the Technical Debt Scoring Framework. Key takeaways:</p>
+
+<ul>
+  <li>Technical debt is inevitable—the key is awareness and management</li>
+  <li>Six categories measure different aspects of code health</li>
+  <li>Score 8.0+ is excellent, 6.0-7.9 is acceptable, below 6.0 requires action</li>
+  <li>Run debt audits at every checkpoint (A, B, C)</li>
+  <li>Automated tools catch problems early</li>
+</ul>
+
+<p>In the next chapter, you'll see an overview of all build milestones and checkpoints.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

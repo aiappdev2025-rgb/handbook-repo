@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 25: TDD Workflow - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-25">Chapter 25: TDD Workflow</h1>
+
+<p>In this chapter, you'll learn the TDD (Test-Driven Development) workflow—the RED → GREEN → REFACTOR cycle that ensures every feature is properly tested. This workflow is the core of MOAI implementation. By the end of this chapter, you'll know exactly how to transform SPECs into working code.</p>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>Read for Understanding</strong> — Understand the RED → GREEN → REFACTOR cycle. You'll follow this exact workflow for every feature during milestone execution.
+</div>
+
+<h2 id="section-25-1">25.1 The TDD Cycle</h2>
+
+<p>TDD follows a strict three-phase cycle. Each phase has a specific purpose and discipline.</p>
+
+<div class="file-structure">
+TDD CYCLE: RED --> GREEN --> REFACTOR --> DONE
+
+RED:      Write failing tests from SPEC test cases
+GREEN:    Write minimum code to pass tests
+REFACTOR: Improve code quality, tests still pass
+DONE:     All tests pass, quality gate passed
+</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <p>For each feature, follow the TDD cycle strictly:</p>
+
+  <h5>RED Phase (Write Failing Tests)</h5>
+  <ol>
+    <li>Take test cases from your SPEC document</li>
+    <li>Create test file in <code>src/__tests__/</code> following naming convention: <code>[feature].test.ts</code></li>
+    <li>Write tests that describe expected behavior</li>
+    <li>Run tests — they should FAIL (this confirms you're testing the right thing)</li>
+  </ol>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create test file
+touch src/__tests__/auth.test.ts
+
+# Write tests based on SPEC test cases
+# Run tests to confirm failure
+npm test</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Write failing tests for SPEC-AUTH-001. Create src/__tests__/auth.test.ts
+Use the test cases defined in the SPEC. Do not write implementation yet."</div>
+
+  <h5>GREEN Phase (Make Tests Pass)</h5>
+  <ol>
+    <li>Write the minimum code needed to pass each test</li>
+    <li>Do not over-engineer — just make the test pass</li>
+    <li>Run tests after each change to verify progress</li>
+  </ol>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Implement the minimum code to make auth.test.ts pass.
+Follow the requirements in SPEC-AUTH-001."</div>
+
+  <h5>REFACTOR Phase (Improve Code Quality)</h5>
+  <ol>
+    <li>Clean up code while keeping tests green</li>
+    <li>Extract reusable functions, improve naming, add types</li>
+    <li>Run tests after each refactor to ensure nothing breaks</li>
+  </ol>
+
+  <p><strong>Quality Gate Check:</strong></p>
+  <div class="code-block"># All tests must pass
+npm test
+
+# No TypeScript errors
+npm run build
+
+# No linting errors
+npm run lint</div>
+</div>
+
+<div class="note">
+<strong>Detailed TDD prompts and milestone guides are in the Build Phase Guide v3.</strong>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The RED → GREEN → REFACTOR cycle and how each phase contributes to code quality.</p>
+  <p><strong>What you should be able to do:</strong> Execute the TDD workflow for any SPEC—write failing tests, implement to pass, then refactor while keeping tests green.</p>
+  <p><strong>Next:</strong> Chapter 26 — Learn the Technical Debt Scoring Framework to monitor code health.</p>
+</div>
+
+<h2 id="section-25-2">25.2 Chapter Summary</h2>
+
+<p>You've learned the TDD workflow. Key takeaways:</p>
+
+<ul>
+  <li><strong>RED:</strong> Write failing tests from SPEC test cases first</li>
+  <li><strong>GREEN:</strong> Write minimum code to make tests pass</li>
+  <li><strong>REFACTOR:</strong> Improve code quality while tests stay green</li>
+  <li>Run tests after every change to verify progress</li>
+  <li>Quality gates ensure code meets standards before moving on</li>
+</ul>
+
+<p>In the next chapter, you'll learn how to measure and manage technical debt throughout the build phase.</p>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>
