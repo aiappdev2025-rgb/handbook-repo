@@ -1,70 +1,9 @@
----
-sidebar_position: 3
-title: "Build Contract Template"
-description: "Consolidates all design artifacts into a structured implementation roadmap"
----
-
-import {
-  TldrBox,
-  WhenToUse,
-  TemplateDownload
-} from '@site/src/components/ChapterComponents';
-
-# Build Contract Template
-
-<span className="reading-time">15 min read</span>
-
-<TldrBox
-  what="A Build Contract compresses design artifacts (Design Brief, UX Package, UI System, Architecture) into a structured reference optimized for implementation."
-  why="SPECs reference the Build Contract rather than hunting through multiple design documents. It's the single source of truth for what to build."
-  outcome="A comprehensive Build Contract that enables efficient SPEC creation and consistent implementation."
-/>
-
-<WhenToUse
-  useWhen={[
-    "After completing all design phases (Validate, Design, Architect)",
-    "Before starting the Build phase (Phase 4)",
-    "You have Design Brief, UX Package, UI System, and Architecture docs ready"
-  ]}
-  notYetIf={[
-    "You're still in design phase",
-    "Architecture decisions aren't finalized",
-    "UX/UI designs are incomplete"
-  ]}
-  skipIf="You're building a very small prototype that doesn't need formal specification"
-/>
-
-## What is a Build Contract?
-
-The Build Contract is the **bridge between design and implementation**. It consolidates:
-
-- **Vocabulary** - Canonical terms used in code
-- **User Model** - User types, auth, and core flows
-- **Screen Inventory** - All pages and routes
-- **Component Specs** - Interactive component behaviors
-- **Data Model** - Database schema and relationships
-- **API Surface** - All endpoints with schemas
-- **Quality Standards** - Code and testing requirements
-
-:::tip Design to Code
-When writing SPECs, reference Build Contract sections by number. This creates traceability: `Build Contract 1.0, Section 4.1: PhotoUpload Component`
-:::
-
-## Template
-
-<TemplateDownload
-  name="BUILD-CONTRACT-TEMPLATE.md"
-  file="build-contract-template.md"
-  description="Complete Build Contract template with all sections"
-/>
-
-```markdown
 # Build Contract: [Product Name]
 
 > **Purpose**: This document compresses design artifacts (Design Brief, UX Package, UI System, Architecture) into a structured reference optimized for implementation. SPECs reference this document rather than hunting through multiple design documents.
 
-**Version**: 1.0
-**Generated**: [Date]
+**Version**: 1.0  
+**Generated**: [Date]  
 **Source Documents**: Design Brief v[X], UX Package v[X], UI System v[X], Architecture v[X]
 
 ---
@@ -291,46 +230,3 @@ When writing SPECs, reference this Build Contract using:
 ```
 
 This ensures SPECs are traceable back to design decisions.
-```
-
-## Section Breakdown
-
-### Section 1: Vocabulary
-Establishes canonical terms. When code uses these terms consistently, it becomes self-documenting and searchable.
-
-### Section 2: User Model
-Defines who uses the system and how. User types map to database roles and RLS policies.
-
-### Section 3: Screen Inventory
-Every page in your app, organized by auth requirements. Maps directly to your routing structure.
-
-### Section 4: Component Specifications
-Interactive components with all states and validation. This drives both UI implementation and testing.
-
-### Section 5: Data Model
-Your database schema. Include relationships and RLS policies for security.
-
-### Section 6: API Surface
-Every endpoint your frontend will call. Include auth requirements and schema summaries.
-
-### Section 7: Quality Standards
-Non-negotiable code quality rules. These become acceptance criteria in every SPEC.
-
-## How to Use the Build Contract
-
-1. **Create it once** after completing design phases
-2. **Reference it in SPECs** using section numbers
-3. **Update the version** when design changes occur
-4. **Keep it synchronized** with actual implementation
-
-## Verification Checklist
-
-Before marking Build Contract complete:
-
-- [ ] All vocabulary terms are defined
-- [ ] User types match database roles
-- [ ] All screens are inventoried with routes
-- [ ] Interactive components have state tables
-- [ ] Data model includes RLS policies
-- [ ] All API endpoints are documented
-- [ ] Quality standards are specific and measurable

@@ -1,5 +1,215 @@
 ---
-title: "claude md"
+sidebar_position: 1
+title: "CLAUDE.md Template"
+description: "Project context file for Claude Code - provides AI assistant with codebase understanding"
 ---
-# claude md
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  TemplateDownload
+} from '@site/src/components/ChapterComponents';
+
+# CLAUDE.md Template
+
+<span className="reading-time">5 min read</span>
+
+<TldrBox
+  what="A project context file that helps Claude Code understand your codebase structure, conventions, and workflows."
+  why="CLAUDE.md gives Claude Code essential context about your project without requiring it to scan every file - leading to faster, more accurate assistance."
+  outcome="A CLAUDE.md file in your project root that enables productive AI-assisted development."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Setting up Claude Code for a new project",
+    "Starting AI-assisted development on an existing codebase",
+    "Onboarding Claude Code to understand your conventions"
+  ]}
+  notYetIf={[
+    "You haven't defined your project structure yet",
+    "You're still in early planning phase"
+  ]}
+  skipIf="Your project already has a comprehensive CLAUDE.md file"
+/>
+
+## What is CLAUDE.md?
+
+CLAUDE.md is a special file that Claude Code reads automatically when working in your repository. It provides:
+
+- **Project structure** - How your codebase is organized
+- **Conventions** - Naming patterns, code style, commit formats
+- **Context** - What the project does and how it works
+- **Instructions** - Specific guidance for working with your code
+
+:::tip Automatic Detection
+Claude Code automatically reads CLAUDE.md from your project root. No configuration required - just create the file and it works.
+:::
+
+## Template
+
+<TemplateDownload
+  name="CLAUDE.md"
+  file="CLAUDE.md"
+  description="Complete CLAUDE.md template ready to customize"
+/>
+
+```markdown
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+[Brief description of what this project does - 1-2 sentences]
+
+**Tech Stack:**
+- Frontend: [e.g., Next.js 14, React, TypeScript]
+- Backend: [e.g., Node.js, tRPC, Prisma]
+- Database: [e.g., PostgreSQL via Supabase]
+- Styling: [e.g., Tailwind CSS, shadcn/ui]
+
+## Repository Structure
+
+```
+project-root/
+├── src/
+│   ├── app/              # Next.js app router pages
+│   ├── components/       # React components
+│   │   ├── ui/          # shadcn/ui components
+│   │   └── features/    # Feature-specific components
+│   ├── lib/             # Utility functions
+│   ├── server/          # Server-side code (tRPC, etc.)
+│   └── types/           # TypeScript type definitions
+├── prisma/              # Database schema and migrations
+├── public/              # Static assets
+└── tests/               # Test files
+```
+
+## Development Commands
+
+```bash
+npm run dev       # Start development server
+npm run build     # Build for production
+npm run test      # Run tests
+npm run lint      # Run linting
+npm run db:push   # Push schema changes to database
+```
+
+## Code Conventions
+
+### File Naming
+- Components: PascalCase (e.g., `UserProfile.tsx`)
+- Utilities: camelCase (e.g., `formatDate.ts`)
+- Constants: SCREAMING_SNAKE_CASE in files
+
+### Component Structure
+- One component per file
+- Co-locate styles and tests with components
+- Use named exports for components
+
+### Import Order
+1. External packages
+2. Internal aliases (@/)
+3. Relative imports
+4. Types
+
+## Git Workflow
+
+### Commit Messages
+```
+[type]: Brief description
+
+Types: feat, fix, docs, style, refactor, test, chore
+```
+
+### Branch Naming
+- feature/[description]
+- fix/[description]
+- chore/[description]
+
+## Key Files
+
+- `src/lib/db.ts` - Database client configuration
+- `src/server/trpc.ts` - tRPC router setup
+- `src/components/ui/` - Shared UI components
+- `.env.local` - Environment variables (not committed)
+
+## Testing Approach
+
+- Unit tests: `*.test.ts` files co-located with source
+- Integration tests: `tests/integration/` directory
+- E2E tests: `tests/e2e/` with Playwright
+
+## Important Notes
+
+[Add any project-specific notes, gotchas, or special instructions here]
+```
+
+## Section Explanations
+
+### Project Overview
+Keep this brief - Claude Code uses it to understand the big picture. Include your tech stack so it knows what frameworks and patterns to use.
+
+### Repository Structure
+The directory tree helps Claude Code navigate your codebase efficiently. Update this when you add new directories.
+
+### Development Commands
+Common commands Claude Code might need to run. Include database commands, testing, and any custom scripts.
+
+### Code Conventions
+Your team's style guide. Claude Code will follow these conventions when writing code.
+
+### Git Workflow
+How commits and branches should be formatted. Claude Code can create commits that match your patterns.
+
+### Key Files
+Point to important files Claude Code should know about. This speeds up common tasks.
+
+## Best Practices
+
+1. **Keep it current** - Update CLAUDE.md when your project structure changes
+2. **Be specific** - Generic instructions are less useful than concrete examples
+3. **Include examples** - Show don't tell (e.g., example commit messages)
+4. **Note gotchas** - Warn about common pitfalls or non-obvious behaviors
+5. **Reference docs** - Link to relevant documentation files for complex systems
+
+## Example: Real-World CLAUDE.md
+
+Here's an excerpt from a production project:
+
+```markdown
+## API Routes
+
+All API routes use tRPC. Routers are in `src/server/routers/`:
+
+- `userRouter.ts` - User CRUD operations
+- `projectRouter.ts` - Project management
+- `billingRouter.ts` - Stripe integration
+
+When creating new routes:
+1. Add router file to `src/server/routers/`
+2. Register in `src/server/routers/index.ts`
+3. Add corresponding Zod schemas to `src/types/`
+
+## Database
+
+Using Prisma with PostgreSQL. Schema is in `prisma/schema.prisma`.
+
+After schema changes:
+1. Run `npm run db:push` for development
+2. Run `npm run db:migrate` to create migration for production
+
+RLS policies are managed in Supabase dashboard, not in code.
+```
+
+## Verification Checklist
+
+After creating your CLAUDE.md:
+
+- [ ] File is in project root directory
+- [ ] Project overview accurately describes the project
+- [ ] Directory structure matches actual codebase
+- [ ] All common commands are listed
+- [ ] Code conventions are specific and actionable
+- [ ] Key files section points to important locations
