@@ -86,6 +86,21 @@ Trust but verify. AI-generated artifacts can be impressive, but they can also be
 
 Claude Chat and Claude Code CLI have different strengths. Using the right tool for each task dramatically improves outcomes. This handbook specifies which tool to use at each stage and why.
 
+<details>
+<summary>💡 Learn More: Why These Specific Principles?</summary>
+
+These four principles emerged from real-world experience building production SaaS products with AI assistance:
+
+**Documentation Before Code** — Teams that skip documentation tend to accumulate "AI-generated technical debt" — code that works but no one fully understands. The cost of fixing architectural issues grows exponentially over time. By front-loading design decisions, you avoid the most expensive category of bugs.
+
+**Quality Is Non-Negotiable** — AI can generate code quickly, but speed without quality leads to fragile systems. Setting explicit standards upfront ensures that every piece of generated code meets production requirements.
+
+**Verification at Every Step** — AI outputs can be confidently wrong. The verification checkpoints catch subtle issues before they propagate through subsequent phases.
+
+**Right Tool for the Task** — Claude Chat excels at exploration, brainstorming, and document generation. Claude Code excels at implementing well-specified features with TDD. Using the wrong tool creates friction and suboptimal results.
+
+</details>
+
 ## The Complete Workflow
 
 The handbook follows a structured progression from research through deployment. Each phase builds on the previous, and each has specific tools and artifacts.

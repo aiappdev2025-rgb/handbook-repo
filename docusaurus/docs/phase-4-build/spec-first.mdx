@@ -1,6 +1,39 @@
 ---
 sidebar_position: 2
-title: "spec first"
+title: "SPEC-First Development"
+description: "Write SPEC documents before implementation for disciplined, testable features"
 ---
-# spec first
+
+import { TemplateDownload } from '@site/src/components/ChapterComponents';
+
+# SPEC-First Development
+
+<TemplateDownload
+  name="SPEC Template"
+  file="spec-template"
+  description="Feature specification template for TDD workflow"
+/>
+
+A **SPEC** (Specification Document) defines what a feature should do before writing any code. Every feature, no matter how small, starts with a SPEC.
+
+<details>
+<summary>💡 Learn More: Why Write SPECs Before Code?</summary>
+
+The SPEC-first approach prevents the most common failure mode in AI-assisted development: **"confident but wrong" code**.
+
+Without a SPEC, AI tends to:
+- Make assumptions about requirements that seem reasonable but are incorrect
+- Generate code that works but doesn't match what you actually need
+- Create implementations that are hard to verify because requirements were never explicit
+
+With a SPEC:
+- Requirements are explicit and verifiable
+- Test cases are defined before implementation
+- Acceptance criteria are clear
+- Claude Code has precise context for implementation
+
+The extra 10-15 minutes spent writing a SPEC typically saves hours of debugging and rework.
+
+</details>
+
 *Content to be migrated*

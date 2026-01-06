@@ -8,8 +8,8 @@ const sidebars: SidebarsConfig = {
       collapsible: true,
       collapsed: false,
       items: [
-        'getting-started/quick-start',
         'getting-started/quick-reference',
+        'getting-started/quick-start',
       ],
     },
     {
