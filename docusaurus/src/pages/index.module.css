@@ -1,23 +1,312 @@
 /**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
+ * Homepage styles for MOAI Handbook
  */
 
+/* ============================================
+   HERO SECTION
+   ============================================ */
 .heroBanner {
-  padding: 4rem 0;
+  padding: 6rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
+  background: linear-gradient(180deg, var(--ifm-background-surface-color) 0%, var(--ifm-background-color) 100%);
+  border-bottom: 1px solid var(--ifm-toc-border-color);
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroStats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.875rem;
+}
+
+.statItem {
+  color: var(--ifm-color-content-secondary);
+  padding: 0.25rem 0.75rem;
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-toc-border-color);
+}
+
+.statDivider {
+  color: var(--ifm-toc-border-color);
 }
 
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ctaPrimary {
+  background: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  transition: all 0.2s;
+}
+
+.ctaPrimary:hover {
+  background: var(--ifm-color-primary-dark);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.ctaSecondary {
+  border-color: var(--ifm-toc-border-color);
+  color: var(--ifm-color-content);
+}
+
+.ctaSecondary:hover {
+  background: var(--ifm-background-surface-color);
+  border-color: var(--ifm-color-primary);
+}
+
+/* ============================================
+   SECTION SHARED STYLES
+   ============================================ */
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-heading-color);
+}
+
+.sectionSubtitle {
+  text-align: center;
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================
+   PHASE OVERVIEW SECTION
+   ============================================ */
+.phaseOverview {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+}
+
+.phaseFlow {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.phaseFlowItem {
+  display: flex;
+  align-items: center;
+}
+
+.phaseArrow {
+  font-size: 1.5rem;
+  color: var(--ifm-toc-border-color);
+  padding: 0 0.5rem;
+}
+
+.phaseCard {
+  text-decoration: none;
+  display: block;
+}
+
+.phaseCardInner {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-toc-border-color);
+  border-left: 4px solid var(--phase-color);
+  padding: 1.25rem;
+  width: 160px;
+  transition: all 0.2s;
+}
+
+.phaseCard:hover .phaseCardInner {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-color: var(--phase-color);
+}
+
+.phaseNumber {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--phase-color);
+  margin-bottom: 0.5rem;
+}
+
+.phaseTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  margin-bottom: 0.25rem;
+}
+
+.phaseDescription {
+  font-size: 0.75rem;
+  color: var(--ifm-color-content-secondary);
+  line-height: 1.4;
+}
+
+/* ============================================
+   QUICK ACCESS SECTION
+   ============================================ */
+.quickAccess {
+  padding: 4rem 0;
+  background: var(--ifm-background-surface-color);
+  border-top: 1px solid var(--ifm-toc-border-color);
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.quickCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-toc-border-color);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.quickCard:hover {
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-2px);
+}
+
+.quickIcon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.quickLabel {
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  margin-bottom: 0.25rem;
+}
+
+.quickDesc {
+  font-size: 0.75rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+/* ============================================
+   PROGRESS SECTION
+   ============================================ */
+.progressSection {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+}
+
+.progressWrapper {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 4rem 1rem;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .phaseFlow {
+    gap: 1rem;
+  }
+
+  .phaseArrow {
+    display: none;
+  }
+
+  .phaseCardInner {
+    width: 140px;
+  }
+
+  .quickGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+  }
+
+  .heroStats {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .statDivider {
+    display: none;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .phaseFlow {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .phaseCardInner {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .quickGrid {
+    grid-template-columns: 1fr;
+  }
 }
