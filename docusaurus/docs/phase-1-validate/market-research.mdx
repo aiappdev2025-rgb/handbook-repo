@@ -1,6 +1,187 @@
 ---
 sidebar_position: 2
 title: "Market Research"
+description: "Validate your product opportunity with comprehensive market research covering TAM/SAM/SOM, competitive landscape, and customer pain points"
 ---
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
 # Market Research
-*Content to be migrated*
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Conduct comprehensive market research covering market size, competitive landscape, customer pain points, trends, and barriers to entry."
+  why="Research validates that a real market opportunity exists before you invest time in design and development."
+  outcome="A documented research artifact with quantified market data and evidence of customer demand."
+/>
+
+<WhenToUse
+  useWhen={[
+    "You have a business idea but haven't validated market size",
+    "You need TAM/SAM/SOM analysis for planning or investors",
+    "You're preparing to make go/no-go decisions on an opportunity"
+  ]}
+  notYetIf={[
+    "You don't have a clear idea of what you want to build",
+    "You haven't completed the Introduction chapter"
+  ]}
+  skipIf="You already have validated market research from a reliable source"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Introduction chapter complete", link: "/phase-1-validate/introduction" },
+    { text: "A business idea or concept to validate" }
+  ]}
+/>
+
+## Why Market Research First?
+
+Many products fail not because they're poorly built, but because they solve problems nobody has or compete in markets too crowded to enter. Research forces you to gather evidence before committing resources.
+
+:::warning The Costly Mistake
+Skipping market research is the most expensive mistake you can make. Building a product nobody wants costs months of work and thousands of dollars.
+:::
+
+## Research Areas
+
+Your market research should cover five key areas:
+
+### 1. Market Size (TAM/SAM/SOM)
+
+- **TAM (Total Addressable Market)**: The entire market for your type of solution
+- **SAM (Serviceable Addressable Market)**: The portion you can realistically reach
+- **SOM (Serviceable Obtainable Market)**: What you can capture in year one
+
+### 2. Competitive Landscape
+
+- Who are the major players?
+- What are their strengths and weaknesses?
+- How are they priced?
+- Where are the gaps in the market?
+
+### 3. Customer Pain Points
+
+- What problems remain unsolved or poorly solved?
+- What do customers complain about in existing solutions?
+- What workarounds are people using?
+
+### 4. Market Trends
+
+- Where is this market heading in 2-3 years?
+- What technology shifts are happening?
+- Are there regulatory changes coming?
+
+### 5. Barriers to Entry
+
+- What makes this market hard to enter?
+- Capital requirements?
+- Technical expertise?
+- Network effects?
+
+## Research Prompt
+
+Use Claude Chat's web search capabilities to gather current market data. Be specific about your angle or differentiator to get targeted insights.
+
+```markdown
+I'm evaluating an opportunity in [MARKET/INDUSTRY]. I need comprehensive research covering:
+
+1. **Market Size**: TAM, SAM, SOM with data sources
+2. **Competitive Landscape**: Major players, their strengths/weaknesses, pricing
+3. **Customer Pain Points**: What problems remain unsolved or poorly solved
+4. **Trends**: Where is this market heading in 2-3 years
+5. **Barriers to Entry**: What makes this market hard to enter
+
+Please search for recent data (within the last 2 years) and cite sources.
+
+My specific angle is: [YOUR DIFFERENTIATOR OR APPROACH]
+```
+
+## How to Validate Your Research
+
+Before proceeding, ensure your research passes these quality checks:
+
+| Criterion | What Good Looks Like |
+|-----------|---------------------|
+| Market Size | Specific numbers with credible sources (Gartner, Statista, industry reports) |
+| Competitors | At least 5 named competitors with positioning analysis |
+| Pain Points | Validated by real user feedback (reviews, forums, surveys) |
+| Differentiator | Clear angle that isn't easily copied |
+| Barriers | No fatal barriers discovered |
+
+## Save Your Research
+
+Save the complete research output to your project:
+
+```bash
+# Create docs folder if needed
+mkdir -p docs
+
+# Save as markdown
+# Copy Claude's output to docs/market-research.md
+```
+
+:::tip Claude Projects
+If using Claude Projects, add your research findings to Project Knowledge so subsequent chats can reference them automatically.
+:::
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`docs/market-research.md` (1,000-2,000 words)" },
+    { type: "Data", description: "TAM/SAM/SOM with sources" },
+    { type: "Analysis", description: "5+ competitors identified with positioning" },
+    { type: "Evidence", description: "Customer pain points validated by real feedback" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Market size is quantified with credible sources",
+    "At least 5 competitors identified with positioning analysis",
+    "Customer pain points backed by real user feedback (reviews, forums)",
+    "Clear differentiator identified that isn't easily copied",
+    "No fatal barriers to entry discovered",
+    "Research document saved to your repository"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 3,
+    title: "Opportunity Assessment",
+    path: "/phase-1-validate/opportunity-assessment"
+  }}
+  previous={{
+    chapter: 1,
+    title: "Introduction",
+    path: "/phase-1-validate/introduction"
+  }}
+  related={[
+    { title: "Competitive Analysis", path: "/phase-1-validate/competitive-analysis" },
+    { title: "Business One-Pager", path: "/phase-1-validate/business-one-pager" }
+  ]}
+/>
+
+<ChapterNav
+  current={2}
+  total={43}
+  previous={{
+    chapter: 1,
+    title: "Introduction",
+    path: "/phase-1-validate/introduction"
+  }}
+  next={{
+    chapter: 3,
+    title: "Opportunity Assessment",
+    path: "/phase-1-validate/opportunity-assessment"
+  }}
+/>

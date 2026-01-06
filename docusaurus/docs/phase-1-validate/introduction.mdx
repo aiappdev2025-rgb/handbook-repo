@@ -1,32 +1,172 @@
 ---
 sidebar_position: 1
-title: "Introduction"
-description: "Introduction to the MOAI methodology"
+title: "Introduction & Methodology"
+description: "Learn the foundational philosophy behind the MOAI methodology—documentation-first development, quality standards, and the complete workflow from idea to production"
 ---
 
-# Introduction
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
 
-Welcome to the MOAI Handbook - your complete guide to building production-quality SaaS products with AI assistance.
+# Introduction & Methodology
 
-## The Problem
+<span className="reading-time">15 min read</span>
 
-Most AI-generated code fails in production because it lacks:
-- Proper architecture
-- Quality gates
-- Testing discipline
-- Production readiness
+<TldrBox
+  what="Learn the MOAI methodology—a documentation-first approach for building production-quality SaaS with AI."
+  why="Most AI-generated code fails in production due to lack of architecture, testing, and quality gates. MOAI solves this."
+  outcome="Understanding of the four core principles and complete workflow that guides the entire handbook."
+/>
 
-## The Solution
+<WhenToUse
+  useWhen={[
+    "Starting a new SaaS project",
+    "Want to understand the MOAI approach",
+    "Need to explain the methodology to a co-founder or team"
+  ]}
+  notYetIf={[
+    "N/A - this is the starting point"
+  ]}
+  skipIf="You're already familiar with the MOAI methodology and core principles"
+/>
 
-MOAI provides a structured approach that ensures every piece of code meets production standards through:
+<Prerequisites
+  items={[
+    { text: "No prerequisites - this is the starting point" }
+  ]}
+/>
 
-1. **Clear phases** with defined outputs
-2. **Quality gates** at critical checkpoints
-3. **Verification checklists** for each chapter
-4. **TDD workflow** for implementation
+## The Vision
 
-## How to Proceed
+Understanding the vision helps you make decisions when the handbook doesn't cover a specific scenario. Every choice in this methodology traces back to these fundamental goals.
 
-Work through the chapters sequentially. Each chapter builds on the previous one, and verification checklists ensure you're ready for the next step.
+This handbook presents a methodology for building **production-quality SaaS products** using AI-assisted development. The goal is not just working code, but code that is:
+- **Secure** — defense-in-depth security at every layer
+- **Maintainable** — clear structure that others can understand
+- **Testable** — comprehensive test coverage from day one
+- **Scalable** — ready to grow with your business
 
-Next: [Chapter 2: Market Research](/phase-1-validate/market-research)
+Version 3.0 introduces **MOAI-ADK integration**, which transforms the Build Phase from a series of prompts into a disciplined, test-driven development process where every feature begins with a specification and ends with verified, documented code.
+
+:::info The MOAI Principle
+**Specification Before Implementation.** Every feature, no matter how small, starts with a SPEC that defines requirements, test cases, and acceptance criteria. Implementation follows the TDD cycle: write failing tests (RED), implement to pass (GREEN), improve code quality (REFACTOR).
+:::
+
+## Core Principles
+
+These four principles guide every decision in this handbook. They're not aspirational—they're **requirements** that shape how you'll work through each stage.
+
+### 1. Documentation Before Code
+
+The most expensive bugs are architectural bugs. They compound over time and eventually require rewrites.
+
+The solution is to invest in documentation before writing code. This handbook enforces a **documentation-first workflow** where design decisions are made explicit before implementation begins.
+
+### 2. Quality Is Non-Negotiable
+
+Every piece of code must meet explicit quality standards:
+- Functions must be appropriately sized
+- Error handling must be comprehensive
+- Security must be defense-in-depth
+- Performance must be considered from the start
+
+These are not aspirational goals. They are **requirements**.
+
+### 3. Verification at Every Step
+
+Trust but verify. AI-generated artifacts can be impressive, but they can also be subtly wrong. Every artifact produced by the handbook workflow must be **verified against explicit criteria** before it feeds into subsequent stages.
+
+### 4. Right Tool for the Task
+
+Claude Chat and Claude Code CLI have different strengths. Using the right tool for each task dramatically improves outcomes. This handbook specifies which tool to use at each stage and why.
+
+## The Complete Workflow
+
+The handbook follows a structured progression from research through deployment. Each phase builds on the previous, and each has specific tools and artifacts.
+
+| Phase | Purpose | Key Artifacts | Tool |
+|-------|---------|---------------|------|
+| **Validate** | Validate opportunity, understand market | Research notes, Business One-Pager, Competitive Analysis | Claude Chat |
+| **Design** | Define product vision and UX | Design Brief, UX Package, UI System | Claude Chat |
+| **Architect** | Technical planning and infrastructure | Architecture Doc, Database Schema, Build Contract | Claude Chat |
+| **Build** | Implement features with TDD | SPECs, Tests, Code, Documentation | Claude Code |
+| **Launch** | QA, deployment, go-live | Deployment scripts, Launch checklist | Claude Code |
+
+:::tip Build Contract: The Bridge
+The **Build Contract** is a special artifact created at the end of the Architect phase. It consolidates all your design and architecture decisions into a single document that drives implementation in the Build phase.
+:::
+
+## How to Use This Handbook
+
+### Sequential Progression
+
+Work through the chapters **sequentially**. Each chapter builds on the previous one, and verification checklists ensure you're ready for the next step.
+
+### GATE Chapters
+
+Some chapters are marked with 🚪 **GATE** — these are mandatory checkpoints. You cannot proceed past a GATE chapter until all requirements are met.
+
+### Tool Badges
+
+Throughout the handbook, you'll see badges indicating which tool to use:
+- **Claude Chat** — for research, design, and planning
+- **Claude Code** — for implementation with TDD workflow
+
+### Verification Checklists
+
+Every chapter ends with a verification checklist. **Complete all items** before moving to the next chapter.
+
+## What You'll Build
+
+By the end of this handbook, you'll have:
+
+1. **Validated Business Opportunity** — market research, competitive analysis, clear MVP scope
+2. **Complete Design System** — UX flows, UI components, design tokens
+3. **Technical Architecture** — database schema, API design, security model
+4. **Production-Ready Code** — tested, documented, deployed application
+5. **Launch Package** — QA completed, monitoring in place, ready for users
+
+<ExpectedOutput
+  items={[
+    { type: "Understanding", description: "The four core principles (Documentation Before Code, Quality Is Non-Negotiable, Verification at Every Step, Right Tool for the Task)" },
+    { type: "Understanding", description: "How the five phases (Validate → Design → Architect → Build → Launch) connect" },
+    { type: "Mindset", description: "This handbook optimizes for production-quality code, not speed" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Can explain the four core principles in your own words",
+    "Understand which tool (Claude Chat vs Claude Code) to use at each phase",
+    "Recognize that the upfront investment in documentation pays dividends during implementation",
+    "Committed to following chapters sequentially and completing verification checklists"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 2,
+    title: "Market Research",
+    path: "/phase-1-validate/market-research"
+  }}
+  related={[
+    { title: "Quick Start Guide", path: "/getting-started/quick-start" },
+    { title: "Workflow Guide", path: "/reference/workflow-guide" }
+  ]}
+/>
+
+<ChapterNav
+  current={1}
+  total={43}
+  next={{
+    chapter: 2,
+    title: "Market Research",
+    path: "/phase-1-validate/market-research"
+  }}
+/>

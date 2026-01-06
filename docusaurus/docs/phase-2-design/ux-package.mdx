@@ -1,6 +1,261 @@
 ---
 sidebar_position: 2
-title: "ux package"
+title: "UX Package"
+description: "Create a comprehensive document defining every screen, flow, and interaction state in your application"
 ---
-# ux package
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# UX Package
+
+<span className="reading-time">25 min read</span>
+
+<TldrBox
+  what="Create a comprehensive UX specification covering all screens, flows, states, and interactions in your application."
+  why="The UX Package answers every 'what happens when...' question before development starts—preventing expensive mid-build changes."
+  outcome="A complete `docs/ux-package.md` artifact (2,000-4,000 words) that serves as the blueprint for UI design and development."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Design Brief is complete and approved",
+    "Ready to create detailed user flows",
+    "Need to define information architecture"
+  ]}
+  notYetIf={[
+    "Design Brief incomplete",
+    "Core features still undefined"
+  ]}
+  skipIf="You have existing UX documentation that covers all flows and states"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Design Brief complete", link: "/phase-1-validate/design-brief" },
+    { text: "Design Philosophy established", link: "/phase-2-design/design-philosophy" }
+  ]}
+/>
+
+## What is a UX Package?
+
+The UX Package defines the **complete user experience**: all screens, all flows, all states. It answers every question a developer might have about "what happens when..." scenarios.
+
+:::warning The Most Common Design Failure
+Building without a UX Package leads to discovering edge cases during development. Each discovery costs hours of rework. A complete UX Package upfront prevents this.
+:::
+
+## UX Package Structure
+
+Your UX Package should include five sections:
+
+### Section 1: Information Architecture
+
+The complete structure of your application:
+
+- **Site Map**: All screens/routes in your application
+- **Navigation Structure**: How users move between areas
+- **User Flow Diagrams**: Visual paths through key journeys
+
+### Section 2: Screen Inventory
+
+For **every screen** in your application, document:
+
+| Element | Description |
+|---------|-------------|
+| Screen Name | Clear identifier |
+| Route | URL path (e.g., `/dashboard`, `/settings`) |
+| Purpose | What user accomplishes here |
+| Entry Points | How user arrives at this screen |
+| Exit Points | Where user goes next |
+| Key Components | Major UI elements on screen |
+| Data Displayed | What information is shown |
+| Data Collected | What user inputs |
+| Actions Available | Buttons, links, interactions |
+| Loading State | What shows while data loads |
+| Empty State | What shows when no data exists |
+| Error State | What shows when something fails |
+
+### Section 3: User Flows
+
+For each core flow from your Design Brief:
+
+- Step-by-step sequence
+- Decision points and branches
+- Error recovery paths
+- Success confirmation
+
+### Section 4: Component Behaviors
+
+Interaction patterns used across the app:
+
+- **Form Validation**: When and how validation runs
+- **Confirmation Dialogs**: When to confirm and wording
+- **Notifications**: Types, duration, dismissal
+- **Loading Indicators**: Spinners, skeletons, progress bars
+
+### Section 5: Responsive Behavior
+
+- Breakpoints (e.g., mobile < 768px, tablet < 1024px)
+- What changes at each breakpoint
+- Mobile-specific interactions (swipe, tap targets)
+
+## UX Package Prompt
+
+Continue in the same Claude Chat session where you created the Design Brief:
+
+```markdown
+Create a UX Package for [PRODUCT NAME].
+
+**Design Brief**: [ATTACH OR REFERENCE]
+
+The UX Package should include:
+
+**SECTION 1: Information Architecture**
+- Site map showing all screens/routes
+- Navigation structure
+- User flow diagrams
+
+**SECTION 2: Screen Inventory**
+For each screen:
+- Screen name and route
+- Purpose (what user accomplishes)
+- Entry points (how user arrives)
+- Exit points (where user goes next)
+- Key components
+- Data displayed/collected
+- Actions available
+- Error states
+- Loading states
+- Empty states
+
+**SECTION 3: User Flows**
+For each core flow from Design Brief:
+- Step-by-step sequence
+- Decision points
+- Error recovery paths
+- Success confirmation
+
+**SECTION 4: Component Behaviors**
+- Form validation rules
+- Confirmation dialogs (when and what)
+- Notification patterns
+- Loading indicators
+
+**SECTION 5: Responsive Behavior**
+- Breakpoints
+- What changes at each breakpoint
+- Mobile-specific interactions
+
+Output in markdown format, ready to save as docs/ux-package.md.
+```
+
+## Example: Screen Inventory Entry
+
+```markdown
+### Dashboard Screen
+
+**Route**: `/dashboard`
+**Purpose**: Give user overview of their account and quick actions
+
+**Entry Points**:
+- Login success
+- Logo click from any screen
+- "Dashboard" nav item
+
+**Exit Points**:
+- Create new [item] → /items/new
+- View [item] → /items/:id
+- Settings → /settings
+
+**Key Components**:
+- Header with navigation
+- Stats summary cards (3)
+- Recent activity list
+- Quick action buttons
+
+**Data Displayed**:
+- Total [items] count
+- This month's [metric]
+- Recent 5 [items]
+
+**Actions Available**:
+- Create new [item]
+- View [item] details
+- Filter activity
+
+**Loading State**: Skeleton cards, skeleton list
+**Empty State**: "Welcome! Create your first [item] to get started" + CTA
+**Error State**: "Unable to load dashboard. Retry?" + Retry button
+```
+
+## Validation Checklist
+
+Before moving on, ensure your UX Package passes these checks:
+
+| Check | What to Verify |
+|-------|----------------|
+| Screen Count | Typical MVP has 8-15 screens |
+| All States | Every screen has loading, empty, error states |
+| Entry/Exit | Every screen has defined entry and exit points |
+| Flow Coverage | All core flows from Design Brief are documented |
+| Edge Cases | Common edge cases addressed (first-time user, returning user, admin) |
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`docs/ux-package.md` (2,000-4,000 words)" },
+    { type: "Coverage", description: "8-15 screens with all states defined" },
+    { type: "Flows", description: "3+ complete user flows with error paths" },
+    { type: "Behaviors", description: "Component behaviors documented" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Every screen has loading, empty, and error states defined",
+    "All core flows from Design Brief are documented with error recovery",
+    "Site map shows complete information architecture",
+    "Screen inventory covers 8-15 screens (typical MVP)",
+    "Responsive behavior defined with specific breakpoints",
+    "Document saved to repository"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 10,
+    title: "User Flows & Wireframes",
+    path: "/phase-2-design/user-flows"
+  }}
+  previous={{
+    chapter: 8,
+    title: "Design Philosophy",
+    path: "/phase-2-design/design-philosophy"
+  }}
+  related={[
+    { title: "Design Brief", path: "/phase-1-validate/design-brief" },
+    { title: "UI System", path: "/phase-2-design/ui-system" }
+  ]}
+/>
+
+<ChapterNav
+  current={9}
+  total={43}
+  previous={{
+    chapter: 8,
+    title: "Design Philosophy",
+    path: "/phase-2-design/design-philosophy"
+  }}
+  next={{
+    chapter: 10,
+    title: "User Flows & Wireframes",
+    path: "/phase-2-design/user-flows"
+  }}
+/>

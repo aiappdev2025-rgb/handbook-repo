@@ -1,6 +1,207 @@
 ---
 sidebar_position: 6
-title: "multi environment"
+title: "Multi-Environment Config"
+description: "Configure development, staging, and production environments with proper secret management"
 ---
-# multi environment
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Multi-Environment Config
+
+<span className="reading-time">15 min read</span>
+
+<TldrBox
+  what="Set up development, staging, and production environments with separate databases, environment variables, and deployment configurations."
+  why="Proper environment separation prevents dev mistakes from affecting production and enables safe testing."
+  outcome="Environment configuration documented with .env files and deployment settings."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Infrastructure providers selected",
+    "Ready to configure environments",
+    "Need to separate dev/staging/production"
+  ]}
+  notYetIf={[
+    "Infrastructure not planned",
+    "Only building a prototype"
+  ]}
+  skipIf="Single-environment setup is sufficient for your needs"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Infrastructure Planning complete", link: "/phase-3-architect/infrastructure" },
+    { text: "Service accounts created" }
+  ]}
+/>
+
+## Environment Strategy
+
+| Environment | Purpose | Database | URL |
+|-------------|---------|----------|-----|
+| **Development** | Local development | Local or dev Supabase | localhost:3000 |
+| **Staging** | Pre-production testing | Staging Supabase | staging.yourapp.com |
+| **Production** | Live application | Production Supabase | yourapp.com |
+
+## Environment Files
+
+Create environment-specific files:
+
+```
+.env.local          # Local development (gitignored)
+.env.development    # Shared dev defaults
+.env.staging        # Staging configuration
+.env.production     # Production configuration
+.env.example        # Template with all required vars
+```
+
+### .env.example
+
+```bash
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# AI
+ANTHROPIC_API_KEY=your-api-key
+
+# Payments
+STRIPE_SECRET_KEY=your-stripe-key
+STRIPE_WEBHOOK_SECRET=your-webhook-secret
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your-publishable-key
+```
+
+### .env.local (Local Development)
+
+```bash
+# Copy from .env.example and fill in dev values
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=https://xxx-dev.supabase.co
+# ... etc
+```
+
+:::warning Git Ignore
+Never commit `.env.local` or any file with real secrets. Only commit `.env.example` with placeholder values.
+:::
+
+## Vercel Environment Configuration
+
+Configure environments in Vercel dashboard:
+
+1. Go to Project Settings → Environment Variables
+2. Add variables for each environment:
+
+| Variable | Development | Staging | Production |
+|----------|-------------|---------|------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | dev-url | staging-url | prod-url |
+| `SUPABASE_SERVICE_ROLE_KEY` | dev-key | staging-key | prod-key |
+
+## Multiple Supabase Projects
+
+For proper isolation, create separate Supabase projects:
+
+```
+yourapp-dev     → Development
+yourapp-staging → Staging
+yourapp-prod    → Production
+```
+
+Apply the same migration to all environments:
+
+```bash
+# Apply migrations to each project
+supabase db push --project-ref your-dev-ref
+supabase db push --project-ref your-staging-ref
+supabase db push --project-ref your-prod-ref
+```
+
+## Environment Detection
+
+Detect environment in your code:
+
+```typescript
+// lib/env.ts
+export const ENV = {
+  isDev: process.env.NODE_ENV === 'development',
+  isStaging: process.env.NEXT_PUBLIC_APP_URL?.includes('staging'),
+  isProd: process.env.NODE_ENV === 'production' &&
+          !process.env.NEXT_PUBLIC_APP_URL?.includes('staging'),
+};
+
+// Usage
+if (ENV.isDev) {
+  console.log('Debug info:', data);
+}
+```
+
+## Branch-Based Deployments
+
+Configure Vercel for automatic deployments:
+
+| Branch | Environment | URL |
+|--------|-------------|-----|
+| `main` | Production | yourapp.com |
+| `staging` | Staging | staging.yourapp.com |
+| `*` (other) | Preview | random-id.vercel.app |
+
+<ExpectedOutput
+  items={[
+    { type: "Configuration", description: ".env.example with all required variables" },
+    { type: "Separation", description: "Separate configs for dev/staging/production" },
+    { type: "Documentation", description: "Environment setup documented" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    ".env.example committed with all required variables",
+    ".env.local gitignored with real values",
+    "Vercel environment variables configured",
+    "Each environment has separate database",
+    "Secrets never committed to repository"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 19,
+    title: "ADR Templates",
+    path: "/phase-3-architect/adr-templates"
+  }}
+  previous={{
+    chapter: 17,
+    title: "Infrastructure Planning",
+    path: "/phase-3-architect/infrastructure"
+  }}
+  related={[
+    { title: "Dev Environment Setup", path: "/phase-3-architect/dev-environment" }
+  ]}
+/>
+
+<ChapterNav
+  current={18}
+  total={43}
+  previous={{
+    chapter: 17,
+    title: "Infrastructure Planning",
+    path: "/phase-3-architect/infrastructure"
+  }}
+  next={{
+    chapter: 19,
+    title: "ADR Templates",
+    path: "/phase-3-architect/adr-templates"
+  }}
+/>

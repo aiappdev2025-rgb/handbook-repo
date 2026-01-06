@@ -1,6 +1,211 @@
 ---
 sidebar_position: 9
-title: "uuild contract"
+title: "Build Contract"
+description: "Generate the Build Contract that bridges design to implementation"
 ---
-# uuild contract
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Build Contract
+
+<span className="reading-time">20 min read</span>
+
+:::info GATE Chapter
+This is a **GATE** chapter. You must complete all requirements before proceeding to the Build phase.
+:::
+
+<TldrBox
+  what="Generate a Build Contract by synthesizing all design artifacts into a single implementation reference document."
+  why="The Build Contract is the bridge between design and implementation—Claude Code will reference it throughout the Build phase."
+  outcome="A complete `docs/build-contract.md` with seven sections synthesized from your design artifacts."
+/>
+
+<WhenToUse
+  useWhen={[
+    "All architecture chapters complete",
+    "Ready to transition to implementation",
+    "Need to consolidate design artifacts"
+  ]}
+  notYetIf={[
+    "Architecture incomplete",
+    "Design artifacts still changing"
+  ]}
+  skipIf="Never—this is a required GATE chapter"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Design Brief complete", link: "/phase-1-validate/design-brief" },
+    { text: "UX Package complete", link: "/phase-2-design/ux-package" },
+    { text: "UI System complete", link: "/phase-2-design/ui-system" },
+    { text: "Architecture complete", link: "/phase-3-architect/solution-architecture" }
+  ]}
+/>
+
+## What is the Build Contract?
+
+The Build Contract consolidates your design artifacts into a single document that Claude Code can reference during implementation. It extracts the essential information from:
+- Design Brief (vocabulary)
+- UX Package (user model, screens)
+- UI System (components)
+- Architecture (data model, API)
+
+## Build Contract Structure
+
+### Section 1: Vocabulary
+Canonical terms from Design Brief.
+
+| Term | Definition | Usage Context |
+|------|------------|---------------|
+| Term 1 | Definition | Where used |
+| Term 2 | Definition | Where used |
+
+### Section 2: User Model
+User types and authentication from UX Package.
+
+### Section 3: Screen Inventory
+All screens with routes from UX Package.
+
+| Screen | Route | Purpose | Key Components |
+|--------|-------|---------|----------------|
+| Dashboard | /dashboard | User overview | StatsCards, ActivityList |
+
+### Section 4: Component Specifications
+Key component behaviors from UI System.
+
+### Section 5: Data Model
+Tables and relationships from Architecture.
+
+| Table | Columns | Constraints | RLS Policy |
+|-------|---------|-------------|------------|
+| users | id, email, ... | FK to auth.users | Own data only |
+
+### Section 6: API Surface
+All API routes from Architecture.
+
+| Route | Method | Purpose | Auth Required |
+|-------|--------|---------|---------------|
+| /api/items | GET | List items | Yes |
+| /api/items | POST | Create item | Yes |
+
+### Section 7: Quality Standards
+Compiled from all documents.
+
+## Build Contract Prompt
+
+Start a fresh Claude Chat session:
+
+```markdown
+I need you to generate a Build Contract from my design artifacts.
+
+Please analyze the attached design artifacts and create a Build Contract
+with these sections:
+
+1. **Vocabulary**: Extract all canonical terms from the Design Brief.
+   Format as table: | Term | Definition | Usage Context |
+
+2. **User Model**: Extract user types, auth, and flows from UX Package.
+
+3. **Screen Inventory**: Extract all screens with routes from UI System.
+   Format as table: | Screen | Route | Purpose | Key Components |
+
+4. **Component Specifications**: Extract key component behaviors from UI System.
+
+5. **Data Model**: Extract entities and relationships from Architecture.
+   Format as table: | Table | Columns | Constraints | RLS Policy |
+
+6. **API Surface**: Extract all API routes from Architecture.
+   Format as table: | Route | Method | Purpose | Auth Required |
+
+7. **Quality Standards**: Compile standards from all documents.
+
+[Attach: Design Brief, UX Package, UI System, Architecture Document]
+
+Output in markdown format, ready to save as docs/build-contract.md.
+```
+
+## Save the Build Contract
+
+```bash
+# Save to docs folder
+# Copy Claude's output to docs/build-contract.md
+```
+
+:::warning Critical for Implementation
+Claude Code reads files from your project. The Build Contract must be saved as a file so Claude Code can reference it during the Build phase.
+:::
+
+## Gate Checklist
+
+Before proceeding to the Build phase:
+
+| Artifact | Location | Status |
+|----------|----------|--------|
+| Design Brief | docs/design-brief.md | ☐ |
+| UX Package | docs/ux-package.md | ☐ |
+| UI System | docs/ui-system.md | ☐ |
+| Architecture | docs/architecture.md | ☐ |
+| **Build Contract** | docs/build-contract.md | ☐ |
+
+All artifacts must be saved before proceeding.
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`docs/build-contract.md` (2,000-4,000 words)" },
+    { type: "Vocabulary", description: "10+ canonical terms extracted" },
+    { type: "Screens", description: "8-15 screens with routes" },
+    { type: "API", description: "All API routes documented" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All seven sections present and populated",
+    "Vocabulary lists 10+ canonical terms",
+    "Screen inventory matches UX Package",
+    "Data model matches Architecture schema",
+    "API surface matches Architecture routes",
+    "Build Contract saved to docs/build-contract.md",
+    "All design artifacts saved in docs/ folder"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 22,
+    title: "Dev Environment Setup",
+    path: "/phase-3-architect/dev-environment"
+  }}
+  previous={{
+    chapter: 20,
+    title: "Test Strategy",
+    path: "/phase-3-architect/test-strategy"
+  }}
+  related={[
+    { title: "Design Brief", path: "/phase-1-validate/design-brief" },
+    { title: "Solution Architecture", path: "/phase-3-architect/solution-architecture" }
+  ]}
+/>
+
+<ChapterNav
+  current={21}
+  total={43}
+  previous={{
+    chapter: 20,
+    title: "Test Strategy",
+    path: "/phase-3-architect/test-strategy"
+  }}
+  next={{
+    chapter: 22,
+    title: "Dev Environment Setup",
+    path: "/phase-3-architect/dev-environment"
+  }}
+/>

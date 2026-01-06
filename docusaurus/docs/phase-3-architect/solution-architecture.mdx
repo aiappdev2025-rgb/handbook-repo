@@ -1,6 +1,218 @@
 ---
 sidebar_position: 1
-title: "solution architecture"
+title: "Solution Architecture"
+description: "Create the technical blueprint covering system design, database schema, API routes, and security approach"
 ---
-# solution architecture
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Solution Architecture
+
+<span className="reading-time">30 min read</span>
+
+<TldrBox
+  what="Create a comprehensive technical architecture document covering technology choices, system structure, and integration patterns."
+  why="Architecture decisions made before coding prevent costly mid-project pivots and ensure deliberate technical choices."
+  outcome="A complete `docs/architecture.md` artifact (2,000-4,000 words) that Claude Code will reference throughout implementation."
+/>
+
+<WhenToUse
+  useWhen={[
+    "All design artifacts are complete (Design Brief, UX Package, UI System)",
+    "Ready to make technology decisions",
+    "Starting technical planning phase"
+  ]}
+  notYetIf={[
+    "UX Package not finalized",
+    "Business requirements still changing"
+  ]}
+  skipIf="You're extending an existing codebase with established architecture"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Component Library Spec complete", link: "/phase-2-design/component-library" },
+    { text: "All Phase 2 design artifacts approved" }
+  ]}
+/>
+
+## What is Solution Architecture?
+
+The Solution Architecture bridges design artifacts with implementation. It translates product requirements into technical decisions: which technologies to use, how components interact, what the data model looks like, and how security is handled.
+
+:::warning Critical for Implementation
+Creating this document before coding prevents costly mid-project pivots. Without it, Claude Code will make ad-hoc technical decisions that may conflict with each other.
+:::
+
+## Architecture Document Structure
+
+Your architecture document should cover eight sections:
+
+### 1. System Overview
+- Architecture diagram (components and connections)
+- Component responsibilities
+- Data flow between services
+
+### 2. Database Schema
+- Tables with columns and types
+- Relationships and foreign keys
+- Constraints and defaults
+
+### 3. API Design
+- Routes and methods
+- Request/response schemas
+- Authentication requirements
+
+### 4. Authentication & Authorization
+- Auth provider (Supabase Auth, Clerk, etc.)
+- User roles and permissions
+- Session management
+
+### 5. AI Integration
+- Claude API usage patterns
+- Error handling for AI calls
+- Cost management strategies
+
+### 6. Third-Party Integrations
+- Payment processing (Stripe)
+- Email services
+- Analytics
+
+### 7. Security Considerations
+- Row Level Security (RLS)
+- Input validation
+- Rate limiting
+
+### 8. Project Structure
+- Folder organization
+- Route groups
+- Component directories
+
+## Architecture Prompt
+
+Start a fresh Claude Chat session for technical planning:
+
+```markdown
+Create a Solution Architecture document for [PRODUCT NAME].
+
+Technology Stack (recommended for AI SaaS):
+- Frontend: Next.js 14+ with App Router
+- Styling: Tailwind CSS
+- Database: Supabase (PostgreSQL + Auth + Storage)
+- AI: Claude API (Anthropic)
+- Payments: Stripe
+- Hosting: Vercel
+
+The Architecture document should include:
+1. System Overview (architecture diagram, component responsibilities)
+2. Database Schema (tables, columns, constraints, RLS policies)
+3. API Design (routes, methods, request/response schemas)
+4. Authentication and Authorization
+5. AI Integration (prompts, error handling, cost management)
+6. Third-Party Integrations
+7. Security Considerations
+8. Project Structure (folder organization, route groups)
+
+Output in markdown format, ready to save as docs/architecture.md.
+```
+
+## Example: System Overview
+
+```markdown
+## System Overview
+
+### Architecture Diagram
+
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Browser   │────▶│   Vercel    │────▶│  Supabase   │
+│  (Next.js)  │◀────│  Functions  │◀────│ (PostgreSQL)│
+└─────────────┘     └──────┬──────┘     └─────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │  Claude API │
+                    └─────────────┘
+
+### Component Responsibilities
+
+| Component | Responsibility |
+|-----------|---------------|
+| Next.js App | UI rendering, client-side state |
+| API Routes | Business logic, data validation |
+| Supabase | Data persistence, auth, file storage |
+| Claude API | AI-powered features |
+| Stripe | Payment processing |
+```
+
+## Save the Architecture Document
+
+Save as `docs/architecture.md` so Claude Code can reference it:
+
+```bash
+mkdir -p docs
+# Copy Claude's output to docs/architecture.md
+```
+
+:::tip Claude Code Integration
+This file becomes part of your project's context system. Claude Code will read it when initializing your project structure.
+:::
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`docs/architecture.md` (2,000-4,000 words)" },
+    { type: "Diagram", description: "System architecture diagram (ASCII or description)" },
+    { type: "Schema", description: "3-5 database tables with columns defined" },
+    { type: "API", description: "API routes with methods and auth requirements" },
+    { type: "Structure", description: "Project folder organization" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Document includes all eight architecture sections",
+    "Database schema lists all tables and relationships",
+    "API routes defined with methods (GET, POST, etc.)",
+    "Security approach documented (RLS, validation)",
+    "Project structure includes folder organization",
+    "File saved to docs/architecture.md"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 14,
+    title: "Data Model Design",
+    path: "/phase-3-architect/data-model"
+  }}
+  previous={{
+    chapter: 12,
+    title: "Component Library Spec",
+    path: "/phase-2-design/component-library"
+  }}
+  related={[
+    { title: "API Specification", path: "/phase-3-architect/api-specification" },
+    { title: "Security Architecture", path: "/phase-3-architect/security" }
+  ]}
+/>
+
+<ChapterNav
+  current={13}
+  total={43}
+  previous={{
+    chapter: 12,
+    title: "Component Library Spec",
+    path: "/phase-2-design/component-library"
+  }}
+  next={{
+    chapter: 14,
+    title: "Data Model Design",
+    path: "/phase-3-architect/data-model"
+  }}
+/>

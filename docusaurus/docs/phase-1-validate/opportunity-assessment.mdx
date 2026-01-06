@@ -1,6 +1,203 @@
 ---
 sidebar_position: 3
 title: "Opportunity Assessment"
+description: "Score and prioritize business opportunities objectively using a structured framework"
 ---
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
 # Opportunity Assessment
-*Content to be migrated*
+
+<span className="reading-time">15 min read</span>
+
+<TldrBox
+  what="Score business opportunities using a structured framework that evaluates market fit, execution feasibility, and founder alignment."
+  why="Objective scoring prevents you from falling in love with ideas that won't work—choose opportunities with the best chance of success."
+  outcome="A scored opportunity assessment that gives you confidence in your chosen direction."
+/>
+
+<WhenToUse
+  useWhen={[
+    "You have multiple ideas and need to choose one",
+    "You want to score opportunities objectively",
+    "You need to validate bootstrapper/indie hacker fit"
+  ]}
+  notYetIf={[
+    "You haven't done basic market research",
+    "You only have a vague concept, not a clear idea"
+  ]}
+  skipIf="You're already committed to a specific opportunity with validated demand"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Market Research complete", link: "/phase-1-validate/market-research" },
+    { text: "At least one concrete business idea" }
+  ]}
+/>
+
+## Why Score Opportunities?
+
+Gut feelings are unreliable. You'll naturally gravitate toward ideas you find exciting, not necessarily ideas that will succeed. A structured scoring framework forces objectivity.
+
+## The Opportunity Scoring Framework
+
+Score each dimension from 1-5, where 5 is the best:
+
+### 1. Market Opportunity (Weight: 25%)
+
+| Score | Criteria |
+|-------|----------|
+| 5 | Large market, growing rapidly, underserved |
+| 4 | Good market size, moderate growth |
+| 3 | Niche market, stable demand |
+| 2 | Small market or declining |
+| 1 | No clear market or oversaturated |
+
+### 2. Problem Severity (Weight: 25%)
+
+| Score | Criteria |
+|-------|----------|
+| 5 | "Hair on fire" problem—urgent, expensive, frequent |
+| 4 | Significant pain, people actively seeking solutions |
+| 3 | Nice-to-have, moderate pain |
+| 2 | Low pain, many workarounds exist |
+| 1 | Problem doesn't really exist |
+
+### 3. Competitive Landscape (Weight: 15%)
+
+| Score | Criteria |
+|-------|----------|
+| 5 | No direct competitors, clear differentiation |
+| 4 | Few competitors, strong differentiation possible |
+| 3 | Moderate competition, can differentiate |
+| 2 | Crowded market, differentiation unclear |
+| 1 | Dominated by well-funded players |
+
+### 4. Execution Feasibility (Weight: 20%)
+
+| Score | Criteria |
+|-------|----------|
+| 5 | Can build MVP in weeks, low technical risk |
+| 4 | Achievable in 1-2 months, manageable complexity |
+| 3 | 3-6 months, requires learning new skills |
+| 2 | 6+ months, significant technical challenges |
+| 1 | Requires resources beyond your reach |
+
+### 5. Founder-Market Fit (Weight: 15%)
+
+| Score | Criteria |
+|-------|----------|
+| 5 | Deep domain expertise, personal experience with problem |
+| 4 | Good understanding, adjacent experience |
+| 3 | Can learn quickly, motivated |
+| 2 | Little knowledge, weak motivation |
+| 1 | No connection to market or users |
+
+## Assessment Prompt
+
+Use this prompt to have Claude help you score your opportunity:
+
+```markdown
+Help me assess this business opportunity using a structured scoring framework.
+
+**Opportunity**: [DESCRIBE YOUR IDEA]
+
+**Market Research Summary**: [KEY FINDINGS FROM CHAPTER 2]
+
+Score each dimension 1-5 and provide reasoning:
+
+1. **Market Opportunity** (25%): Size, growth, underserved needs
+2. **Problem Severity** (25%): Urgency, pain level, frequency
+3. **Competitive Landscape** (15%): Number of competitors, differentiation
+4. **Execution Feasibility** (20%): Time to MVP, technical complexity
+5. **Founder-Market Fit** (15%): Domain expertise, motivation
+
+Calculate weighted total score and provide:
+- Overall assessment (Strong/Moderate/Weak opportunity)
+- Key risks to mitigate
+- Recommendation: Proceed, Pivot, or Pass
+```
+
+## Comparing Multiple Opportunities
+
+If you have several ideas, score each one independently:
+
+| Dimension | Idea A | Idea B | Idea C |
+|-----------|--------|--------|--------|
+| Market Opportunity | | | |
+| Problem Severity | | | |
+| Competitive Landscape | | | |
+| Execution Feasibility | | | |
+| Founder-Market Fit | | | |
+| **Weighted Total** | | | |
+
+:::tip Don't Force It
+If no opportunity scores above 3.0, don't proceed. Go back to ideation. It's better to find a stronger opportunity than to build something destined to struggle.
+:::
+
+## Interpretation Guide
+
+| Weighted Score | Assessment | Action |
+|----------------|------------|--------|
+| 4.0 - 5.0 | Strong opportunity | Proceed with confidence |
+| 3.0 - 3.9 | Moderate opportunity | Proceed with awareness of risks |
+| 2.0 - 2.9 | Weak opportunity | Consider pivoting or passing |
+| Below 2.0 | Poor opportunity | Pass and find another idea |
+
+<ExpectedOutput
+  items={[
+    { type: "Assessment", description: "Scored opportunity with reasoning for each dimension" },
+    { type: "Decision", description: "Clear Proceed/Pivot/Pass recommendation" },
+    { type: "Risks", description: "Key risks identified for mitigation" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Each dimension scored with specific reasoning",
+    "Weighted total calculated correctly",
+    "Assessment accounts for bootstrapper constraints",
+    "Key risks identified with mitigation strategies",
+    "Clear go/no-go decision documented"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 4,
+    title: "Business One-Pager",
+    path: "/phase-1-validate/business-one-pager"
+  }}
+  previous={{
+    chapter: 2,
+    title: "Market Research",
+    path: "/phase-1-validate/market-research"
+  }}
+  related={[
+    { title: "MVP Scoping", path: "/phase-1-validate/mvp-scoping" }
+  ]}
+/>
+
+<ChapterNav
+  current={3}
+  total={43}
+  previous={{
+    chapter: 2,
+    title: "Market Research",
+    path: "/phase-1-validate/market-research"
+  }}
+  next={{
+    chapter: 4,
+    title: "Business One-Pager",
+    path: "/phase-1-validate/business-one-pager"
+  }}
+/>

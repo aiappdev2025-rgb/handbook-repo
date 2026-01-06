@@ -1,6 +1,240 @@
 ---
 sidebar_position: 10
-title: "dev environment"
+title: "Dev Environment Setup"
+description: "Set up development environment, CLAUDE.md, and prepare for the Build phase"
 ---
-# dev environment
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Dev Environment Setup
+
+<span className="reading-time">25 min read</span>
+
+:::info GATE Chapter
+This is a **GATE** chapter. Complete all requirements before starting the Build phase.
+:::
+
+<TldrBox
+  what="Set up your development environment, create CLAUDE.md for Claude Code context, and verify everything is ready for implementation."
+  why="Proper setup ensures Claude Code has the context it needs to implement your design correctly."
+  outcome="A fully configured development environment ready for the Build phase."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Build Contract is complete",
+    "Ready to transition from design to implementation",
+    "Setting up for Claude Code usage"
+  ]}
+  notYetIf={[
+    "Build Contract not complete",
+    "Design artifacts not saved"
+  ]}
+  skipIf="Never—this is a required GATE chapter"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Build Contract complete", link: "/phase-3-architect/build-contract" },
+    { text: "All design artifacts saved in docs/" }
+  ]}
+/>
+
+## The Critical Transition
+
+You've completed all planning with Claude Chat. Now you're transitioning to Claude Code for implementation.
+
+| Before This Point | After This Point |
+|------------------|------------------|
+| Claude Chat (web) | Claude Code (CLI) |
+| Exploration, iteration | Implementation |
+| Document generation | File editing, testing |
+
+:::warning Do Not Skip This Setup
+Without proper environment configuration, Claude Code won't have the context needed to implement your design correctly.
+:::
+
+## Step 1: Create Next.js Project
+
+```bash
+npx create-next-app@latest my-saas-project \
+  --typescript --tailwind --eslint --app --src-dir
+cd my-saas-project
+```
+
+## Step 2: Initialize Git
+
+```bash
+git init
+git add .
+git commit -m "Initial Next.js project setup"
+```
+
+## Step 3: Create CLAUDE.md
+
+The CLAUDE.md file provides Claude Code with project context:
+
+```markdown
+# CLAUDE.md
+
+## Project Overview
+[Brief description from design-brief.md]
+
+## Technology Stack
+- Frontend: Next.js 14+ with App Router
+- Styling: Tailwind CSS
+- Database: Supabase (PostgreSQL + Auth + Storage)
+- AI: Claude API
+- Payments: Stripe
+
+## Project Structure
+[From architecture.md]
+
+## Code Standards
+- TypeScript strict mode
+- ESLint + Prettier
+- Vitest for testing
+
+## Database Conventions
+- Tables use snake_case
+- All tables have RLS enabled
+- Foreign keys with ON DELETE CASCADE
+
+## Key Commands
+- `npm run dev` - Start development server
+- `npm run build` - Production build
+- `npm run test` - Run tests
+- `npm run lint` - Run ESLint
+
+## Vocabulary
+[Extract canonical terms from design-brief.md]
+
+## Current Sprint Focus
+- Currently working on: M1 - Project Setup
+- Next milestone: M2 - Design System
+
+## Project Artifacts
+- `docs/design-brief.md` - Product vision and vocabulary
+- `docs/ux-package.md` - User flows and screens
+- `docs/ui-system.md` - Component specifications
+- `docs/architecture.md` - Technical architecture
+- `docs/build-contract.md` - Implementation reference
+```
+
+## Step 4: Set Up Documentation Structure
+
+```bash
+mkdir -p docs/specs
+```
+
+Place your artifacts:
+```
+docs/
+├── design-brief.md
+├── ux-package.md
+├── ui-system.md
+├── architecture.md
+├── build-contract.md
+└── specs/          # For SPEC documents
+```
+
+## Step 5: Initial Commit
+
+```bash
+git add .
+git commit -m "Add CLAUDE.md and documentation structure"
+```
+
+## Step 6: Install Claude Code
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude --version
+```
+
+## Step 7: Verify Setup
+
+Run Claude Code and test:
+
+```bash
+claude "Read CLAUDE.md and summarize the project"
+```
+
+Claude should correctly describe your project's purpose, tech stack, and key terminology.
+
+## Environment Ready Checklist
+
+| Item | Verification |
+|------|--------------|
+| Project created | Next.js with TypeScript, Tailwind, App Router |
+| Git initialized | At least one commit |
+| CLAUDE.md exists | At project root with project details |
+| docs/ folder | Contains all design artifacts |
+| docs/specs/ folder | Empty, ready for SPECs |
+| Claude Code installed | `claude --version` works |
+| Context test passed | Claude can summarize your project |
+
+:::tip You're Ready
+If all items pass, you're ready to begin the Build phase. Start with Milestone 1: Project Setup.
+:::
+
+<ExpectedOutput
+  items={[
+    { type: "Project", description: "Next.js project with TypeScript and Tailwind" },
+    { type: "Configuration", description: "CLAUDE.md with project context" },
+    { type: "Documentation", description: "All artifacts in docs/ folder" },
+    { type: "Tooling", description: "Claude Code installed and working" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Next.js project created with recommended stack",
+    "Git repository initialized with initial commit",
+    "CLAUDE.md exists at project root",
+    "All design artifacts saved in docs/",
+    "docs/specs/ folder created for SPEC documents",
+    "Claude Code installed and working",
+    "Claude can read CLAUDE.md and describe the project"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 23,
+    title: "TDD Workflow",
+    path: "/phase-4-build/tdd-workflow"
+  }}
+  previous={{
+    chapter: 21,
+    title: "Build Contract",
+    path: "/phase-3-architect/build-contract"
+  }}
+  related={[
+    { title: "SPEC Documents", path: "/phase-4-build/spec-documents" },
+    { title: "Quality Gates", path: "/phase-4-build/quality-gates" }
+  ]}
+/>
+
+<ChapterNav
+  current={22}
+  total={43}
+  previous={{
+    chapter: 21,
+    title: "Build Contract",
+    path: "/phase-3-architect/build-contract"
+  }}
+  next={{
+    chapter: 23,
+    title: "TDD Workflow",
+    path: "/phase-4-build/tdd-workflow"
+  }}
+/>

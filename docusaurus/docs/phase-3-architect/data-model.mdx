@@ -1,6 +1,195 @@
 ---
 sidebar_position: 2
-title: "data model"
+title: "Data Model Design"
+description: "Generate SQL-ready database schema with tables, constraints, indexes, and Row Level Security policies"
 ---
-# data model
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Data Model Design
+
+<span className="reading-time">25 min read</span>
+
+<TldrBox
+  what="Generate a complete SQL migration file with CREATE TABLE statements, RLS policies, indexes, and triggers."
+  why="Concrete SQL that Supabase can execute ensures your database design is complete and reviewed before any data is created."
+  outcome="A production-ready `supabase/migrations/00001_initial_schema.sql` file."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Architecture document is complete with data model outline",
+    "Ready to translate tables into SQL",
+    "Using Supabase (or PostgreSQL)"
+  ]}
+  notYetIf={[
+    "Architecture document incomplete",
+    "Data requirements still changing"
+  ]}
+  skipIf="Using a different database that doesn't use SQL migrations"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Solution Architecture complete", link: "/phase-3-architect/solution-architecture" },
+    { text: "Database tables defined in architecture" }
+  ]}
+/>
+
+## From Architecture to SQL
+
+Your architecture document outlines the data model conceptually. Now you need concrete SQL that Supabase can execute:
+
+- CREATE TABLE statements with proper types
+- Foreign key relationships
+- Row Level Security policies
+- Indexes for query performance
+- Triggers for updated_at timestamps
+
+## Database Schema Prompt
+
+Continue in the same Claude Chat session from the architecture:
+
+```markdown
+Based on the Architecture document we just created, generate a complete
+database schema for Supabase.
+
+For each table, provide:
+1. **CREATE TABLE statement** with all columns, types, and constraints
+2. **RLS policies** for SELECT, INSERT, UPDATE, DELETE
+3. **Indexes** for frequently queried columns
+4. **Triggers** for updated_at timestamps
+
+Required tables based on our architecture:
+- user_profiles (extends auth.users)
+- [LIST YOUR DOMAIN TABLES FROM ARCHITECTURE]
+- subscriptions (Stripe sync)
+- usage_logs (if applicable)
+
+For each RLS policy, explain the security rationale.
+
+Output as a single SQL migration file that can be run in Supabase SQL Editor.
+```
+
+## Example: Table with RLS
+
+```sql
+-- Users profile table (extends Supabase auth.users)
+CREATE TABLE public.user_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  full_name TEXT,
+  avatar_url TEXT,
+  subscription_tier TEXT DEFAULT 'free',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
+
+-- Policies
+CREATE POLICY "Users can read own profile"
+  ON public.user_profiles FOR SELECT
+  USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile"
+  ON public.user_profiles FOR UPDATE
+  USING (auth.uid() = id);
+
+-- Index for email lookups
+CREATE INDEX idx_user_profiles_email ON public.user_profiles(email);
+
+-- Updated_at trigger
+CREATE TRIGGER update_user_profiles_updated_at
+  BEFORE UPDATE ON public.user_profiles
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+```
+
+## Schema Validation Checklist
+
+Before saving, verify your schema meets these standards:
+
+| Check | Requirement |
+|-------|-------------|
+| Standard columns | All tables have `id`, `created_at`, `updated_at` |
+| Foreign keys | References correct tables with ON DELETE behavior |
+| RLS enabled | Every table has RLS enabled (no exceptions) |
+| CRUD policies | Policies cover SELECT, INSERT, UPDATE, DELETE |
+| Indexes | Foreign keys and filtered columns are indexed |
+| User profiles | Links to `auth.users(id)` with ON DELETE CASCADE |
+
+:::warning Security First
+RLS must be enabled on ALL tables. Missing RLS means any authenticated user can access all data in that table.
+:::
+
+## Save the Migration File
+
+```bash
+mkdir -p supabase/migrations
+# Save as supabase/migrations/00001_initial_schema.sql
+```
+
+:::tip Migration Naming
+Supabase migrations use timestamp or sequential prefixes. Using `00001_` ensures this runs first. Later migrations will be `00002_`, `00003_`, etc.
+:::
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`supabase/migrations/00001_initial_schema.sql` (200-500 lines)" },
+    { type: "Tables", description: "CREATE TABLE statements for all domain tables" },
+    { type: "Security", description: "RLS policies for all CRUD operations" },
+    { type: "Performance", description: "Indexes for foreign keys and filtered columns" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All tables have id (UUID), created_at, updated_at columns",
+    "Foreign keys reference correct tables with ON DELETE behavior",
+    "RLS is enabled on ALL tables",
+    "Policies cover all CRUD operations (SELECT, INSERT, UPDATE, DELETE)",
+    "Indexes exist for foreign keys and frequently filtered columns",
+    "user_profiles table links to auth.users(id) with CASCADE",
+    "Migration file saved in supabase/migrations/"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 15,
+    title: "API Specification",
+    path: "/phase-3-architect/api-specification"
+  }}
+  previous={{
+    chapter: 13,
+    title: "Solution Architecture",
+    path: "/phase-3-architect/solution-architecture"
+  }}
+  related={[
+    { title: "Security Architecture", path: "/phase-3-architect/security" }
+  ]}
+/>
+
+<ChapterNav
+  current={14}
+  total={43}
+  previous={{
+    chapter: 13,
+    title: "Solution Architecture",
+    path: "/phase-3-architect/solution-architecture"
+  }}
+  next={{
+    chapter: 15,
+    title: "API Specification",
+    path: "/phase-3-architect/api-specification"
+  }}
+/>

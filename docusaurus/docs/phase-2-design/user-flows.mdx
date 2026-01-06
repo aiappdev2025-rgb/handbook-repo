@@ -1,6 +1,244 @@
 ---
 sidebar_position: 3
-title: "user flows"
+title: "User Flows & Wireframes"
+description: "Validate your UX Package through critique and create visual user flow diagrams"
 ---
-# user flows
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# User Flows & Wireframes
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Validate your UX Package through structured critique, then create visual diagrams of key user journeys."
+  why="A 10-minute critique now saves hours of rework later—catch usability issues before they become implementation problems."
+  outcome="A refined UX Package with validated flows and optional wireframe diagrams."
+/>
+
+<WhenToUse
+  useWhen={[
+    "UX Package is complete (first draft)",
+    "Need to visualize specific user journeys",
+    "Validating feature interactions before UI design"
+  ]}
+  notYetIf={[
+    "Haven't defined primary user personas",
+    "UX Package not started"
+  ]}
+  skipIf="Working from existing validated wireframes"
+/>
+
+<Prerequisites
+  items={[
+    { text: "UX Package complete", link: "/phase-2-design/ux-package" },
+    { text: "Core user flows documented" }
+  ]}
+/>
+
+## Phase 1: UX Critique
+
+Before proceeding to UI design, critique your UX Package for issues. This step catches design flaws that are expensive to fix during implementation.
+
+### Critique Prompt
+
+```markdown
+Review this UX Package as a UX expert. Identify:
+
+1. **Usability Issues**: Friction points, confusing flows, cognitive overload
+2. **Missing States**: Empty states, error states, loading states not defined
+3. **Edge Cases**: Scenarios not covered
+4. **Accessibility Gaps**: Issues for users with disabilities
+5. **Mobile Considerations**: Touch targets, thumb zones, scrolling
+
+For each issue, suggest a specific improvement.
+
+[ATTACH UX PACKAGE]
+```
+
+### Common Issues Found
+
+| Category | Example Issue | Typical Fix |
+|----------|---------------|-------------|
+| **Usability** | Too many steps to complete core action | Combine steps or add shortcuts |
+| **Missing States** | No empty state for new users | Add onboarding guidance |
+| **Edge Cases** | What if user has 1000+ items? | Add pagination or virtualization |
+| **Accessibility** | Color-only indicators | Add text labels or icons |
+| **Mobile** | 44px touch targets too small | Increase to 48px minimum |
+
+### Incorporate Feedback
+
+After receiving critique, update your UX Package:
+
+1. Review each identified issue
+2. Decide whether to fix or defer (with rationale)
+3. Update `docs/ux-package.md` with improvements
+
+:::tip Iterate as Needed
+Run multiple critique cycles until the UX Package is solid. Always update the same file rather than creating separate versions.
+:::
+
+## Phase 2: Visual Flow Diagrams
+
+For complex flows, create visual diagrams to communicate the journey:
+
+### Flow Diagram Template
+
+```
+┌─────────────┐
+│  Start      │
+│  (Entry)    │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│  Step 1     │────▶│  Step 2     │
+│  (Action)   │     │  (Action)   │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│  Decision   │────▶│  Error      │
+│  Point      │ No  │  Recovery   │
+└──────┬──────┘     └─────────────┘
+       │ Yes
+       ▼
+┌─────────────┐
+│  Success    │
+│  (End)      │
+└─────────────┘
+```
+
+### Key Flows to Diagram
+
+Create diagrams for your most critical flows:
+
+1. **Onboarding Flow**: First-time user from signup to first value
+2. **Core Action Flow**: The main thing users do in your app
+3. **Recovery Flow**: How users recover from errors or mistakes
+
+### Flow Documentation
+
+For each flow, document:
+
+```markdown
+## Flow: [Name]
+
+**Trigger**: What initiates this flow
+**Goal**: What user is trying to accomplish
+**Success Criteria**: How user knows they succeeded
+
+### Steps
+
+1. User lands on [screen]
+2. User clicks [action]
+3. System shows [response]
+4. User enters [data]
+5. System validates and [result]
+
+### Decision Points
+
+- **If validation fails**: Show inline error, preserve data
+- **If network error**: Show retry option
+- **If success**: Show confirmation, redirect to [screen]
+
+### Edge Cases
+
+- First-time user: Show tooltip guidance
+- Mobile user: Use bottom sheet instead of modal
+- Slow network: Show progress indicator
+```
+
+## Optional: Low-Fidelity Wireframes
+
+For complex screens, sketch wireframes to clarify layout:
+
+```
+┌─────────────────────────────────────┐
+│  [Logo]    [Nav] [Nav] [Nav] [User] │
+├─────────────────────────────────────┤
+│                                     │
+│  ┌─────────┐ ┌─────────┐ ┌───────┐  │
+│  │  Stat   │ │  Stat   │ │ Stat  │  │
+│  │  Card   │ │  Card   │ │ Card  │  │
+│  └─────────┘ └─────────┘ └───────┘  │
+│                                     │
+│  ┌───────────────────────────────┐  │
+│  │                               │  │
+│  │        Main Content           │  │
+│  │                               │  │
+│  │                               │  │
+│  └───────────────────────────────┘  │
+│                                     │
+└─────────────────────────────────────┘
+```
+
+:::info When to Wireframe
+Create wireframes when:
+- Screen layout isn't obvious from description
+- Stakeholders need visual alignment
+- Component placement affects flow understanding
+
+Skip wireframes when:
+- Using standard patterns (list, detail, form)
+- Working solo and layout is clear
+:::
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "Updated `docs/ux-package.md` with critique improvements" },
+    { type: "Validation", description: "5-10 issues identified and addressed" },
+    { type: "Diagrams", description: "Visual flow diagrams for critical user journeys (optional)" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "UX Package critiqued for usability issues",
+    "Missing states identified and added",
+    "Edge cases documented with handling",
+    "Accessibility gaps addressed",
+    "Mobile considerations documented",
+    "Critical flows have visual diagrams (optional)"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 11,
+    title: "UI System",
+    path: "/phase-2-design/ui-system"
+  }}
+  previous={{
+    chapter: 9,
+    title: "UX Package",
+    path: "/phase-2-design/ux-package"
+  }}
+  related={[
+    { title: "Design Philosophy", path: "/phase-2-design/design-philosophy" },
+    { title: "Component Library", path: "/phase-2-design/component-library" }
+  ]}
+/>
+
+<ChapterNav
+  current={10}
+  total={43}
+  previous={{
+    chapter: 9,
+    title: "UX Package",
+    path: "/phase-2-design/ux-package"
+  }}
+  next={{
+    chapter: 11,
+    title: "UI System",
+    path: "/phase-2-design/ui-system"
+  }}
+/>

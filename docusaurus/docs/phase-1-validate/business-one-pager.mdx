@@ -1,6 +1,225 @@
 ---
 sidebar_position: 4
 title: "Business One-Pager"
+description: "Create a concise business summary that forces clarity on your business model before design begins"
 ---
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
 # Business One-Pager
-*Content to be migrated*
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Create a one-page document that synthesizes your research into actionable business decisions: problem, solution, pricing, and go-to-market strategy."
+  why="The One-Pager forces clarity on the business model before design begins—prevents building a product nobody wants to pay for."
+  outcome="A standalone document (500-1,000 words) that anyone can read to understand what you're building and why it will succeed."
+/>
+
+<WhenToUse
+  useWhen={[
+    "You're ready to crystallize your idea into a document",
+    "You need to communicate the concept clearly to others",
+    "You're starting to think about MVP scope"
+  ]}
+  notYetIf={[
+    "You're still evaluating multiple opportunities",
+    "Market research is incomplete"
+  ]}
+  skipIf="You have an existing business plan that covers all eight sections in this chapter"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Market Research complete", link: "/phase-1-validate/market-research" },
+    { text: "Opportunity Assessment complete", link: "/phase-1-validate/opportunity-assessment" }
+  ]}
+/>
+
+## Why a One-Pager?
+
+Many products fail because founders skip business model clarity and jump straight into building. They end up with:
+- A product nobody wants to pay for
+- A product priced wrong
+- A product marketed to the wrong audience
+
+The One-Pager forces these decisions upfront.
+
+## The Eight Sections
+
+Your Business One-Pager must cover these sections:
+
+### 1. Problem Statement
+
+What specific problem are we solving? Be precise—vague problems lead to vague solutions.
+
+**Good**: "Real estate agents spend 2+ hours writing each property description, and the results are often generic and uninspiring."
+
+**Bad**: "Real estate is inefficient."
+
+### 2. Solution Overview
+
+How does our product solve the problem? Focus on the mechanism, not features.
+
+### 3. Target Customer Profile
+
+Who exactly is this for? Include:
+- Demographics (role, company size, location)
+- Psychographics (values, behaviors, preferences)
+- Buying behavior (budget authority, purchase triggers)
+
+### 4. Value Proposition
+
+Why choose us over alternatives? Complete this sentence:
+> "Unlike [alternative], our product [key differentiator]."
+
+### 5. Pricing Strategy
+
+- Price point
+- Model (subscription, usage-based, tiered)
+- Justification (based on value, competitors, willingness to pay)
+
+### 6. Go-to-Market Strategy
+
+How will you acquire your first 100 customers?
+- Initial acquisition channels
+- Launch strategy
+- Early traction tactics
+
+### 7. Success Metrics
+
+What does success look like?
+- 6-month targets
+- 12-month targets
+- Key metrics to track
+
+### 8. Key Risks
+
+What could make this fail? How do we mitigate each risk?
+
+## One-Pager Prompt
+
+Continue in the same Claude Chat session where you conducted research. This gives Claude full context of your market findings.
+
+```markdown
+Create a Business One-Pager for my SaaS product.
+
+**Product Concept**: [DESCRIBE YOUR PRODUCT]
+**Target Customer**: [WHO IS THIS FOR]
+**Research Findings**: [ATTACH OR SUMMARIZE RESEARCH]
+
+The one-pager should cover:
+
+1. **Problem Statement**: What specific problem are we solving?
+2. **Solution Overview**: How does our product solve it?
+3. **Target Customer Profile**: Demographics, psychographics, buying behavior
+4. **Value Proposition**: Why choose us over alternatives?
+5. **Pricing Strategy**: Price point, model (subscription, usage, tiered), justification
+6. **Go-to-Market**: Initial acquisition channels, launch strategy
+7. **Success Metrics**: What does success look like in 6 months? 12 months?
+8. **Key Risks**: What could make this fail? How do we mitigate?
+
+Output in markdown format, ready to save as docs/one-pager.md.
+```
+
+## Example Excerpt
+
+Here's a partial example for a real estate description generator:
+
+```markdown
+## 1. Problem Statement
+
+Real estate agents spend an average of 45 minutes writing each property
+description. Most agents write 3-5 listings per week, consuming 2-4 hours
+on a task they find tedious. The resulting descriptions are often generic,
+fail to highlight unique selling points, and don't convert browsers into
+showing requests.
+
+## 2. Solution Overview
+
+ListingAI generates compelling, unique property descriptions in under
+60 seconds. Agents input property details and photos, and receive
+professionally written descriptions optimized for buyer psychology
+and local market language.
+
+## 5. Pricing Strategy
+
+**Price**: $29/month (Starter), $79/month (Pro), $199/month (Team)
+**Model**: Subscription with usage tiers
+**Justification**: Agents bill $150-500 per listing. At 4 listings/month,
+$29 saves 3+ hours of work—clear ROI at ~$10/hour of time saved.
+```
+
+## Save the One-Pager
+
+The One-Pager becomes the business foundation that design, architecture, and implementation all trace back to.
+
+```bash
+# Save to your docs folder
+# Copy Claude's output to docs/one-pager.md
+```
+
+:::tip Readability Test
+Your One-Pager should be readable in 2-3 minutes by someone unfamiliar with your project. If it takes longer, cut the fluff.
+:::
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`docs/one-pager.md` (500-1,000 words)" },
+    { type: "Clarity", description: "Each section is specific and actionable" },
+    { type: "Pricing", description: "Includes actual numbers, not ranges" },
+    { type: "Strategy", description: "Go-to-market names specific channels" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All eight sections are present and complete",
+    "Problem statement is specific, not vague",
+    "Pricing includes actual numbers",
+    "Go-to-market names specific channels (not 'social media')",
+    "Success metrics are measurable (numbers, not feelings)",
+    "Key risks have mitigation strategies",
+    "Document is saved to repository"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 5,
+    title: "Competitive Analysis",
+    path: "/phase-1-validate/competitive-analysis"
+  }}
+  previous={{
+    chapter: 3,
+    title: "Opportunity Assessment",
+    path: "/phase-1-validate/opportunity-assessment"
+  }}
+  related={[
+    { title: "Design Brief", path: "/phase-1-validate/design-brief" },
+    { title: "MVP Scoping", path: "/phase-1-validate/mvp-scoping" }
+  ]}
+/>
+
+<ChapterNav
+  current={4}
+  total={43}
+  previous={{
+    chapter: 3,
+    title: "Opportunity Assessment",
+    path: "/phase-1-validate/opportunity-assessment"
+  }}
+  next={{
+    chapter: 5,
+    title: "Competitive Analysis",
+    path: "/phase-1-validate/competitive-analysis"
+  }}
+/>

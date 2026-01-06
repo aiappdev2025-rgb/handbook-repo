@@ -1,6 +1,176 @@
 ---
 sidebar_position: 1
-title: "design philosophy"
+title: "Design Philosophy"
+description: "Establish the UX principles that guide all design decisions throughout your product"
 ---
-# design philosophy
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Design Philosophy
+
+<span className="reading-time">10 min read</span>
+
+<TldrBox
+  what="Establish core UX principles that guide every design decision—consistency, clarity, and user-centered thinking."
+  why="Without explicit principles, design becomes 'design by committee' and feels inconsistent across screens."
+  outcome="A clear philosophy to reference when making design decisions in subsequent chapters."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Starting design work after completing the Design Brief",
+    "You need to align on UX principles with co-founders or team",
+    "Multiple stakeholders have different design opinions"
+  ]}
+  notYetIf={[
+    "Design Brief not complete",
+    "MVP scope not locked"
+  ]}
+  skipIf="You have an established design system from a previous project"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Design Brief complete", link: "/phase-1-validate/design-brief" },
+    { text: "MVP Scoping complete", link: "/phase-1-validate/mvp-scoping" }
+  ]}
+/>
+
+## Why Philosophy Before Screens?
+
+Before diving into screen specifications, you need principles that guide decisions. Without them, every screen becomes a debate, and the product feels inconsistent.
+
+:::info The Invisible Interface
+Good design is invisible. Users should accomplish their goals without thinking about the interface. Every screen should have a clear purpose, every element should earn its place, and every interaction should feel natural.
+:::
+
+## The Five Core Principles
+
+These principles should guide every design decision in your product:
+
+### 1. Clarity Over Cleverness
+
+Obvious is better than innovative. Users shouldn't have to think about how to use your product.
+
+**Apply when:**
+- Choosing between a "creative" navigation and a standard one → Choose standard
+- Deciding on icon-only vs icon+label → Add the label
+- Picking between custom components and platform conventions → Use conventions
+
+### 2. Progressive Disclosure
+
+Show what's needed, hide complexity. Don't overwhelm users with options they don't need yet.
+
+**Apply when:**
+- Designing forms → Show required fields first, optional later
+- Building dashboards → Show key metrics prominently, details on demand
+- Creating settings → Group by frequency of use, hide advanced options
+
+### 3. Consistent Patterns
+
+Same action, same behavior everywhere. Users learn once, apply everywhere.
+
+**Apply when:**
+- A user deletes something → Same confirmation pattern everywhere
+- A form submits → Same success/error pattern everywhere
+- Navigation changes → Same transition pattern everywhere
+
+### 4. Forgiving Design
+
+Easy to recover from mistakes. Undo, confirm destructive actions, provide clear error messages.
+
+**Apply when:**
+- User deletes something important → Provide undo or require confirmation
+- Form submission fails → Preserve entered data, show specific errors
+- User navigates away → Save drafts automatically
+
+### 5. Performance as Feature
+
+Fast feels professional. Every interaction should feel instant.
+
+**Apply when:**
+- Loading data → Show skeletons or spinners immediately
+- Processing actions → Provide immediate feedback, process in background
+- Navigating → Use optimistic updates where safe
+
+## Applying the Principles
+
+Use this decision framework when making design choices:
+
+| Question | Good Answer |
+|----------|-------------|
+| Does this feature earn its place? | Solves a real user need |
+| Is the path obvious? | No instructions needed |
+| Are there unnecessary steps? | Each step has clear purpose |
+| What happens on error? | Clear message, recovery path |
+| What about empty states? | Helpful guidance, not just "No data" |
+
+## Document Your Principles
+
+Create a short principles document that you can reference:
+
+```markdown
+## Our Design Principles
+
+1. **Clarity over Cleverness** - When in doubt, be obvious
+2. **Progressive Disclosure** - Show complexity gradually
+3. **Consistent Patterns** - Same action, same behavior
+4. **Forgiving Design** - Easy to undo, hard to break
+5. **Performance as Feature** - Fast is a feature, slow is a bug
+```
+
+<ExpectedOutput
+  items={[
+    { type: "Understanding", description: "The five core design principles and when to apply each" },
+    { type: "Framework", description: "A decision framework for design choices" },
+    { type: "Alignment", description: "Shared vocabulary for design discussions with team" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Can explain each of the five principles in your own words",
+    "Understand how to apply principles to real design decisions",
+    "Have documented your principles for reference",
+    "Team/co-founders aligned on the philosophy (if applicable)"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 9,
+    title: "UX Package",
+    path: "/phase-2-design/ux-package"
+  }}
+  previous={{
+    chapter: 7,
+    title: "Design Brief",
+    path: "/phase-1-validate/design-brief"
+  }}
+  related={[
+    { title: "UI System", path: "/phase-2-design/ui-system" }
+  ]}
+/>
+
+<ChapterNav
+  current={8}
+  total={43}
+  previous={{
+    chapter: 7,
+    title: "Design Brief",
+    path: "/phase-1-validate/design-brief"
+  }}
+  next={{
+    chapter: 9,
+    title: "UX Package",
+    path: "/phase-2-design/ux-package"
+  }}
+/>

@@ -1,6 +1,213 @@
 ---
 sidebar_position: 7
-title: "adr templates"
+title: "ADR Templates"
+description: "Document architectural decisions using Architecture Decision Records"
 ---
-# adr templates
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# ADR Templates
+
+<span className="reading-time">10 min read</span>
+
+<TldrBox
+  what="Use Architecture Decision Records (ADRs) to document significant technical decisions with context and rationale."
+  why="Future you (and teammates) will forget why decisions were made. ADRs capture the 'why' for later reference."
+  outcome="ADR template and process for documenting key decisions throughout the project."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Making a significant technical decision",
+    "Choosing between multiple valid approaches",
+    "Making a decision you might question later"
+  ]}
+  notYetIf={[
+    "Decision is trivial or easily reversible",
+    "No alternatives were considered"
+  ]}
+  skipIf="Working solo on a short-term project"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Architecture planning in progress" },
+    { text: "Documentation folder structure set up" }
+  ]}
+/>
+
+## What is an ADR?
+
+An Architecture Decision Record captures:
+- **What** decision was made
+- **Why** this option was chosen
+- **What** alternatives were considered
+- **What** the consequences are
+
+## ADR Template
+
+Create ADRs in `docs/adr/`:
+
+```markdown
+# ADR-001: [Short Title]
+
+## Status
+Accepted | Proposed | Deprecated | Superseded by ADR-XXX
+
+## Context
+What is the issue that we're seeing that motivates this decision?
+
+## Decision
+What is the change that we're proposing and/or doing?
+
+## Alternatives Considered
+
+### Option A: [Name]
+- Pros: ...
+- Cons: ...
+
+### Option B: [Name]
+- Pros: ...
+- Cons: ...
+
+## Consequences
+
+### Positive
+- What becomes easier?
+
+### Negative
+- What becomes harder?
+
+### Risks
+- What could go wrong?
+
+## References
+- Links to relevant documentation, discussions, or research
+```
+
+## Example ADR
+
+```markdown
+# ADR-001: Use Supabase for Authentication
+
+## Status
+Accepted
+
+## Context
+We need authentication for our SaaS application. Options include
+building custom auth, using NextAuth.js, or using Supabase Auth.
+We're already using Supabase for the database.
+
+## Decision
+Use Supabase Auth for all authentication needs.
+
+## Alternatives Considered
+
+### Option A: Custom Authentication
+- Pros: Full control, no vendor lock-in
+- Cons: Security risk, significant development time
+
+### Option B: NextAuth.js
+- Pros: Flexible, many providers
+- Cons: Additional dependency, separate from database
+
+### Option C: Supabase Auth (Chosen)
+- Pros: Integrated with database, RLS support, social providers
+- Cons: Vendor lock-in to Supabase
+
+## Consequences
+
+### Positive
+- RLS policies can reference auth.uid() directly
+- No separate auth service to maintain
+- Social login providers included
+
+### Negative
+- Migration away from Supabase becomes harder
+- Limited customization compared to custom auth
+
+### Risks
+- Supabase pricing changes could affect costs
+- Mitigation: Auth data is exportable
+
+## References
+- Supabase Auth docs: https://supabase.com/docs/guides/auth
+```
+
+## When to Write ADRs
+
+Write an ADR when:
+
+| Decision Type | Example |
+|---------------|---------|
+| **Technology choice** | "Use React Query vs SWR" |
+| **Architecture pattern** | "Use server components vs client" |
+| **Integration approach** | "How to integrate Stripe" |
+| **Security decision** | "Token storage approach" |
+| **Breaking convention** | "Why we're not using X" |
+
+## ADR Folder Structure
+
+```
+docs/
+├── adr/
+│   ├── 001-use-supabase-auth.md
+│   ├── 002-choose-tailwind-over-css-modules.md
+│   └── 003-server-components-for-data-fetching.md
+```
+
+<ExpectedOutput
+  items={[
+    { type: "Template", description: "ADR template ready for use" },
+    { type: "Process", description: "Clear criteria for when to write ADRs" },
+    { type: "Folder", description: "`docs/adr/` directory created" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "ADR template saved in your project",
+    "docs/adr/ folder created",
+    "Initial ADRs written for major decisions already made",
+    "Team understands when to write ADRs"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 20,
+    title: "Test Strategy",
+    path: "/phase-3-architect/test-strategy"
+  }}
+  previous={{
+    chapter: 18,
+    title: "Multi-Environment Config",
+    path: "/phase-3-architect/multi-environment"
+  }}
+  related={[
+    { title: "Solution Architecture", path: "/phase-3-architect/solution-architecture" }
+  ]}
+/>
+
+<ChapterNav
+  current={19}
+  total={43}
+  previous={{
+    chapter: 18,
+    title: "Multi-Environment Config",
+    path: "/phase-3-architect/multi-environment"
+  }}
+  next={{
+    chapter: 20,
+    title: "Test Strategy",
+    path: "/phase-3-architect/test-strategy"
+  }}
+/>

@@ -1,6 +1,210 @@
 ---
 sidebar_position: 4
-title: "security"
+title: "Security Architecture"
+description: "Design defense-in-depth security covering authentication, authorization, data protection, and common vulnerabilities"
 ---
-# security
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Security Architecture
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Design a defense-in-depth security approach covering authentication, authorization, data protection, and vulnerability prevention."
+  why="Security must be designed in, not bolted on. Retrofitting security is expensive and often incomplete."
+  outcome="A security section in your architecture document with specific controls for each layer."
+/>
+
+<WhenToUse
+  useWhen={[
+    "API specification is designed",
+    "Ready to formalize security controls",
+    "Need to document auth/authz approach"
+  ]}
+  notYetIf={[
+    "API routes not defined",
+    "User roles not determined"
+  ]}
+  skipIf="Extending existing system with established security model"
+/>
+
+<Prerequisites
+  items={[
+    { text: "API Specification complete", link: "/phase-3-architect/api-specification" },
+    { text: "User roles defined in UX Package" }
+  ]}
+/>
+
+## Defense-in-Depth Layers
+
+Security should exist at multiple layers so that if one layer fails, others still protect your system:
+
+```
+┌─────────────────────────────────────────────┐
+│  Layer 1: Network (HTTPS, CORS, Rate Limiting) │
+├─────────────────────────────────────────────┤
+│  Layer 2: Authentication (Supabase Auth)      │
+├─────────────────────────────────────────────┤
+│  Layer 3: Authorization (RLS Policies)        │
+├─────────────────────────────────────────────┤
+│  Layer 4: Input Validation (Zod Schemas)      │
+├─────────────────────────────────────────────┤
+│  Layer 5: Data Protection (Encryption)        │
+└─────────────────────────────────────────────┘
+```
+
+## Layer 1: Network Security
+
+| Control | Implementation |
+|---------|---------------|
+| **HTTPS** | Enforced by Vercel (automatic) |
+| **CORS** | Restrict to your domain only |
+| **Rate Limiting** | 100 req/min per IP for API routes |
+| **Headers** | CSP, X-Frame-Options, X-Content-Type-Options |
+
+## Layer 2: Authentication
+
+```typescript
+// middleware.ts - Protect routes
+export function middleware(request: NextRequest) {
+  const session = await getSession(request);
+
+  if (!session && request.nextUrl.pathname.startsWith('/app')) {
+    return NextResponse.redirect('/login');
+  }
+}
+```
+
+## Layer 3: Authorization (RLS)
+
+Every database table should have Row Level Security:
+
+```sql
+-- Users can only read their own data
+CREATE POLICY "Users read own data"
+  ON items FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Users can only modify their own data
+CREATE POLICY "Users modify own data"
+  ON items FOR ALL
+  USING (auth.uid() = user_id);
+```
+
+## Layer 4: Input Validation
+
+Validate ALL user input with Zod:
+
+```typescript
+import { z } from 'zod';
+
+const createItemSchema = z.object({
+  title: z.string().min(1).max(200),
+  description: z.string().max(2000).optional(),
+  category_id: z.string().uuid(),
+});
+
+// In API route
+const result = createItemSchema.safeParse(body);
+if (!result.success) {
+  return Response.json({ error: result.error }, { status: 400 });
+}
+```
+
+## Layer 5: Data Protection
+
+| Data Type | Protection |
+|-----------|------------|
+| Passwords | Never stored (use Supabase Auth) |
+| API Keys | Encrypted at rest, never in client code |
+| PII | Encrypted columns where required |
+| Sessions | HTTP-only, secure, same-site cookies |
+
+## OWASP Top 10 Prevention
+
+| Vulnerability | Prevention |
+|--------------|------------|
+| **Injection** | Parameterized queries (Supabase client handles this) |
+| **Broken Auth** | Supabase Auth + session validation |
+| **Sensitive Data** | HTTPS, encrypted storage |
+| **XXE** | Not applicable (JSON only) |
+| **Broken Access** | RLS policies on all tables |
+| **Misconfig** | Environment-based config, no secrets in code |
+| **XSS** | React auto-escaping, CSP headers |
+| **Insecure Deserialization** | JSON schema validation |
+| **Vulnerable Components** | Dependabot, npm audit |
+| **Logging** | Structured logging without PII |
+
+## Security Checklist
+
+Before proceeding to implementation:
+
+| Category | Requirement |
+|----------|-------------|
+| **Auth** | Authentication required for all /app routes |
+| **RLS** | Every table has RLS enabled |
+| **Validation** | All API inputs validated with Zod |
+| **Secrets** | No secrets in code (use env vars) |
+| **Headers** | Security headers configured |
+| **CORS** | Restricted to your domain |
+| **Rate Limiting** | Implemented on API routes |
+
+<ExpectedOutput
+  items={[
+    { type: "Documentation", description: "Security section in architecture document" },
+    { type: "Controls", description: "Specific controls for each security layer" },
+    { type: "Policies", description: "RLS policies for all tables" },
+    { type: "Validation", description: "Input validation approach defined" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All five security layers documented with specific controls",
+    "RLS policies defined for every database table",
+    "Input validation approach specified (Zod schemas)",
+    "OWASP Top 10 addressed with specific mitigations",
+    "No secrets in code (environment variables only)",
+    "Rate limiting strategy defined"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 17,
+    title: "Infrastructure Planning",
+    path: "/phase-3-architect/infrastructure"
+  }}
+  previous={{
+    chapter: 15,
+    title: "API Specification",
+    path: "/phase-3-architect/api-specification"
+  }}
+  related={[
+    { title: "Data Model Design", path: "/phase-3-architect/data-model" }
+  ]}
+/>
+
+<ChapterNav
+  current={16}
+  total={43}
+  previous={{
+    chapter: 15,
+    title: "API Specification",
+    path: "/phase-3-architect/api-specification"
+  }}
+  next={{
+    chapter: 17,
+    title: "Infrastructure Planning",
+    path: "/phase-3-architect/infrastructure"
+  }}
+/>

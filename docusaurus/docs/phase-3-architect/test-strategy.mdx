@@ -1,6 +1,238 @@
 ---
 sidebar_position: 8
-title: "test strategy"
+title: "Test Strategy"
+description: "Define testing approach including unit, integration, and end-to-end test coverage requirements"
 ---
-# test strategy
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Test Strategy
+
+<span className="reading-time">15 min read</span>
+
+<TldrBox
+  what="Define your testing approach: what to test, how to test, and target coverage levels for unit, integration, and E2E tests."
+  why="The MOAI methodology requires tests before implementation (TDD). A clear strategy ensures consistent test quality."
+  outcome="Test strategy document with coverage targets and testing patterns for your project."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Architecture planning complete",
+    "Preparing for implementation phase",
+    "Need to define testing standards"
+  ]}
+  notYetIf={[
+    "Architecture not finalized",
+    "Team not aligned on TDD approach"
+  ]}
+  skipIf="Extending existing project with established test patterns"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Solution Architecture complete", link: "/phase-3-architect/solution-architecture" },
+    { text: "API Specification defined", link: "/phase-3-architect/api-specification" }
+  ]}
+/>
+
+## The Testing Pyramid
+
+```
+        /\
+       /E2E\        Few, slow, expensive
+      /──────\
+     /  Integ  \    Some, moderate
+    /────────────\
+   /    Unit       \  Many, fast, cheap
+  /──────────────────\
+```
+
+| Level | What | Tools | Coverage Target |
+|-------|------|-------|-----------------|
+| **Unit** | Functions, hooks, utils | Vitest | 80%+ |
+| **Integration** | API routes, DB queries | Vitest + Supabase | 70%+ |
+| **E2E** | Critical user flows | Playwright | Key flows |
+
+## Testing Stack
+
+```bash
+# Install testing dependencies
+npm install -D vitest @testing-library/react @testing-library/jest-dom
+npm install -D @playwright/test
+npm install -D msw  # API mocking
+```
+
+## Unit Testing Patterns
+
+### Testing Utilities
+
+```typescript
+// lib/utils.test.ts
+import { describe, it, expect } from 'vitest';
+import { formatCurrency, validateEmail } from './utils';
+
+describe('formatCurrency', () => {
+  it('formats USD correctly', () => {
+    expect(formatCurrency(1234.56)).toBe('$1,234.56');
+  });
+
+  it('handles zero', () => {
+    expect(formatCurrency(0)).toBe('$0.00');
+  });
+});
+```
+
+### Testing React Hooks
+
+```typescript
+// hooks/useUser.test.ts
+import { renderHook, waitFor } from '@testing-library/react';
+import { useUser } from './useUser';
+
+describe('useUser', () => {
+  it('returns null when not authenticated', async () => {
+    const { result } = renderHook(() => useUser());
+
+    await waitFor(() => {
+      expect(result.current.user).toBeNull();
+    });
+  });
+});
+```
+
+## Integration Testing Patterns
+
+### Testing API Routes
+
+```typescript
+// app/api/items/route.test.ts
+import { describe, it, expect, beforeEach } from 'vitest';
+import { POST, GET } from './route';
+
+describe('POST /api/items', () => {
+  it('creates item for authenticated user', async () => {
+    const request = new Request('http://localhost/api/items', {
+      method: 'POST',
+      body: JSON.stringify({ title: 'Test Item' }),
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(201);
+    expect(data.title).toBe('Test Item');
+  });
+
+  it('returns 401 for unauthenticated request', async () => {
+    // ... test without auth
+  });
+});
+```
+
+## E2E Testing Patterns
+
+### Critical Flow Tests
+
+```typescript
+// e2e/auth.spec.ts
+import { test, expect } from '@playwright/test';
+
+test.describe('Authentication', () => {
+  test('user can sign up and access dashboard', async ({ page }) => {
+    await page.goto('/signup');
+
+    await page.fill('[data-testid="email"]', 'test@example.com');
+    await page.fill('[data-testid="password"]', 'securepassword123');
+    await page.click('[data-testid="signup-button"]');
+
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByText('Welcome')).toBeVisible();
+  });
+});
+```
+
+## What to Test
+
+| Layer | Test | Don't Test |
+|-------|------|------------|
+| **Unit** | Business logic, utils, formatters | UI rendering, third-party libs |
+| **Integration** | API routes, database operations | External services (mock them) |
+| **E2E** | Critical user flows, happy paths | Every edge case |
+
+## SPEC-Test Connection
+
+Every SPEC document should define its test cases:
+
+```markdown
+## Test Cases (in SPEC document)
+
+### Unit Tests
+- [ ] formatCurrency handles positive numbers
+- [ ] formatCurrency handles negative numbers
+- [ ] formatCurrency handles zero
+
+### Integration Tests
+- [ ] API creates item in database
+- [ ] API enforces RLS policies
+
+### E2E Tests
+- [ ] User can complete core flow
+```
+
+<ExpectedOutput
+  items={[
+    { type: "Strategy", description: "Test strategy document with coverage targets" },
+    { type: "Configuration", description: "Vitest and Playwright configured" },
+    { type: "Patterns", description: "Testing patterns documented for each layer" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Testing stack installed (Vitest, Playwright)",
+    "Coverage targets defined (80% unit, 70% integration)",
+    "Testing patterns documented for each layer",
+    "E2E tests planned for critical flows",
+    "SPEC-test connection understood"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 21,
+    title: "Build Contract",
+    path: "/phase-3-architect/build-contract"
+  }}
+  previous={{
+    chapter: 19,
+    title: "ADR Templates",
+    path: "/phase-3-architect/adr-templates"
+  }}
+  related={[
+    { title: "Quality Gates", path: "/phase-4-build/quality-gates" }
+  ]}
+/>
+
+<ChapterNav
+  current={20}
+  total={43}
+  previous={{
+    chapter: 19,
+    title: "ADR Templates",
+    path: "/phase-3-architect/adr-templates"
+  }}
+  next={{
+    chapter: 21,
+    title: "Build Contract",
+    path: "/phase-3-architect/build-contract"
+  }}
+/>

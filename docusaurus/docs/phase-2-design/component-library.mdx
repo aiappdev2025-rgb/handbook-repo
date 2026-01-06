@@ -1,6 +1,303 @@
 ---
 sidebar_position: 5
-title: "component liurary"
+title: "Component Library Spec"
+description: "Document component states, variants, and implementation details for development"
 ---
-# component liurary
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Component Library Spec
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Document detailed component specifications including states, variants, props, and accessibility requirements."
+  why="Detailed specs ensure developers build components that match design intent exactly—no guessing required."
+  outcome="A complete component spec document ready for implementation in Phase 4."
+/>
+
+<WhenToUse
+  useWhen={[
+    "UI System is defined with design tokens",
+    "Preparing for implementation phase",
+    "Need to document component states and variants"
+  ]}
+  notYetIf={[
+    "Visual design not approved",
+    "UI System incomplete"
+  ]}
+  skipIf="Using a component library with existing documentation (shadcn/ui, Radix)"
+/>
+
+<Prerequisites
+  items={[
+    { text: "UI System complete", link: "/phase-2-design/ui-system" },
+    { text: "UX Package validated", link: "/phase-2-design/user-flows" }
+  ]}
+/>
+
+## Why Detailed Component Specs?
+
+The UI System defines design tokens and visual direction. The Component Library Spec goes deeper—documenting every state, variant, and behavior so developers have no questions.
+
+## Component Documentation Template
+
+For each component, document:
+
+```markdown
+## [Component Name]
+
+### Purpose
+What this component is for and when to use it.
+
+### Variants
+| Variant | Use Case |
+|---------|----------|
+| variant-1 | When to use this variant |
+| variant-2 | When to use this variant |
+
+### Sizes
+| Size | Height | Padding | Font Size |
+|------|--------|---------|-----------|
+| sm | 32px | 12px | 14px |
+| md | 40px | 16px | 16px |
+| lg | 48px | 24px | 18px |
+
+### States
+| State | Appearance | Trigger |
+|-------|------------|---------|
+| default | Normal | Initial |
+| hover | Highlight | Mouse over |
+| active | Pressed | Mouse down |
+| focus | Ring | Keyboard focus |
+| disabled | Muted | disabled prop |
+| loading | Spinner | loading prop |
+| error | Red border | error prop |
+
+### Props
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| variant | string | 'primary' | Visual variant |
+| size | string | 'md' | Component size |
+| disabled | boolean | false | Disable interaction |
+| loading | boolean | false | Show loading state |
+
+### Accessibility
+- Role: `button`
+- Keyboard: Enter/Space to activate
+- ARIA: `aria-disabled` when disabled
+- Focus: Visible focus ring
+```
+
+## Core Components to Document
+
+### 1. Button
+
+```markdown
+## Button
+
+### Variants
+- **Primary**: Main call-to-action (one per screen)
+- **Secondary**: Supporting actions
+- **Ghost**: Tertiary actions, in toolbars
+- **Destructive**: Delete, remove actions
+- **Link**: Navigation that looks like text
+
+### States
+Default → Hover (darken 10%) → Active (darken 20%) → Disabled (opacity 50%)
+
+### Loading State
+- Spinner replaces text
+- Minimum 500ms display (prevent flash)
+- `aria-busy="true"` when loading
+```
+
+### 2. Form Input
+
+```markdown
+## Input
+
+### Variants
+- **Default**: Standard text input
+- **With Icon**: Leading or trailing icon
+- **With Addon**: Prefix/suffix text (e.g., "$", ".com")
+
+### States
+- **Default**: Gray border
+- **Focus**: Blue border, subtle shadow
+- **Error**: Red border, error message below
+- **Disabled**: Gray background, no interaction
+
+### Validation
+- Validate on blur (not on every keystroke)
+- Show error message below field
+- Preserve user input on error
+```
+
+### 3. Modal/Dialog
+
+```markdown
+## Modal
+
+### Behavior
+- Trap focus within modal
+- Close on Escape key
+- Close on backdrop click (optional)
+- Prevent body scroll when open
+
+### Sizes
+- **sm**: 400px max-width (confirmations)
+- **md**: 500px max-width (forms)
+- **lg**: 700px max-width (complex content)
+- **full**: 90vw (large tables/editors)
+
+### Accessibility
+- `role="dialog"`
+- `aria-modal="true"`
+- `aria-labelledby` pointing to title
+- Return focus to trigger on close
+```
+
+### 4. Toast/Notification
+
+```markdown
+## Toast
+
+### Variants
+- **Success**: Green, checkmark icon
+- **Error**: Red, X icon
+- **Warning**: Yellow, warning icon
+- **Info**: Blue, info icon
+
+### Behavior
+- Stack from bottom-right
+- Auto-dismiss: 5s (success), manual (error)
+- Max 3 visible at once
+- Swipe to dismiss on mobile
+
+### Accessibility
+- `role="status"` (or `alert` for errors)
+- `aria-live="polite"` (or `assertive` for errors)
+```
+
+### 5. Table
+
+```markdown
+## Table
+
+### Features
+- Sortable columns (click header)
+- Row selection (checkbox column)
+- Pagination (bottom)
+- Empty state (centered message)
+
+### States
+- **Loading**: Skeleton rows
+- **Empty**: Centered message + CTA
+- **Error**: Retry message
+
+### Responsive
+- Horizontal scroll below 768px
+- Or stack to cards on mobile
+```
+
+## Visual Direction Options
+
+Before finalizing, consider exploring alternatives:
+
+### Exploration Prompt
+
+```markdown
+Present 3 distinct visual directions for [PRODUCT NAME]:
+
+**Direction A**: Minimal and Professional
+**Direction B**: Bold and Modern
+**Direction C**: Warm and Approachable
+
+For each direction, provide:
+- Color palette (with hex codes)
+- Typography choices
+- Sample button component
+- Mood/feeling conveyed
+- Best suited for which audience
+```
+
+### When to Explore
+
+| Explore | Skip |
+|---------|------|
+| Consumer products | Internal tools |
+| Brand-driven products | B2B utilities |
+| Design as differentiator | Time-constrained MVPs |
+
+## Phase 2 Complete
+
+You've now completed Phase 2: Design. Your artifacts:
+
+- **Design Brief**: Product vision and vocabulary
+- **Design Philosophy**: UX principles
+- **UX Package**: Complete screen and flow specs
+- **UI System**: Visual design tokens
+- **Component Library Spec**: Detailed component documentation
+
+These artifacts form the foundation for technical implementation in Phase 3.
+
+<ExpectedOutput
+  items={[
+    { type: "Documentation", description: "Detailed specs for 10+ UI components" },
+    { type: "States", description: "Every component has all states documented" },
+    { type: "Props", description: "Component APIs defined for implementation" },
+    { type: "Accessibility", description: "A11y requirements per component" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All core components documented (Button, Input, Modal, Toast, Table, etc.)",
+    "Each component has states defined (default, hover, focus, disabled, error)",
+    "Sizes and variants specified with exact values",
+    "Accessibility requirements documented per component",
+    "Visual direction finalized (or alternatives explored if needed)",
+    "All Phase 2 artifacts saved to repository"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 13,
+    title: "Solution Architecture",
+    path: "/phase-3-architect/solution-architecture"
+  }}
+  previous={{
+    chapter: 11,
+    title: "UI System",
+    path: "/phase-2-design/ui-system"
+  }}
+  related={[
+    { title: "UI System", path: "/phase-2-design/ui-system" },
+    { title: "Quality Gates", path: "/phase-4-build/quality-gates" }
+  ]}
+/>
+
+<ChapterNav
+  current={12}
+  total={43}
+  previous={{
+    chapter: 11,
+    title: "UI System",
+    path: "/phase-2-design/ui-system"
+  }}
+  next={{
+    chapter: 13,
+    title: "Solution Architecture",
+    path: "/phase-3-architect/solution-architecture"
+  }}
+/>

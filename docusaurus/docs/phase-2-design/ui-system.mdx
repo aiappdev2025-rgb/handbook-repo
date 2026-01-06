@@ -1,6 +1,297 @@
 ---
 sidebar_position: 4
-title: "ui system"
+title: "UI System"
+description: "Define your visual design language—colors, typography, spacing, and component specifications"
 ---
-# ui system
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# UI System
+
+<span className="reading-time">25 min read</span>
+
+<TldrBox
+  what="Define your visual design language: colors, typography, spacing, and design tokens that ensure visual consistency."
+  why="Without a defined system, each screen risks becoming visually inconsistent, making the product feel unprofessional."
+  outcome="A complete `docs/ui-system.md` with design tokens, layout system, and visual direction."
+/>
+
+<WhenToUse
+  useWhen={[
+    "UX flows are approved and validated",
+    "Ready for visual design decisions",
+    "Need component specifications for implementation"
+  ]}
+  notYetIf={[
+    "User flows not finalized",
+    "UX Package still changing"
+  ]}
+  skipIf="Using an established design system (Material, Tailwind presets)"
+/>
+
+<Prerequisites
+  items={[
+    { text: "UX Package complete and validated", link: "/phase-2-design/user-flows" },
+    { text: "Design Philosophy established", link: "/phase-2-design/design-philosophy" }
+  ]}
+/>
+
+## What is a UI System?
+
+The UI System defines the **visual language**: colors, typography, spacing, and components. It ensures visual consistency across the entire application.
+
+## UI System Structure
+
+Your UI System should include four sections:
+
+### Section 1: Design Tokens
+
+Design tokens are the atomic values that define your visual language:
+
+#### Color Palette
+
+```css
+/* Primary */
+--color-primary-50: #eff6ff;
+--color-primary-500: #3b82f6;
+--color-primary-700: #1d4ed8;
+
+/* Semantic */
+--color-success: #10b981;
+--color-warning: #f59e0b;
+--color-error: #ef4444;
+
+/* Neutrals */
+--color-gray-50: #f9fafb;
+--color-gray-500: #6b7280;
+--color-gray-900: #111827;
+```
+
+#### Typography Scale
+
+```css
+/* Font Family */
+--font-sans: 'Inter', system-ui, sans-serif;
+--font-mono: 'Fira Code', monospace;
+
+/* Font Sizes */
+--text-xs: 0.75rem;    /* 12px */
+--text-sm: 0.875rem;   /* 14px */
+--text-base: 1rem;     /* 16px */
+--text-lg: 1.125rem;   /* 18px */
+--text-xl: 1.25rem;    /* 20px */
+--text-2xl: 1.5rem;    /* 24px */
+```
+
+#### Spacing Scale
+
+```css
+/* Base: 4px */
+--space-1: 0.25rem;  /* 4px */
+--space-2: 0.5rem;   /* 8px */
+--space-3: 0.75rem;  /* 12px */
+--space-4: 1rem;     /* 16px */
+--space-6: 1.5rem;   /* 24px */
+--space-8: 2rem;     /* 32px */
+```
+
+#### Other Tokens
+
+```css
+/* Border Radius */
+--radius-sm: 0.25rem;
+--radius-md: 0.375rem;
+--radius-lg: 0.5rem;
+--radius-full: 9999px;
+
+/* Shadows */
+--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+--shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+--shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+```
+
+### Section 2: Layout System
+
+#### Grid System
+
+- 12-column grid for desktop
+- 4-column grid for mobile
+- Gutter: 24px (desktop), 16px (mobile)
+
+#### Container Widths
+
+```css
+--container-sm: 640px;
+--container-md: 768px;
+--container-lg: 1024px;
+--container-xl: 1280px;
+```
+
+#### Breakpoints
+
+| Breakpoint | Width | Target |
+|------------|-------|--------|
+| `sm` | 640px | Large phones |
+| `md` | 768px | Tablets |
+| `lg` | 1024px | Small laptops |
+| `xl` | 1280px | Desktops |
+
+### Section 3: Component Specifications
+
+For each component, define:
+
+- Visual design (all states)
+- Variants (sizes, styles)
+- Behavior specifications
+- Accessibility requirements
+
+#### Example: Button Component
+
+```markdown
+## Button
+
+### Variants
+- **Primary**: Blue background, white text
+- **Secondary**: White background, blue border
+- **Ghost**: Transparent, blue text
+- **Destructive**: Red background, white text
+
+### Sizes
+- **sm**: 32px height, 12px padding
+- **md**: 40px height, 16px padding
+- **lg**: 48px height, 24px padding
+
+### States
+- Default: Standard appearance
+- Hover: 10% darker background
+- Active: 20% darker background
+- Disabled: 50% opacity, no pointer events
+- Loading: Spinner icon, text hidden
+
+### Accessibility
+- Minimum 44px touch target on mobile
+- Focus ring: 2px blue outline
+- aria-disabled when disabled
+- aria-busy when loading
+```
+
+### Section 4: Visual Direction
+
+Define the overall aesthetic:
+
+| Aspect | Direction |
+|--------|-----------|
+| **Overall Feel** | Minimal and professional |
+| **Color Usage** | Restrained, accent for actions only |
+| **Typography** | Clean, readable, limited weights |
+| **Imagery** | Abstract illustrations, no stock photos |
+| **Icons** | Outline style, consistent stroke width |
+| **Motion** | Subtle, functional, 200ms default |
+
+## UI System Prompt
+
+```markdown
+Create a UI System for [PRODUCT NAME].
+
+**Design Brief**: [ATTACH]
+**UX Package**: [ATTACH]
+
+The UI System should define:
+
+**SECTION 1: Design Tokens**
+- Color palette (primary, secondary, semantic, neutrals)
+- Typography scale (font families, sizes, weights, line heights)
+- Spacing scale (4px base recommended)
+- Border radius scale
+- Shadow scale
+
+**SECTION 2: Layout System**
+- Grid system
+- Container widths
+- Responsive breakpoints
+
+**SECTION 3: Component Specifications**
+For each component:
+- Visual design (all states)
+- Variants (sizes, styles)
+- Behavior specifications
+- Accessibility requirements
+
+Components needed:
+- Button (primary, secondary, ghost, destructive)
+- Input (text, email, password, textarea)
+- Select
+- Checkbox, Radio
+- Card
+- Modal
+- Toast/Notification
+- Table
+- Form field (with label, error, helper text)
+
+**SECTION 4: Visual Direction**
+- Overall aesthetic
+- Color usage principles
+- Icon style
+- Motion principles
+
+Output in markdown format, ready to save as docs/ui-system.md.
+```
+
+<ExpectedOutput
+  items={[
+    { type: "Artifact", description: "`docs/ui-system.md` (1,500-3,000 words)" },
+    { type: "Tokens", description: "Complete design tokens with specific values (hex codes, pixels)" },
+    { type: "Components", description: "Specifications for 10+ UI components with all states" },
+    { type: "Layout", description: "Grid system and responsive breakpoints defined" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "Design tokens include specific values (hex codes, pixel sizes)",
+    "Component library defines all states (default, hover, active, disabled, error)",
+    "Layout system includes grid and breakpoints",
+    "Visual direction clearly articulated",
+    "Document saved to repository"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 12,
+    title: "Component Library Spec",
+    path: "/phase-2-design/component-library"
+  }}
+  previous={{
+    chapter: 10,
+    title: "User Flows & Wireframes",
+    path: "/phase-2-design/user-flows"
+  }}
+  related={[
+    { title: "UX Package", path: "/phase-2-design/ux-package" },
+    { title: "Solution Architecture", path: "/phase-3-architect/solution-architecture" }
+  ]}
+/>
+
+<ChapterNav
+  current={11}
+  total={43}
+  previous={{
+    chapter: 10,
+    title: "User Flows & Wireframes",
+    path: "/phase-2-design/user-flows"
+  }}
+  next={{
+    chapter: 12,
+    title: "Component Library Spec",
+    path: "/phase-2-design/component-library"
+  }}
+/>

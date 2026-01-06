@@ -1,6 +1,246 @@
 ---
 sidebar_position: 3
-title: "api specification"
+title: "API Specification"
+description: "Define API routes, request/response schemas, and authentication requirements"
 ---
-# api specification
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# API Specification
+
+<span className="reading-time">20 min read</span>
+
+<TldrBox
+  what="Document all API routes with methods, request/response schemas, authentication requirements, and error responses."
+  why="A complete API spec ensures frontend and backend development can proceed in parallel with clear contracts."
+  outcome="An API specification section in your architecture document or a standalone `docs/api-spec.md`."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Database schema is designed",
+    "Ready to define API endpoints",
+    "Need to document contracts between frontend and backend"
+  ]}
+  notYetIf={[
+    "Data model not finalized",
+    "User flows still changing"
+  ]}
+  skipIf="Using a generated API (Supabase client, tRPC with inference)"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Data Model Design complete", link: "/phase-3-architect/data-model" },
+    { text: "User flows documented in UX Package" }
+  ]}
+/>
+
+## API Design Principles
+
+Your API should follow these principles:
+
+| Principle | Implementation |
+|-----------|---------------|
+| **RESTful** | Use HTTP methods correctly (GET, POST, PUT, DELETE) |
+| **Consistent** | Same patterns across all endpoints |
+| **Documented** | Every route has clear request/response schema |
+| **Secure** | Authentication required for sensitive operations |
+| **Validated** | All input validated before processing |
+
+## Route Documentation Template
+
+For each API route, document:
+
+```markdown
+### POST /api/items
+
+**Purpose**: Create a new item
+
+**Authentication**: Required (Bearer token)
+
+**Request Body**:
+```json
+{
+  "title": "string (required, max 200 chars)",
+  "description": "string (optional, max 2000 chars)",
+  "category_id": "uuid (required)"
+}
+```
+
+**Success Response** (201):
+```json
+{
+  "id": "uuid",
+  "title": "string",
+  "description": "string",
+  "category_id": "uuid",
+  "created_at": "ISO timestamp",
+  "updated_at": "ISO timestamp"
+}
+```
+
+**Error Responses**:
+- 400: Validation error (missing/invalid fields)
+- 401: Unauthorized (no/invalid token)
+- 403: Forbidden (not allowed to create in this category)
+- 500: Server error
+```
+
+## API Specification Prompt
+
+```markdown
+Create an API specification for [PRODUCT NAME] based on the architecture.
+
+For each endpoint, document:
+1. HTTP method and route
+2. Purpose (what it does)
+3. Authentication requirement
+4. Request body/query params schema
+5. Success response schema
+6. Error responses (400, 401, 403, 404, 500)
+
+Group endpoints by resource:
+- /api/auth/* (authentication)
+- /api/users/* (user management)
+- /api/[domain]/* (domain-specific)
+- /api/ai/* (AI features)
+- /api/billing/* (Stripe integration)
+
+Include validation rules for all request fields.
+
+Output in markdown format.
+```
+
+## Example: Complete Resource API
+
+```markdown
+## Items API
+
+### GET /api/items
+
+**Purpose**: List items for authenticated user
+**Auth**: Required
+
+**Query Params**:
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| page | number | 1 | Page number |
+| limit | number | 20 | Items per page (max 100) |
+| sort | string | created_at | Sort field |
+| order | asc/desc | desc | Sort order |
+
+**Response** (200):
+```json
+{
+  "items": [...],
+  "total": 150,
+  "page": 1,
+  "limit": 20,
+  "hasMore": true
+}
+```
+
+### GET /api/items/:id
+
+**Purpose**: Get single item by ID
+**Auth**: Required
+
+**Response** (200): Single item object
+**Errors**: 404 if not found or not owned by user
+
+### POST /api/items
+
+**Purpose**: Create new item
+**Auth**: Required
+**Body**: `{ title, description?, category_id }`
+**Response** (201): Created item
+
+### PUT /api/items/:id
+
+**Purpose**: Update item
+**Auth**: Required (must own item)
+**Body**: `{ title?, description?, category_id? }`
+**Response** (200): Updated item
+
+### DELETE /api/items/:id
+
+**Purpose**: Delete item
+**Auth**: Required (must own item)
+**Response** (204): No content
+```
+
+## Next.js App Router Pattern
+
+With Next.js App Router, API routes live in `app/api/`:
+
+```
+app/
+├── api/
+│   ├── auth/
+│   │   └── [...nextauth]/route.ts
+│   ├── items/
+│   │   ├── route.ts         # GET (list), POST (create)
+│   │   └── [id]/route.ts    # GET, PUT, DELETE
+│   └── ai/
+│       └── generate/route.ts
+```
+
+<ExpectedOutput
+  items={[
+    { type: "Specification", description: "All API routes documented" },
+    { type: "Schemas", description: "Request/response schemas for each endpoint" },
+    { type: "Errors", description: "Error responses defined (400, 401, 403, 404, 500)" },
+    { type: "Validation", description: "Input validation rules documented" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All CRUD operations for each resource documented",
+    "Authentication requirements specified per route",
+    "Request schemas include validation rules (required, max length, type)",
+    "Response schemas match database model",
+    "Error responses documented with status codes",
+    "Routes organized by resource group"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 16,
+    title: "Security Architecture",
+    path: "/phase-3-architect/security"
+  }}
+  previous={{
+    chapter: 14,
+    title: "Data Model Design",
+    path: "/phase-3-architect/data-model"
+  }}
+  related={[
+    { title: "Solution Architecture", path: "/phase-3-architect/solution-architecture" }
+  ]}
+/>
+
+<ChapterNav
+  current={15}
+  total={43}
+  previous={{
+    chapter: 14,
+    title: "Data Model Design",
+    path: "/phase-3-architect/data-model"
+  }}
+  next={{
+    chapter: 16,
+    title: "Security Architecture",
+    path: "/phase-3-architect/security"
+  }}
+/>

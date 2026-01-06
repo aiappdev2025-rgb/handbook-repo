@@ -1,6 +1,190 @@
 ---
 sidebar_position: 5
-title: "infrastructure"
+title: "Infrastructure Planning"
+description: "Plan hosting, database, storage, and third-party service infrastructure"
 ---
-# infrastructure
-*Content to be migrated*
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  ExpectedOutput,
+  Verification,
+  NextSteps,
+  ChapterNav
+} from '@site/src/components/ChapterComponents';
+
+# Infrastructure Planning
+
+<span className="reading-time">15 min read</span>
+
+<TldrBox
+  what="Plan infrastructure including hosting (Vercel), database (Supabase), file storage, and third-party services."
+  why="Infrastructure decisions affect cost, performance, and scaling. Planning ahead prevents mid-project migrations."
+  outcome="Infrastructure section in architecture document with service choices and configuration approach."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Security architecture is designed",
+    "Ready to select infrastructure providers",
+    "Need to plan hosting and database setup"
+  ]}
+  notYetIf={[
+    "Architecture decisions still in flux",
+    "Budget not determined"
+  ]}
+  skipIf="Using existing infrastructure"
+/>
+
+<Prerequisites
+  items={[
+    { text: "Security Architecture complete", link: "/phase-3-architect/security" },
+    { text: "Database schema designed", link: "/phase-3-architect/data-model" }
+  ]}
+/>
+
+## Recommended Stack
+
+For AI SaaS applications, this stack optimizes for developer experience and cost efficiency:
+
+| Service | Provider | Purpose | Cost |
+|---------|----------|---------|------|
+| **Hosting** | Vercel | Frontend + API routes | Free tier available |
+| **Database** | Supabase | PostgreSQL + Auth + Storage | Free tier available |
+| **AI** | Anthropic | Claude API | Pay-per-use |
+| **Payments** | Stripe | Subscriptions | 2.9% + $0.30 |
+| **Email** | Resend | Transactional email | Free tier available |
+| **Analytics** | PostHog | Product analytics | Free tier available |
+
+## Vercel Configuration
+
+```json
+// vercel.json
+{
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@supabase-url",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-key"
+  }
+}
+```
+
+## Supabase Setup
+
+### Project Creation
+1. Create project at supabase.com
+2. Note the project URL and anon key
+3. Run initial migration (from Chapter 14)
+
+### Required Extensions
+```sql
+-- Enable required extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+```
+
+### Storage Buckets
+```sql
+-- Create storage bucket for user uploads
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('user-uploads', 'user-uploads', false);
+
+-- RLS for storage
+CREATE POLICY "Users access own uploads"
+  ON storage.objects FOR ALL
+  USING (auth.uid()::text = (storage.foldername(name))[1]);
+```
+
+## Environment Variables
+
+Document all required environment variables:
+
+| Variable | Description | Where to Get |
+|----------|-------------|--------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | Supabase dashboard |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key | Supabase dashboard |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (server only) | Supabase dashboard |
+| `ANTHROPIC_API_KEY` | Claude API key | Anthropic console |
+| `STRIPE_SECRET_KEY` | Stripe secret key | Stripe dashboard |
+| `STRIPE_WEBHOOK_SECRET` | Webhook signing secret | Stripe dashboard |
+
+:::warning Never Expose Secrets
+Keys starting with `NEXT_PUBLIC_` are exposed to the browser. Never prefix sensitive keys like `SUPABASE_SERVICE_ROLE_KEY` or `STRIPE_SECRET_KEY` with `NEXT_PUBLIC_`.
+:::
+
+## Cost Estimation
+
+Estimate monthly costs for your MVP:
+
+| Service | Free Tier | Estimated Growth |
+|---------|-----------|------------------|
+| Vercel | 100GB bandwidth | $20/mo at scale |
+| Supabase | 500MB DB, 1GB storage | $25/mo at scale |
+| Claude API | N/A | $50-200/mo based on usage |
+| Stripe | N/A | 2.9% + $0.30 per transaction |
+| **Total MVP** | **~$0-50/mo** | **~$100-300/mo** |
+
+## Infrastructure Checklist
+
+Before proceeding:
+
+| Item | Status |
+|------|--------|
+| Vercel account created | ☐ |
+| Supabase project created | ☐ |
+| Anthropic API key obtained | ☐ |
+| Stripe account set up | ☐ |
+| Environment variables documented | ☐ |
+| Cost estimation reviewed | ☐ |
+
+<ExpectedOutput
+  items={[
+    { type: "Documentation", description: "Infrastructure section in architecture document" },
+    { type: "Accounts", description: "Required accounts identified" },
+    { type: "Variables", description: "Environment variables documented" },
+    { type: "Costs", description: "Monthly cost estimation" }
+  ]}
+/>
+
+<Verification
+  checks={[
+    "All required service providers identified",
+    "Environment variables documented with sources",
+    "Cost estimation calculated for MVP phase",
+    "Free tier limits understood",
+    "No secrets planned for client-side exposure"
+  ]}
+/>
+
+<NextSteps
+  next={{
+    chapter: 18,
+    title: "Multi-Environment Config",
+    path: "/phase-3-architect/multi-environment"
+  }}
+  previous={{
+    chapter: 16,
+    title: "Security Architecture",
+    path: "/phase-3-architect/security"
+  }}
+  related={[
+    { title: "Dev Environment Setup", path: "/phase-3-architect/dev-environment" }
+  ]}
+/>
+
+<ChapterNav
+  current={17}
+  total={43}
+  previous={{
+    chapter: 16,
+    title: "Security Architecture",
+    path: "/phase-3-architect/security"
+  }}
+  next={{
+    chapter: 18,
+    title: "Multi-Environment Config",
+    path: "/phase-3-architect/multi-environment"
+  }}
+/>
