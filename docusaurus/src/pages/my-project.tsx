@@ -7,6 +7,9 @@ import {
   downloadFile,
   downloadProjectZip,
   downloadAllProjectsZip,
+  downloadFullProjectZip,
+  downloadArtifactsZip,
+  downloadPhaseArtifactsZip,
 } from '../lib/conductorExport';
 import ProjectImport from '../components/ProjectImport';
 import ArtifactsTab from '../components/ArtifactsTab';
@@ -933,6 +936,51 @@ function ProjectHeader() {
     setShowExportMenu(false);
   };
 
+  const handleExportFullZip = async () => {
+    if (!activeProject) return;
+    setExporting(true);
+    try {
+      await downloadFullProjectZip(activeProject);
+    } catch (err) {
+      console.error('Failed to export full ZIP:', err);
+      alert('Failed to export ZIP file');
+    }
+    setExporting(false);
+    setShowExportMenu(false);
+  };
+
+  const handleExportArtifactsZip = async () => {
+    if (!activeProject) return;
+    setExporting(true);
+    try {
+      const success = await downloadArtifactsZip(activeProject);
+      if (!success) {
+        alert('No artifacts to export. Create some artifacts first!');
+      }
+    } catch (err) {
+      console.error('Failed to export artifacts:', err);
+      alert('Failed to export artifacts');
+    }
+    setExporting(false);
+    setShowExportMenu(false);
+  };
+
+  const handleExportPhaseArtifacts = async (phaseNum: number) => {
+    if (!activeProject) return;
+    setExporting(true);
+    try {
+      const success = await downloadPhaseArtifactsZip(activeProject, phaseNum);
+      if (!success) {
+        alert(`No artifacts in Phase ${phaseNum} to export.`);
+      }
+    } catch (err) {
+      console.error('Failed to export phase artifacts:', err);
+      alert('Failed to export phase artifacts');
+    }
+    setExporting(false);
+    setShowExportMenu(false);
+  };
+
   return (
     <div className={styles.projectHeader}>
       <div className={styles.projectHeaderLeft}>
@@ -976,10 +1024,25 @@ function ProjectHeader() {
           </button>
           {showExportMenu && (
             <div className={styles.exportMenu}>
-              <button onClick={handleExportZip}>Export All (ZIP)</button>
-              <button onClick={handleExportMarkdown}>Export as Markdown</button>
-              <button onClick={handleExportJSON}>Export as JSON</button>
-              <button onClick={handleExportAllZip}>Export All Projects (ZIP)</button>
+              <div className={styles.exportSection}>
+                <span className={styles.exportLabel}>Full Project</span>
+                <button onClick={handleExportFullZip}>Export All (ZIP with Artifacts)</button>
+                <button onClick={handleExportJSON}>Export JSON (Backup)</button>
+                <button onClick={handleExportMarkdown}>Export Profile (MD)</button>
+              </div>
+              <div className={styles.exportDivider} />
+              <div className={styles.exportSection}>
+                <span className={styles.exportLabel}>Artifacts Only</span>
+                <button onClick={handleExportArtifactsZip}>All Artifacts (ZIP)</button>
+                <button onClick={() => handleExportPhaseArtifacts(1)}>Phase 1 Artifacts</button>
+                <button onClick={() => handleExportPhaseArtifacts(2)}>Phase 2 Artifacts</button>
+                <button onClick={() => handleExportPhaseArtifacts(3)}>Phase 3 Artifacts</button>
+              </div>
+              <div className={styles.exportDivider} />
+              <div className={styles.exportSection}>
+                <span className={styles.exportLabel}>Multiple Projects</span>
+                <button onClick={handleExportAllZip}>Export All Projects (ZIP)</button>
+              </div>
             </div>
           )}
         </div>

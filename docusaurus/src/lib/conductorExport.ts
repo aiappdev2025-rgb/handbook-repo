@@ -2,6 +2,7 @@
 // Generates markdown, JSON, and ZIP exports for project data
 
 import type {Project} from './conductorSchema';
+import {artifactDefinitions} from './conductorSchema';
 
 // Generate markdown content for a project
 export function projectToMarkdown(project: Project): string {
@@ -259,4 +260,232 @@ export async function downloadAllProjectsZip(projects: Project[]): Promise<void>
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+// Phase definitions for export organization
+const phases = [
+  {num: 1, name: 'phase-1-validate'},
+  {num: 2, name: 'phase-2-design'},
+  {num: 3, name: 'phase-3-architect'},
+  {num: 4, name: 'phase-4-build'},
+  {num: 5, name: 'phase-5-launch'},
+];
+
+// Export project with artifacts as ZIP
+export async function downloadFullProjectZip(project: Project): Promise<void> {
+  const JSZip = (await import('jszip')).default;
+  const zip = new JSZip();
+
+  const projectName = getSafeFilename(project.phase1.productName || project.name);
+  const root = zip.folder(projectName);
+
+  if (!root) return;
+
+  // Add project profile
+  root.file('project-profile.md', projectToMarkdown(project));
+  root.file('project-profile.json', projectToJSON(project));
+
+  // Add artifacts organized by phase
+  const artifactsFolder = root.folder('artifacts');
+
+  if (artifactsFolder) {
+    phases.forEach((phase) => {
+      const phaseArtifacts = Object.entries(artifactDefinitions).filter(
+        ([, def]) => def.phase === phase.num
+      );
+
+      if (phaseArtifacts.length > 0) {
+        const phaseFolder = artifactsFolder.folder(phase.name);
+
+        if (phaseFolder) {
+          phaseArtifacts.forEach(([id, def]) => {
+            const artifact = project.artifacts?.[id];
+            if (artifact?.currentContent) {
+              // Add current content
+              phaseFolder.file(def.filename, artifact.currentContent);
+
+              // Add versions if they exist
+              if (artifact.versions?.length > 0) {
+                const versionsFolder = phaseFolder.folder(`${id}-versions`);
+                if (versionsFolder) {
+                  artifact.versions.forEach((version, index) => {
+                    const versionFilename = `v${index + 1}-${version.createdAt.split('T')[0]}.md`;
+                    versionsFolder.file(versionFilename, version.content);
+                  });
+                }
+              }
+            }
+          });
+        }
+      }
+    });
+  }
+
+  // Add README for the export
+  const readme = `# ${project.phase1.productName || project.name} - Project Export
+
+Exported: ${new Date().toISOString()}
+
+## Contents
+
+- \`project-profile.md\` - Project overview and field data
+- \`project-profile.json\` - Machine-readable project data
+- \`artifacts/\` - All generated documents organized by phase
+
+## Artifacts by Phase
+
+${phases
+  .map((phase) => {
+    const phaseArtifacts = Object.entries(artifactDefinitions)
+      .filter(([, def]) => def.phase === phase.num)
+      .map(([id, def]) => {
+        const artifact = project.artifacts?.[id];
+        const status = artifact?.status || 'empty';
+        const statusIcon = status === 'complete' ? '✅' : status === 'draft' ? '📝' : '⬜';
+        return `  - ${statusIcon} ${def.filename}`;
+      })
+      .join('\n');
+    return `### Phase ${phase.num}\n${phaseArtifacts}`;
+  })
+  .join('\n\n')}
+
+## Importing
+
+To import this project back into MOAI Handbook:
+1. Go to My Project page
+2. Click Import
+3. Select \`project-profile.json\`
+
+Note: Artifacts must be re-uploaded individually after import.
+`;
+
+  root.file('README.md', readme);
+
+  // Generate and download ZIP
+  const content = await zip.generateAsync({type: 'blob'});
+  const url = URL.createObjectURL(content);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${projectName}-full-export.zip`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Export only artifacts (no profile)
+export async function downloadArtifactsZip(project: Project): Promise<boolean> {
+  const JSZip = (await import('jszip')).default;
+  const zip = new JSZip();
+
+  const projectName = getSafeFilename(project.phase1.productName || project.name);
+
+  let hasArtifacts = false;
+
+  phases.forEach((phase) => {
+    const phaseArtifacts = Object.entries(artifactDefinitions).filter(
+      ([, def]) => def.phase === phase.num
+    );
+
+    phaseArtifacts.forEach(([id, def]) => {
+      const artifact = project.artifacts?.[id];
+      if (artifact?.currentContent) {
+        hasArtifacts = true;
+        zip.file(`${phase.name}/${def.filename}`, artifact.currentContent);
+      }
+    });
+  });
+
+  if (!hasArtifacts) {
+    return false;
+  }
+
+  const content = await zip.generateAsync({type: 'blob'});
+  const url = URL.createObjectURL(content);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${projectName}-artifacts.zip`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  return true;
+}
+
+// Export single phase artifacts
+export async function downloadPhaseArtifactsZip(
+  project: Project,
+  phaseNum: number
+): Promise<boolean> {
+  const JSZip = (await import('jszip')).default;
+  const zip = new JSZip();
+
+  const projectName = getSafeFilename(project.phase1.productName || project.name);
+  const phaseName = `phase-${phaseNum}`;
+
+  const phaseArtifacts = Object.entries(artifactDefinitions).filter(
+    ([, def]) => def.phase === phaseNum
+  );
+
+  let hasArtifacts = false;
+
+  phaseArtifacts.forEach(([id, def]) => {
+    const artifact = project.artifacts?.[id];
+    if (artifact?.currentContent) {
+      hasArtifacts = true;
+      zip.file(def.filename, artifact.currentContent);
+    }
+  });
+
+  if (!hasArtifacts) {
+    return false;
+  }
+
+  const content = await zip.generateAsync({type: 'blob'});
+  const url = URL.createObjectURL(content);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${projectName}-${phaseName}-artifacts.zip`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  return true;
+}
+
+// Generate artifact summary for markdown export
+export interface ArtifactSummary {
+  phase: number;
+  total: number;
+  completed: number;
+  drafts: number;
+  empty: number;
+}
+
+export function getArtifactSummary(project: Project): ArtifactSummary[] {
+  const summary: ArtifactSummary[] = [];
+
+  [1, 2, 3, 4, 5].forEach((phaseNum) => {
+    const phaseArtifacts = Object.entries(artifactDefinitions).filter(
+      ([, def]) => def.phase === phaseNum
+    );
+
+    const completed = phaseArtifacts.filter(
+      ([id]) => project.artifacts?.[id]?.status === 'complete'
+    ).length;
+
+    const drafts = phaseArtifacts.filter(
+      ([id]) => project.artifacts?.[id]?.status === 'draft'
+    ).length;
+
+    summary.push({
+      phase: phaseNum,
+      total: phaseArtifacts.length,
+      completed,
+      drafts,
+      empty: phaseArtifacts.length - completed - drafts,
+    });
+  });
+
+  return summary;
 }

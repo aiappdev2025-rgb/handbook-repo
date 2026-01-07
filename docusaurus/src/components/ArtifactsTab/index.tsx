@@ -1,6 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import {useProject} from '../../context/ProjectContext';
 import {artifactDefinitions, ArtifactStatus} from '../../lib/conductorSchema';
+import {downloadArtifactsZip, downloadPhaseArtifactsZip} from '../../lib/conductorExport';
 import ArtifactModal from '../ArtifactModal';
 import styles from './styles.module.css';
 
@@ -29,9 +30,10 @@ const phases = [
 ];
 
 export default function ArtifactsTab(): JSX.Element {
-  const {getArtifact, saveArtifact} = useProject();
+  const {getArtifact, saveArtifact, activeProject} = useProject();
   const [selectedArtifact, setSelectedArtifact] = useState<ArtifactWithState | null>(null);
   const [modalMode, setModalMode] = useState<ModalMode>('view');
+  const [exporting, setExporting] = useState(false);
 
   const getArtifactsForPhase = useCallback((phaseNum: number): ArtifactWithState[] => {
     return Object.entries(artifactDefinitions)
@@ -102,6 +104,36 @@ export default function ArtifactsTab(): JSX.Element {
     }
   }, [selectedArtifact, saveArtifact]);
 
+  const handleExportAllArtifacts = useCallback(async () => {
+    if (!activeProject) return;
+    setExporting(true);
+    try {
+      const success = await downloadArtifactsZip(activeProject);
+      if (!success) {
+        alert('No artifacts to export. Create some artifacts first!');
+      }
+    } catch (err) {
+      console.error('Failed to export artifacts:', err);
+      alert('Failed to export artifacts');
+    }
+    setExporting(false);
+  }, [activeProject]);
+
+  const handleExportPhaseArtifacts = useCallback(async (phaseNum: number) => {
+    if (!activeProject) return;
+    setExporting(true);
+    try {
+      const success = await downloadPhaseArtifactsZip(activeProject, phaseNum);
+      if (!success) {
+        alert(`No artifacts in Phase ${phaseNum} to export.`);
+      }
+    } catch (err) {
+      console.error('Failed to export phase artifacts:', err);
+      alert('Failed to export phase artifacts');
+    }
+    setExporting(false);
+  }, [activeProject]);
+
   const getStatusIcon = (status: ArtifactStatus): string => {
     switch (status) {
       case 'complete':
@@ -126,9 +158,20 @@ export default function ArtifactsTab(): JSX.Element {
   return (
     <div className={styles.artifactsTab}>
       <div className={styles.summary}>
-        <p>
-          Track all your project documents. Upload Claude's outputs or edit directly.
-        </p>
+        <div className={styles.summaryText}>
+          <p>
+            Track all your project documents. Upload Claude's outputs or edit directly.
+          </p>
+        </div>
+        <div className={styles.summaryActions}>
+          <button
+            className={styles.exportAllBtn}
+            onClick={handleExportAllArtifacts}
+            disabled={exporting}
+          >
+            {exporting ? 'Exporting...' : 'Export All Artifacts'}
+          </button>
+        </div>
       </div>
 
       {phases.map((phase) => {
@@ -148,12 +191,22 @@ export default function ArtifactsTab(): JSX.Element {
                 </span>
                 <span className={styles.phaseName}>{phase.name}</span>
               </div>
-              <div className={styles.phaseStats}>
-                <span className={styles.statComplete}>{completed} complete</span>
-                <span className={styles.statDraft}>{drafts} draft</span>
-                <span className={styles.statEmpty}>
-                  {artifacts.length - completed - drafts} empty
-                </span>
+              <div className={styles.phaseActions}>
+                <button
+                  className={styles.phaseExportBtn}
+                  onClick={() => handleExportPhaseArtifacts(phase.num)}
+                  disabled={exporting}
+                  title="Export phase artifacts"
+                >
+                  ⬇
+                </button>
+                <div className={styles.phaseStats}>
+                  <span className={styles.statComplete}>{completed} complete</span>
+                  <span className={styles.statDraft}>{drafts} draft</span>
+                  <span className={styles.statEmpty}>
+                    {artifacts.length - completed - drafts} empty
+                  </span>
+                </div>
               </div>
             </div>
 
