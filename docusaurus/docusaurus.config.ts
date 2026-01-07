@@ -18,7 +18,12 @@ const config: Config = {
   projectName: 'handbook-repo',
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
 
   // Open Graph / Social sharing metadata
   headTags: [
