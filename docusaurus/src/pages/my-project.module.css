@@ -214,6 +214,56 @@
 }
 
 /* ============================================
+   TABS
+   ============================================ */
+.projectTabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  border-bottom: 2px solid var(--gray-700);
+}
+
+:global([data-theme='light']) .projectTabs {
+  border-bottom-color: var(--gray-200);
+}
+
+.tabBtn {
+  padding: 0.875rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--ifm-font-family-monospace);
+  letter-spacing: 0.02em;
+}
+
+:global([data-theme='light']) .tabBtn {
+  color: var(--gray-500);
+}
+
+.tabBtn:hover {
+  color: var(--gray-200);
+}
+
+:global([data-theme='light']) .tabBtn:hover {
+  color: var(--gray-700);
+}
+
+.tabBtnActive {
+  color: var(--accent-blue);
+  border-bottom-color: var(--accent-blue);
+}
+
+:global([data-theme='light']) .tabBtnActive {
+  color: var(--accent-blue);
+}
+
+/* ============================================
    PHASE SECTIONS
    ============================================ */
 .phaseSections {

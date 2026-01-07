@@ -9,6 +9,7 @@ import {
   downloadAllProjectsZip,
 } from '../lib/conductorExport';
 import ProjectImport from '../components/ProjectImport';
+import ArtifactsTab from '../components/ArtifactsTab';
 import styles from './my-project.module.css';
 
 // Types from conductor schema
@@ -1099,10 +1100,14 @@ function Phase5Section() {
   );
 }
 
+// Tab type
+type TabType = 'fields' | 'artifacts';
+
 // Main page component
 export default function MyProjectPage(): JSX.Element {
   const {projects, activeProject, createProject, getPhaseCompletion} = useProject();
   const [expandedPhases, setExpandedPhases] = useState<number[]>([1]);
+  const [activeTab, setActiveTab] = useState<TabType>('fields');
 
   const togglePhase = (phaseNum: number) => {
     setExpandedPhases((prev) =>
@@ -1140,21 +1145,45 @@ export default function MyProjectPage(): JSX.Element {
     <Layout title="My Project" description="Manage your SaaS project data">
       <div className={styles.pageContainer}>
         <ProjectHeader />
-        <div className={styles.phaseSections}>
-          {phases.map(({num, title, Component}) => (
-            <div key={num} className={styles.phaseSection}>
-              <PhaseHeader
-                phaseNum={num}
-                title={title}
-                completion={getPhaseCompletion(num as 1 | 2 | 3 | 4 | 5)}
-                isExpanded={expandedPhases.includes(num)}
-                onToggle={() => togglePhase(num)}
-                prerequisiteWarning={getPrerequisiteWarning(num)}
-              />
-              {expandedPhases.includes(num) && <Component />}
-            </div>
-          ))}
+
+        {/* Tabs */}
+        <div className={styles.projectTabs}>
+          <button
+            className={`${styles.tabBtn} ${activeTab === 'fields' ? styles.tabBtnActive : ''}`}
+            onClick={() => setActiveTab('fields')}
+          >
+            Fields
+          </button>
+          <button
+            className={`${styles.tabBtn} ${activeTab === 'artifacts' ? styles.tabBtnActive : ''}`}
+            onClick={() => setActiveTab('artifacts')}
+          >
+            Artifacts
+          </button>
         </div>
+
+        {/* Fields Tab */}
+        {activeTab === 'fields' && (
+          <div className={styles.phaseSections}>
+            {phases.map(({num, title, Component}) => (
+              <div key={num} className={styles.phaseSection}>
+                <PhaseHeader
+                  phaseNum={num}
+                  title={title}
+                  completion={getPhaseCompletion(num as 1 | 2 | 3 | 4 | 5)}
+                  isExpanded={expandedPhases.includes(num)}
+                  onToggle={() => togglePhase(num)}
+                  prerequisiteWarning={getPrerequisiteWarning(num)}
+                />
+                {expandedPhases.includes(num) && <Component />}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Artifacts Tab */}
+        {activeTab === 'artifacts' && <ArtifactsTab />}
+
         <SaveIndicator saving={false} />
       </div>
     </Layout>

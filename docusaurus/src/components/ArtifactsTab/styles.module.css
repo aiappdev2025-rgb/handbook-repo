@@ -1,0 +1,250 @@
+/* ============================================
+   ARTIFACTS TAB
+   Industrial control panel aesthetic
+   ============================================ */
+
+.artifactsTab {
+  padding: 1.5rem 0;
+}
+
+.summary {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--gray-900);
+  border: 1px solid var(--gray-700);
+}
+
+:global([data-theme='light']) .summary {
+  background: var(--gray-50);
+  border-color: var(--gray-200);
+}
+
+.summary p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--gray-400);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .summary p {
+  color: var(--gray-600);
+}
+
+/* ============================================
+   PHASE SECTIONS
+   ============================================ */
+.phaseSection {
+  margin-bottom: 1rem;
+  border: 1px solid var(--gray-700);
+  overflow: hidden;
+}
+
+:global([data-theme='light']) .phaseSection {
+  border-color: var(--gray-200);
+}
+
+.phaseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: var(--gray-900);
+  border-left: 4px solid var(--phase-border-color);
+}
+
+:global([data-theme='light']) .phaseHeader {
+  background: var(--gray-50);
+}
+
+.phaseTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.phaseLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.phaseName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-100);
+}
+
+:global([data-theme='light']) .phaseName {
+  color: var(--gray-900);
+}
+
+.phaseStats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.statComplete {
+  color: #4ade80;
+}
+
+.statDraft {
+  color: #fbbf24;
+}
+
+.statEmpty {
+  color: var(--gray-500);
+}
+
+/* ============================================
+   ARTIFACTS LIST
+   ============================================ */
+.artifactsList {
+  background: var(--gray-950);
+}
+
+:global([data-theme='light']) .artifactsList {
+  background: var(--white);
+}
+
+.artifactRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--gray-800);
+  gap: 1rem;
+}
+
+:global([data-theme='light']) .artifactRow {
+  border-bottom-color: var(--gray-100);
+}
+
+.artifactRow:last-child {
+  border-bottom: none;
+}
+
+.artifactInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.artifactStatus {
+  font-size: 1.125rem;
+  line-height: 1;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.artifactDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.artifactFilename {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-100);
+}
+
+:global([data-theme='light']) .artifactFilename {
+  color: var(--gray-900);
+}
+
+.artifactDescription {
+  font-size: 0.8125rem;
+  color: var(--gray-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:global([data-theme='light']) .artifactDescription {
+  color: var(--gray-600);
+}
+
+.artifactDate {
+  font-size: 0.6875rem;
+  color: var(--gray-600);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .artifactDate {
+  color: var(--gray-500);
+}
+
+/* ============================================
+   ACTION BUTTONS
+   ============================================ */
+.artifactActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid var(--gray-600);
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--ifm-font-family-monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+:global([data-theme='light']) .actionBtn {
+  border-color: var(--gray-300);
+  color: var(--gray-600);
+}
+
+.actionBtn:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .phaseHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .phaseStats {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    font-size: 0.6875rem;
+  }
+
+  .artifactRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .artifactActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .actionBtn {
+    flex: 1;
+    min-width: 70px;
+    text-align: center;
+  }
+}
