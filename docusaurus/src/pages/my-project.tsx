@@ -1,6 +1,14 @@
 import React, {useState, useCallback, useEffect, useRef} from 'react';
 import Layout from '@theme/Layout';
 import {useProject} from '../context/ProjectContext';
+import {
+  projectToMarkdown,
+  projectToJSON,
+  downloadFile,
+  downloadProjectZip,
+  downloadAllProjectsZip,
+} from '../lib/conductorExport';
+import ProjectImport from '../components/ProjectImport';
 import styles from './my-project.module.css';
 
 // Types from conductor schema
@@ -863,14 +871,12 @@ function ProjectHeader() {
     switchProject,
     createProject,
     deleteProject,
-    exportProject,
-    importProject,
   } = useProject();
 
   const [showNewProject, setShowNewProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [exporting, setExporting] = useState(false);
 
   const handleCreateProject = () => {
     if (newProjectName.trim()) {
@@ -881,54 +887,49 @@ function ProjectHeader() {
   };
 
   const handleExportJSON = () => {
-    if (!activeProjectId) return;
-    const json = exportProject(activeProjectId);
-    if (json) {
-      const blob = new Blob([json], {type: 'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${activeProject?.name || 'project'}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+    if (!activeProject) return;
+    downloadFile(
+      projectToJSON(activeProject),
+      `${activeProject.phase1.productName || activeProject.name || 'project'}.json`,
+      'application/json'
+    );
     setShowExportMenu(false);
   };
 
-  const handleExportAll = () => {
-    const json = JSON.stringify(projects, null, 2);
-    const blob = new Blob([json], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'all-projects.json';
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleExportMarkdown = () => {
+    if (!activeProject) return;
+    downloadFile(
+      projectToMarkdown(activeProject),
+      `${activeProject.phase1.productName || activeProject.name || 'project'}.md`,
+      'text/markdown'
+    );
     setShowExportMenu(false);
   };
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      try {
-        const data = JSON.parse(content);
-        if (Array.isArray(data)) {
-          data.forEach((proj) => importProject(JSON.stringify(proj)));
-        } else {
-          importProject(content);
-        }
-      } catch (err) {
-        console.error('Failed to parse import file:', err);
-      }
-    };
-    reader.readAsText(file);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const handleExportZip = async () => {
+    if (!activeProject) return;
+    setExporting(true);
+    try {
+      await downloadProjectZip(activeProject);
+    } catch (err) {
+      console.error('Failed to export ZIP:', err);
+      alert('Failed to export ZIP file');
     }
+    setExporting(false);
+    setShowExportMenu(false);
+  };
+
+  const handleExportAllZip = async () => {
+    if (projects.length === 0) return;
+    setExporting(true);
+    try {
+      await downloadAllProjectsZip(projects);
+    } catch (err) {
+      console.error('Failed to export all projects:', err);
+      alert('Failed to export ZIP file');
+    }
+    setExporting(false);
+    setShowExportMenu(false);
   };
 
   return (
@@ -965,26 +966,23 @@ function ProjectHeader() {
       </div>
       <div className={styles.projectHeaderRight}>
         <div className={styles.exportDropdown}>
-          <button className={styles.exportButton} onClick={() => setShowExportMenu(!showExportMenu)}>
-            Export
+          <button
+            className={styles.exportButton}
+            onClick={() => setShowExportMenu(!showExportMenu)}
+            disabled={exporting}
+          >
+            {exporting ? 'Exporting...' : 'Export'}
           </button>
           {showExportMenu && (
             <div className={styles.exportMenu}>
-              <button onClick={handleExportJSON}>Export Current (JSON)</button>
-              <button onClick={handleExportAll}>Export All (JSON)</button>
+              <button onClick={handleExportZip}>Export All (ZIP)</button>
+              <button onClick={handleExportMarkdown}>Export as Markdown</button>
+              <button onClick={handleExportJSON}>Export as JSON</button>
+              <button onClick={handleExportAllZip}>Export All Projects (ZIP)</button>
             </div>
           )}
         </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json"
-          style={{display: 'none'}}
-          onChange={handleImport}
-        />
-        <button className={styles.importButton} onClick={() => fileInputRef.current?.click()}>
-          Import
-        </button>
+        <ProjectImport onComplete={() => setShowExportMenu(false)} />
         {activeProjectId && (
           <button
             className={styles.deleteButton}
