@@ -209,3 +209,46 @@
   font-size: 0.875rem;
   color: var(--gray-400);
 }
+
+/* ============================================
+   LIGHT MODE OVERRIDES
+   ============================================ */
+:global([data-theme='light']) .checkpoint {
+  background: var(--white);
+  border-color: var(--accent-amber);
+}
+
+:global([data-theme='light']) .collapsible {
+  border-color: var(--gray-200);
+}
+
+:global([data-theme='light']) .collapsibleHeader {
+  background: var(--gray-100);
+}
+
+:global([data-theme='light']) .collapsibleHeader:hover {
+  background: var(--gray-200);
+}
+
+:global([data-theme='light']) .collapsibleContent {
+  border-top-color: var(--gray-200);
+}
+
+:global([data-theme='light']) .progressStep {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+  color: #334155;
+}
+
+:global([data-theme='light']) .progressStep:last-child {
+  border-right-color: var(--gray-200);
+}
+
+:global([data-theme='light']) .actionItem {
+  background: var(--white);
+  border-color: var(--gray-200);
+}
+
+:global([data-theme='light']) .actionItemDescription {
+  color: #475569;
+}

@@ -83,16 +83,17 @@
    LIGHT MODE SUPPORT
    ============================================ */
 [data-theme='light'] {
-  --ifm-background-color: var(--gray-50);
-  --ifm-background-surface-color: var(--white);
+  --ifm-background-color: var(--white);
+  --ifm-background-surface-color: #f8fafc;
   --ifm-navbar-background-color: var(--white);
   --ifm-footer-background-color: var(--gray-100);
   --ifm-toc-border-color: var(--gray-200);
-  --ifm-color-content: var(--gray-900);
-  --ifm-color-content-secondary: var(--gray-600);
-  --ifm-heading-color: var(--gray-950);
+  --ifm-color-content: #1e293b;           /* Dark slate text */
+  --ifm-color-content-secondary: #475569;
+  --ifm-heading-color: #0f172a;
 }
 
+/* Light mode component containers */
 [data-theme='light'] .tldr-box,
 [data-theme='light'] .when-to-use,
 [data-theme='light'] .prerequisites,
@@ -108,6 +109,266 @@
 [data-theme='light'] .prereq-item,
 [data-theme='light'] .verification-item {
   border-color: var(--gray-100);
+}
+
+/* ============================================
+   LIGHT MODE - TL;DR BOX
+   ============================================ */
+[data-theme='light'] .tldr-box {
+  background: #f0f9ff;
+  border-color: #bfdbfe;
+  border-left-color: #3b82f6;
+}
+
+[data-theme='light'] .tldr-header {
+  background: #dbeafe;
+  border-bottom-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+[data-theme='light'] .tldr-content {
+  color: #1e293b;
+}
+
+[data-theme='light'] .tldr-content strong {
+  color: #334155;
+}
+
+/* ============================================
+   LIGHT MODE - WHEN TO USE
+   ============================================ */
+[data-theme='light'] .when-to-use {
+  background: var(--white);
+  border-color: var(--gray-200);
+}
+
+[data-theme='light'] .when-header {
+  background: var(--gray-100);
+  border-bottom-color: var(--gray-200);
+  color: #334155;
+}
+
+[data-theme='light'] .when-grid {
+  border-bottom-color: var(--gray-200);
+}
+
+[data-theme='light'] .when-column:first-child {
+  border-right-color: var(--gray-200);
+}
+
+[data-theme='light'] .when-title {
+  color: #334155;
+}
+
+/* USE WHEN column - green accent */
+[data-theme='light'] .when-column:first-child .when-title {
+  color: #166534;
+}
+
+/* NOT YET IF column - amber accent */
+[data-theme='light'] .when-column:last-child .when-title {
+  color: #b45309;
+}
+
+[data-theme='light'] .when-list li {
+  color: #334155;
+}
+
+[data-theme='light'] .when-list li::before {
+  color: #64748b;
+}
+
+[data-theme='light'] .when-skip {
+  background: var(--gray-50);
+  color: #475569;
+}
+
+[data-theme='light'] .when-skip-label {
+  color: #64748b;
+}
+
+/* ============================================
+   LIGHT MODE - PREREQUISITES
+   ============================================ */
+[data-theme='light'] .prerequisites {
+  background: var(--white);
+  border-color: var(--gray-200);
+}
+
+[data-theme='light'] .prereq-header {
+  background: var(--gray-100);
+  border-bottom-color: var(--gray-200);
+}
+
+[data-theme='light'] .prereq-title {
+  color: #334155;
+}
+
+[data-theme='light'] .prerequisites-gate .prereq-title {
+  color: #b45309;
+}
+
+[data-theme='light'] .prereq-count {
+  color: #64748b;
+}
+
+[data-theme='light'] .prereq-item {
+  border-bottom-color: var(--gray-100);
+}
+
+[data-theme='light'] .prereq-checkbox {
+  color: #334155;
+}
+
+[data-theme='light'] .prereq-checkbox input[type="checkbox"] {
+  border-color: var(--gray-300);
+  background: var(--white);
+}
+
+/* ============================================
+   LIGHT MODE - EXPECTED OUTPUT
+   ============================================ */
+[data-theme='light'] .expected-output {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+[data-theme='light'] .expected-output-header {
+  background: #dcfce7;
+  border-bottom-color: #bbf7d0;
+  color: #166534;
+}
+
+[data-theme='light'] .expected-output-content p:first-child {
+  color: #475569;
+}
+
+[data-theme='light'] .expected-output-content li {
+  border-bottom-color: #dcfce7;
+  color: #334155;
+}
+
+[data-theme='light'] .expected-output-content li strong {
+  color: #64748b;
+}
+
+[data-theme='light'] .expected-output-content code {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #1d4ed8;
+}
+
+/* ============================================
+   LIGHT MODE - VERIFICATION
+   ============================================ */
+[data-theme='light'] .verification {
+  background: #faf5ff;
+  border-color: #e9d5ff;
+}
+
+[data-theme='light'] .verification-header {
+  background: #f3e8ff;
+  border-bottom-color: #e9d5ff;
+  color: #7c3aed;
+}
+
+[data-theme='light'] .verification-item {
+  border-bottom-color: #f3e8ff;
+}
+
+[data-theme='light'] .verification-item input[type="checkbox"] {
+  border-color: var(--gray-300);
+  background: var(--white);
+}
+
+[data-theme='light'] .verification-item label {
+  color: #334155;
+}
+
+/* ============================================
+   LIGHT MODE - NEXT STEPS
+   ============================================ */
+[data-theme='light'] .next-steps {
+  background: var(--white);
+  border-color: var(--gray-200);
+}
+
+[data-theme='light'] .next-steps-header {
+  background: var(--gray-100);
+  border-bottom-color: var(--gray-200);
+  color: #334155;
+}
+
+[data-theme='light'] .next-steps-main {
+  background: var(--gray-50);
+  border-color: var(--gray-200);
+  color: #1e293b;
+}
+
+[data-theme='light'] .next-steps-main:hover {
+  border-color: #3b82f6;
+  color: #1e293b;
+}
+
+[data-theme='light'] .next-steps-main-label {
+  color: #64748b;
+}
+
+[data-theme='light'] .next-steps-main-title {
+  color: #1e293b;
+}
+
+[data-theme='light'] .next-steps-related {
+  border-top-color: var(--gray-200);
+}
+
+[data-theme='light'] .next-steps-related-title {
+  color: #64748b;
+}
+
+/* ============================================
+   LIGHT MODE - CHAPTER NAV
+   ============================================ */
+[data-theme='light'] .chapter-nav {
+  background: var(--gray-50);
+  border-top-color: var(--gray-200);
+}
+
+[data-theme='light'] .chapter-nav__prev:hover,
+[data-theme='light'] .chapter-nav__next:hover {
+  background: var(--gray-100);
+}
+
+[data-theme='light'] .chapter-nav__label {
+  color: #64748b;
+}
+
+[data-theme='light'] .chapter-nav__title {
+  color: #1e293b;
+}
+
+[data-theme='light'] .chapter-nav__progress-text {
+  color: #64748b;
+}
+
+[data-theme='light'] .chapter-nav__progress-bar {
+  background: var(--gray-200);
+}
+
+/* ============================================
+   LIGHT MODE - TEMPLATE DOWNLOAD
+   ============================================ */
+[data-theme='light'] .template-download {
+  background: var(--white);
+  border-color: var(--gray-200);
+}
+
+[data-theme='light'] .template-download__name {
+  color: #1e293b;
+}
+
+[data-theme='light'] .template-download__desc {
+  color: #64748b;
 }
 
 /* ============================================
@@ -210,6 +471,10 @@
   font-weight: 600;
   color: var(--gray-400);
   margin-top: 1.5rem;
+}
+
+[data-theme='light'] .markdown h4 {
+  color: var(--gray-600);
 }
 
 /* Reading Time */
