@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # M4: UI Shell
 
@@ -61,14 +62,13 @@ Layouts define the visual structure that users experience on every page. This mi
 
 Create root layout, marketing layout (public pages), and app layout (authenticated pages):
 
-```markdown
-ROLE
-Frontend Developer creating the layout architecture.
+<SmartPrompt
+  title="M4: UI Shell Prompt"
+  template={`Create UI shell for [PRODUCT_NAME].
 
-CONTEXT
-Project: {{productName}}
-Design system ready (using shadcn/ui).
-API layer complete (M3).
+**Tech Stack**: [TECH_STACK]
+**Core Features**: [CORE_FEATURES]
+**User Personas**: [USER_PERSONAS]
 
 OBJECTIVE
 Create layout components for marketing and authenticated pages.
@@ -108,8 +108,8 @@ REQUIREMENTS
 VERIFICATION
 Test at 320px, 768px, 1024px, 1440px widths
 Navigation works on mobile (tap, no hover)
-Run: npm run build — no errors
-```
+Run: npm run build — no errors`}
+/>
 
 ## Layout Structure
 

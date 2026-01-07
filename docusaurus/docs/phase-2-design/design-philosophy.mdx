@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Design Philosophy
 
@@ -115,17 +116,29 @@ Use this decision framework when making design choices:
 
 ## Document Your Principles
 
-Create a short principles document that you can reference:
+Create a short principles document that you can reference. Use this prompt to help establish your design philosophy:
 
-```markdown
-## Our Design Principles
+<SmartPrompt
+  title="Design Philosophy Prompt"
+  template={`Define design philosophy for [PRODUCT_NAME].
 
-1. **Clarity over Cleverness** - When in doubt, be obvious
-2. **Progressive Disclosure** - Show complexity gradually
-3. **Consistent Patterns** - Same action, same behavior
-4. **Forgiving Design** - Easy to undo, hard to break
-5. **Performance as Feature** - Fast is a feature, slow is a bug
-```
+**Target Users**: [USER_PERSONAS]
+**Core Features**: [CORE_FEATURES]
+
+Establish:
+1. **Design Principles** (3-5): The guiding rules for all design decisions
+2. **Visual Direction**: Overall aesthetic (minimal, bold, playful, etc.)
+3. **UX Priorities**: What matters most (speed, simplicity, power, etc.)
+4. **Accessibility Requirements**: WCAG level, key considerations
+5. **Brand Personality**: How the product should feel to users
+
+For each principle, provide:
+- A memorable name
+- A one-sentence explanation
+- An example of when to apply it
+
+Output as design-philosophy.md`}
+/>
 
 <ExpectedOutput
   items={[

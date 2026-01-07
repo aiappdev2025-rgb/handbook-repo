@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Data Model Design
 
@@ -58,26 +59,44 @@ Your architecture document outlines the data model conceptually. Now you need co
 
 Continue in the same Claude Chat session from the architecture:
 
-```markdown
-Based on the Architecture document we just created, generate a complete
-database schema for Supabase.
+<SmartPrompt
+  title="Data Model Prompt"
+  template={`Design data model for [PRODUCT_NAME].
 
-For each table, provide:
-1. **CREATE TABLE statement** with all columns, types, and constraints
-2. **RLS policies** for SELECT, INSERT, UPDATE, DELETE
-3. **Indexes** for frequently queried columns
-4. **Triggers** for updated_at timestamps
+**Database**: [TECH_STACK]
+**Core Features**: [CORE_FEATURES]
+**Entities**: [ENTITIES]
 
-Required tables based on our architecture:
-- user_profiles (extends auth.users)
-- [LIST YOUR DOMAIN TABLES FROM ARCHITECTURE]
+For each entity/table, provide:
+
+1. **CREATE TABLE statement** with:
+   - id (UUID PRIMARY KEY)
+   - All domain-specific columns with types
+   - created_at, updated_at timestamps
+   - Foreign key relationships with ON DELETE behavior
+
+2. **RLS Policies** for:
+   - SELECT (who can read)
+   - INSERT (who can create)
+   - UPDATE (who can modify)
+   - DELETE (who can remove)
+   - Include security rationale for each policy
+
+3. **Indexes** for:
+   - Foreign key columns
+   - Frequently filtered/sorted columns
+
+4. **Triggers** for:
+   - updated_at timestamp auto-update
+
+Required tables:
+- user_profiles (extends auth.users with CASCADE delete)
+- Domain-specific tables from [ENTITIES]
 - subscriptions (Stripe sync)
-- usage_logs (if applicable)
+- usage_logs (if tracking usage)
 
-For each RLS policy, explain the security rationale.
-
-Output as a single SQL migration file that can be run in Supabase SQL Editor.
-```
+Output as a single SQL migration file (00001_initial_schema.sql)`}
+/>
 
 ## Example: Table with RLS
 

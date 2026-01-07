@@ -123,6 +123,10 @@ const config: Config = {
           position: 'left',
         },
         {
+          type: 'custom-projectIndicator',
+          position: 'right',
+        },
+        {
           type: 'search',
           position: 'right',
         },

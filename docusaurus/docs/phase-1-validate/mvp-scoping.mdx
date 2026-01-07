@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # MVP Scoping
 
@@ -94,18 +95,17 @@ Prioritize remaining features:
 
 ## MVP Scoping Prompt
 
-```markdown
-Help me scope my MVP using the MoSCoW method.
+<SmartPrompt
+  title="MVP Scoping Prompt"
+  template={`Define MVP scope for [PRODUCT_NAME].
 
-**Product**: [FROM ONE-PAGER]
-**Core Value Proposition**: [THE ONE THING]
-**Target Launch**: [TIMEFRAME]
+**Product Concept**: [PRODUCT_CONCEPT]
+**Target Customer**: [TARGET_CUSTOMER]
+**Problem**: [PROBLEM_STATEMENT]
 
-**All Features I'm Considering**:
-1. [Feature 1]
-2. [Feature 2]
-3. [Feature 3]
-... (list all)
+Current feature ideas: [MVP_FEATURES]
+
+Help me scope using the MoSCoW method:
 
 For each feature, categorize as:
 - **Must Have**: Required for launch (max 3-5)
@@ -114,12 +114,14 @@ For each feature, categorize as:
 - **Won't Have**: Explicitly out of scope
 
 Also identify:
-- The "one thing" this MVP does exceptionally well
-- Launch criteria (what defines "done"?)
-- Key hypotheses we're testing
+1. The "one thing" this MVP does exceptionally well
+2. What's explicitly OUT of scope for v1
+3. Estimated build complexity for each Must Have feature
+4. Technical risks to watch for
+5. Launch criteria (what defines "done"?)
 
-Output in markdown format, ready to save as docs/mvp-scope.md.
-```
+Output as MVP Scope document in markdown format.`}
+/>
 
 ## The 3-5 Feature Rule
 

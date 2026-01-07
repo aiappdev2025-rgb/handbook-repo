@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # UX Package
 
@@ -111,51 +112,52 @@ Interaction patterns used across the app:
 
 Continue in the same Claude Chat session where you created the Design Brief:
 
-```markdown
-Create a UX Package for [PRODUCT NAME].
+<SmartPrompt
+  title="UX Package Prompt"
+  template={`Create UX Package for [PRODUCT_NAME].
 
-**Design Brief**: [ATTACH OR REFERENCE]
+**User Personas**: [USER_PERSONAS]
+**Core Features**: [CORE_FEATURES]
+**Design Principles**: [DESIGN_PRINCIPLES]
 
 The UX Package should include:
 
 **SECTION 1: Information Architecture**
 - Site map showing all screens/routes
-- Navigation structure
-- User flow diagrams
+- Navigation structure (main nav, sidebar, footer)
+- User flow diagrams for key journeys
 
 **SECTION 2: Screen Inventory**
-For each screen:
-- Screen name and route
+For each screen, document:
+- Screen name and route (URL path)
 - Purpose (what user accomplishes)
 - Entry points (how user arrives)
 - Exit points (where user goes next)
-- Key components
-- Data displayed/collected
-- Actions available
-- Error states
-- Loading states
-- Empty states
+- Key components on the screen
+- Data displayed and data collected
+- Actions available (buttons, links)
+- Loading state, Empty state, Error state
 
 **SECTION 3: User Flows**
-For each core flow from Design Brief:
+For each core feature, document:
 - Step-by-step sequence
-- Decision points
+- Decision points and branches
 - Error recovery paths
 - Success confirmation
 
 **SECTION 4: Component Behaviors**
-- Form validation rules
-- Confirmation dialogs (when and what)
-- Notification patterns
-- Loading indicators
+- Form validation rules (when, how)
+- Confirmation dialogs (when and wording)
+- Notification patterns (types, duration)
+- Loading indicators (spinners, skeletons)
 
 **SECTION 5: Responsive Behavior**
-- Breakpoints
+- Breakpoints (mobile, tablet, desktop)
 - What changes at each breakpoint
 - Mobile-specific interactions
 
-Output in markdown format, ready to save as docs/ux-package.md.
-```
+Output as ux-package.md`}
+/>
 
 ## Example: Screen Inventory Entry
 

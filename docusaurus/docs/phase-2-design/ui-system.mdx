@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # UI System
 
@@ -198,52 +199,50 @@ Define the overall aesthetic:
 
 ## UI System Prompt
 
-```markdown
-Create a UI System for [PRODUCT NAME].
+<SmartPrompt
+  title="UI System Prompt"
+  template={`Design UI System for [PRODUCT_NAME].
 
-**Design Brief**: [ATTACH]
-**UX Package**: [ATTACH]
+**Design Principles**: [DESIGN_PRINCIPLES]
+**Tech Stack**: [TECH_STACK]
 
 The UI System should define:
 
 **SECTION 1: Design Tokens**
-- Color palette (primary, secondary, semantic, neutrals)
-- Typography scale (font families, sizes, weights, line heights)
-- Spacing scale (4px base recommended)
-- Border radius scale
-- Shadow scale
+- Color palette (primary, secondary, semantic colors, neutrals with hex codes)
+- Typography scale (font families, sizes in rem, weights, line heights)
+- Spacing scale (4px base: 4, 8, 12, 16, 24, 32, 48, 64)
+- Border radius scale (sm, md, lg, full)
+- Shadow scale (sm, md, lg, xl)
 
 **SECTION 2: Layout System**
-- Grid system
-- Container widths
-- Responsive breakpoints
+- Grid system (12-column desktop, 4-column mobile)
+- Container widths (sm, md, lg, xl)
+- Responsive breakpoints (mobile, tablet, desktop)
 
 **SECTION 3: Component Specifications**
-For each component:
-- Visual design (all states)
+For each component, define:
+- Visual design (all states: default, hover, active, disabled, error)
 - Variants (sizes, styles)
 - Behavior specifications
-- Accessibility requirements
+- Accessibility requirements (ARIA, keyboard, focus)
 
 Components needed:
 - Button (primary, secondary, ghost, destructive)
 - Input (text, email, password, textarea)
-- Select
-- Checkbox, Radio
-- Card
-- Modal
-- Toast/Notification
-- Table
-- Form field (with label, error, helper text)
+- Select, Checkbox, Radio
+- Card, Modal, Toast/Notification
+- Table, Form field
 
 **SECTION 4: Visual Direction**
-- Overall aesthetic
+- Overall aesthetic and feel
 - Color usage principles
-- Icon style
-- Motion principles
+- Icon style (outline, filled, stroke width)
+- Motion principles (duration, easing)
+- Dark/light mode approach
 
-Output in markdown format, ready to save as docs/ui-system.md.
-```
+Output as ui-system.md`}
+/>
 
 <ExpectedOutput
   items={[

@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Opportunity Assessment
 
@@ -106,26 +107,30 @@ Score each dimension from 1-5, where 5 is the best:
 
 Use this prompt to have Claude help you score your opportunity:
 
-```markdown
-Help me assess this business opportunity using a structured scoring framework.
+<SmartPrompt
+  title="Opportunity Assessment Prompt"
+  template={`Evaluate this SaaS opportunity:
 
-**Opportunity**: [DESCRIBE YOUR IDEA]
+**Product**: [PRODUCT_NAME]
+**Concept**: [PRODUCT_CONCEPT]
+**Target**: [TARGET_CUSTOMER]
+**Problem**: [PROBLEM_STATEMENT]
 
-**Market Research Summary**: [KEY FINDINGS FROM CHAPTER 2]
+Score each dimension 1-10 and provide reasoning:
 
-Score each dimension 1-5 and provide reasoning:
+1. **Market Size** (1-10): How large and growing is the market?
+2. **Competition Level** (1-10, lower = better): How crowded is the space?
+3. **Build Complexity** (1-10, lower = better): Technical difficulty and time to MVP
+4. **Monetization Potential** (1-10): Clear path to revenue?
+5. **Bootstrapper Fit** (1-10): Suitable for solo founder or small team?
 
-1. **Market Opportunity** (25%): Size, growth, underserved needs
-2. **Problem Severity** (25%): Urgency, pain level, frequency
-3. **Competitive Landscape** (15%): Number of competitors, differentiation
-4. **Execution Feasibility** (20%): Time to MVP, technical complexity
-5. **Founder-Market Fit** (15%): Domain expertise, motivation
+For each score, provide specific reasoning.
 
-Calculate weighted total score and provide:
+Then provide:
 - Overall assessment (Strong/Moderate/Weak opportunity)
 - Key risks to mitigate
-- Recommendation: Proceed, Pivot, or Pass
-```
+- Recommendation: Proceed, Pivot, or Pass`}
+/>
 
 ## Comparing Multiple Opportunities
 

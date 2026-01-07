@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # API Specification
 
@@ -97,28 +98,36 @@ For each API route, document:
 
 ## API Specification Prompt
 
-```markdown
-Create an API specification for [PRODUCT NAME] based on the architecture.
+<SmartPrompt
+  title="API Specification Prompt"
+  template={`Specify API for [PRODUCT_NAME].
+
+**Entities**: [ENTITIES]
+**Core Features**: [CORE_FEATURES]
+**Auth Strategy**: [AUTH_STRATEGY]
 
 For each endpoint, document:
-1. HTTP method and route
-2. Purpose (what it does)
-3. Authentication requirement
-4. Request body/query params schema
-5. Success response schema
-6. Error responses (400, 401, 403, 404, 500)
+1. **HTTP Method + Path** (GET /api/items)
+2. **Purpose**: What the endpoint does
+3. **Authentication**: Required/Optional/Public
+4. **Request Body/Params**: Schema with validation rules
+5. **Response Shape**: Success response schema
+6. **Error Codes**: 400, 401, 403, 404, 500 with messages
 
 Group endpoints by resource:
 - /api/auth/* (authentication)
-- /api/users/* (user management)
-- /api/[domain]/* (domain-specific)
-- /api/ai/* (AI features)
-- /api/billing/* (Stripe integration)
+- /api/users/* (user profile management)
+- /api/[domain]/* (domain-specific CRUD)
+- /api/ai/* (AI-powered features)
+- /api/billing/* (Stripe webhooks, subscription management)
 
-Include validation rules for all request fields.
+For each request field, include:
+- Type (string, number, uuid, etc.)
+- Required or optional
+- Validation rules (min/max length, pattern)
 
-Output in markdown format.
-```
+Output as api-spec.md`}
+/>
 
 ## Example: Complete Resource API
 

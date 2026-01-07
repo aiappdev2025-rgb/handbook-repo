@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # M1: Project Foundation
 
@@ -87,14 +88,13 @@ your-saas-project/
 
 Use this prompt with Claude Code to set up the project:
 
-```markdown
-ROLE
-Full-Stack Developer setting up a new Next.js project.
+<SmartPrompt
+  title="M1: Project Foundation Prompt"
+  template={`Initialize project for [PRODUCT_NAME].
 
-CONTEXT
-Project: {{productName}}
-Description: {{brief product description}}
-Stack: Next.js 14+, TypeScript strict, Tailwind CSS, Supabase.
+**Tech Stack**: [TECH_STACK]
+**Project Folder**: [PROJECT_FOLDER]
+**Product Concept**: [PRODUCT_CONCEPT]
 
 OBJECTIVE
 Initialize a production-ready Next.js project with proper configuration.
@@ -141,8 +141,8 @@ REQUIREMENTS
 VERIFICATION
 Run: npm run dev — app should start without errors on localhost:3000
 Run: npm run build — should complete with no TypeScript errors
-Run: npm run lint — should pass with no warnings
-```
+Run: npm run lint — should pass with no warnings`}
+/>
 
 ## TypeScript Configuration
 

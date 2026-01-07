@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Solution Architecture
 
@@ -100,29 +101,57 @@ Your architecture document should cover eight sections:
 
 Start a fresh Claude Chat session for technical planning:
 
-```markdown
-Create a Solution Architecture document for [PRODUCT NAME].
+<SmartPrompt
+  title="Solution Architecture Prompt"
+  template={`Design solution architecture for [PRODUCT_NAME].
 
-Technology Stack (recommended for AI SaaS):
-- Frontend: Next.js 14+ with App Router
-- Styling: Tailwind CSS
-- Database: Supabase (PostgreSQL + Auth + Storage)
-- AI: Claude API (Anthropic)
-- Payments: Stripe
-- Hosting: Vercel
+**Tech Stack**: [TECH_STACK]
+**Core Features**: [CORE_FEATURES]
 
 The Architecture document should include:
-1. System Overview (architecture diagram, component responsibilities)
-2. Database Schema (tables, columns, constraints, RLS policies)
-3. API Design (routes, methods, request/response schemas)
-4. Authentication and Authorization
-5. AI Integration (prompts, error handling, cost management)
-6. Third-Party Integrations
-7. Security Considerations
-8. Project Structure (folder organization, route groups)
 
-Output in markdown format, ready to save as docs/architecture.md.
-```
+**1. System Overview**
+- Architecture diagram (components and connections)
+- Component responsibilities
+- Data flow between services
+
+**2. Database Schema**
+- Tables with columns and types
+- Relationships and foreign keys
+- Constraints and defaults
+
+**3. API Design**
+- Routes and methods (RESTful)
+- Request/response schemas
+- Authentication requirements
+
+**4. Authentication & Authorization**
+- Auth provider integration
+- User roles and permissions
+- Session management
+
+**5. AI Integration** (if applicable)
+- Claude API usage patterns
+- Error handling for AI calls
+- Cost management strategies
+
+**6. Third-Party Integrations**
+- Payment processing (Stripe)
+- Email services
+- Analytics
+
+**7. Security Considerations**
+- Row Level Security (RLS)
+- Input validation
+- Rate limiting
+
+**8. Project Structure**
+- Folder organization
+- Route groups
+- Component directories
+
+Output as solution-architecture.md`}
+/>
 
 ## Example: System Overview
 

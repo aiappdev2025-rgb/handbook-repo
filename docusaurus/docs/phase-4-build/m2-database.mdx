@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # M2: Database Schema
 
@@ -63,14 +64,13 @@ Your database schema is the foundation of your application's data integrity. Row
 
 Create the core schema with profiles table and main entities:
 
-```markdown
-ROLE
-Database Engineer designing the application schema.
+<SmartPrompt
+  title="M2: Database Schema Prompt"
+  template={`Create database schema for [PRODUCT_NAME].
 
-CONTEXT
-Project: {{productName}}
-Database: Supabase (PostgreSQL)
-Core feature: {{describe your main feature and data it needs}}
+**Database**: [TECH_STACK]
+**Entities**: [ENTITIES]
+**Core Features**: [CORE_FEATURES]
 
 OBJECTIVE
 Create the database schema with proper security.
@@ -85,7 +85,7 @@ REQUIREMENTS
    - created_at: timestamptz default now()
    - updated_at: timestamptz default now()
 
-2. Create core entity tables for your feature:
+2. Create core entity tables based on [ENTITIES]:
    - Define tables based on your product's data model
    - Include user_id foreign key on user-owned data
    - Add created_at, updated_at timestamps
@@ -106,8 +106,8 @@ REQUIREMENTS
 
 OUTPUT
 Create migration file in supabase/migrations/
-Use descriptive filename: YYYYMMDDHHMMSS_create_core_schema.sql
-```
+Use descriptive filename: YYYYMMDDHHMMSS_create_core_schema.sql`}
+/>
 
 ### Prompt 2: Row Level Security Policies
 

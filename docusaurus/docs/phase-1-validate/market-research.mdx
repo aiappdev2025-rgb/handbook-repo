@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Market Research
 
@@ -92,19 +93,29 @@ Your market research should cover five key areas:
 
 Use Claude Chat's web search capabilities to gather current market data. Be specific about your angle or differentiator to get targeted insights.
 
-```markdown
-I'm evaluating an opportunity in [MARKET/INDUSTRY]. I need comprehensive research covering:
+<SmartPrompt
+  title="Market Research Prompt"
+  template={`Research the market for [PRODUCT_NAME].
 
-1. **Market Size**: TAM, SAM, SOM with data sources
-2. **Competitive Landscape**: Major players, their strengths/weaknesses, pricing
-3. **Customer Pain Points**: What problems remain unsolved or poorly solved
-4. **Trends**: Where is this market heading in 2-3 years
-5. **Barriers to Entry**: What makes this market hard to enter
+**Product Concept**: [PRODUCT_CONCEPT]
+**Target Customer**: [TARGET_CUSTOMER]
+
+Please analyze:
+1. **Total Addressable Market (TAM)** - with data sources
+2. **Serviceable Addressable Market (SAM)** - the portion we can realistically reach
+3. **Serviceable Obtainable Market (SOM)** - what we can capture in year one
+4. **Key market trends** - where is this market heading in 2-3 years
+5. **Growth projections** - expected market growth rate
+
+Also cover:
+- **Competitive Landscape**: Major players, their strengths/weaknesses, pricing
+- **Customer Pain Points**: What problems remain unsolved or poorly solved
+- **Barriers to Entry**: What makes this market hard to enter
 
 Please search for recent data (within the last 2 years) and cite sources.
 
-My specific angle is: [YOUR DIFFERENTIATOR OR APPROACH]
-```
+Output as structured markdown.`}
+/>
 
 ## How to Validate Your Research
 
