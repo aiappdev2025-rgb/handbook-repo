@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation, useHistory} from '@docusaurus/router';
+import {ProjectProvider} from '../context/ProjectContext';
 
 // Reading progress bar styles
 const progressBarStyles: React.CSSProperties = {
@@ -160,11 +161,11 @@ function KeyboardNavigation() {
 
 export default function Root({children}: {children: React.ReactNode}): JSX.Element {
   return (
-    <>
+    <ProjectProvider>
       <ReadingProgressBar />
       {children}
       <BackToTopButton />
       <KeyboardNavigation />
-    </>
+    </ProjectProvider>
   );
 }
