@@ -13,6 +13,7 @@ import {
   NextSteps,
   ChapterNav
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Business One-Pager
 
@@ -109,12 +110,13 @@ What could make this fail? How do we mitigate each risk?
 
 Continue in the same Claude Chat session where you conducted research. This gives Claude full context of your market findings.
 
-```markdown
-Create a Business One-Pager for my SaaS product.
+<SmartPrompt
+  title="One-Pager Prompt"
+  template={`Create a Business One-Pager for [PRODUCT_NAME].
 
-**Product Concept**: [DESCRIBE YOUR PRODUCT]
-**Target Customer**: [WHO IS THIS FOR]
-**Research Findings**: [ATTACH OR SUMMARIZE RESEARCH]
+**Product Concept**: [PRODUCT_CONCEPT]
+**Target Customer**: [TARGET_CUSTOMER]
+**Problem**: [PROBLEM_STATEMENT]
 
 The one-pager should cover:
 
@@ -127,8 +129,8 @@ The one-pager should cover:
 7. **Success Metrics**: What does success look like in 6 months? 12 months?
 8. **Key Risks**: What could make this fail? How do we mitigate?
 
-Output in markdown format, ready to save as docs/one-pager.md.
-```
+Output in markdown format, ready to save as docs/one-pager.md.`}
+/>
 
 ## Example Excerpt
 
