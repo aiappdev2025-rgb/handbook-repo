@@ -118,6 +118,11 @@ const config: Config = {
           label: 'Handbook',
         },
         {
+          to: '/my-project',
+          label: 'My Project',
+          position: 'left',
+        },
+        {
           type: 'search',
           position: 'right',
         },
