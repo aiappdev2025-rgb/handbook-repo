@@ -4,9 +4,20 @@ import {
   projectSchema,
   getNestedValue,
   setNestedValue,
+  Artifact,
+  ArtifactStatus,
+  ArtifactDefinition,
+  artifactDefinitions,
 } from '../lib/conductorSchema';
 
 const STORAGE_KEY = 'conductor-projects';
+
+// Combined artifact definition + current state for UI
+export interface PhaseArtifact extends ArtifactDefinition {
+  id: string;
+  status: ArtifactStatus;
+  currentContent: string;
+}
 
 interface ProjectContextValue {
   projects: Project[];
@@ -21,6 +32,12 @@ interface ProjectContextValue {
   duplicateProject: (projectId: string) => Project | null;
   exportProject: (projectId: string) => string | null;
   importProject: (jsonData: string) => Project | null;
+  // Artifact management
+  getArtifact: (artifactId: string) => Artifact | null;
+  saveArtifact: (artifactId: string, content: string, status?: ArtifactStatus, note?: string) => void;
+  updateArtifactStatus: (artifactId: string, status: ArtifactStatus) => void;
+  restoreArtifactVersion: (artifactId: string, versionId: string) => void;
+  getPhaseArtifacts: (phaseNum: 1 | 2 | 3 | 4 | 5) => PhaseArtifact[];
 }
 
 const ProjectContext = createContext<ProjectContextValue | null>(null);
@@ -217,6 +234,143 @@ export function ProjectProvider({children}: {children: React.ReactNode}): JSX.El
     }
   }, []);
 
+  // ==========================================================================
+  // ARTIFACT MANAGEMENT FUNCTIONS
+  // ==========================================================================
+
+  // Get artifact by ID
+  const getArtifact = useCallback((artifactId: string): Artifact | null => {
+    if (!activeProject) return null;
+    return activeProject.artifacts?.[artifactId] || null;
+  }, [activeProject]);
+
+  // Save artifact (creates new version from previous content)
+  const saveArtifact = useCallback((
+    artifactId: string,
+    content: string,
+    status: ArtifactStatus = 'draft',
+    note: string = ''
+  ): void => {
+    if (!activeProjectId) return;
+
+    setProjects(prev =>
+      prev.map(p => {
+        if (p.id !== activeProjectId) return p;
+
+        const now = new Date().toISOString();
+        const existingArtifact = p.artifacts?.[artifactId];
+
+        // Create version from previous content if exists
+        const versions = existingArtifact?.versions || [];
+        if (existingArtifact?.currentContent) {
+          versions.push({
+            id: `v_${Date.now()}`,
+            content: existingArtifact.currentContent,
+            createdAt: existingArtifact.updatedAt,
+            note: existingArtifact.versionNote || '',
+          });
+        }
+
+        // Keep only last 10 versions
+        const trimmedVersions = versions.slice(-10);
+
+        return {
+          ...p,
+          updatedAt: now,
+          artifacts: {
+            ...p.artifacts,
+            [artifactId]: {
+              id: artifactId,
+              status,
+              currentContent: content,
+              versions: trimmedVersions,
+              updatedAt: now,
+              versionNote: note,
+            },
+          },
+        };
+      })
+    );
+  }, [activeProjectId]);
+
+  // Update artifact status only
+  const updateArtifactStatus = useCallback((artifactId: string, status: ArtifactStatus): void => {
+    if (!activeProjectId) return;
+
+    setProjects(prev =>
+      prev.map(p => {
+        if (p.id !== activeProjectId) return p;
+        if (!p.artifacts?.[artifactId]) return p;
+
+        return {
+          ...p,
+          artifacts: {
+            ...p.artifacts,
+            [artifactId]: {
+              ...p.artifacts[artifactId],
+              status,
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        };
+      })
+    );
+  }, [activeProjectId]);
+
+  // Restore artifact to a previous version
+  const restoreArtifactVersion = useCallback((artifactId: string, versionId: string): void => {
+    if (!activeProjectId) return;
+
+    setProjects(prev =>
+      prev.map(p => {
+        if (p.id !== activeProjectId) return p;
+
+        const artifact = p.artifacts?.[artifactId];
+        if (!artifact) return p;
+
+        const version = artifact.versions.find(v => v.id === versionId);
+        if (!version) return p;
+
+        // Save current as new version, restore old
+        const now = new Date().toISOString();
+        const newVersions = [
+          ...artifact.versions,
+          {
+            id: `v_${Date.now()}`,
+            content: artifact.currentContent,
+            createdAt: artifact.updatedAt,
+            note: 'Before restore',
+          },
+        ].slice(-10);
+
+        return {
+          ...p,
+          artifacts: {
+            ...p.artifacts,
+            [artifactId]: {
+              ...artifact,
+              currentContent: version.content,
+              versions: newVersions,
+              updatedAt: now,
+            },
+          },
+        };
+      })
+    );
+  }, [activeProjectId]);
+
+  // Get all artifacts for a phase with their definitions
+  const getPhaseArtifacts = useCallback((phaseNum: 1 | 2 | 3 | 4 | 5): PhaseArtifact[] => {
+    return Object.entries(artifactDefinitions)
+      .filter(([, def]) => def.phase === phaseNum)
+      .map(([id, def]) => ({
+        ...def,
+        id,
+        status: (activeProject?.artifacts?.[id]?.status || 'empty') as ArtifactStatus,
+        currentContent: activeProject?.artifacts?.[id]?.currentContent || '',
+      }));
+  }, [activeProject]);
+
   const contextValue = useMemo<ProjectContextValue>(() => ({
     projects,
     activeProject,
@@ -230,6 +384,12 @@ export function ProjectProvider({children}: {children: React.ReactNode}): JSX.El
     duplicateProject,
     exportProject,
     importProject,
+    // Artifact management
+    getArtifact,
+    saveArtifact,
+    updateArtifactStatus,
+    restoreArtifactVersion,
+    getPhaseArtifacts,
   }), [
     projects,
     activeProject,
@@ -243,6 +403,11 @@ export function ProjectProvider({children}: {children: React.ReactNode}): JSX.El
     duplicateProject,
     exportProject,
     importProject,
+    getArtifact,
+    saveArtifact,
+    updateArtifactStatus,
+    restoreArtifactVersion,
+    getPhaseArtifacts,
   ]);
 
   return (

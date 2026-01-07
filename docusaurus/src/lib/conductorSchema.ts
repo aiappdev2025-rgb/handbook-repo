@@ -1,6 +1,182 @@
 // Conductor System - Project Data Schema
 // Defines the structure for user project data that auto-fills prompts throughout the handbook
 
+// =============================================================================
+// ARTIFACT DEFINITIONS
+// Maps artifacts to chapters - used for artifact storage and chapter navigation
+// =============================================================================
+
+export interface ArtifactDefinition {
+  phase: 1 | 2 | 3 | 4 | 5;
+  chapter: string;
+  filename: string;
+  title: string;
+  description: string;
+  extractFields: string[];
+}
+
+export const artifactDefinitions: Record<string, ArtifactDefinition> = {
+  // Phase 1: Validate
+  'market-research': {
+    phase: 1,
+    chapter: 'market-research',
+    filename: 'market-research.md',
+    title: 'Market Research',
+    description: 'TAM/SAM/SOM analysis and market trends',
+    extractFields: ['phase1.marketTAM', 'phase1.marketSAM', 'phase1.marketSOM'],
+  },
+  'opportunity-assessment': {
+    phase: 1,
+    chapter: 'opportunity-assessment',
+    filename: 'opportunity-assessment.md',
+    title: 'Opportunity Assessment',
+    description: 'Opportunity scoring and evaluation',
+    extractFields: [],
+  },
+  'business-one-pager': {
+    phase: 1,
+    chapter: 'business-one-pager',
+    filename: 'business-one-pager.md',
+    title: 'Business One-Pager',
+    description: 'Complete business overview document',
+    extractFields: ['phase1.productConcept', 'phase1.problemStatement', 'phase1.pricingModel'],
+  },
+  'competitive-analysis': {
+    phase: 1,
+    chapter: 'competitive-analysis',
+    filename: 'competitive-analysis.md',
+    title: 'Competitive Analysis',
+    description: 'Competitor research and differentiation',
+    extractFields: ['phase1.competitors'],
+  },
+  'mvp-scope': {
+    phase: 1,
+    chapter: 'mvp-scoping',
+    filename: 'mvp-scope.md',
+    title: 'MVP Scope',
+    description: 'Feature prioritization and scope definition',
+    extractFields: ['phase1.mvpFeatures', 'phase1.outOfScope'],
+  },
+  'design-brief': {
+    phase: 1,
+    chapter: 'design-brief',
+    filename: 'design-brief.md',
+    title: 'Design Brief',
+    description: 'Product requirements and user stories',
+    extractFields: ['phase2.coreFeatures', 'phase2.userPersonas'],
+  },
+
+  // Phase 2: Design
+  'design-philosophy': {
+    phase: 2,
+    chapter: 'design-philosophy',
+    filename: 'design-philosophy.md',
+    title: 'Design Philosophy',
+    description: 'Design principles and visual direction',
+    extractFields: ['phase2.designPrinciples'],
+  },
+  'ux-package': {
+    phase: 2,
+    chapter: 'ux-package',
+    filename: 'ux-package.md',
+    title: 'UX Package',
+    description: 'Information architecture and user flows',
+    extractFields: ['phase2.keyUserFlows'],
+  },
+  'user-flows': {
+    phase: 2,
+    chapter: 'user-flows',
+    filename: 'user-flows.md',
+    title: 'User Flows',
+    description: 'Detailed user journey documentation',
+    extractFields: [],
+  },
+  'ui-system': {
+    phase: 2,
+    chapter: 'ui-system',
+    filename: 'ui-system.md',
+    title: 'UI System',
+    description: 'Visual design system specification',
+    extractFields: [],
+  },
+  'component-library': {
+    phase: 2,
+    chapter: 'component-library',
+    filename: 'component-library.md',
+    title: 'Component Library',
+    description: 'UI component specifications',
+    extractFields: [],
+  },
+
+  // Phase 3: Architect
+  'solution-architecture': {
+    phase: 3,
+    chapter: 'solution-architecture',
+    filename: 'solution-architecture.md',
+    title: 'Solution Architecture',
+    description: 'System design and tech stack',
+    extractFields: ['phase3.techStack'],
+  },
+  'data-model': {
+    phase: 3,
+    chapter: 'data-model',
+    filename: 'data-model.md',
+    title: 'Data Model',
+    description: 'Database schema and entities',
+    extractFields: ['phase3.entities'],
+  },
+  'api-spec': {
+    phase: 3,
+    chapter: 'api-specification',
+    filename: 'api-spec.md',
+    title: 'API Specification',
+    description: 'API endpoints and contracts',
+    extractFields: ['phase3.apiEndpoints'],
+  },
+  'security-architecture': {
+    phase: 3,
+    chapter: 'security',
+    filename: 'security-architecture.md',
+    title: 'Security Architecture',
+    description: 'Auth and security design',
+    extractFields: ['phase3.authStrategy'],
+  },
+  'build-contract': {
+    phase: 3,
+    chapter: 'build-contract',
+    filename: 'build-contract.md',
+    title: 'Build Contract',
+    description: 'Implementation roadmap for Claude Code',
+    extractFields: [],
+  },
+};
+
+// =============================================================================
+// ARTIFACT VERSION & STORAGE TYPES
+// =============================================================================
+
+export type ArtifactStatus = 'empty' | 'draft' | 'complete';
+
+export interface ArtifactVersion {
+  id: string;
+  content: string;
+  createdAt: string;
+  note: string;
+}
+
+export interface Artifact {
+  id: string;
+  status: ArtifactStatus;
+  currentContent: string;
+  versions: ArtifactVersion[];
+  updatedAt: string;
+  versionNote?: string;
+}
+
+// =============================================================================
+// PROJECT DATA TYPES
+// =============================================================================
+
 // Type definitions
 export interface Competitor {
   name: string;
@@ -118,6 +294,9 @@ export interface Project {
   phase3: Phase3Data;
   phase4: Phase4Data;
   phase5: Phase5Data;
+
+  // Artifacts storage (key = artifact ID)
+  artifacts: Record<string, Artifact>;
 }
 
 // Default project schema (used as template for new projects)
@@ -185,6 +364,9 @@ export const projectSchema: Project = {
     monitoringSetup: false,
     launchDate: '',
   },
+
+  // Artifacts storage
+  artifacts: {},
 };
 
 // Field metadata for UI rendering and validation
