@@ -135,7 +135,7 @@ const config: Config = {
     },
 
     prism: {
-      theme: prismThemes.vsDark,
+      theme: prismThemes.vsLight,
       darkTheme: prismThemes.vsDark,
       additionalLanguages: ['bash', 'json', 'typescript', 'jsx'],
     },

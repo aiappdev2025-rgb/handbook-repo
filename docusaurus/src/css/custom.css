@@ -524,25 +524,44 @@ pre {
 }
 
 [data-theme='light'] pre {
-  border-color: #e2e8f0;
+  border-color: #e2e8f0 !important;
   background: #f8fafc !important;
 }
 
-[data-theme='light'] .prism-code {
+/* Force light mode on all code block containers and prism elements */
+[data-theme='light'] pre[class*="prism-code"],
+[data-theme='light'] .prism-code,
+[data-theme='light'] [class*="codeBlockContent"] pre,
+[data-theme='light'] [class*="codeBlock"] pre {
   background: #f8fafc !important;
+  background-color: #f8fafc !important;
   color: #334155 !important;
 }
 
-/* Light mode syntax highlighting */
+/* Override any inline prism theme styles */
+[data-theme='light'] pre.prism-code,
+[data-theme='light'] .theme-code-block pre,
+html[data-theme='light'] pre[class*="language-"] {
+  background: #f8fafc !important;
+  background-color: #f8fafc !important;
+}
+
+/* Ensure code block containers also have light bg */
+[data-theme='light'] [class*="codeBlockContainer"],
+[data-theme='light'] [class*="codeBlockContent"] {
+  background: #f8fafc !important;
+}
+
+/* Light mode syntax highlighting - use !important to override theme */
 [data-theme='light'] .token.comment,
 [data-theme='light'] .token.prolog,
 [data-theme='light'] .token.doctype,
 [data-theme='light'] .token.cdata {
-  color: #64748b;
+  color: #64748b !important;
 }
 
 [data-theme='light'] .token.punctuation {
-  color: #475569;
+  color: #475569 !important;
 }
 
 [data-theme='light'] .token.property,
@@ -551,7 +570,7 @@ pre {
 [data-theme='light'] .token.number,
 [data-theme='light'] .token.constant,
 [data-theme='light'] .token.symbol {
-  color: #c026d3;
+  color: #c026d3 !important;
 }
 
 [data-theme='light'] .token.selector,
@@ -559,7 +578,7 @@ pre {
 [data-theme='light'] .token.string,
 [data-theme='light'] .token.char,
 [data-theme='light'] .token.builtin {
-  color: #059669;
+  color: #059669 !important;
 }
 
 [data-theme='light'] .token.operator,
@@ -568,23 +587,31 @@ pre {
 [data-theme='light'] .language-css .token.string,
 [data-theme='light'] .style .token.string,
 [data-theme='light'] .token.variable {
-  color: #b45309;
+  color: #b45309 !important;
 }
 
 [data-theme='light'] .token.atrule,
 [data-theme='light'] .token.attr-value,
 [data-theme='light'] .token.keyword {
-  color: #7c3aed;
+  color: #7c3aed !important;
 }
 
 [data-theme='light'] .token.function,
 [data-theme='light'] .token.class-name {
-  color: #2563eb;
+  color: #2563eb !important;
 }
 
 [data-theme='light'] .token.regex,
 [data-theme='light'] .token.important {
-  color: #ea580c;
+  color: #ea580c !important;
+}
+
+/* Plain text in code blocks */
+[data-theme='light'] .token.plain,
+[data-theme='light'] .token-line,
+[data-theme='light'] pre[class*="language-"] code,
+[data-theme='light'] .prism-code code {
+  color: #334155 !important;
 }
 
 code {
