@@ -344,6 +344,11 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
       const formatted = formatValue(value, path || '');
       const isSimpleField = typeof value === 'string' || value === '' || value === undefined || value === null;
 
+      // Navigate to project profile for complex fields
+      const goToProfile = () => {
+        window.location.href = '/my-project';
+      };
+
       // Add interactive placeholder
       if (editingField?.token === token) {
         elements.push(
@@ -370,13 +375,14 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
           <span
             key={`filled-${i}`}
             className={`${styles.placeholder} ${styles.filled}`}
-            onClick={isSimpleField && path ? () => startEdit(token, path) : undefined}
+            onClick={isSimpleField && path ? () => startEdit(token, path) : goToProfile}
             title={isSimpleField ? 'Click to edit' : 'Edit in Project Profile'}
-            role={isSimpleField ? 'button' : undefined}
-            tabIndex={isSimpleField ? 0 : undefined}
+            role="button"
+            tabIndex={0}
           >
             <span className={styles.placeholderValue}>{formatted}</span>
             {isSimpleField && <span className={styles.editHint}>&#9998;</span>}
+            {!isSimpleField && <span className={styles.editHint}>&#8594;</span>}
           </span>
         );
       } else {
@@ -384,13 +390,14 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
           <span
             key={`empty-${i}`}
             className={`${styles.placeholder} ${styles.empty}`}
-            onClick={path && isSimpleField ? () => startEdit(token, path) : undefined}
+            onClick={path && isSimpleField ? () => startEdit(token, path) : goToProfile}
             title={isSimpleField ? 'Click to fill' : 'Fill in Project Profile'}
-            role={isSimpleField ? 'button' : undefined}
-            tabIndex={isSimpleField ? 0 : undefined}
+            role="button"
+            tabIndex={0}
           >
             <span className={styles.placeholderToken}>{token}</span>
             {isSimpleField && <span className={styles.fillHint}>+</span>}
+            {!isSimpleField && <span className={styles.fillHint}>&#8594;</span>}
           </span>
         );
       }
