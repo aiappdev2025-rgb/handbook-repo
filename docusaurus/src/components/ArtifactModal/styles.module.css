@@ -653,6 +653,105 @@
 }
 
 /* ============================================
+   PARSE PROMPT
+   ============================================ */
+.parsePrompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(59, 130, 246, 0.1);
+  border-top: 1px solid var(--accent-blue);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+:global([data-theme='light']) .parsePrompt {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.parsePromptLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.parsePromptIcon {
+  font-size: 16px;
+}
+
+.parsePromptText {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-200);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .parsePromptText {
+  color: var(--gray-800);
+}
+
+.parsePromptConfidence {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.parsePromptActions {
+  display: flex;
+  gap: 8px;
+}
+
+.parseApplyBtn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--accent-blue);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.parseApplyBtn:hover {
+  background: var(--accent-blue-dark);
+}
+
+.parseDismissBtn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--gray-600);
+  border-radius: 4px;
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .parseDismissBtn {
+  border-color: var(--gray-400);
+  color: var(--gray-600);
+}
+
+.parseDismissBtn:hover {
+  border-color: var(--gray-500);
+  color: var(--gray-300);
+}
+
+:global([data-theme='light']) .parseDismissBtn:hover {
+  border-color: var(--gray-500);
+  color: var(--gray-800);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {

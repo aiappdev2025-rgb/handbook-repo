@@ -1,6 +1,7 @@
 import React, {useState, useCallback, useMemo} from 'react';
 import {useProject} from '../../context/ProjectContext';
 import {artifactDefinitions, ArtifactStatus} from '../../lib/conductorSchema';
+import {parseArtifact, ParseResult, getFieldDisplayName, formatExtractedValue} from '../../lib/conductorParser';
 import styles from './styles.module.css';
 
 // Map placeholder tokens to project field paths
@@ -172,6 +173,10 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  // Parse result state
+  const [parseResult, setParseResult] = useState<ParseResult | null>(null);
+  const [showParseResult, setShowParseResult] = useState(false);
+
   // Get artifact definition and current artifact
   const artifactDef = artifactId ? artifactDefinitions[artifactId] : null;
   const currentArtifact = artifactId ? getArtifact(artifactId) : null;
@@ -208,6 +213,13 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
     setSaving(true);
     saveArtifact(artifactId, outputContent, outputStatus, versionNote);
 
+    // Try to parse the artifact content
+    const result = parseArtifact(artifactId, outputContent);
+    if (Object.keys(result.extracted).length > 0) {
+      setParseResult(result);
+      setShowParseResult(true);
+    }
+
     setTimeout(() => {
       setSaving(false);
       setSaved(true);
@@ -215,6 +227,18 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
       setTimeout(() => setSaved(false), 2000);
     }, 300);
   }, [artifactId, outputContent, outputStatus, versionNote, saveArtifact]);
+
+  // Apply parsed fields to project
+  const handleApplyParsed = useCallback(() => {
+    if (!parseResult?.extracted) return;
+
+    Object.entries(parseResult.extracted).forEach(([path, value]) => {
+      updateField(path, value);
+    });
+
+    setShowParseResult(false);
+    setParseResult(null);
+  }, [parseResult, updateField]);
 
   // Find all placeholders in template
   const placeholders = useMemo((): PlaceholderMatch[] => {
@@ -546,6 +570,37 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
                   </span>
                 )}
               </div>
+
+              {/* Parse Result UI */}
+              {showParseResult && parseResult && Object.keys(parseResult.extracted).length > 0 && (
+                <div className={styles.parseResult}>
+                  <div className={styles.parseHeader}>
+                    <span className={styles.parseIcon}>&#128269;</span>
+                    <span>Found {Object.keys(parseResult.extracted).length} field(s) to extract</span>
+                    <span className={styles.parseConfidence}>
+                      {parseResult.confidence}% confidence
+                    </span>
+                  </div>
+                  <div className={styles.parseFields}>
+                    {Object.entries(parseResult.extracted).map(([path, value]) => (
+                      <div key={path} className={styles.parseField}>
+                        <span className={styles.parseFieldName}>{getFieldDisplayName(path)}</span>
+                        <span className={styles.parseFieldValue}>
+                          {formatExtractedValue(value)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={styles.parseActions}>
+                    <button className={styles.applyBtn} onClick={handleApplyParsed}>
+                      &#10003; Apply to Project
+                    </button>
+                    <button className={styles.dismissBtn} onClick={() => setShowParseResult(false)}>
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

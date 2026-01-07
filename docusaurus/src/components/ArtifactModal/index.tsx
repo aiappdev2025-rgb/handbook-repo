@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useProject} from '../../context/ProjectContext';
 import {ArtifactStatus} from '../../lib/conductorSchema';
+import {parseArtifact, ParseResult, getFieldDisplayName, formatExtractedValue} from '../../lib/conductorParser';
 import styles from './styles.module.css';
 
 interface ArtifactVersion {
@@ -35,7 +36,7 @@ export default function ArtifactModal({
   onClose,
   onSave,
 }: ArtifactModalProps): JSX.Element {
-  const {restoreArtifactVersion} = useProject();
+  const {restoreArtifactVersion, updateField} = useProject();
 
   const [mode, setMode] = useState<'view' | 'edit' | 'history'>(initialMode);
   const [content, setContent] = useState(artifact.content || '');
@@ -47,6 +48,9 @@ export default function ArtifactModal({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  // Parse result state
+  const [parseResult, setParseResult] = useState<ParseResult | null>(null);
+
   useEffect(() => {
     setContent(artifact.content || '');
     setStatus(artifact.status === 'empty' ? 'draft' : artifact.status);
@@ -55,12 +59,29 @@ export default function ArtifactModal({
   const handleSave = (): void => {
     setSaving(true);
     onSave(content, status, versionNote);
+
+    // Try to parse the artifact content
+    const result = parseArtifact(artifact.id, content);
+    if (Object.keys(result.extracted).length > 0) {
+      setParseResult(result);
+    }
+
     setTimeout(() => {
       setSaving(false);
       setSaved(true);
       setVersionNote('');
       setTimeout(() => setSaved(false), 1500);
     }, 300);
+  };
+
+  const handleApplyParsed = (): void => {
+    if (!parseResult?.extracted) return;
+
+    Object.entries(parseResult.extracted).forEach(([path, value]) => {
+      updateField(path, value);
+    });
+
+    setParseResult(null);
   };
 
   const handleRestoreVersion = (versionId: string): void => {
@@ -233,6 +254,32 @@ export default function ArtifactModal({
                   {saving ? 'Saving...' : saved ? '✓ Saved!' : 'Save'}
                 </button>
               </div>
+
+              {/* Parse Prompt UI */}
+              {parseResult && Object.keys(parseResult.extracted).length > 0 && (
+                <div className={styles.parsePrompt}>
+                  <div className={styles.parsePromptLeft}>
+                    <span className={styles.parsePromptIcon}>&#128269;</span>
+                    <span className={styles.parsePromptText}>
+                      Found {Object.keys(parseResult.extracted).length} extractable field(s)
+                    </span>
+                    <span className={styles.parsePromptConfidence}>
+                      {parseResult.confidence}%
+                    </span>
+                  </div>
+                  <div className={styles.parsePromptActions}>
+                    <button className={styles.parseApplyBtn} onClick={handleApplyParsed}>
+                      Apply to Project
+                    </button>
+                    <button
+                      className={styles.parseDismissBtn}
+                      onClick={() => setParseResult(null)}
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
