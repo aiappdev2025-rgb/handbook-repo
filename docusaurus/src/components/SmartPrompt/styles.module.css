@@ -421,6 +421,293 @@
 }
 
 /* ============================================
+   OUTPUT SECTION
+   ============================================ */
+.outputSection {
+  border-top: 1px solid var(--gray-700);
+}
+
+:global([data-theme='light']) .outputSection {
+  border-top-color: var(--gray-200);
+}
+
+.outputHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--gray-800);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+:global([data-theme='light']) .outputHeader {
+  background: var(--gray-100);
+}
+
+.outputHeader:hover {
+  background: var(--gray-750);
+}
+
+:global([data-theme='light']) .outputHeader:hover {
+  background: var(--gray-150);
+}
+
+.outputHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.outputIcon {
+  font-size: 1rem;
+}
+
+.outputTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gray-300);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .outputTitle {
+  color: var(--gray-700);
+}
+
+.statusBadge {
+  font-size: 0.625rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.statusEmpty {
+  background: var(--gray-700);
+  color: var(--gray-400);
+}
+
+:global([data-theme='light']) .statusEmpty {
+  background: var(--gray-200);
+  color: var(--gray-600);
+}
+
+.statusDraft {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+:global([data-theme='light']) .statusDraft {
+  background: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.statusComplete {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+:global([data-theme='light']) .statusComplete {
+  background: rgba(34, 197, 94, 0.15);
+  color: #166534;
+}
+
+.toggleIcon {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.outputBody {
+  padding: 1rem 1.5rem;
+  background: var(--gray-950);
+}
+
+:global([data-theme='light']) .outputBody {
+  background: var(--gray-50);
+}
+
+.outputInstructions {
+  font-size: 0.8125rem;
+  color: var(--gray-400);
+  margin: 0 0 0.75rem;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .outputInstructions {
+  color: var(--gray-600);
+}
+
+.outputActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.uploadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--gray-800);
+  border: 1px solid var(--gray-600);
+  color: var(--gray-300);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .uploadBtn {
+  background: var(--white);
+  border-color: var(--gray-300);
+  color: var(--gray-700);
+}
+
+.uploadBtn:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.outputTextarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  background: var(--gray-900);
+  border: 1px solid var(--gray-700);
+  color: var(--gray-200);
+  resize: vertical;
+  min-height: 200px;
+}
+
+:global([data-theme='light']) .outputTextarea {
+  background: var(--white);
+  border-color: var(--gray-300);
+  color: var(--gray-800);
+}
+
+.outputTextarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.outputTextarea::placeholder {
+  color: var(--gray-600);
+}
+
+:global([data-theme='light']) .outputTextarea::placeholder {
+  color: var(--gray-400);
+}
+
+.outputMeta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.statusSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statusSelector label {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .statusSelector label {
+  color: var(--gray-600);
+}
+
+.statusSelector select {
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  background: var(--gray-800);
+  border: 1px solid var(--gray-600);
+  color: var(--gray-200);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .statusSelector select {
+  background: var(--white);
+  border-color: var(--gray-300);
+  color: var(--gray-800);
+}
+
+.versionNote {
+  flex: 1;
+  min-width: 150px;
+}
+
+.versionNote input {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  background: var(--gray-800);
+  border: 1px solid var(--gray-600);
+  color: var(--gray-200);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .versionNote input {
+  background: var(--white);
+  border-color: var(--gray-300);
+  color: var(--gray-800);
+}
+
+.versionNote input::placeholder {
+  color: var(--gray-500);
+}
+
+:global([data-theme='light']) .versionNote input::placeholder {
+  color: var(--gray-400);
+}
+
+.outputSave {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.saveArtifactBtn {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--accent-blue);
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.saveArtifactBtn:hover:not(:disabled) {
+  background: var(--accent-blue-dark);
+}
+
+.saveArtifactBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.versionCount {
+  font-size: 0.6875rem;
+  color: var(--gray-500);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
@@ -471,5 +758,43 @@
   .fillLink,
   .createLink {
     margin-left: 0;
+  }
+
+  /* Output section responsive */
+  .outputBody {
+    padding: 0.75rem 1rem;
+  }
+
+  .outputMeta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .statusSelector {
+    width: 100%;
+  }
+
+  .statusSelector select {
+    flex: 1;
+  }
+
+  .versionNote {
+    min-width: 100%;
+  }
+
+  .outputSave {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .saveArtifactBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .versionCount {
+    text-align: center;
   }
 }

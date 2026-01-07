@@ -1,5 +1,6 @@
 import React, {useState, useCallback, useMemo} from 'react';
 import {useProject} from '../../context/ProjectContext';
+import {artifactDefinitions, ArtifactStatus} from '../../lib/conductorSchema';
 import styles from './styles.module.css';
 
 // Map placeholder tokens to project field paths
@@ -38,6 +39,7 @@ const placeholderMap: Record<string, string> = {
 interface SmartPromptProps {
   template: string;
   title?: string;
+  artifactId?: string;
 }
 
 interface EditingField {
@@ -156,11 +158,63 @@ function formatValue(value: unknown, path: string): string {
   return String(value);
 }
 
-export default function SmartPrompt({template, title}: SmartPromptProps): JSX.Element {
-  const {activeProject, getField, updateField} = useProject();
+export default function SmartPrompt({template, title, artifactId}: SmartPromptProps): JSX.Element {
+  const {activeProject, getField, updateField, getArtifact, saveArtifact} = useProject();
   const [editingField, setEditingField] = useState<EditingField | null>(null);
   const [editValue, setEditValue] = useState('');
   const [copied, setCopied] = useState(false);
+
+  // Output section state
+  const [showOutput, setShowOutput] = useState(false);
+  const [outputContent, setOutputContent] = useState('');
+  const [outputStatus, setOutputStatus] = useState<ArtifactStatus>('draft');
+  const [versionNote, setVersionNote] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  // Get artifact definition and current artifact
+  const artifactDef = artifactId ? artifactDefinitions[artifactId] : null;
+  const currentArtifact = artifactId ? getArtifact(artifactId) : null;
+
+  // Load existing artifact content when opening output section
+  const handleToggleOutput = useCallback(() => {
+    if (!showOutput && currentArtifact?.currentContent) {
+      setOutputContent(currentArtifact.currentContent);
+      setOutputStatus(currentArtifact.status || 'draft');
+    }
+    setShowOutput(!showOutput);
+  }, [showOutput, currentArtifact]);
+
+  // Handle file upload
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result;
+      if (typeof result === 'string') {
+        setOutputContent(result);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = ''; // Reset input
+  }, []);
+
+  // Save artifact
+  const handleSaveArtifact = useCallback(() => {
+    if (!artifactId || !outputContent.trim()) return;
+
+    setSaving(true);
+    saveArtifact(artifactId, outputContent, outputStatus, versionNote);
+
+    setTimeout(() => {
+      setSaving(false);
+      setSaved(true);
+      setVersionNote('');
+      setTimeout(() => setSaved(false), 2000);
+    }, 300);
+  }, [artifactId, outputContent, outputStatus, versionNote, saveArtifact]);
 
   // Find all placeholders in template
   const placeholders = useMemo((): PlaceholderMatch[] => {
@@ -401,6 +455,99 @@ export default function SmartPrompt({template, title}: SmartPromptProps): JSX.El
           <a href="/my-project" className={styles.createLink}>
             Create or select a project &#8594;
           </a>
+        </div>
+      )}
+
+      {/* Output Section - Only show if artifactId is provided */}
+      {artifactId && activeProject && (
+        <div className={styles.outputSection}>
+          <div
+            className={styles.outputHeader}
+            onClick={handleToggleOutput}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && handleToggleOutput()}
+          >
+            <div className={styles.outputHeaderLeft}>
+              <span className={styles.outputIcon}>&#128190;</span>
+              <span className={styles.outputTitle}>
+                Save Output: {artifactDef?.filename || 'artifact.md'}
+              </span>
+              {currentArtifact && (
+                <span className={`${styles.statusBadge} ${styles[`status${currentArtifact.status.charAt(0).toUpperCase() + currentArtifact.status.slice(1)}`]}`}>
+                  {currentArtifact.status}
+                </span>
+              )}
+            </div>
+            <span className={styles.toggleIcon}>{showOutput ? '\u25BC' : '\u25B6'}</span>
+          </div>
+
+          {showOutput && (
+            <div className={styles.outputBody}>
+              <p className={styles.outputInstructions}>
+                After running the prompt above, paste Claude's response or upload the .md file:
+              </p>
+
+              <div className={styles.outputActions}>
+                <label className={styles.uploadBtn}>
+                  <span>&#128193; Upload .md File</span>
+                  <input
+                    type="file"
+                    accept=".md,.txt"
+                    onChange={handleFileUpload}
+                    hidden
+                  />
+                </label>
+              </div>
+
+              <textarea
+                className={styles.outputTextarea}
+                value={outputContent}
+                onChange={(e) => setOutputContent(e.target.value)}
+                placeholder="Paste Claude's markdown output here..."
+                rows={12}
+              />
+
+              <div className={styles.outputMeta}>
+                <div className={styles.statusSelector}>
+                  <label htmlFor="artifact-status">Status:</label>
+                  <select
+                    id="artifact-status"
+                    value={outputStatus}
+                    onChange={(e) => setOutputStatus(e.target.value as ArtifactStatus)}
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="complete">Complete</option>
+                  </select>
+                </div>
+
+                <div className={styles.versionNote}>
+                  <input
+                    type="text"
+                    placeholder="Version note (optional)"
+                    value={versionNote}
+                    onChange={(e) => setVersionNote(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.outputSave}>
+                <button
+                  onClick={handleSaveArtifact}
+                  className={styles.saveArtifactBtn}
+                  disabled={!outputContent.trim() || saving}
+                >
+                  {saving ? 'Saving...' : saved ? '\u2713 Saved!' : 'Save Artifact'}
+                </button>
+
+                {currentArtifact?.versions?.length > 0 && (
+                  <span className={styles.versionCount}>
+                    {currentArtifact.versions.length} previous version(s)
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
