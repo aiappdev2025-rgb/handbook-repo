@@ -5,8 +5,30 @@ description: Generate copy-paste prompts for Claude Code based on MOAI methodolo
 ---
 
 import PromptBuilder from '@site/src/components/PromptBuilder';
+import {
+  TldrBox,
+  WhenToUse,
+} from '@site/src/components/ChapterComponents';
 
 # Prompt Builder
+
+<TldrBox
+  what="Interactive tool to generate effective prompts for Claude Code."
+  why="Well-structured prompts lead to better AI outputs."
+  outcome="Copy-paste prompts customized for your project and current milestone."
+/>
+
+<WhenToUse
+  useWhen={[
+    "Working with Claude Code on any phase",
+    "Need structured prompts for specific tasks",
+    "Want consistent prompt formatting"
+  ]}
+  notYetIf={[
+    "Haven't defined your project context",
+    "Not sure which milestone you're on"
+  ]}
+/>
 
 The Prompt Builder helps you generate effective prompts for Claude Code based on the MOAI methodology. Select a phase, milestone, and prompt template, then fill in your project-specific variables.
 

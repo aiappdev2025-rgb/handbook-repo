@@ -1,6 +1,44 @@
 ---
 sidebar_position: 1
 title: "QA & Deployment"
+description: "Quality assurance and deployment procedures"
 ---
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+  Verification,
+} from '@site/src/components/ChapterComponents';
+
 # QA & Deployment
+
+<span className="reading-time">Coming soon</span>
+
+<TldrBox
+  what="Execute comprehensive QA testing and deploy to production environment."
+  why="Thorough QA prevents embarrassing bugs and ensures a smooth launch."
+  outcome="Tested, deployed application ready for real users."
+/>
+
+<WhenToUse
+  useWhen={[
+    "All build milestones (M1-M11) are complete",
+    "Pre-launch checklist items addressed",
+    "Ready to deploy to production"
+  ]}
+  notYetIf={[
+    "Build phase not complete",
+    "Critical features missing",
+    "Security review not done"
+  ]}
+/>
+
+<Prerequisites
+  items={[
+    { text: "M11 Pre-Launch complete", link: "/phase-4-build/m11-prelaunch" },
+    { text: "All quality gates passed", link: "/phase-4-build/quality-gates" }
+  ]}
+/>
+
 *Content to be migrated*

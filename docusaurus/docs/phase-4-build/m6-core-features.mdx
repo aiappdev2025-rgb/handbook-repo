@@ -1,6 +1,44 @@
 ---
 sidebar_position: 12
-title: "m6 core features"
+title: "M6: Core Features"
+description: "Implement the primary features that deliver core value"
 ---
-# m6 core features
+
+import {
+  TldrBox,
+  WhenToUse,
+  Prerequisites,
+} from '@site/src/components/ChapterComponents';
+
+# M6: Core Features
+
+<span className="reading-time">Coming soon</span>
+
+<TldrBox
+  what="Build the primary features that deliver your product's core value proposition."
+  why="Core features define your product's value and differentiation in the market."
+  outcome="Working implementation of all core product features."
+/>
+
+<WhenToUse
+  useWhen={[
+    "M5 Authentication is complete",
+    "User flows are finalized",
+    "Ready to build main functionality"
+  ]}
+  notYetIf={[
+    "Authentication not working",
+    "Core feature specs not complete",
+    "Data model changes still pending"
+  ]}
+  skipIf="Core features were already built in earlier milestones"
+/>
+
+<Prerequisites
+  items={[
+    { text: "M5 Authentication complete", link: "/phase-4-build/m5-auth" },
+    { text: "Feature specifications ready", link: "/phase-3-architect/solution-architecture" }
+  ]}
+/>
+
 *Content to be migrated*
