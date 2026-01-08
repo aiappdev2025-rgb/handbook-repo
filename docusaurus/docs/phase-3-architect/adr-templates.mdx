@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
-title: "ADR Templates"
-description: "Document architectural decisions using Architecture Decision Records"
+title: "Architecture Decision Records"
+description: "Document your technical decisions with Architecture Decision Records (ADRs)"
 ---
 
 import {
@@ -11,72 +11,212 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
-# ADR Templates
+# Architecture Decision Records (ADRs)
 
-<span className="reading-time">10 min read</span>
+<span className="reading-time">15 min read</span>
 
 <TldrBox
-  what="Use Architecture Decision Records (ADRs) to document significant technical decisions with context and rationale."
-  why="Future you (and teammates) will forget why decisions were made. ADRs capture the 'why' for later reference."
-  outcome="ADR template and process for documenting key decisions throughout the project."
+  what="Document significant technical decisions using Architecture Decision Records—capturing the context, options considered, and reasoning behind each choice."
+  why="Future you (and teammates) will forget why decisions were made. ADRs preserve the 'why' for later reference and prevent revisiting already-decided questions."
+  outcome="A set of ADR documents (001, 002, etc.) in your `docs/adrs/` folder documenting your key architectural choices."
 />
 
 <WhenToUse
   useWhen={[
-    "Making a significant technical decision",
+    "Making significant technical decisions (database, framework, auth)",
     "Choosing between multiple valid approaches",
-    "Making a decision you might question later"
+    "Making decisions you might question later"
   ]}
   notYetIf={[
-    "Decision is trivial or easily reversible",
-    "No alternatives were considered"
+    "Solution architecture not yet started",
+    "Still exploring options without commitment"
   ]}
-  skipIf="Working solo on a short-term project"
+  skipIf="Working on a short prototype where documentation isn't needed"
 />
 
 <Prerequisites
   items={[
-    { text: "Architecture planning in progress" },
-    { text: "Documentation folder structure set up" }
+    { text: "Solution Architecture in progress or complete", link: "/phase-3-architect/solution-architecture" },
+    { text: "Tech stack decisions being made" }
   ]}
 />
 
 ## What is an ADR?
 
-An Architecture Decision Record captures:
-- **What** decision was made
-- **Why** this option was chosen
-- **What** alternatives were considered
-- **What** the consequences are
+An Architecture Decision Record is a short document that captures **one** architectural decision. Each ADR answers four questions:
 
-## ADR Template
+| Section | Question | Example |
+|---------|----------|---------|
+| **Context** | Why was this decision needed? | "We need authentication for our SaaS..." |
+| **Decision** | What did you choose? | "We will use Supabase Auth" |
+| **Alternatives** | What else was considered? | "NextAuth.js, Clerk, custom auth" |
+| **Consequences** | What are the trade-offs? | "Pros: integrated with DB. Cons: vendor lock-in" |
 
-Create ADRs in `docs/adr/`:
+## Why ADRs Matter for Solo Founders
 
-```markdown
-# ADR-001: [Short Title]
+Even working solo, ADRs provide critical value:
+
+1. **Memory preservation** — 6 months from now, you'll forget why you chose X over Y
+2. **Faster onboarding** — When you hire or partner, they understand the codebase immediately
+3. **Change evaluation** — When considering pivots, you can revisit past decisions with full context
+4. **Avoid repeated debates** — Document once, reference forever
+
+## Which Decisions Need ADRs?
+
+Create an ADR for decisions that are:
+
+| Create ADR | Skip ADR |
+|------------|----------|
+| Hard to reverse (database, auth provider, hosting) | Trivial choices (icon library) |
+| Significantly impact architecture (state management, API patterns) | Easily reversible decisions |
+| Have multiple valid options you considered | Standard conventions (file naming) |
+
+## Step 1: Create ADR Folder
+
+In your project, create the ADR folder structure:
+
+```bash
+mkdir -p docs/adrs
+```
+
+Your project structure should look like:
+
+```
+your-project/
+├── docs/
+│   └── adrs/
+│       ├── 001-use-nextjs.md
+│       ├── 002-use-supabase.md
+│       └── 003-use-stripe.md
+```
+
+## Step 2: Generate Your ADRs
+
+Use the prompt below to generate ADRs for your key technical decisions. This prompt will create ADRs for your major architectural choices in one session.
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in your Phase 3 architecture chat (same session as Solution Architecture)
+- Have your `solution-architecture.md` content ready to reference
+- Know your key technical decisions
+
+**What to expect:**
+- Claude generates 3-5 ADRs for your main decisions
+- Each ADR follows a consistent format
+- Save each ADR to `docs/adrs/00X-decision-name.md`
+</HowToRun>
+
+<SmartPrompt
+  artifactId="adr-templates"
+  title="Generate ADRs Prompt"
+  template={`Generate Architecture Decision Records for [PRODUCT_NAME].
+
+**Tech Stack**: [TECH_STACK]
+**Auth Strategy**: [AUTH_STRATEGY]
+
+Create ADRs for these key decisions:
+1. **Frontend Framework** — Why [TECH_STACK] frontend choice?
+2. **Database & Backend** — Why [TECH_STACK] database choice?
+3. **Authentication** — Why [AUTH_STRATEGY]?
+4. **Hosting/Deployment** — Why [TECH_STACK] hosting choice?
+5. **Payments** — Why [TECH_STACK] payments choice? (if applicable)
+
+For each ADR, use this format:
+
+# ADR-00X: [Decision Title]
 
 ## Status
-Accepted | Proposed | Deprecated | Superseded by ADR-XXX
+Accepted
 
 ## Context
-What is the issue that we're seeing that motivates this decision?
+[2-3 sentences on why this decision was needed]
 
 ## Decision
-What is the change that we're proposing and/or doing?
+[1-2 sentences stating the choice clearly]
 
 ## Alternatives Considered
 
 ### Option A: [Name]
-- Pros: ...
-- Cons: ...
+- **Pros:** [benefits]
+- **Cons:** [drawbacks]
 
 ### Option B: [Name]
-- Pros: ...
-- Cons: ...
+- **Pros:** [benefits]
+- **Cons:** [drawbacks]
+
+### Option C: [Chosen] ✓
+- **Pros:** [benefits]
+- **Cons:** [drawbacks]
+
+## Consequences
+
+### Positive
+- [Benefits gained]
+
+### Negative
+- [Trade-offs accepted]
+
+### Risks
+- [What could go wrong and mitigations]
+
+## References
+- [Relevant documentation links]
+
+---
+
+Output as markdown with clear separators between each ADR so I can save them as individual files.`}
+/>
+
+## Step 3: Save Your ADRs
+
+After running the prompt:
+
+1. **Copy each ADR section** — Claude outputs them separated by `---`
+2. **Save individually** — Each ADR goes in `docs/adrs/00X-decision-name.md`
+3. **Number sequentially** — Start at 001 and increment
+
+```bash
+# Example files after saving
+docs/adrs/001-use-nextjs-app-router.md
+docs/adrs/002-use-supabase-database.md
+docs/adrs/003-use-supabase-auth.md
+docs/adrs/004-deploy-on-vercel.md
+docs/adrs/005-use-stripe-payments.md
+```
+
+## ADR Template Reference
+
+Save this template to `docs/adrs/template.md` for future ADRs:
+
+```markdown
+# ADR-XXX: [Short Title]
+
+## Status
+
+[Proposed | Accepted | Deprecated | Superseded by ADR-XXX]
+
+## Context
+
+[What is the issue that we're seeing that motivates this decision?]
+
+## Decision
+
+[What is the change that we're proposing and/or doing?]
+
+## Alternatives Considered
+
+### Option A: [Name]
+- **Pros:** ...
+- **Cons:** ...
+
+### Option B: [Name]
+- **Pros:** ...
+- **Cons:** ...
 
 ## Consequences
 
@@ -90,94 +230,114 @@ What is the change that we're proposing and/or doing?
 - What could go wrong?
 
 ## References
+
 - Links to relevant documentation, discussions, or research
 ```
 
 ## Example ADR
 
+Here's a complete example of a well-written ADR:
+
 ```markdown
-# ADR-001: Use Supabase for Authentication
+# ADR-001: Use Next.js App Router for Frontend
 
 ## Status
+
 Accepted
 
 ## Context
-We need authentication for our SaaS application. Options include
-building custom auth, using NextAuth.js, or using Supabase Auth.
-We're already using Supabase for the database.
+
+We need a React framework for building our SaaS application. The app requires
+server-side rendering for SEO, API routes for backend logic, and a modern
+developer experience. We're targeting Vercel for deployment.
 
 ## Decision
-Use Supabase Auth for all authentication needs.
+
+We will use Next.js 14 with the App Router for our frontend framework.
 
 ## Alternatives Considered
 
-### Option A: Custom Authentication
-- Pros: Full control, no vendor lock-in
-- Cons: Security risk, significant development time
+### Option A: Next.js Pages Router
+- **Pros:** Mature, well-documented, familiar patterns
+- **Cons:** Being phased out, no React Server Components
 
-### Option B: NextAuth.js
-- Pros: Flexible, many providers
-- Cons: Additional dependency, separate from database
+### Option B: Remix
+- **Pros:** Great data loading patterns, web standards focused
+- **Cons:** Smaller ecosystem, fewer deployment options
 
-### Option C: Supabase Auth (Chosen)
-- Pros: Integrated with database, RLS support, social providers
-- Cons: Vendor lock-in to Supabase
+### Option C: Next.js App Router ✓
+- **Pros:** Server Components, streaming, Vercel-optimized, future-proof
+- **Cons:** Newer patterns, some libraries not yet compatible
 
 ## Consequences
 
 ### Positive
-- RLS policies can reference auth.uid() directly
-- No separate auth service to maintain
-- Social login providers included
+- React Server Components reduce client bundle size
+- Built-in API routes eliminate need for separate backend
+- Excellent Vercel integration for deployment
+- Strong TypeScript support out of the box
 
 ### Negative
-- Migration away from Supabase becomes harder
-- Limited customization compared to custom auth
+- Learning curve for App Router patterns
+- Some third-party libraries still catching up
 
 ### Risks
-- Supabase pricing changes could affect costs
-- Mitigation: Auth data is exportable
+- Breaking changes in future Next.js versions
+- Mitigation: Pin Next.js version, test before upgrading
 
 ## References
-- Supabase Auth docs: https://supabase.com/docs/guides/auth
+
+- https://nextjs.org/docs/app
+- https://vercel.com/docs
 ```
 
-## When to Write ADRs
+## Step 4: Reference ADRs in Code
 
-Write an ADR when:
+Add comments in your code pointing to relevant ADRs:
 
-| Decision Type | Example |
-|---------------|---------|
-| **Technology choice** | "Use React Query vs SWR" |
-| **Architecture pattern** | "Use server components vs client" |
-| **Integration approach** | "How to integrate Stripe" |
-| **Security decision** | "Token storage approach" |
-| **Breaking convention** | "Why we're not using X" |
-
-## ADR Folder Structure
-
+```typescript
+// Auth configuration
+// See ADR-003: Use Supabase for authentication
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 ```
-docs/
-├── adr/
-│   ├── 001-use-supabase-auth.md
-│   ├── 002-choose-tailwind-over-css-modules.md
-│   └── 003-server-components-for-data-fetching.md
+
+This creates a traceable connection between code and architectural decisions.
+
+## Updating ADRs
+
+When a decision changes:
+
+1. **Don't delete** — Mark the old ADR as "Superseded by ADR-XXX"
+2. **Create new ADR** — Document the new decision with updated context
+3. **Link both** — Reference the old ADR in the new one
+
+```markdown
+## Status
+
+Superseded by ADR-007
+
+*This decision was revisited after 6 months due to scaling requirements.*
 ```
 
 <ExpectedOutput
   items={[
-    { type: "Template", description: "ADR template ready for use" },
-    { type: "Process", description: "Clear criteria for when to write ADRs" },
-    { type: "Folder", description: "`docs/adr/` directory created" }
+    { type: "Folder", description: "`docs/adrs/` directory created in project" },
+    { type: "Template", description: "ADR template saved for future use" },
+    { type: "ADRs", description: "3-5 ADRs covering major technical decisions" },
+    { type: "Process", description: "Understanding of when to write future ADRs" }
   ]}
 />
 
 <Verification
   checks={[
-    "ADR template saved in your project",
-    "docs/adr/ folder created",
-    "Initial ADRs written for major decisions already made",
-    "Team understands when to write ADRs"
+    "docs/adrs/ folder created in your project",
+    "ADR template saved (template.md)",
+    "ADRs written for: framework, database, auth, hosting",
+    "Each ADR includes Context, Decision, Alternatives, Consequences",
+    "ADRs numbered sequentially (001, 002, etc.)"
   ]}
 />
 

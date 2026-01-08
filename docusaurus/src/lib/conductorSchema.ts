@@ -149,6 +149,14 @@ export const artifactDefinitions: Record<string, ArtifactDefinition> = {
     description: 'Implementation roadmap for Claude Code',
     extractFields: [],
   },
+  'adr-templates': {
+    phase: 3,
+    chapter: 'adr-templates',
+    filename: 'adrs.md',
+    title: 'Architecture Decision Records',
+    description: 'Technical decision documentation',
+    extractFields: [],
+  },
 };
 
 // =============================================================================

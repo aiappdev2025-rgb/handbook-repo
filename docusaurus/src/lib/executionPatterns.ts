@@ -129,6 +129,12 @@ export const artifactExecutionOverrides: Record<string, Partial<ExecutionContext
     prerequisites: ['API specification complete'],
     tips: ['Final architecture artifact before build']
   },
+  'adr-templates': {
+    contextFiles: ['solution-architecture.md'],
+    prerequisites: ['Solution architecture complete', 'Tech stack decided'],
+    estimatedTime: '15-20 min',
+    tips: ['Generate all ADRs at once, then save individually', 'Number ADRs sequentially (001, 002, etc.)']
+  },
   'build-contract': {
     platform: 'claude-chat',
     session: 'new',
