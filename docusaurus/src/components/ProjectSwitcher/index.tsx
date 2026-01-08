@@ -38,8 +38,9 @@ export default function ProjectSwitcher(): JSX.Element {
   }, [isCreating]);
 
   const handleCreateProject = () => {
-    if (newProjectName.trim()) {
-      createProject(newProjectName.trim());
+    const trimmedName = newProjectName.trim();
+    if (trimmedName) {
+      createProject(trimmedName);
       setNewProjectName('');
       setIsCreating(false);
       setIsOpen(false);
@@ -48,6 +49,7 @@ export default function ProjectSwitcher(): JSX.Element {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleCreateProject();
     } else if (e.key === 'Escape') {
       setIsCreating(false);

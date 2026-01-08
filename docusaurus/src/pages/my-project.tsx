@@ -849,8 +849,17 @@ function EmptyState({onCreateProject}: {onCreateProject: (name: string) => void}
   const [projectName, setProjectName] = useState('');
 
   const handleCreate = () => {
-    if (projectName.trim()) {
-      onCreateProject(projectName.trim());
+    const trimmedName = projectName.trim();
+    if (trimmedName) {
+      onCreateProject(trimmedName);
+      setProjectName('');
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleCreate();
     }
   };
 
@@ -873,9 +882,14 @@ function EmptyState({onCreateProject}: {onCreateProject: (name: string) => void}
             placeholder="My Awesome SaaS"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+            onKeyDown={handleKeyDown}
           />
-          <button className={styles.emptyStateButton} onClick={handleCreate} disabled={!projectName.trim()}>
+          <button
+            type="button"
+            className={styles.emptyStateButton}
+            onClick={handleCreate}
+            disabled={!projectName.trim()}
+          >
             Create Project
           </button>
         </div>
@@ -901,10 +915,21 @@ function ProjectHeader() {
   const [exporting, setExporting] = useState(false);
 
   const handleCreateProject = () => {
-    if (newProjectName.trim()) {
-      createProject(newProjectName.trim());
+    const trimmedName = newProjectName.trim();
+    if (trimmedName) {
+      createProject(trimmedName);
       setNewProjectName('');
       setShowNewProject(false);
+    }
+  };
+
+  const handleNewProjectKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleCreateProject();
+    } else if (e.key === 'Escape') {
+      setShowNewProject(false);
+      setNewProjectName('');
     }
   };
 
@@ -1019,14 +1044,14 @@ function ProjectHeader() {
               placeholder="Project name"
               value={newProjectName}
               onChange={(e) => setNewProjectName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleCreateProject()}
+              onKeyDown={handleNewProjectKeyDown}
               autoFocus
             />
-            <button className={styles.newProjectSave} onClick={handleCreateProject}>Create</button>
-            <button className={styles.newProjectCancel} onClick={() => setShowNewProject(false)}>Cancel</button>
+            <button type="button" className={styles.newProjectSave} onClick={handleCreateProject}>Create</button>
+            <button type="button" className={styles.newProjectCancel} onClick={() => setShowNewProject(false)}>Cancel</button>
           </div>
         ) : (
-          <button className={styles.newProjectButton} onClick={() => setShowNewProject(true)}>
+          <button type="button" className={styles.newProjectButton} onClick={() => setShowNewProject(true)}>
             + New Project
           </button>
         )}
