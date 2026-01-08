@@ -8,6 +8,7 @@ import {
   TldrBox,
   WhenToUse,
   Prerequisites,
+  Verification,
 } from '@site/src/components/ChapterComponents';
 
 # M9: Payments Integration
@@ -42,3 +43,13 @@ import {
 />
 
 *Content to be migrated*
+
+<Verification
+  checks={[
+    "Payment processing works in test mode",
+    "Subscription management functional",
+    "Billing webhooks handled correctly",
+    "PCI compliance requirements met",
+    "All tests passing"
+  ]}
+/>

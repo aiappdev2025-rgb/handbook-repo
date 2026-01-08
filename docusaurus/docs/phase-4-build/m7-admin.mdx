@@ -8,6 +8,7 @@ import {
   TldrBox,
   WhenToUse,
   Prerequisites,
+  Verification,
 } from '@site/src/components/ChapterComponents';
 
 # M7: Admin Panel
@@ -42,3 +43,13 @@ import {
 />
 
 *Content to be migrated*
+
+<Verification
+  checks={[
+    "Admin panel accessible to authorized users only",
+    "User management features work correctly",
+    "System settings configurable",
+    "Audit logging in place",
+    "All tests passing"
+  ]}
+/>

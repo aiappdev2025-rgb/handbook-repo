@@ -6,7 +6,8 @@ description: "Know exactly when to switch from Claude Chat to Claude Code in you
 
 import {
   TldrBox,
-  WhenToUse
+  WhenToUse,
+  Verification,
 } from '@site/src/components/ChapterComponents';
 
 # Claude Code Timing
@@ -226,3 +227,11 @@ Sometimes you need both tools in the same session:
 - [Workflow Guide](/reference/workflow-guide) - Context management in Claude Code
 - [SPEC Template](/templates/spec-template) - Feature specification format
 - [Build Contract Template](/templates/build-contract) - Design-to-code bridge document
+
+<Verification
+  checks={[
+    "Understand when to use Claude Chat vs Claude Code",
+    "Know the Build Contract is the transition point",
+    "Clear on tool strengths for each phase"
+  ]}
+/>
