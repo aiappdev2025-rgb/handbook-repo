@@ -35,6 +35,7 @@ const placeholderMap: Record<string, string> = {
   '[STAGING_URL]': 'phase5.stagingUrl',
   '[PRODUCTION_URL]': 'phase5.productionUrl',
   '[LAUNCH_DATE]': 'phase5.launchDate',
+  '[MONITORING_SETUP]': 'phase5.monitoringSetup',
 };
 
 interface SmartPromptProps {
