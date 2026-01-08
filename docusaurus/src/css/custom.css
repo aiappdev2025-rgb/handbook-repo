@@ -3,6 +3,13 @@
    MOAI Handbook v3.1
    ============================================ */
 
+/*
+ * Geometric Grid Design Principles:
+ * - Sharp corners: border-radius: 0 for all containers
+ * - Small elements (badges, pills): border-radius: 2px max
+ * - Exception: circular status indicators use border-radius: 50% or 9999px
+ */
+
 /* ============================================
    CSS VARIABLES
    ============================================ */

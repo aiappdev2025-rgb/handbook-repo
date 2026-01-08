@@ -1,7 +1,7 @@
 .promptBuilder {
   padding: 1.5rem;
   background: var(--ifm-background-surface-color);
-  border-radius: 8px;
+  border-radius: 0;
   border: 1px solid var(--ifm-color-emphasis-200);
 }
 
@@ -42,7 +42,7 @@
 
 .select {
   padding: 0.625rem 0.75rem;
-  border-radius: 6px;
+  border-radius: 0;
   border: 1px solid var(--ifm-color-emphasis-300);
   background: var(--ifm-background-color);
   color: var(--ifm-font-color-base);
@@ -64,7 +64,7 @@
 .description {
   padding: 0.75rem 1rem;
   background: var(--ifm-color-emphasis-100);
-  border-radius: 6px;
+  border-radius: 0;
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
 }
@@ -100,7 +100,7 @@
 
 .variableInput input {
   padding: 0.625rem 0.75rem;
-  border-radius: 6px;
+  border-radius: 0;
   border: 1px solid var(--ifm-color-emphasis-300);
   background: var(--ifm-background-color);
   color: var(--ifm-font-color-base);
@@ -124,7 +124,7 @@
 
 .outputSection {
   border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -144,7 +144,7 @@
 
 .copyButton {
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 0;
   border: none;
   background: var(--ifm-color-primary);
   color: white;
