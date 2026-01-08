@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -146,6 +147,17 @@ if (!result.success) {
 | **Logging** | Structured logging without PII |
 
 ## Security Architecture Prompt
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in the same Phase 3 chat
+- Have API specification ready for reference
+
+**What to expect:**
+- Defense-in-depth security controls
+- Takes 15-20 minutes
+- Integrates into architecture document
+</HowToRun>
 
 <SmartPrompt
   artifactId="security-architecture"

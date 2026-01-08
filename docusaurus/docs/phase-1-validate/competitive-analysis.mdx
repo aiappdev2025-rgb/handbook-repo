@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -124,6 +125,17 @@ Low Price
 ```
 
 ## Competitive Analysis Prompt
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in the same Phase 1 chat session
+- Have your Business One-Pager complete for context
+
+**What to expect:**
+- Claude may use web search to research competitors
+- Takes 15-20 minutes for thorough analysis
+- Save the output as `docs/competitive-analysis.md`
+</HowToRun>
 
 <SmartPrompt
   artifactId="competitive-analysis"

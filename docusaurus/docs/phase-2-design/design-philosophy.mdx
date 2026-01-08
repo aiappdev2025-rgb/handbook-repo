@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -117,6 +118,16 @@ Use this decision framework when making design choices:
 ## Document Your Principles
 
 Create a short principles document that you can reference. Use this prompt to help establish your design philosophy:
+
+<HowToRun platform="chat" session="new">
+**Before you start:**
+- Upload your `design-brief.md` from Phase 1
+- Start a new chat for fresh design context
+
+**What to expect:**
+- Establishes visual and UX direction
+- Continue in same chat for rest of Phase 2
+</HowToRun>
 
 <SmartPrompt
   artifactId="design-philosophy"

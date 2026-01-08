@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -94,6 +95,17 @@ Prioritize remaining features:
 | **Won't** | Not in MVP | Explicitly deferred |
 
 ## MVP Scoping Prompt
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in the same Phase 1 chat session
+- Have your Business One-Pager and Competitive Analysis ready
+
+**What to expect:**
+- Takes 10-15 minutes
+- Creates clear feature priorities with MoSCoW method
+- Save the output as `docs/mvp-scope.md`
+</HowToRun>
 
 <SmartPrompt
   artifactId="mvp-scope"

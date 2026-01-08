@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -106,6 +107,17 @@ Score each dimension from 1-5, where 5 is the best:
 ## Assessment Prompt
 
 Use this prompt to have Claude help you score your opportunity:
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in the same chat session from Market Research
+- Have your market research findings ready for context
+
+**What to expect:**
+- Builds on your previous research conversation
+- Takes 10-15 minutes for thorough assessment
+- Save the output as `docs/opportunity-assessment.md`
+</HowToRun>
 
 <SmartPrompt
   artifactId="opportunity-assessment"

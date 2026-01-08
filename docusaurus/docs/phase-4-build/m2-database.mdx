@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -63,6 +64,17 @@ Your database schema is the foundation of your application's data integrity. Row
 ### Prompt 1: Core Database Schema
 
 Create the core schema with profiles table and main entities:
+
+<HowToRun platform="code" session="continue">
+**Before you start:**
+- Continue in same Claude Code session from M1
+- Have your data model SQL from Phase 3 ready
+
+**What to expect:**
+- Creates migration files in `supabase/migrations/`
+- Sets up RLS policies for all tables
+- ~20-30 minutes
+</HowToRun>
 
 <SmartPrompt
   artifactId="m2-database-schema"

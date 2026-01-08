@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -109,6 +110,17 @@ What could make this fail? How do we mitigate each risk?
 ## One-Pager Prompt
 
 Continue in the same Claude Chat session where you conducted research. This gives Claude full context of your market findings.
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Have `market-research.md` and `opportunity-assessment.md` ready
+- Upload or paste these into the chat for context
+
+**What to expect:**
+- This synthesizes all your Phase 1 research
+- Takes 10-15 minutes
+- Output becomes your project's foundation document
+</HowToRun>
 
 <SmartPrompt
   title="One-Pager Prompt"

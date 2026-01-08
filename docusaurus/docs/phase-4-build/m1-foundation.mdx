@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -87,6 +88,25 @@ your-saas-project/
 ## Implementation Prompt
 
 Use this prompt with Claude Code to set up the project:
+
+<HowToRun platform="code" session="project">
+**Before you start:**
+- Initialize your git repository
+- Have `build-contract.md` and `CLAUDE.md` in project root
+- Navigate to project folder in terminal
+
+**Running the prompt:**
+```bash
+cd your-project-folder
+claude
+# Paste the prompt below
+```
+
+**What to expect:**
+- Claude Code creates files directly
+- Commit after milestone completes
+- ~30-60 minutes per milestone
+</HowToRun>
 
 <SmartPrompt
   artifactId="m1-foundation"

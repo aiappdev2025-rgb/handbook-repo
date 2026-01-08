@@ -7,7 +7,8 @@ description: "Consolidates all design artifacts into a structured implementation
 import {
   TldrBox,
   WhenToUse,
-  TemplateDownload
+  TemplateDownload,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -62,6 +63,17 @@ When writing SPECs, reference Build Contract sections by number. This creates tr
 ## Generate Your Build Contract
 
 Use this prompt to create a Build Contract from your existing design artifacts:
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in the same Phase 3 chat session
+- Have all design documents (Design Brief, UX Package, UI System, Architecture) ready
+
+**What to expect:**
+- Consolidates all artifacts into one reference document
+- Takes 20-30 minutes
+- Save as `docs/build-contract.md`
+</HowToRun>
 
 <SmartPrompt
   artifactId="build-contract"

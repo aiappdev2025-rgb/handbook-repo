@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -215,6 +216,16 @@ Default → Hover (darken 10%) → Active (darken 20%) → Disabled (opacity 50%
 Before finalizing, consider exploring alternatives:
 
 ### Exploration Prompt
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in the same Phase 2 chat
+- Have `ui-system.md` output ready to reference
+
+**What to expect:**
+- Final Phase 2 artifact
+- Creates component specs for Phase 4 build
+</HowToRun>
 
 <SmartPrompt
   artifactId="component-library"

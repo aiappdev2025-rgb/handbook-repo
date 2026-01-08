@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -61,6 +62,17 @@ Layouts define the visual structure that users experience on every page. This mi
 ## Implementation Prompt
 
 Create root layout, marketing layout (public pages), and app layout (authenticated pages):
+
+<HowToRun platform="code" session="continue">
+**Before you start:**
+- Continue in same Claude Code session
+- M3 (Core API) should be complete
+
+**What to expect:**
+- Creates layout components and navigation
+- Sets up responsive design patterns
+- ~25-35 minutes
+</HowToRun>
 
 <SmartPrompt
   artifactId="m4-ui-shell"

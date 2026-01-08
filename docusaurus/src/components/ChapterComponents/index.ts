@@ -6,3 +6,4 @@ export { default as Verification } from './Verification';
 export { default as NextSteps } from './NextSteps';
 export { default as TemplateDownload } from './TemplateDownload';
 export { default as ChapterNav } from './ChapterNav';
+export { default as HowToRun } from './HowToRun';

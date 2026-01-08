@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -100,6 +101,16 @@ Your architecture document should cover eight sections:
 ## Architecture Prompt
 
 Start a fresh Claude Chat session for technical planning:
+
+<HowToRun platform="chat" session="new">
+**Before you start:**
+- Upload all Phase 2 design documents
+- Start fresh chat for architecture focus
+
+**What to expect:**
+- Key technical decisions made here
+- Continue in same chat through Phase 3
+</HowToRun>
 
 <SmartPrompt
   artifactId="solution-architecture"

@@ -11,7 +11,8 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
 import SmartPrompt from '@site/src/components/SmartPrompt';
 
@@ -58,6 +59,17 @@ Your architecture document outlines the data model conceptually. Now you need co
 ## Database Schema Prompt
 
 Continue in the same Claude Chat session from the architecture:
+
+<HowToRun platform="chat" session="continue">
+**Before you start:**
+- Stay in the same Phase 3 chat
+- Have your architecture document ready
+
+**What to expect:**
+- SQL-ready migration file
+- Takes 15-20 minutes
+- Save as `supabase/migrations/00001_initial_schema.sql`
+</HowToRun>
 
 <SmartPrompt
   artifactId="data-model"
