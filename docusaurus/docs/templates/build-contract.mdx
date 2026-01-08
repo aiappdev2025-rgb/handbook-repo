@@ -9,6 +9,7 @@ import {
   WhenToUse,
   TemplateDownload
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Build Contract Template
 
@@ -56,6 +57,37 @@ When writing SPECs, reference Build Contract sections by number. This creates tr
   name="BUILD-CONTRACT-TEMPLATE.md"
   file="build-contract-template.md"
   description="Complete Build Contract template with all sections"
+/>
+
+## Generate Your Build Contract
+
+Use this prompt to create a Build Contract from your existing design artifacts:
+
+<SmartPrompt
+  artifactId="build-contract"
+  title="Build Contract Prompt"
+  template={`Generate a Build Contract for [PRODUCT_NAME].
+
+**Tech Stack**: [TECH_STACK]
+**Repository**: [REPO_URL]
+
+**Source Documents**:
+- Design Brief: [summary or link]
+- UX Package: [summary or link]
+- UI System: [summary or link]
+- Architecture: [summary or link]
+
+Create a Build Contract covering:
+
+1. **Vocabulary**: Canonical terms used in code
+2. **User Model**: User types, auth, core flows
+3. **Screen Inventory**: All pages with routes and components
+4. **Component Specifications**: Interactive components with states
+5. **Data Model**: Database schema with RLS policies
+6. **API Surface**: All endpoints with request/response schemas
+7. **Quality Standards**: Code structure, security, testing, performance
+
+Output as markdown ready for docs/build-contract.md`}
 />
 
 ```markdown
