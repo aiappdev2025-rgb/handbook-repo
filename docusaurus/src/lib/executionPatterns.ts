@@ -93,16 +93,20 @@ export const artifactExecutionOverrides: Record<string, Partial<ExecutionContext
   },
   'ux-package': {
     contextFiles: ['design-philosophy.md', 'design-brief.md'],
+    prerequisites: ['Design philosophy complete'],
     tips: ['Keep in same chat as design philosophy']
   },
   'user-flows': {
     contextFiles: ['ux-package.md'],
+    prerequisites: ['UX package complete'],
   },
   'ui-system': {
     contextFiles: ['design-philosophy.md', 'ux-package.md'],
+    prerequisites: ['User flows documented'],
   },
   'component-library': {
     contextFiles: ['ui-system.md'],
+    prerequisites: ['UI system complete'],
     tips: ['Final Phase 2 artifact']
   },
   'solution-architecture': {
@@ -114,12 +118,15 @@ export const artifactExecutionOverrides: Record<string, Partial<ExecutionContext
   },
   'data-model': {
     contextFiles: ['solution-architecture.md'],
+    prerequisites: ['Solution architecture complete'],
   },
   'api-spec': {
     contextFiles: ['data-model.md', 'solution-architecture.md'],
+    prerequisites: ['Data model complete'],
   },
   'security-architecture': {
     contextFiles: ['solution-architecture.md', 'api-spec.md'],
+    prerequisites: ['API specification complete'],
     tips: ['Final architecture artifact before build']
   },
   'build-contract': {

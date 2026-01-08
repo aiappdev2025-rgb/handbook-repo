@@ -2,6 +2,7 @@ import React, {useState, useCallback, useMemo} from 'react';
 import {useProject} from '../../context/ProjectContext';
 import {artifactDefinitions, ArtifactStatus} from '../../lib/conductorSchema';
 import {parseArtifact, ParseResult, getFieldDisplayName, formatExtractedValue} from '../../lib/conductorParser';
+import {getExecutionContext, ExecutionContext} from '../../lib/executionPatterns';
 import styles from './styles.module.css';
 
 // Map placeholder tokens to project field paths
@@ -42,6 +43,7 @@ interface SmartPromptProps {
   template: string;
   title?: string;
   artifactId?: string;
+  showExecution?: boolean;  // Show execution guide (default: true when artifactId provided)
 }
 
 interface EditingField {
@@ -160,7 +162,7 @@ function formatValue(value: unknown, path: string): string {
   return String(value);
 }
 
-export default function SmartPrompt({template, title, artifactId}: SmartPromptProps): JSX.Element {
+export default function SmartPrompt({template, title, artifactId, showExecution = true}: SmartPromptProps): JSX.Element {
   const {activeProject, getField, updateField, getArtifact, saveArtifact} = useProject();
   const [editingField, setEditingField] = useState<EditingField | null>(null);
   const [editValue, setEditValue] = useState('');
@@ -178,9 +180,18 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
   const [parseResult, setParseResult] = useState<ParseResult | null>(null);
   const [showParseResult, setShowParseResult] = useState(false);
 
+  // Execution guide state
+  const [showTips, setShowTips] = useState(false);
+
   // Get artifact definition and current artifact
   const artifactDef = artifactId ? artifactDefinitions[artifactId] : null;
   const currentArtifact = artifactId ? getArtifact(artifactId) : null;
+
+  // Get execution context based on artifactId and phase
+  const executionContext: ExecutionContext | null = useMemo(() => {
+    if (!artifactId || !artifactDef) return null;
+    return getExecutionContext(artifactId, artifactDef.phase);
+  }, [artifactId, artifactDef]);
 
   // Load existing artifact content when opening output section
   const handleToggleOutput = useCallback(() => {
@@ -460,6 +471,94 @@ export default function SmartPrompt({template, title, artifactId}: SmartPromptPr
           </button>
         </div>
       </div>
+
+      {/* Execution Guide Section */}
+      {showExecution && executionContext && (
+        <div className={styles.executionGuide}>
+          <div className={styles.executionBadges}>
+            <div className={styles.executionBadge}>
+              <span className={styles.badgeIcon}>
+                {executionContext.platform === 'claude-chat' ? '💬' :
+                 executionContext.platform === 'claude-code' ? '💻' : '🔀'}
+              </span>
+              <div className={styles.badgeText}>
+                <span className={styles.badgeLabel}>
+                  {executionContext.platform === 'claude-chat' ? 'Claude Chat' :
+                   executionContext.platform === 'claude-code' ? 'Claude Code' : 'Either'}
+                </span>
+                <span className={styles.badgeDesc}>
+                  {executionContext.platform === 'claude-chat' ? 'Use claude.ai or Claude app' :
+                   executionContext.platform === 'claude-code' ? 'Use Claude Code CLI' : 'Either platform works'}
+                </span>
+              </div>
+            </div>
+            <div className={styles.executionBadge}>
+              <span className={styles.badgeIcon}>
+                {executionContext.session === 'new' ? '🆕' :
+                 executionContext.session === 'continue' ? '➡️' : '📁'}
+              </span>
+              <div className={styles.badgeText}>
+                <span className={styles.badgeLabel}>
+                  {executionContext.session === 'new' ? 'New Chat' :
+                   executionContext.session === 'continue' ? 'Continue' : 'Project Session'}
+                </span>
+                <span className={styles.badgeDesc}>
+                  {executionContext.session === 'new' ? 'Start a fresh conversation' :
+                   executionContext.session === 'continue' ? 'Stay in current conversation' : 'Use dedicated project'}
+                </span>
+              </div>
+            </div>
+            {executionContext.estimatedTime && (
+              <div className={styles.executionBadge}>
+                <span className={styles.badgeIcon}>⏱️</span>
+                <div className={styles.badgeText}>
+                  <span className={styles.badgeLabel}>{executionContext.estimatedTime}</span>
+                  <span className={styles.badgeDesc}>Estimated time</span>
+                </div>
+              </div>
+            )}
+          </div>
+          {(executionContext.contextFiles?.length || executionContext.prerequisites?.length || executionContext.tips?.length) && (
+            <div className={styles.executionDetails}>
+              {executionContext.contextFiles && executionContext.contextFiles.length > 0 && (
+                <div className={styles.executionDetail}>
+                  <span className={styles.detailLabel}>Context:</span>
+                  <span className={styles.detailValue}>
+                    {executionContext.contextFiles.join(', ')}
+                  </span>
+                </div>
+              )}
+              {executionContext.prerequisites && executionContext.prerequisites.length > 0 && (
+                <div className={styles.executionDetail}>
+                  <span className={styles.detailLabel}>Prerequisites:</span>
+                  <span className={styles.detailValue}>
+                    {executionContext.prerequisites.join(', ')}
+                  </span>
+                </div>
+              )}
+              {executionContext.tips && executionContext.tips.length > 0 && (
+                <div className={styles.executionTips}>
+                  <button
+                    className={styles.tipsToggle}
+                    onClick={() => setShowTips(!showTips)}
+                    type="button"
+                  >
+                    <span className={styles.tipsIcon}>{showTips ? '▼' : '▶'}</span>
+                    <span>Tips ({executionContext.tips.length})</span>
+                  </button>
+                  {showTips && (
+                    <ul className={styles.tipsList}>
+                      {executionContext.tips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className={styles.promptContent}>
         <pre className={styles.promptText}>
