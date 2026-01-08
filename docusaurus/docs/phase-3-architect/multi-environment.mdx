@@ -19,99 +19,253 @@ import {
 <span className="reading-time">15 min read</span>
 
 <TldrBox
-  what="Set up development, staging, and production environments with separate databases, environment variables, and deployment configurations."
-  why="Proper environment separation prevents dev mistakes from affecting production and enables safe testing."
-  outcome="Environment configuration documented with .env files and deployment settings."
+  what="Set up separate environments to safely develop, test, and deploy your SaaS."
+  why="Environment separation prevents dev mistakes from affecting production and enables safe testing."
+  outcome="Start with 2 environments (dev + prod), add staging when you have a team or complex deployments."
 />
 
 <WhenToUse
   useWhen={[
-    "Infrastructure providers selected",
-    "Ready to configure environments",
-    "Need to separate dev/staging/production"
+    "After choosing your tech stack",
+    "Before writing any code",
+    "When setting up your project repository"
   ]}
   notYetIf={[
     "Infrastructure not planned",
-    "Only building a prototype"
+    "Still exploring tech options"
   ]}
-  skipIf="Single-environment setup is sufficient for your needs"
+  skipIf="Building a throwaway prototype"
 />
 
 <Prerequisites
   items={[
     { text: "Infrastructure Planning complete", link: "/phase-3-architect/infrastructure" },
-    { text: "Service accounts created" }
+    { text: "Service accounts created (Supabase, Stripe, etc.)" }
   ]}
 />
 
-## Environment Strategy
+## Choose Your Setup
 
-| Environment | Purpose | Database | URL |
-|-------------|---------|----------|-----|
-| **Development** | Local development | Local or dev Supabase | localhost:3000 |
-| **Staging** | Pre-production testing | Staging Supabase | staging.yourapp.com |
-| **Production** | Live application | Production Supabase | yourapp.com |
+### Option A: 2 Environments (Recommended for Solo Founders)
 
-## Environment Files
+**Best for:** Solo founders, MVPs, early-stage products
 
-Create environment-specific files:
+| Environment | Purpose | When to Use |
+|-------------|---------|-------------|
+| **Local Development** | Build and test features | Daily coding |
+| **Production** | Live app for real users | After features are ready |
+
+**Pros:**
+- Simpler to manage
+- Lower costs (no staging server)
+- Faster deployment cycle
+
+**Cons:**
+- No pre-production testing environment
+- Riskier deployments (test in prod)
+
+---
+
+### Option B: 3 Environments (Recommended for Teams)
+
+**Best for:** Teams, complex features, enterprise clients
+
+| Environment | Purpose | When to Use |
+|-------------|---------|-------------|
+| **Local Development** | Build features | Daily coding |
+| **Staging** | Test before production | Before each release |
+| **Production** | Live app for real users | After staging verification |
+
+**Pros:**
+- Catch bugs before production
+- Test with production-like data
+- Safer deployments
+
+**Cons:**
+- Additional costs (staging database, services)
+- More complexity to manage
+- Slower deployment cycle
+
+---
+
+## Step-by-Step: 2-Environment Setup
+
+Follow these steps to set up Local + Production environments.
+
+### Step 1: Create Environment Files
+
+In your project root, create these files:
 
 ```
-.env.local          # Local development (gitignored)
-.env.development    # Shared dev defaults
-.env.staging        # Staging configuration
-.env.production     # Production configuration
-.env.example        # Template with all required vars
+your-project/
+├── .env.local          # Local development (gitignored)
+├── .env.example        # Template for other developers
+└── .env.production     # Production values (set in Vercel/hosting)
 ```
 
-### .env.example
+### Step 2: Define Local Environment Variables
+
+Create `.env.local`:
 
 ```bash
+# .env.local - Local Development
+
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
 
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your-project.supabase.co
+# Database (local or dev instance)
+DATABASE_URL=postgresql://postgres:password@localhost:5432/myapp_dev
+
+# Auth (development keys)
+NEXTAUTH_SECRET=dev-secret-change-in-production
+NEXTAUTH_URL=http://localhost:3000
+
+# Supabase (if using)
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-key
 
-# AI
-ANTHROPIC_API_KEY=your-api-key
+# Stripe (test mode)
+STRIPE_SECRET_KEY=sk_test_xxx
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
+STRIPE_WEBHOOK_SECRET=whsec_xxx
 
-# Payments
-STRIPE_SECRET_KEY=your-stripe-key
-STRIPE_WEBHOOK_SECRET=your-webhook-secret
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your-publishable-key
+# AI (if using)
+ANTHROPIC_API_KEY=sk-ant-xxx
 ```
 
-### .env.local (Local Development)
+### Step 3: Create Example Template
+
+Create `.env.example` (commit this to git):
 
 ```bash
-# Copy from .env.example and fill in dev values
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_SUPABASE_URL=https://xxx-dev.supabase.co
-# ... etc
+# .env.example - Copy to .env.local and fill in values
+
+# App
+NEXT_PUBLIC_APP_URL=
+NODE_ENV=development
+
+# Database
+DATABASE_URL=
+
+# Auth
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Stripe (use test keys for development)
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+# AI
+ANTHROPIC_API_KEY=
 ```
 
-:::warning Git Ignore
-Never commit `.env.local` or any file with real secrets. Only commit `.env.example` with placeholder values.
+### Step 4: Configure Production Environment
+
+In your hosting platform (Vercel, Railway, etc.):
+
+1. Go to **Project Settings → Environment Variables**
+2. Add each variable with production values:
+
+| Variable | Production Value |
+|----------|------------------|
+| `NEXT_PUBLIC_APP_URL` | `https://yourapp.com` |
+| `NODE_ENV` | `production` |
+| `DATABASE_URL` | Production database connection string |
+| `NEXTAUTH_SECRET` | Generate unique secret (use `openssl rand -base64 32`) |
+| `STRIPE_SECRET_KEY` | `sk_live_xxx` (live key!) |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | `pk_live_xxx` |
+
+:::warning Use Stripe LIVE keys in production
+Toggle off "Test mode" in Stripe dashboard to see your live keys. Never use test keys in production.
 :::
 
-## Vercel Environment Configuration
+### Step 5: Add to .gitignore
 
-Configure environments in Vercel dashboard:
+Ensure secrets aren't committed:
 
-1. Go to Project Settings → Environment Variables
-2. Add variables for each environment:
+```gitignore
+# .gitignore
+.env
+.env.local
+.env.production.local
+```
 
-| Variable | Development | Staging | Production |
-|----------|-------------|---------|------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | dev-url | staging-url | prod-url |
-| `SUPABASE_SERVICE_ROLE_KEY` | dev-key | staging-key | prod-key |
+### Step 6: Verify Setup
 
-## Multiple Supabase Projects
+```bash
+# Local development
+npm run dev
+# Visit http://localhost:3000 - should work with local env
 
-For proper isolation, create separate Supabase projects:
+# Production (after deploy)
+# Visit https://yourapp.com - should work with production env
+```
+
+---
+
+## Step-by-Step: 3-Environment Setup
+
+Follow these steps if you need Local + Staging + Production.
+
+### Step 1: Create Environment Files
+
+```
+your-project/
+├── .env.local          # Local development
+├── .env.example        # Template
+├── .env.staging        # Staging values (reference)
+└── .env.production     # Production values (reference)
+```
+
+### Step 2: Set Up Staging Environment
+
+**Option A: Vercel Preview Deployments (Easiest)**
+
+Every PR automatically gets a preview URL. Configure staging-specific vars:
+
+1. Go to Vercel → Project Settings → Environment Variables
+2. Add variables and check only "Preview" environment
+3. PRs will use these staging values automatically
+
+**Option B: Dedicated Staging Branch**
+
+1. Create a `staging` branch in your repo
+2. Configure Vercel to deploy `staging` branch to `staging.yourapp.com`
+3. Set staging environment variables for this deployment
+
+### Step 3: Configure Environment-Specific Variables
+
+| Variable | Local | Staging | Production |
+|----------|-------|---------|------------|
+| `NEXT_PUBLIC_APP_URL` | `localhost:3000` | `staging.yourapp.com` | `yourapp.com` |
+| `DATABASE_URL` | local postgres | staging DB | production DB |
+| `STRIPE_SECRET_KEY` | `sk_test_xxx` | `sk_test_xxx` | `sk_live_xxx` |
+| `SUPABASE_URL` | dev project | staging project | prod project |
+
+### Step 4: Create Separate Databases
+
+**Recommended approach:**
+
+```
+Local:      myapp_dev (local postgres or Supabase dev project)
+Staging:    myapp_staging (separate Supabase project)
+Production: myapp_prod (production Supabase project)
+```
+
+**Why separate databases?**
+- Test migrations safely on staging
+- No risk of corrupting production data
+- Can reset staging data anytime
+
+For Supabase, create separate projects:
 
 ```
 yourapp-dev     → Development
@@ -119,18 +273,37 @@ yourapp-staging → Staging
 yourapp-prod    → Production
 ```
 
-Apply the same migration to all environments:
+Apply migrations to each:
 
 ```bash
-# Apply migrations to each project
 supabase db push --project-ref your-dev-ref
 supabase db push --project-ref your-staging-ref
 supabase db push --project-ref your-prod-ref
 ```
 
-## Environment Detection
+### Step 5: Configure Deployment Flow
 
-Detect environment in your code:
+```
+Local Development
+     ↓ (push to feature branch)
+Staging (preview deploy / PR)
+     ↓ (merge to main)
+Production (auto deploy)
+```
+
+Configure in Vercel:
+
+| Branch | Environment | URL |
+|--------|-------------|-----|
+| `main` | Production | yourapp.com |
+| `staging` | Staging | staging.yourapp.com |
+| `*` (PRs) | Preview | random-id.vercel.app |
+
+---
+
+## Environment Detection in Code
+
+Detect which environment you're in:
 
 ```typescript
 // lib/env.ts
@@ -147,31 +320,70 @@ if (ENV.isDev) {
 }
 ```
 
-## Branch-Based Deployments
+---
 
-Configure Vercel for automatic deployments:
+## Quick Reference: Environment Variables by Service
 
-| Branch | Environment | URL |
-|--------|-------------|-----|
-| `main` | Production | yourapp.com |
-| `staging` | Staging | staging.yourapp.com |
-| `*` (other) | Preview | random-id.vercel.app |
+### Supabase
+
+| Variable | Where to Find |
+|----------|---------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Project Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Project Settings → API (keep secret!) |
+
+### Stripe
+
+| Variable | Where to Find |
+|----------|---------------|
+| `STRIPE_SECRET_KEY` | Developers → API Keys |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Developers → API Keys |
+| `STRIPE_WEBHOOK_SECRET` | Developers → Webhooks → Signing secret |
+
+:::tip Toggle Test Mode
+In Stripe dashboard, toggle "Test mode" to switch between test and live keys.
+:::
+
+### Vercel
+
+| Variable | Where to Set |
+|----------|--------------|
+| All env vars | Project → Settings → Environment Variables |
+| Select environment | Check Development / Preview / Production boxes |
+
+---
+
+## Common Mistakes to Avoid
+
+| Mistake | Why It's Bad | Fix |
+|---------|--------------|-----|
+| Committing `.env.local` to git | Exposes secrets | Add to `.gitignore` |
+| Using production database locally | Risk of data corruption | Always use separate dev database |
+| Using Stripe live keys in development | Real charges! | Use test keys locally |
+| Forgetting `NEXT_PUBLIC_` prefix | Client-side vars won't work | Add prefix for browser-accessible vars |
+| Same `NEXTAUTH_SECRET` everywhere | Security vulnerability | Generate unique secret per environment |
+| Hardcoding environment URLs | Breaks across environments | Use environment variables |
+
+---
 
 <ExpectedOutput
   items={[
-    { type: "Configuration", description: ".env.example with all required variables" },
-    { type: "Separation", description: "Separate configs for dev/staging/production" },
-    { type: "Documentation", description: "Environment setup documented" }
+    { type: "Files", description: ".env.local and .env.example created" },
+    { type: "Configuration", description: "Production environment variables in hosting platform" },
+    { type: "Separation", description: "Clear separation between dev and production" }
   ]}
 />
 
 <Verification
   checks={[
-    ".env.example committed with all required variables",
-    ".env.local gitignored with real values",
-    "Vercel environment variables configured",
-    "Each environment has separate database",
-    "Secrets never committed to repository"
+    "Chose environment setup (2 or 3 environments)",
+    "Created .env.local with all required variables",
+    "Created .env.example template (committed to git)",
+    "Added .env files to .gitignore",
+    "Configured production environment variables in hosting",
+    "Verified local development works (npm run dev)",
+    "Verified production deployment works",
+    "(If 3 env) Staging environment configured"
   ]}
 />
 
