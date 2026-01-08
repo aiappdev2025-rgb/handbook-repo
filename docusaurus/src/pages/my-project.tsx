@@ -114,21 +114,38 @@ function TextInput({
   const [localValue, setLocalValue] = useState(getField<string>(path));
   const debouncedValue = useDebounce(localValue, 500);
   const isFirstRender = useRef(true);
+  // Track which project the current local value belongs to
+  const valueProjectId = useRef(activeProjectId);
 
+  // Save debounced value - but only if still on the same project
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    updateField(path, debouncedValue);
-  }, [debouncedValue, path, updateField]);
+    // Only save if we're still on the same project where the value was typed
+    if (valueProjectId.current === activeProjectId) {
+      updateField(path, debouncedValue);
+    }
+  }, [debouncedValue, path, updateField, activeProjectId]);
 
   // Re-sync local value when project changes
   useEffect(() => {
+    valueProjectId.current = activeProjectId;
     setLocalValue(getField<string>(path));
+    // Reset first render flag so synced values don't trigger saves
+    isFirstRender.current = true;
   }, [getField, path, activeProjectId]);
 
   const InputComponent = multiline ? 'textarea' : 'input';
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setLocalValue(e.target.value);
+    // Mark that this value belongs to the current project
+    valueProjectId.current = activeProjectId;
+    // Allow saves after user interaction
+    isFirstRender.current = false;
+  };
 
   return (
     <div className={styles.fieldGroup}>
@@ -136,7 +153,7 @@ function TextInput({
       <InputComponent
         className={`${styles.fieldInput} ${multiline ? styles.textarea : ''}`}
         value={localValue}
-        onChange={(e) => setLocalValue(e.target.value)}
+        onChange={handleChange}
         placeholder={placeholder}
         rows={multiline ? 4 : undefined}
       />
