@@ -162,6 +162,9 @@ function KeyboardNavigation() {
 export default function Root({children}: {children: React.ReactNode}): JSX.Element {
   return (
     <ProjectProvider>
+      <a href="#__docusaurus" className="skip-link">
+        Skip to content
+      </a>
       <ReadingProgressBar />
       {children}
       <BackToTopButton />

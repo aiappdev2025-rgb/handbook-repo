@@ -1003,3 +1003,54 @@
     padding: 2rem 1.5rem;
   }
 }
+
+/* ===========================================
+ * Focus States for Accessibility
+ * =========================================== */
+
+.tabBtn:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.exportButton:focus-visible,
+.importButton:focus-visible,
+.deleteButton:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.newProjectButton:focus-visible,
+.newProjectSave:focus-visible,
+.newProjectCancel:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.addButton:focus-visible,
+.addButtonSmall:focus-visible,
+.removeButton:focus-visible,
+.removeButtonSmall:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.phaseHeader:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -2px;
+}
+
+.emptyStateButton:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.fieldInput:focus-visible,
+.fieldSelect:focus-visible,
+.textarea:focus-visible,
+.newProjectInput:focus-visible,
+.emptyStateInput:focus-visible {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}

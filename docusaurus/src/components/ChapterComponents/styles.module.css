@@ -252,3 +252,12 @@
 :global([data-theme='light']) .actionItemDescription {
   color: #475569;
 }
+
+/* ===========================================
+ * Focus States for Accessibility
+ * =========================================== */
+
+.collapsibleHeader:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -2px;
+}

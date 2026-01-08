@@ -181,9 +181,17 @@
   vertical-align: baseline;
 }
 
-.placeholder:focus {
+.placeholder:focus-visible {
   outline: 2px solid var(--accent-blue);
   outline-offset: 1px;
+}
+
+/* Button focus states */
+.copyBtn:focus-visible,
+.saveBtn:focus-visible,
+.cancelBtn:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
 }
 
 /* Filled placeholder - green terminal style */
@@ -287,8 +295,9 @@
   color: var(--gray-900);
 }
 
-.editInput:focus {
+.editInput:focus-visible {
   outline: none;
+  border-color: var(--ifm-color-primary);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
 }
 

@@ -410,8 +410,26 @@
   color: var(--gray-800);
 }
 
-.editor:focus {
+.editor:focus-visible {
   outline: none;
+  box-shadow: inset 0 0 0 2px var(--ifm-color-primary);
+}
+
+/* Focus states for interactive elements */
+.modeTab:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -2px;
+}
+
+.closeBtn:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.restoreBtn:focus-visible,
+.saveBtn:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
 }
 
 .editor::placeholder {
