@@ -110,7 +110,7 @@ function TextInput({
   placeholder?: string;
   multiline?: boolean;
 }) {
-  const {getField, updateField} = useProject();
+  const {getField, updateField, activeProjectId} = useProject();
   const [localValue, setLocalValue] = useState(getField<string>(path));
   const debouncedValue = useDebounce(localValue, 500);
   const isFirstRender = useRef(true);
@@ -123,9 +123,10 @@ function TextInput({
     updateField(path, debouncedValue);
   }, [debouncedValue, path, updateField]);
 
+  // Re-sync local value when project changes
   useEffect(() => {
     setLocalValue(getField<string>(path));
-  }, [getField, path]);
+  }, [getField, path, activeProjectId]);
 
   const InputComponent = multiline ? 'textarea' : 'input';
 
