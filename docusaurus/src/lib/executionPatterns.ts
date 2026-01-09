@@ -135,6 +135,14 @@ export const artifactExecutionOverrides: Record<string, Partial<ExecutionContext
     estimatedTime: '15-20 min',
     tips: ['Generate all ADRs at once, then save individually', 'Number ADRs sequentially (001, 002, etc.)']
   },
+  'test-strategy': {
+    platform: 'claude-code',
+    session: 'dedicated-project',
+    contextFiles: ['solution-architecture.md'],
+    prerequisites: ['Tech stack decided', 'Project initialized'],
+    estimatedTime: '15-20 min',
+    tips: ['Claude Code will create all test files', 'Install dependencies after generation']
+  },
   'build-contract': {
     platform: 'claude-chat',
     session: 'new',

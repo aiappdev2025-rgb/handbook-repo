@@ -1,7 +1,7 @@
 ---
 sidebar_position: 8
 title: "Test Strategy"
-description: "Define testing approach including unit, integration, and end-to-end test coverage requirements"
+description: "Define your testing approach for reliable software"
 ---
 
 import {
@@ -11,28 +11,30 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Test Strategy
 
-<span className="reading-time">15 min read</span>
+<span className="reading-time">15-20 min</span>
 
 <TldrBox
-  what="Define your testing approach: what to test, how to test, and target coverage levels for unit, integration, and E2E tests."
-  why="The MOAI methodology requires tests before implementation (TDD). A clear strategy ensures consistent test quality."
-  outcome="Test strategy document with coverage targets and testing patterns for your project."
+  what="Define what you'll test, how you'll test it, and what tools you'll use. A clear test strategy prevents bugs from reaching production and gives you confidence to ship fast."
+  why="The MOAI methodology requires tests before implementation (TDD). A clear strategy ensures consistent test quality across your entire codebase."
+  outcome="A test strategy document, configured testing tools (Vitest + Playwright), and example tests ready to run."
 />
 
 <WhenToUse
   useWhen={[
-    "Architecture planning complete",
-    "Preparing for implementation phase",
-    "Need to define testing standards"
+    "After completing your solution architecture",
+    "Before starting Phase 4 build",
+    "When you need to decide on testing tools and coverage goals"
   ]}
   notYetIf={[
     "Architecture not finalized",
-    "Team not aligned on TDD approach"
+    "Tech stack not decided"
   ]}
   skipIf="Extending existing project with established test patterns"
 />
@@ -40,9 +42,42 @@ import {
 <Prerequisites
   items={[
     { text: "Solution Architecture complete", link: "/phase-3-architect/solution-architecture" },
-    { text: "API Specification defined", link: "/phase-3-architect/api-specification" }
+    { text: "Tech stack decisions made" }
   ]}
 />
+
+## What You'll Get
+
+By the end of this chapter, Claude Code will have created:
+
+| File | Purpose |
+|------|---------|
+| `docs/test-strategy.md` | Your complete testing plan document |
+| `vitest.config.ts` | Test runner configuration |
+| `src/test/setup.ts` | Test environment setup |
+| `src/lib/__tests__/example.test.ts` | Example unit test structure |
+| Updated `package.json` | Test scripts added |
+
+---
+
+## Why Test Strategy Matters
+
+| Without Strategy | With Strategy |
+|------------------|---------------|
+| Random test coverage | Focused testing on critical paths |
+| "I'll add tests later" (never) | Tests built into each milestone |
+| Bugs in production | Bugs caught before deploy |
+| Fear of refactoring | Confidence to change code |
+
+### For Solo Founders
+
+You don't need 100% coverage. Focus on:
+
+- **Critical user flows** (signup, payment, core feature)
+- **Business logic** (pricing calculations, permissions)
+- **Integration points** (API calls, database operations)
+
+---
 
 ## The Testing Pyramid
 
@@ -59,150 +94,348 @@ import {
 | Level | What | Tools | Coverage Target |
 |-------|------|-------|-----------------|
 | **Unit** | Functions, hooks, utils | Vitest | 80%+ |
-| **Integration** | API routes, DB queries | Vitest + Supabase | 70%+ |
-| **E2E** | Critical user flows | Playwright | Key flows |
+| **Integration** | API routes, DB queries | Vitest + Testing Library | 70%+ |
+| **E2E** | Critical user flows | Playwright | 3-5 key paths |
 
-## Testing Stack
+**Recommended ratio for MVP:** 70% unit, 20% integration, 10% E2E
 
-```bash
-# Install testing dependencies
-npm install -D vitest @testing-library/react @testing-library/jest-dom
-npm install -D @playwright/test
-npm install -D msw  # API mocking
-```
+---
 
-## Unit Testing Patterns
+## Step 1: Generate Your Test Strategy
 
-### Testing Utilities
+Run this prompt in Claude Code to create your test strategy document and initial test setup.
 
-```typescript
-// lib/utils.test.ts
-import { describe, it, expect } from 'vitest';
-import { formatCurrency, validateEmail } from './utils';
+<HowToRun platform="code" session="project">
+**Before you start:**
+- Open terminal in your project folder
+- Run `claude` to start Claude Code
 
-describe('formatCurrency', () => {
-  it('formats USD correctly', () => {
-    expect(formatCurrency(1234.56)).toBe('$1,234.56');
-  });
+**What Claude Code will create:**
+- `docs/test-strategy.md` — Your testing plan
+- Test configuration files
+- Example test structure
+</HowToRun>
 
-  it('handles zero', () => {
-    expect(formatCurrency(0)).toBe('$0.00');
-  });
-});
-```
+<SmartPrompt
+  artifactId="test-strategy"
+  title="Generate Test Strategy"
+  template={`Create a test strategy for [PRODUCT_NAME].
 
-### Testing React Hooks
+**Tech Stack**: [TECH_STACK]
+**Core Features**: [CORE_FEATURES]
 
-```typescript
-// hooks/useUser.test.ts
-import { renderHook, waitFor } from '@testing-library/react';
-import { useUser } from './useUser';
+## Task 1: Create Test Strategy Document
 
-describe('useUser', () => {
-  it('returns null when not authenticated', async () => {
-    const { result } = renderHook(() => useUser());
+Create docs/test-strategy.md with this content:
 
-    await waitFor(() => {
-      expect(result.current.user).toBeNull();
-    });
-  });
-});
-```
+# Test Strategy for [PRODUCT_NAME]
 
-## Integration Testing Patterns
+## Overview
 
-### Testing API Routes
+This document defines our testing approach, tools, and coverage targets.
 
-```typescript
-// app/api/items/route.test.ts
-import { describe, it, expect, beforeEach } from 'vitest';
-import { POST, GET } from './route';
+## Testing Tools
 
-describe('POST /api/items', () => {
-  it('creates item for authenticated user', async () => {
-    const request = new Request('http://localhost/api/items', {
-      method: 'POST',
-      body: JSON.stringify({ title: 'Test Item' }),
-    });
+| Type | Tool | Purpose |
+|------|------|---------|
+| Unit | Vitest | Fast unit tests for functions and utilities |
+| Integration | Vitest + Testing Library | Component and API tests |
+| E2E | Playwright | Critical user flow testing |
+| Mocking | MSW | API request mocking |
 
-    const response = await POST(request);
-    const data = await response.json();
+## Coverage Goals
 
-    expect(response.status).toBe(201);
-    expect(data.title).toBe('Test Item');
-  });
-
-  it('returns 401 for unauthenticated request', async () => {
-    // ... test without auth
-  });
-});
-```
-
-## E2E Testing Patterns
-
-### Critical Flow Tests
-
-```typescript
-// e2e/auth.spec.ts
-import { test, expect } from '@playwright/test';
-
-test.describe('Authentication', () => {
-  test('user can sign up and access dashboard', async ({ page }) => {
-    await page.goto('/signup');
-
-    await page.fill('[data-testid="email"]', 'test@example.com');
-    await page.fill('[data-testid="password"]', 'securepassword123');
-    await page.click('[data-testid="signup-button"]');
-
-    await expect(page).toHaveURL('/dashboard');
-    await expect(page.getByText('Welcome')).toBeVisible();
-  });
-});
-```
+| Area | Target | Priority |
+|------|--------|----------|
+| Business logic | 80% | High |
+| API endpoints | 70% | High |
+| UI components | 50% | Medium |
+| E2E flows | 3-5 critical paths | High |
 
 ## What to Test
 
-| Layer | Test | Don't Test |
-|-------|------|------------|
-| **Unit** | Business logic, utils, formatters | UI rendering, third-party libs |
-| **Integration** | API routes, database operations | External services (mock them) |
-| **E2E** | Critical user flows, happy paths | Every edge case |
+### Must Test (Critical)
+- User authentication (signup, login, logout)
+- Payment processing
+- Core feature: [main feature from CORE_FEATURES]
+- Data validation and permissions
 
-## SPEC-Test Connection
+### Should Test (Important)
+- API error handling
+- Form submissions
+- Permission checks
+- Edge cases for business logic
 
-Every SPEC document should define its test cases:
+### Nice to Test (If Time)
+- UI variations
+- Error state rendering
+- Accessibility
 
-```markdown
-## Test Cases (in SPEC document)
+## Test File Structure
 
-### Unit Tests
-- [ ] formatCurrency handles positive numbers
-- [ ] formatCurrency handles negative numbers
-- [ ] formatCurrency handles zero
+\`\`\`
+src/
+├── lib/
+│   └── __tests__/        # Unit tests for utilities
+│       ├── utils.test.ts
+│       └── validation.test.ts
+├── components/
+│   └── __tests__/        # Component tests
+├── app/
+│   └── api/
+│       └── __tests__/    # API route tests
+└── test/
+    └── setup.ts          # Test environment setup
+e2e/
+├── auth.spec.ts          # E2E: Authentication flows
+├── checkout.spec.ts      # E2E: Payment flows
+└── core-feature.spec.ts  # E2E: Main feature
+\`\`\`
 
-### Integration Tests
-- [ ] API creates item in database
-- [ ] API enforces RLS policies
+## Running Tests
 
-### E2E Tests
-- [ ] User can complete core flow
+\`\`\`bash
+npm run test          # Run unit/integration tests
+npm run test:watch    # Watch mode for development
+npm run test:coverage # Generate coverage report
+npm run test:e2e      # Run Playwright E2E tests
+\`\`\`
+
+## Test-Driven Development Workflow
+
+For each feature:
+1. Write failing test first
+2. Implement minimal code to pass
+3. Refactor while keeping tests green
+4. Repeat
+
+---
+
+## Task 2: Create Vitest Configuration
+
+Create vitest.config.ts:
+
+\`\`\`typescript
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      exclude: ['node_modules/', 'src/test/'],
+    },
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+})
+\`\`\`
+
+---
+
+## Task 3: Create Test Setup File
+
+Create src/test/setup.ts:
+
+\`\`\`typescript
+import '@testing-library/jest-dom'
+
+// Mock environment variables for tests
+process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000'
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'http://localhost:54321'
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+
+// Global test utilities
+beforeEach(() => {
+  // Reset any test state before each test
+})
+
+afterEach(() => {
+  // Clean up after each test
+})
+\`\`\`
+
+---
+
+## Task 4: Create Example Unit Test
+
+Create src/lib/__tests__/example.test.ts:
+
+\`\`\`typescript
+import { describe, it, expect } from 'vitest'
+
+// Example utility function (replace with your actual utils)
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount)
+}
+
+describe('formatCurrency', () => {
+  it('formats positive numbers correctly', () => {
+    expect(formatCurrency(1234.56)).toBe('$1,234.56')
+  })
+
+  it('handles zero', () => {
+    expect(formatCurrency(0)).toBe('$0.00')
+  })
+
+  it('handles negative numbers', () => {
+    expect(formatCurrency(-50)).toBe('-$50.00')
+  })
+})
+
+describe('Example async test', () => {
+  it('handles promises', async () => {
+    const result = await Promise.resolve('success')
+    expect(result).toBe('success')
+  })
+})
+\`\`\`
+
+---
+
+## Task 5: Update package.json Scripts
+
+Add these scripts to package.json (merge with existing scripts):
+
+\`\`\`json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  }
+}
+\`\`\`
+
+---
+
+After creating all files, confirm:
+1. List all created files
+2. Show the npm install command for dependencies`}
+/>
+
+---
+
+## Step 2: Install Dependencies
+
+After Claude Code creates the files, install the test dependencies:
+
+```bash
+npm install -D vitest @vitejs/plugin-react jsdom
+npm install -D @testing-library/react @testing-library/jest-dom
+npm install -D @playwright/test
+npm install -D msw
 ```
+
+---
+
+## Step 3: Verify Setup
+
+Run the tests to verify everything works:
+
+```bash
+# Check files were created
+ls docs/test-strategy.md
+ls vitest.config.ts
+ls src/test/setup.ts
+ls src/lib/__tests__/
+
+# Run tests
+npm run test
+```
+
+Expected output:
+```
+✓ src/lib/__tests__/example.test.ts (4 tests)
+  ✓ formatCurrency › formats positive numbers correctly
+  ✓ formatCurrency › handles zero
+  ✓ formatCurrency › handles negative numbers
+  ✓ Example async test › handles promises
+
+Test Files  1 passed
+Tests       4 passed
+```
+
+---
+
+## Step 4: Plan Your First Tests
+
+During Phase 4, you'll write tests for each milestone. Here's what to test per milestone:
+
+| Milestone | What to Test |
+|-----------|--------------|
+| M1: Foundation | Project setup, environment config |
+| M2: Database | Schema validation, query functions |
+| M3: Auth | Login, signup, logout, session handling |
+| M4: UI Shell | Component rendering, navigation |
+| M5-M10 | Feature-specific business logic |
+| M11: Payments | Checkout flow, webhook handling |
+
+---
+
+## Testing Tips for Solo Founders
+
+### Start Simple
+```typescript
+// Don't over-engineer tests. Start basic:
+it('calculates price correctly', () => {
+  expect(calculatePrice(10, 0.1)).toBe(11)
+})
+```
+
+### Test Business Logic First
+```typescript
+// Focus on critical business rules
+describe('Subscription', () => {
+  it('should not allow access after expiry', () => {
+    const sub = { expiresAt: new Date('2024-01-01') }
+    expect(hasAccess(sub)).toBe(false)
+  })
+})
+```
+
+### Use Test-Driven Development (TDD)
+1. **Red** — Write a failing test
+2. **Green** — Write minimal code to pass
+3. **Refactor** — Clean up while tests stay green
+4. **Repeat**
+
+---
 
 <ExpectedOutput
   items={[
-    { type: "Strategy", description: "Test strategy document with coverage targets" },
-    { type: "Configuration", description: "Vitest and Playwright configured" },
-    { type: "Patterns", description: "Testing patterns documented for each layer" }
+    { type: "Strategy Doc", description: "`docs/test-strategy.md` with coverage targets and test structure" },
+    { type: "Configuration", description: "`vitest.config.ts` ready to run tests" },
+    { type: "Setup File", description: "`src/test/setup.ts` with environment mocks" },
+    { type: "Example Test", description: "`src/lib/__tests__/example.test.ts` demonstrating patterns" },
+    { type: "Scripts", description: "Test scripts added to `package.json`" }
   ]}
 />
 
 <Verification
   checks={[
-    "Testing stack installed (Vitest, Playwright)",
-    "Coverage targets defined (80% unit, 70% integration)",
-    "Testing patterns documented for each layer",
-    "E2E tests planned for critical flows",
-    "SPEC-test connection understood"
+    "`docs/test-strategy.md` created by Claude Code",
+    "`vitest.config.ts` created with proper configuration",
+    "`src/test/setup.ts` created with environment mocks",
+    "Example test file created in `src/lib/__tests__/`",
+    "Test dependencies installed",
+    "`npm run test` passes with example tests"
   ]}
 />
 

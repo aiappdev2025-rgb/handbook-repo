@@ -157,6 +157,14 @@ export const artifactDefinitions: Record<string, ArtifactDefinition> = {
     description: 'Technical decision documentation',
     extractFields: [],
   },
+  'test-strategy': {
+    phase: 3,
+    chapter: 'test-strategy',
+    filename: 'test-strategy.md',
+    title: 'Test Strategy',
+    description: 'Testing approach and configuration',
+    extractFields: [],
+  },
 };
 
 // =============================================================================
