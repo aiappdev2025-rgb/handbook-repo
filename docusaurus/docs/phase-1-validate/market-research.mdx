@@ -100,9 +100,9 @@ Use Claude Chat's web search capabilities to gather current market data. Be spec
 - No files needed - start fresh
 
 **What to expect:**
-- Claude may use web search for market data
+- Claude uses web search for current market data
 - Takes 15-20 minutes for thorough research
-- Save the output as `docs/market-research.md`
+- You'll save the output manually (see "Save Your Research" below)
 </HowToRun>
 
 <SmartPrompt
@@ -144,15 +144,15 @@ Before proceeding, ensure your research passes these quality checks:
 
 ## Save Your Research
 
-Save the complete research output to your project:
+Since this uses Claude Chat (for web search capability), you'll need to save the output manually:
 
-```bash
-# Create docs folder if needed
-mkdir -p docs
+1. **Create the docs folder** in your project (if it doesn't exist)
+2. **Copy Claude's output** from the chat
+3. **Save as** `docs/market-research.md` in your project
 
-# Save as markdown
-# Copy Claude's output to docs/market-research.md
-```
+:::tip Claude Chat Artifacts
+If Claude generates an artifact, click the download button to save it directly. Otherwise, copy the markdown output from the chat response.
+:::
 
 :::tip Claude Projects
 If using Claude Projects, add your research findings to Project Knowledge so subsequent chats can reference them automatically.

@@ -11,8 +11,10 @@ import {
   ExpectedOutput,
   Verification,
   NextSteps,
-  ChapterNav
+  ChapterNav,
+  HowToRun
 } from '@site/src/components/ChapterComponents';
+import SmartPrompt from '@site/src/components/SmartPrompt';
 
 # Multi-Environment Config
 
@@ -92,24 +94,33 @@ import {
 
 Follow these steps to set up Local + Production environments.
 
-### Step 1: Create Environment Files
+### Step 1: Create Environment Files with Claude Code
 
-In your project root, create these files:
+Use Claude Code to create your environment files automatically:
 
-```
-your-project/
-├── .env.local          # Local development (gitignored)
-├── .env.example        # Template for other developers
-└── .env.production     # Production values (set in Vercel/hosting)
-```
+<HowToRun platform="code" session="project">
+**Before you start:**
+- Open your project folder in terminal
+- Have your Supabase, Stripe, and other service credentials ready
 
-### Step 2: Define Local Environment Variables
+**What Claude Code will do:**
+- Create `.env.local` with placeholder values
+- Create `.env.example` as a template (safe to commit)
+- Add `.env.local` to `.gitignore` if not already there
+</HowToRun>
 
-Create `.env.local`:
+<SmartPrompt
+  artifactId="multi-environment-setup"
+  title="Create Environment Files"
+  template={`Set up environment files for [PRODUCT_NAME].
 
-```bash
-# .env.local - Local Development
+**Tech Stack**: [TECH_STACK]
 
+TASK: Create environment configuration files.
+
+1. Create \`.env.local\` with these variables (use placeholder values):
+
+\`\`\`
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NODE_ENV=development
@@ -117,14 +128,10 @@ NODE_ENV=development
 # Database (local or dev instance)
 DATABASE_URL=postgresql://postgres:password@localhost:5432/myapp_dev
 
-# Auth (development keys)
-NEXTAUTH_SECRET=dev-secret-change-in-production
-NEXTAUTH_URL=http://localhost:3000
-
-# Supabase (if using)
-NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # Stripe (test mode)
 STRIPE_SECRET_KEY=sk_test_xxx
@@ -133,13 +140,11 @@ STRIPE_WEBHOOK_SECRET=whsec_xxx
 
 # AI (if using)
 ANTHROPIC_API_KEY=sk-ant-xxx
-```
+\`\`\`
 
-### Step 3: Create Example Template
+2. Create \`.env.example\` with empty values (template for other developers):
 
-Create `.env.example` (commit this to git):
-
-```bash
+\`\`\`
 # .env.example - Copy to .env.local and fill in values
 
 # App
@@ -148,10 +153,6 @@ NODE_ENV=development
 
 # Database
 DATABASE_URL=
-
-# Auth
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=
@@ -165,6 +166,38 @@ STRIPE_WEBHOOK_SECRET=
 
 # AI
 ANTHROPIC_API_KEY=
+\`\`\`
+
+3. Add to \`.gitignore\` if not already present:
+\`\`\`
+.env
+.env.local
+.env.production.local
+\`\`\`
+
+After creating, confirm the files exist and remind me to fill in actual values.`}
+/>
+
+### Step 2: Fill in Your Actual Values
+
+After Claude Code creates the files, edit `.env.local` with your real credentials:
+
+| Variable | Where to Find |
+|----------|---------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API |
+| `STRIPE_SECRET_KEY` | Stripe → Developers → API Keys (test mode) |
+| `STRIPE_WEBHOOK_SECRET` | Stripe → Developers → Webhooks |
+
+### Step 3: Verify the Setup
+
+```bash
+# Check files were created
+ls -la .env*
+
+# Verify .gitignore includes env files
+grep ".env" .gitignore
 ```
 
 ### Step 4: Configure Production Environment
@@ -187,18 +220,7 @@ In your hosting platform (Vercel, Railway, etc.):
 Toggle off "Test mode" in Stripe dashboard to see your live keys. Never use test keys in production.
 :::
 
-### Step 5: Add to .gitignore
-
-Ensure secrets aren't committed:
-
-```gitignore
-# .gitignore
-.env
-.env.local
-.env.production.local
-```
-
-### Step 6: Verify Setup
+### Step 5: Verify Setup
 
 ```bash
 # Local development

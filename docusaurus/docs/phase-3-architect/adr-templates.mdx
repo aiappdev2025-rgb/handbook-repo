@@ -76,57 +76,62 @@ Create an ADR for decisions that are:
 | Significantly impact architecture (state management, API patterns) | Easily reversible decisions |
 | Have multiple valid options you considered | Standard conventions (file naming) |
 
-## Step 1: Create ADR Folder
+## Step 1: Understand the Target Structure
 
-In your project, create the ADR folder structure:
-
-```bash
-mkdir -p docs/adrs
-```
-
-Your project structure should look like:
+After running the prompt, your project will have:
 
 ```
 your-project/
 ├── docs/
 │   └── adrs/
-│       ├── 001-use-nextjs.md
-│       ├── 002-use-supabase.md
-│       └── 003-use-stripe.md
+│       ├── template.md
+│       ├── 001-frontend-framework.md
+│       ├── 002-database-backend.md
+│       ├── 003-authentication.md
+│       ├── 004-hosting.md
+│       └── 005-payments.md (if applicable)
 ```
 
-## Step 2: Generate Your ADRs
+## Step 2: Generate Your ADRs with Claude Code
 
-Use the prompt below to generate ADRs for your key technical decisions. This prompt will create ADRs for your major architectural choices in one session.
+Use the prompt below to generate ADRs for your key technical decisions. Claude Code will create the folder structure and save all files automatically.
 
-<HowToRun platform="chat" session="continue">
+<HowToRun platform="code" session="project">
 **Before you start:**
-- Stay in your Phase 3 architecture chat (same session as Solution Architecture)
-- Have your `solution-architecture.md` content ready to reference
-- Know your key technical decisions
+- Open your project folder in terminal
+- Have your tech stack decisions ready (from Solution Architecture)
 
-**What to expect:**
-- Claude generates 3-5 ADRs for your main decisions
-- Each ADR follows a consistent format
-- Save each ADR to `docs/adrs/00X-decision-name.md`
+**What Claude Code will do:**
+- Create the `docs/adrs/` folder if it doesn't exist
+- Generate 3-5 ADR files based on your tech stack
+- Save each ADR as a numbered markdown file
+- Create the ADR template for future use
 </HowToRun>
 
 <SmartPrompt
   artifactId="adr-templates"
   title="Generate ADRs Prompt"
-  template={`Generate Architecture Decision Records for [PRODUCT_NAME].
+  template={`Create Architecture Decision Records for [PRODUCT_NAME].
 
 **Tech Stack**: [TECH_STACK]
 **Auth Strategy**: [AUTH_STRATEGY]
 
-Create ADRs for these key decisions:
-1. **Frontend Framework** — Why [TECH_STACK] frontend choice?
-2. **Database & Backend** — Why [TECH_STACK] database choice?
-3. **Authentication** — Why [AUTH_STRATEGY]?
-4. **Hosting/Deployment** — Why [TECH_STACK] hosting choice?
-5. **Payments** — Why [TECH_STACK] payments choice? (if applicable)
+TASK: Create ADR files directly in the project.
 
-For each ADR, use this format:
+First, create the folder structure:
+- Create docs/adrs/ if it doesn't exist
+
+Then create these ADR files:
+
+1. **docs/adrs/001-frontend-framework.md** - Why we chose [TECH_STACK] frontend
+2. **docs/adrs/002-database-backend.md** - Why we chose [TECH_STACK] database
+3. **docs/adrs/003-authentication.md** - Why we chose [AUTH_STRATEGY]
+4. **docs/adrs/004-hosting.md** - Why we chose [TECH_STACK] hosting
+5. **docs/adrs/005-payments.md** - Why we chose [TECH_STACK] payments (if applicable)
+
+Also create **docs/adrs/template.md** with the blank ADR template for future use.
+
+For each ADR file, use this format:
 
 # ADR-00X: [Decision Title]
 
@@ -169,29 +174,32 @@ Accepted
 
 ---
 
-Output as markdown with clear separators between each ADR so I can save them as individual files.`}
+Create all files directly. After creating, list the files created for confirmation.`}
 />
 
-## Step 3: Save Your ADRs
+## Step 3: Verify Your ADRs
 
-After running the prompt:
-
-1. **Copy each ADR section** — Claude outputs them separated by `---`
-2. **Save individually** — Each ADR goes in `docs/adrs/00X-decision-name.md`
-3. **Number sequentially** — Start at 001 and increment
+After running the prompt, verify the files were created:
 
 ```bash
-# Example files after saving
-docs/adrs/001-use-nextjs-app-router.md
-docs/adrs/002-use-supabase-database.md
-docs/adrs/003-use-supabase-auth.md
-docs/adrs/004-deploy-on-vercel.md
-docs/adrs/005-use-stripe-payments.md
+ls docs/adrs/
 ```
+
+You should see:
+```
+template.md
+001-frontend-framework.md
+002-database-backend.md
+003-authentication.md
+004-hosting.md
+005-payments.md
+```
+
+Review each file to ensure the content accurately reflects your decisions.
 
 ## ADR Template Reference
 
-Save this template to `docs/adrs/template.md` for future ADRs:
+The prompt above creates `docs/adrs/template.md` automatically. Here's what it contains for reference:
 
 ```markdown
 # ADR-XXX: [Short Title]
