@@ -6,7 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+- **Stage 3.2: UX Package Revision** (Chapter 10) - Structured workflow for incorporating UX Critic feedback:
+  - **10.2 Decision Framework** - Matrix and questions for evaluating fix vs. defer vs. reject decisions
+  - **10.3 Critique Review Template** - Markdown template for documenting decisions on each critique item
+  - **10.4 UX Package Revision Prompt** - Complete prompt for generating revised UX Package with improvements incorporated
+  - **10.5 Verification Checklist** - Checklist to validate revision completeness
+  - **10.6 When to Re-run the Critic** - Guidance on when additional critique cycles are needed
+  - **10.7 Save the Revised Package** - Instructions for saving with version options
+
+### Changed
+- **Chapter 11: UI System** - Added prerequisites section noting requirement for revised (post-critique) UX Package
+- **Chapter 10 title** remains "UX Critique and Validation" but now covers the complete critique-to-revision workflow
 
 ---
 

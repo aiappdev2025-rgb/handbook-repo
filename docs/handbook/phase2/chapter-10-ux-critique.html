@@ -48,41 +48,241 @@ For each issue, suggest a specific improvement.
   <p><strong>Next:</strong> Incorporate the feedback into your UX Package.</p>
 </div>
 
-<h2 id="section-10-2">10.2 Update the UX Package</h2>
+<h2 id="section-10-2">10.2 Decision Framework</h2>
 
-<p>After receiving the critique, incorporate the improvements into your UX Package. This iterative refinement is what separates good UX from great UX. Don't skip improvements just because the original version "works."</p>
+<p>Not every critique item needs immediate action. Use this framework to systematically evaluate each finding and decide whether to fix now, defer to a future version, or reject as not applicable.</p>
 
-<h3>Instructions</h3>
+<h3>Decision Matrix</h3>
+
+<table class="comparison-table">
+  <thead>
+    <tr>
+      <th>Fix Now</th>
+      <th>Defer</th>
+      <th>Rationale</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Blocks core user flow</td>
+      <td>Nice-to-have enhancement</td>
+      <td>Core flows must work for MVP</td>
+    </tr>
+    <tr>
+      <td>Creates confusion in money path</td>
+      <td>Affects edge case only</td>
+      <td>Money path (signup → payment → value) is critical</td>
+    </tr>
+    <tr>
+      <td>Violates accessibility baseline</td>
+      <td>Requires significant rework</td>
+      <td>Accessibility is non-negotiable</td>
+    </tr>
+    <tr>
+      <td>Simple fix (&lt; 1 hour impact)</td>
+      <td>Complex fix (multi-day impact)</td>
+      <td>Time-box MVP scope</td>
+    </tr>
+    <tr>
+      <td>Affects &gt;50% of users</td>
+      <td>Affects &lt;10% of users</td>
+      <td>Prioritize by impact</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Decision Questions</h3>
+
+<p>For each critique item, ask yourself:</p>
 
 <ol>
-  <li>Review each identified issue and suggested improvement</li>
-  <li>Ask Claude to generate an updated UX Package with the fixes incorporated</li>
-  <li>Replace <code>docs/ux-package.md</code> with the updated version</li>
+  <li><strong>Does this block the core user journey?</strong> → Fix now</li>
+  <li><strong>Does this affect the money path</strong> (signup → payment → value delivery)? → Fix now</li>
+  <li><strong>Is this an accessibility violation?</strong> → Fix now</li>
+  <li><strong>Can I fix this in under an hour of design work?</strong> → Probably fix now</li>
+  <li><strong>Is this a "would be nice" enhancement?</strong> → Likely defer to v1.1</li>
 </ol>
 
 <div class="note">
-  <strong>Iterate as Needed:</strong> You may run multiple critique cycles until the UX Package is solid. Always update the same file rather than creating separate versions.
+  <strong>Why This Matters:</strong> The UX Package feeds directly into the UI System and Build Contract. Unresolved UX issues become implementation problems. Deferred items need documentation so they're not forgotten.
 </div>
+
+<h2 id="section-10-3">10.3 Critique Review Template</h2>
+
+<p>Before generating the revised UX Package, work through each critique item manually. This ensures you've made deliberate decisions rather than blindly accepting or rejecting feedback.</p>
+
+<div class="code-block">## UX Critique Review - [Product Name]
+
+### Items to Fix (incorporate into revised UX Package)
+
+| # | Issue | Section Affected | How to Fix |
+|---|-------|------------------|------------|
+| 1 | [Issue from critique] | [e.g., User Flow 2.3] | [Brief fix approach] |
+| 2 | | | |
+| 3 | | | |
+
+### Items to Defer (document for future)
+
+| # | Issue | Why Deferred | Revisit When |
+|---|-------|--------------|--------------|
+| 1 | [Issue from critique] | [Rationale] | [e.g., v1.1, post-launch] |
+| 2 | | | |
+
+### Items to Reject (not actual issues)
+
+| # | Issue | Why Rejected |
+|---|-------|--------------|
+| 1 | [Issue from critique] | [e.g., Critic misunderstood context] |</div>
+
+<div class="warning">
+  <strong>Don't Skip This Step:</strong> It's tempting to jump straight to the revision prompt. But without this review, you risk either accepting bad suggestions or missing legitimate issues. Take 10-15 minutes to complete the template.
+</div>
+
+<h2 id="section-10-4">10.4 UX Package Revision Prompt</h2>
+
+<p>After completing the review template, use this prompt to generate a revised UX Package that incorporates all your fixes while maintaining the original structure.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues UX work)</span>
+</div>
+<div class="prompt-block">[ROLE: UX DESIGNER — Revise the UX Package based on critique findings]
+
+CONTEXT: I have completed a UX Package for [PRODUCT NAME] and run it through a UX Critic review. I've decided which issues to fix now vs. defer. I need you to generate a revised UX Package that incorporates all the fixes while maintaining the original structure.
+
+ORIGINAL UX PACKAGE:
+&lt;&lt;&lt;
+[Paste your complete UX Package from Stage 3.0]
+&gt;&gt;&gt;
+
+UX CRITIQUE FINDINGS:
+&lt;&lt;&lt;
+[Paste the full output from Stage 3.1 UX Critic]
+&gt;&gt;&gt;
+
+MY DECISIONS ON EACH ISSUE:
+
+Items to FIX (incorporate these improvements):
+&lt;&lt;&lt;
+[Paste your "Items to Fix" table from the review template]
+&gt;&gt;&gt;
+
+Items DEFERRED (note these for future):
+&lt;&lt;&lt;
+[Paste your "Items to Defer" table from the review template]
+&gt;&gt;&gt;
+
+Items REJECTED (ignore these):
+&lt;&lt;&lt;
+[Paste your "Items to Reject" table, or "None"]
+&gt;&gt;&gt;
+
+INSTRUCTIONS:
+1. Generate a COMPLETE revised UX Package (not just the changes)
+2. For each "Fix" item, update the relevant section with the improvement
+3. Maintain the exact same structure as the original UX Package
+4. Add a new section at the end: "Known Limitations &amp; Future Improvements" listing all deferred items
+5. Add a "Revision Notes" section documenting what changed from the original
+
+OUTPUT FORMAT:
+
+# UX Package - [Product Name]
+## Revision 1.1 (Post-Critique)
+
+[Complete revised UX Package with same structure as original]
+
+---
+
+## Revision Notes
+
+### Changes from v1.0
+| Section | Change | Rationale |
+|---------|--------|-----------|
+| [Section #] | [What changed] | [Why, referencing critique item] |
+
+### Known Limitations &amp; Future Improvements
+| Item | Description | Target Version |
+|------|-------------|----------------|
+| [Deferred item] | [Brief description] | [v1.1 / Post-launch / etc.] |</div>
 
 <div class="success">
   <h4>Expected Outcome</h4>
-  <p><strong>What you should have:</strong> An updated <code>docs/ux-package.md</code> that addresses all identified issues from the critique.</p>
-  <p><strong>How to validate:</strong> Review the updated file against the critique. Each issue should now have a corresponding fix or explicit rationale for why it wasn't addressed.</p>
+  <p><strong>What you should have:</strong> A complete revised UX Package that incorporates all fixes, documents deferred items, and includes revision notes explaining what changed.</p>
+  <p><strong>How to validate:</strong> Compare the revision notes against your "Items to Fix" table. Every fix item should appear in the revision notes with a corresponding section change.</p>
+</div>
+
+<h2 id="section-10-5">10.5 Verification Checklist</h2>
+
+<p>After generating the revised UX Package, verify the revision is complete and correct:</p>
+
+<div class="checklist">
+  <h4>Revision Verification</h4>
+  <ul>
+    <li><input type="checkbox"> All "Fix" items have been incorporated</li>
+    <li><input type="checkbox"> No sections were accidentally removed from original</li>
+    <li><input type="checkbox"> User flows still make logical sense after changes</li>
+    <li><input type="checkbox"> State diagrams updated if flows changed</li>
+    <li><input type="checkbox"> Edge cases section updated if new cases identified</li>
+    <li><input type="checkbox"> "Known Limitations" section includes all deferred items</li>
+    <li><input type="checkbox"> Revision notes clearly document what changed</li>
+  </ul>
+</div>
+
+<h2 id="section-10-6">10.6 When to Re-run the Critic</h2>
+
+<p>After significant revisions, consider running the UX Critique prompt (Section 10.1) again on the revised package. This catches any new issues introduced by your changes.</p>
+
+<h3>Re-run the critic if:</h3>
+<ul>
+  <li>You made changes to the core user flow</li>
+  <li>You restructured the information architecture</li>
+  <li>You added new screens or states</li>
+  <li>The original critique had 5+ "critical" severity items</li>
+</ul>
+
+<h3>Skip re-running if:</h3>
+<ul>
+  <li>Changes were limited to copy/microcopy improvements</li>
+  <li>You only addressed minor flow tweaks</li>
+  <li>The original critique found no critical issues</li>
+</ul>
+
+<div class="note">
+  <strong>Iterate as Needed:</strong> Some products require 2-3 critique cycles before the UX Package is solid. This is normal for complex flows. Always update the same file rather than creating separate versions.
+</div>
+
+<h2 id="section-10-7">10.7 Save the Revised Package</h2>
+
+<p>Save the revised UX Package to your project. You can either replace the original or keep both versions for reference.</p>
+
+<h3>Options</h3>
+<ul>
+  <li><strong>Replace original:</strong> Save as <code>docs/ux-package.md</code> (recommended for active projects)</li>
+  <li><strong>Keep history:</strong> Save as <code>docs/ux-package-v1.1.md</code> and keep the original</li>
+</ul>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> An updated <code>docs/ux-package.md</code> that addresses all identified issues and documents deferred improvements.</p>
+  <p><strong>How to validate:</strong> Open the file and verify it includes the "Revision Notes" and "Known Limitations" sections at the end.</p>
   <p><strong>Next:</strong> Chapter 11 — Create the UI System that defines visual design.</p>
 </div>
 
-<h2 id="section-10-3">10.3 Chapter Summary</h2>
+<h2 id="section-10-8">10.8 Chapter Summary</h2>
 
-<p>You've completed the UX validation phase. Here's what you accomplished:</p>
+<p>You've completed the UX validation and revision phase. Here's what you accomplished:</p>
 
 <ul>
-  <li>Critiqued UX Package for usability issues</li>
-  <li>Identified missing states and edge cases</li>
-  <li>Reviewed accessibility and mobile considerations</li>
-  <li>Incorporated improvements into the UX Package</li>
+  <li>Critiqued UX Package for usability, accessibility, and completeness issues</li>
+  <li>Applied decision framework to evaluate each critique finding</li>
+  <li>Documented fix/defer/reject decisions in review template</li>
+  <li>Generated revised UX Package with improvements incorporated</li>
+  <li>Documented known limitations for future versions</li>
+  <li>Verified the revision is complete and correct</li>
 </ul>
 
-<p>Your user experience is fully specified and validated. In the next chapter, you'll define the visual design language that brings this experience to life.</p>
+<p>Your user experience is now fully specified, validated, and refined. The revised UX Package is ready to feed into the UI System in the next chapter.</p>
 
     </article>
 
