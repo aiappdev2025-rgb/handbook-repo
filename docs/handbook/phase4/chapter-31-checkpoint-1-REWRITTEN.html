@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 31: Checkpoint 1 - Foundation Audit - AI SaaS Handbook</title>
+  <link rel="stylesheet" href="../../css/handbook.css">
+</head>
+<body>
+
+<nav id="top-nav"></nav>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+
+  <main class="content">
+    <article>
+
+<h1 id="chapter-31">Chapter 31: Checkpoint 1 - Foundation Audit</h1>
+
+<p class="chapter-intro">This checkpoint verifies your foundation is solid before building features. Unlike traditional audits, this version auto-detects your architecture, adapts checks to your specific stack, and runs automatically via Claude Code prompts.</p>
+
+<div class="checkpoint-box" style="background: #ede9fe; border: 2px solid #8b5cf6; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+  <h2 style="color: #6d28d9; margin-top: 0;">Checkpoint 1: Foundation Audit</h2>
+  <p><strong>Time:</strong> 10-20 minutes (mostly automated)</p>
+  <p><strong>Prerequisites:</strong> M1-M4 complete</p>
+  <p><strong>Outcome:</strong> Verified foundation, git tagged <code>checkpoint-1</code></p>
+</div>
+
+<h2 id="section-31-1">31.1 TL;DR</h2>
+
+<p>You'll copy-paste prompts into Claude Code. It does the rest:</p>
+
+<ul>
+  <li><strong>Auto-detects</strong> your architecture (Supabase, file-based, local-only, etc.)</li>
+  <li><strong>Adapts checks</strong> to your specific stack</li>
+  <li><strong>Runs automatically</strong> - no manual configuration needed</li>
+  <li><strong>Generates a report</strong> you can review and commit</li>
+</ul>
+
+<h2 id="section-31-2">31.2 How To Use This Chapter</h2>
+
+<h3>The Easy Path (Recommended)</h3>
+
+<ol>
+  <li><strong>Run the Full Audit</strong> — Copy the prompt in Section 31.3, paste into Claude Code</li>
+  <li><strong>Review the Report</strong> — Check CHECKPOINT-1-REPORT.md it generates</li>
+  <li><strong>Fix Any Failures</strong> — Use the section-specific prompts if needed</li>
+  <li><strong>Tag the Checkpoint</strong> — Run the git commands</li>
+</ol>
+
+<h3>If You Prefer Step-by-Step</h3>
+
+<p>Each section below has:</p>
+<ul>
+  <li><strong>What it checks</strong> — explanation of the verification</li>
+  <li><strong>Claude Code Prompt</strong> — copy and paste this</li>
+  <li><strong>Manual Alternative</strong> — if you prefer to do it yourself</li>
+  <li><strong>Expected Output</strong> — what success looks like</li>
+</ul>
+
+<p>Most sections are fully automated. Sections marked 🔧 require some manual verification.</p>
+
+<h2 id="section-31-3">31.3 Full Audit — One Command</h2>
+
+<p>For most projects, this single prompt runs everything:</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Full Checkpoint 1 Audit</h4>
+<pre>Run Checkpoint 1: Foundation Audit
+
+1. Detect my architecture:
+   - Check package.json for database (supabase, prisma, sqlite, gray-matter/file-based, none)
+   - Check for auth packages (next-auth, @clerk, @supabase/auth, lucia, or none)
+   - Check folder structure for API style (app/api, server actions, tRPC, file operations)
+   - Check for deployment config (vercel.json, Dockerfile, railway.json, or localhost-only)
+   - Display results in a table and confirm with me before proceeding
+
+2. Run automated checks based on my architecture:
+   - npm run build (must pass)
+   - npm run lint (must pass)
+   - npx tsc --noEmit (must pass)
+   - npm audit (no critical vulnerabilities)
+
+3. Run architecture-specific checks:
+   - If Supabase: note RLS checks for manual verification, check client setup
+   - If file-based: verify data/ directory structure, check for Zod schemas, verify data/ not in public/, check for path validation patterns
+   - If local-only: verify no required cloud dependencies, check localhost binding
+   - If has auth: note auth flow for manual verification
+   - If no auth (local-only): skip auth checks
+
+4. Find my Build Contract (BUILD-CONTRACT.md, build-contract.md, or docs/build-contract.md):
+   - Extract MVP criteria
+   - Extract next steps
+   - Include in report
+
+5. Generate CHECKPOINT-1-REPORT.md with:
+   - Architecture detection results
+   - All check results (✅ Passed, ⚠️ Adapted, ⏭️ Skipped, ❌ Failed)
+   - Any manual checks I need to do
+   - Next steps from my Build Contract
+   - Git tag commands (if all critical checks pass)
+
+6. Tell me:
+   - Overall status (ready to tag or needs fixes)
+   - What manual checks remain (if any)
+   - The exact commands to run for git tagging</pre>
+</div>
+
+<h3>Expected Output</h3>
+
+<p>Claude Code will:</p>
+<ul>
+  <li>Show your detected architecture</li>
+  <li>Run all applicable checks</li>
+  <li>Create CHECKPOINT-1-REPORT.md</li>
+  <li>Tell you if you're ready to tag checkpoint-1</li>
+</ul>
+
+<div class="warning" style="background: var(--warning-bg); border-left: 4px solid var(--warning); padding: 1rem; margin: 1.5rem 0;">
+  <p><strong>If It Fails:</strong> Use the section-specific prompts below to debug individual areas.</p>
+</div>
+
+<h2 id="section-31-4">31.4 Step 1: Architecture Detection</h2>
+
+<p>Before running checks, we need to know your stack.</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Detect Architecture</h4>
+<pre>Analyze my project architecture:
+
+1. Read package.json and detect:
+   - Database: supabase | postgresql | sqlite | prisma | file-based (gray-matter) | none
+   - Auth: supabase-auth | nextauth | clerk | lucia | none-local
+   - API: rest-routes (app/api) | trpc | server-actions | file-ops
+   - Deployment: vercel | netlify | railway | docker | local-only
+   - Framework: nextjs-app | nextjs-pages | remix | astro
+
+2. Check for config files:
+   - vercel.json, netlify.toml, Dockerfile, railway.json
+   - .env files with localhost indicators
+
+3. Display results in a table:
+   | Component  | Detected     | Confidence | Notes |
+   |------------|--------------|------------|-------|
+   | Database   | ...          | High/Med   | ...   |
+   | Auth       | ...          | High/Med   | ...   |
+   | API        | ...          | High/Med   | ...   |
+   | Deployment | ...          | High/Med   | ...   |
+   | Framework  | ...          | High/Med   | ...   |
+
+4. Based on detection, tell me which checks will be:
+   - ✅ Run as-is
+   - ⚠️ Adapted (and to what)
+   - ⏭️ Skipped (and why)
+
+5. Ask me to confirm or correct before proceeding</pre>
+</div>
+
+<h3>Manual Alternative</h3>
+
+<p>Check your package.json dependencies manually and note your stack.</p>
+
+<h3>Override Detection</h3>
+
+<p>If auto-detection is wrong, create <code>.checkpoint-config.yaml</code> in your project root:</p>
+
+<div class="code-block">architecture:
+  database: file-based
+  auth: none-local
+  api: rest-routes
+  deployment: local-only
+  framework: nextjs-app</div>
+
+<h2 id="section-31-5">31.5 Step 2: Code Quality Checks (Universal)</h2>
+
+<p>These apply to ALL architectures.</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Run Code Quality Checks</h4>
+<pre>Run code quality checks for Checkpoint 1:
+
+1. Run build:
+   npm run build
+   - Must complete with no errors
+   - If it fails, show me the first 30 lines of errors
+
+2. Run linting:
+   npm run lint
+   - Must pass with no warnings
+   - If it fails, offer to run `npm run lint -- --fix`
+
+3. Run type check:
+   npx tsc --noEmit
+   - Must have no TypeScript errors
+   - If it fails, show me the errors grouped by file
+
+4. Run security audit:
+   npm audit
+   - No critical vulnerabilities allowed
+   - High vulnerabilities: warn but pass
+   - If critical found, show me which packages and suggest fixes
+
+5. Summarize results:
+   | Check      | Status | Notes |
+   |------------|--------|-------|
+   | Build      | ✅/❌  | ...   |
+   | Lint       | ✅/❌  | ...   |
+   | TypeScript | ✅/❌  | ...   |
+   | Audit      | ✅/❌  | ...   |</pre>
+</div>
+
+<h3>Manual Alternative</h3>
+
+<div class="code-block">npm run build
+npm run lint
+npx tsc --noEmit
+npm audit</div>
+
+<h3>Expected Output</h3>
+
+<p>All four checks should pass. If any fail, fix before proceeding.</p>
+
+<h2 id="section-31-6">31.6 Step 3: Security Verification (Conditional)</h2>
+
+<p>Checks vary by architecture.</p>
+
+<h3>If Supabase/PostgreSQL Database</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check Supabase Security</h4>
+<pre>Check Supabase security setup:
+
+1. Verify I have Supabase client configured:
+   - Check for @supabase/supabase-js in package.json
+   - Look for supabase client initialization in lib/ or utils/
+
+2. Generate the RLS verification queries I need to run manually:
+
+   Query 1 - Check RLS enabled:
+   SELECT schemaname, tablename, rowsecurity
+   FROM pg_tables
+   WHERE schemaname = 'public';
+
+   Query 2 - List policies:
+   SELECT tablename, policyname, cmd
+   FROM pg_policies
+   WHERE schemaname = 'public';
+
+3. Create a checklist for me to verify in Supabase dashboard:
+   - [ ] RLS enabled on ALL tables (rowsecurity = true)
+   - [ ] Each table has SELECT policy for authenticated users
+   - [ ] Each table has INSERT/UPDATE/DELETE policies with auth.uid() check
+   - [ ] No policies allow anon access to sensitive data
+   - [ ] is_admin() function exists (if using admin features)
+
+4. Note: These must be verified manually in Supabase SQL Editor</pre>
+</div>
+
+<h4>🔧 Manual Steps Required</h4>
+
+<ol>
+  <li>Go to Supabase Dashboard → SQL Editor</li>
+  <li>Run the queries above</li>
+  <li>Verify all tables show <code>rowsecurity = true</code></li>
+  <li>Check each policy restricts access to <code>auth.uid() = user_id</code></li>
+</ol>
+
+<h3>If File-Based Storage</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check File-Based Security</h4>
+<pre>Check file-based security:
+
+1. Verify Zod is installed:
+   - Check package.json for "zod"
+   - If missing, tell me to run: npm install zod
+
+2. Check for validation schemas:
+   - Look in lib/validation/, lib/schemas/, src/schemas/
+   - Verify schemas exist for: Project, Task, Idea, InboxItem (or whatever entities I have)
+   - Check that schemas use .required() for mandatory fields
+
+3. Check data directory security:
+   - Verify data/ directory exists
+   - Verify data/ is NOT inside public/ folder
+   - If data/ is in public/, this is a CRITICAL FAILURE
+
+4. Check for path traversal prevention:
+   - Search for slug validation patterns like /^[a-z0-9-]+$/
+   - Search for checks that reject ".." in paths
+   - If not found, flag as needs attention
+
+5. Check for input sanitization:
+   - Look for .parse() or .safeParse() calls in API routes
+   - Verify file operations validate input before using
+
+6. Report findings:
+   | Check                    | Status | Location/Notes |
+   |--------------------------|--------|----------------|
+   | Zod installed            | ✅/❌  | ...            |
+   | Schemas defined          | ✅/❌  | ...            |
+   | Data dir secure          | ✅/❌  | ...            |
+   | Path traversal blocked   | ✅/⚠️  | ...            |
+   | Input validation in APIs | ✅/⚠️  | ...            |</pre>
+</div>
+
+<h3>If No Database / Local-Only</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check Local-Only Security</h4>
+<pre>Check local-only security:
+
+1. Verify no required external services:
+   - Check package.json for cloud dependencies
+   - Flag if found: @supabase/supabase-js, firebase, @aws-sdk, stripe
+   - Note: It's OK if these exist but are optional
+
+2. Check localhost binding:
+   - Check package.json scripts.dev for host flags
+   - Check next.config.js for host configuration
+   - Verify app doesn't bind to 0.0.0.0 in production
+
+3. Check .env files:
+   - Look for localhost:3001 or similar
+   - Verify no production API keys are required for local dev
+
+4. Report:
+   | Check                  | Status | Notes |
+   |------------------------|--------|-------|
+   | No required cloud deps | ✅/⚠️  | ...   |
+   | Localhost binding      | ✅/⚠️  | ...   |
+   | Local-only .env        | ✅/⚠️  | ...   |</pre>
+</div>
+
+<h2 id="section-31-7">31.7 Step 4: Schema & Data Integrity (Conditional)</h2>
+
+<h3>If Supabase/PostgreSQL</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Generate Schema Integrity Checklist</h4>
+<pre>Generate schema integrity checklist:
+
+1. Create SQL query to check foreign keys:
+   SELECT
+     tc.table_name,
+     kcu.column_name,
+     ccu.table_name AS foreign_table,
+     rc.delete_rule
+   FROM information_schema.table_constraints tc
+   JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name
+   JOIN information_schema.constraint_column_usage ccu ON tc.constraint_name = ccu.constraint_name
+   JOIN information_schema.referential_constraints rc ON tc.constraint_name = rc.constraint_name
+   WHERE tc.constraint_type = 'FOREIGN KEY';
+
+2. Create checklist for manual verification:
+   - [ ] profiles table references auth.users with ON DELETE CASCADE
+   - [ ] All user-owned tables have user_id foreign key
+   - [ ] created_at exists on all tables
+   - [ ] updated_at exists on all tables
+   - [ ] updated_at trigger applied to relevant tables
+   - [ ] Indexes exist on foreign keys
+   - [ ] Indexes exist on commonly queried columns
+
+3. Note: Run query in Supabase SQL Editor and verify</pre>
+</div>
+
+<h4>🔧 Manual Steps Required</h4>
+
+<p>Run the SQL query in Supabase and verify the checklist.</p>
+
+<h3>If File-Based</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check File-Based Data Integrity</h4>
+<pre>Check file-based data integrity:
+
+1. Verify directory structure:
+   Expected:
+   data/
+   ├── projects/
+   ├── tasks/
+   ├── ideas/
+   └── inbox/
+
+   - Check each directory exists
+   - Create any missing directories
+
+2. Check Zod schemas include required fields:
+   - Look for schemas in lib/validation/ or similar
+   - Verify each entity schema has:
+     - id (string)
+     - createdAt (date/string)
+     - updatedAt (date/string)
+   - List any schemas missing these fields
+
+3. Check file naming convention:
+   - Look at any existing files in data/
+   - Verify they follow slug pattern (lowercase, hyphens, no spaces)
+
+4. Verify gray-matter is installed for YAML parsing:
+   - Check package.json for "gray-matter"
+   - If missing, tell me to run: npm install gray-matter
+
+5. Report:
+   | Check              | Status | Notes |
+   |--------------------|--------|-------|
+   | Directory structure | ✅/❌  | ...   |
+   | Zod schemas complete| ✅/⚠️  | ...   |
+   | File naming OK      | ✅/⚠️  | ...   |
+   | gray-matter installed| ✅/❌ | ...   |
+
+6. If directories missing, create them:
+   mkdir -p data/projects data/tasks data/ideas data/inbox</pre>
+</div>
+
+<h2 id="section-31-8">31.8 Step 5: API Layer Verification (Conditional)</h2>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check API Layer</h4>
+<pre>Check API layer:
+
+1. Find API routes:
+   - Check app/api/ for route handlers
+   - Check for 'use server' directives (server actions)
+   - Check for tRPC router (if using tRPC)
+
+2. For each API route/action found, check:
+   - Input validation: Look for .parse() or .safeParse() calls
+   - Error handling: Look for try/catch blocks
+   - Error responses: Verify they don't expose file paths or stack traces
+
+3. Check error response patterns:
+   - Search for patterns like: { error: ... } or NextResponse.json({ error: })
+   - Verify error messages are user-friendly, not technical
+   - Flag any that include: stack, __dirname, file path, or internal details
+
+4. Check TypeScript types:
+   - If Supabase: verify types are generated (database.types.ts or similar)
+   - If file-based: verify types are inferred from Zod schemas (z.infer<>)
+
+5. Report:
+   | Check                   | Status | Notes |
+   |-------------------------|--------|-------|
+   | API routes found        | ✅/❌  | X routes in app/api/ |
+   | Input validation        | ✅/⚠️  | X/Y routes validated |
+   | Error handling          | ✅/⚠️  | ... |
+   | No internal leaks       | ✅/⚠️  | ... |
+   | Types defined           | ✅/⚠️  | ... |</pre>
+</div>
+
+<h2 id="section-31-9">31.9 Step 6: UI Shell Verification (Universal with Conditions)</h2>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check UI Shell</h4>
+<pre>Check UI shell:
+
+1. Check root layout (app/layout.tsx):
+   - Verify it exists
+   - Check for providers: ThemeProvider, Toaster, or similar
+   - Check for proper html/body structure
+
+2. Check for required UI components:
+   - Toast/notification system
+   - Theme support (if using dark mode)
+
+3. Check responsive setup:
+   - Look for Tailwind responsive classes (sm:, md:, lg:)
+   - Check for mobile navigation component
+
+4. Create manual test checklist:
+   - [ ] App loads without console errors
+   - [ ] Navigation works at 320px width (mobile)
+   - [ ] Navigation works at 768px width (tablet)
+   - [ ] Navigation works at 1024px+ width (desktop)
+   - [ ] Mobile menu opens and closes (if applicable)
+   - [ ] Dark mode toggles (if applicable)
+
+5. Architecture-specific:
+   - If has auth: [ ] Protected routes redirect to login
+   - If local-only: Skip auth redirect check
+   - If has marketing pages: [ ] Marketing layout has header/footer
+   - If no marketing pages: Skip marketing layout check
+
+6. Report:
+   | Check              | Status | Notes |
+   |--------------------|--------|-------|
+   | Root layout exists | ✅/❌  | ...   |
+   | Providers setup    | ✅/⚠️  | ...   |
+   | Responsive classes | ✅/⚠️  | ...   |</pre>
+</div>
+
+<h4>🔧 Manual Steps Required</h4>
+
+<p>Open your app in browser and test the checklist items at different viewport widths.</p>
+
+<h2 id="section-31-10">31.10 Step 7: Generate Report</h2>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Generate Checkpoint 1 Report</h4>
+<pre>Generate Checkpoint 1 Report:
+
+1. Create CHECKPOINT-1-REPORT.md with:
+
+# Checkpoint 1: Foundation Audit Report
+
+**Project:** [detect from package.json name]
+**Date:** [today's date]
+**Architecture:** [detected architecture profile]
+
+## Architecture
+
+| Component  | Detected     |
+|------------|--------------|
+| Database   | ...          |
+| Auth       | ...          |
+| API        | ...          |
+| Deployment | ...          |
+| Framework  | ...          |
+
+## Results Summary
+
+| Status | Count |
+|--------|-------|
+| ✅ Passed  | X |
+| ⚠️ Adapted | X |
+| ⏭️ Skipped | X |
+| ❌ Failed  | X |
+
+## Detailed Results
+
+### ✅ Passed
+[list all passed checks]
+
+### ⚠️ Adapted
+[list checks that were adapted, with what they were adapted to]
+
+### ⏭️ Skipped
+[list skipped checks with reason]
+
+### ❌ Failed
+[list failed checks with fix instructions]
+
+## Manual Checks Required
+[list any checks that need manual verification with instructions]
+
+## Next Steps
+[pull from BUILD-CONTRACT.md if found]
+
+## Git Tag
+
+[if all critical pass:]
+git add .
+git commit -m "Complete Checkpoint 1: Foundation verified"
+git tag -a checkpoint-1 -m "Checkpoint 1: Foundation audit complete"
+git push origin checkpoint-1
+
+[if failures:]
+⚠️ Fix failed checks before tagging
+
+2. Save to project root as CHECKPOINT-1-REPORT.md
+3. Show me a summary</pre>
+</div>
+
+<h2 id="section-31-11">31.11 Step 8: Tag the Checkpoint</h2>
+
+<p>Once all checks pass (or only non-critical items remain):</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Complete Checkpoint 1</h4>
+<pre>Complete Checkpoint 1:
+
+1. Check if there are uncommitted changes:
+   git status
+
+2. If changes exist, commit them:
+   git add .
+   git commit -m "Complete Checkpoint 1: Foundation verified"
+
+3. Create the checkpoint tag:
+   git tag -a checkpoint-1 -m "Checkpoint 1: Foundation audit complete - [architecture profile]"
+
+4. Show me the command to push (don't run it):
+   git push origin checkpoint-1
+
+5. Confirm checkpoint is complete</pre>
+</div>
+
+<h3>Why Tag?</h3>
+
+<p>The <code>checkpoint-1</code> tag creates a safe rollback point. If you encounter issues in later milestones, you can return to this verified state:</p>
+
+<div class="code-block">git checkout checkpoint-1</div>
+
+<h2 id="section-31-12">31.12 What's Next</h2>
+
+<p>Your foundation is verified. Based on your Build Contract, your next steps are:</p>
+
+<div class="info" style="background: var(--info-bg); border-left: 4px solid var(--info); padding: 1rem; margin: 1.5rem 0;">
+  <p><strong>Note:</strong> Claude Code will pull these from BUILD-CONTRACT.md</p>
+</div>
+
+<p>If no Build Contract found, typical next steps:</p>
+<ol>
+  <li>M5: Authentication (if applicable)</li>
+  <li>First feature implementation</li>
+  <li>Core CRUD operations</li>
+</ol>
+
+<h3>Continue to Next Chapter</h3>
+
+<ul>
+  <li>If has auth: <a href="chapter-33-m5-authentication.html">Chapter 33: M5 - Authentication</a></li>
+  <li>If local-only: <a href="chapter-34-m6-core-feature.html">Chapter 34: M6 - Core Features</a></li>
+</ul>
+
+<h2 id="section-31-13">31.13 Troubleshooting</h2>
+
+<h3>Architecture detection is wrong</h3>
+
+<p>Create <code>.checkpoint-config.yaml</code>:</p>
+
+<div class="code-block">architecture:
+  database: file-based  # or: supabase, postgresql, prisma, none
+  auth: none-local      # or: supabase-auth, nextauth, clerk
+  deployment: local-only # or: vercel, docker, railway</div>
+
+<h3>npm run build fails</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt</h4>
+<pre>My build is failing. Help me fix it:
+1. Run npm run build and capture the full error
+2. Identify the root cause
+3. Suggest specific fixes
+4. Apply the fix if it's safe</pre>
+</div>
+
+<h3>TypeScript errors</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt</h4>
+<pre>Fix my TypeScript errors:
+1. Run npx tsc --noEmit
+2. Group errors by file
+3. For each file, explain the error and fix it</pre>
+</div>
+
+<h3>npm audit found vulnerabilities</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt</h4>
+<pre>Fix security vulnerabilities:
+1. Run npm audit
+2. For critical/high issues, run npm audit fix
+3. If fix doesn't work, show me which packages and suggest alternatives
+4. For moderate/low, just note them</pre>
+</div>
+
+<div class="success" style="background: var(--success-bg); border-left: 4px solid var(--success); padding: 1rem; margin: 1.5rem 0;">
+  <h4>Checkpoint 1 Complete</h4>
+  <p>Your foundation is verified and architecture-aware. Proceed with confidence to feature development.</p>
+</div>
+
+    </article>
+
+    <nav id="page-nav"></nav>
+  </main>
+</div>
+
+<script src="../../js/navigation.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+# .checkpoint-config.yaml
+# Override architecture auto-detection for Checkpoint audits
+# Place this file in your project root if auto-detection is incorrect
+
+architecture:
+  # Database options: supabase | postgresql | sqlite | prisma | file-based | none
+  database: file-based
+
+  # Auth options: supabase-auth | nextauth | clerk | lucia | none-local
+  auth: none-local
+
+  # API style options: rest-routes | trpc | server-actions | file-ops
+  api: rest-routes
+
+  # Deployment options: vercel | netlify | railway | docker | local-only
+  deployment: local-only
+
+  # Framework options: nextjs-app | nextjs-pages | remix | astro
+  framework: nextjs-app
+
+# Optional: Skip specific checks
+skip_checks:
+  # - rls_verification
+  # - auth_flow_test
+  # - mobile_responsive
+
+# Optional: Add custom checks
+custom_checks:
+  # - name: "Custom security check"
+  #   command: "npm run custom-security-audit"
+  #   required: true
