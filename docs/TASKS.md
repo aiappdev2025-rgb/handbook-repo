@@ -158,6 +158,22 @@ COMPANION: Workflow Reference (separate, linked in nav)
 - [ ] Create Workflow Quick Reference Card (Option C)
 - [ ] Add Project Scaffolding Prompt to Chapter 28
 
+### Phase 9: Handbook v4 - Combined Files (COMPLETED)
+- [x] Create `handbook-v4/` folder at repository root
+- [x] Generate phase1-validate.html (47 KB, chapters 1-7)
+- [x] Generate phase2-design.html (38 KB, chapters 8-12)
+- [x] Generate phase3-architect.html (74 KB, chapters 13-22)
+- [x] Generate phase4-build.html (135 KB, chapters 23-41 + appendices A-B)
+- [x] Generate phase5-launch.html (34 KB, chapters 42-43)
+
+Each combined file includes:
+- Embedded CSS (no external dependencies)
+- Table of contents with anchor links to all chapters
+- Full content from all chapters in the phase
+- Standalone, self-contained HTML files
+
+**Location**: `/handbook-v4/` (328 KB total across 5 files)
+
 ---
 
 ## File Mapping Reference
@@ -193,4 +209,4 @@ COMPANION: Workflow Reference (separate, linked in nav)
 
 ---
 
-*Last Updated: 2026-01-06 (Project Workspace app complete)*
+*Last Updated: 2026-02-05 (Handbook v4 combined files complete)*

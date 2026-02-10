@@ -75,6 +75,7 @@ This file tracks planned improvements and future developments for the handbook.
 
 | Date | Improvement | Notes |
 |------|-------------|-------|
+| 2026-02-05 | Handbook v4 combined files | 5 standalone HTML files (one per phase) in handbook-v4/ folder |
 | 2026-01-06 | Navigation system with inline data | Fixed file:// protocol support |
 | 2026-01-06 | Split handbook into per-chapter files | Parts 1-3 complete |
 
@@ -89,4 +90,4 @@ This file tracks planned improvements and future developments for the handbook.
 
 ---
 
-*Last Updated: 2026-01-06*
+*Last Updated: 2026-02-05*

@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 3: Architect - AI SaaS Handbook</title>
+  <style>
+/* AI SaaS Handbook - Shared Styles v3.0 */
+
+/* =============================================
+   CSS Variables
+   ============================================= */
+:root {
+  /* Primary colors */
+  --primary: #1a365d;
+  --secondary: #2c5282;
+  --accent: #2d3748;
+
+  /* Text colors */
+  --text: #1a202c;
+  --muted: #718096;
+
+  /* Backgrounds */
+  --bg: #ffffff;
+  --surface: #f7fafc;
+  --border: #e2e8f0;
+
+  /* Code blocks */
+  --code-bg: #1e1e1e;
+  --code-text: #d4d4d4;
+
+  /* Prompts */
+  --prompt-bg: #fefce8;
+  --prompt-border: #facc15;
+  --prompt-bg-alt: #fffbeb;
+  --prompt-border-alt: #d69e2e;
+
+  /* Status colors */
+  --success: #10b981;
+  --success-bg: #d1fae5;
+  --warning: #f59e0b;
+  --warning-bg: #fef3c7;
+  --error: #ef4444;
+  --error-bg: #fee2e2;
+  --info: #4299e1;
+  --info-bg: #bee3f8;
+
+  /* Special colors */
+  --moai: #7c3aed;
+  --moai-bg: #f3e8ff;
+  --moai-border: #9f7aea;
+  --checkpoint-bg: #ede9fe;
+  --checkpoint-border: #8b5cf6;
+  --admin-bg: #fdf4ff;
+  --admin-border: #d946ef;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --content-max-width: 950px;
+}
+
+/* =============================================
+   Reset & Base
+   ============================================= */
+* { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* =============================================
+   Typography
+   ============================================= */
+h1 {
+  color: var(--primary);
+  font-size: 2rem;
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+}
+
+h1:first-child {
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--secondary);
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--accent);
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+h4 {
+  color: var(--accent);
+  font-size: 1.1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+h5 {
+  color: var(--accent);
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+h6 {
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+p { margin: 1rem 0; }
+
+ul, ol {
+  margin: 1rem 0;
+  padding-left: 1.75rem;
+}
+
+li { margin: 0.4rem 0; }
+
+a { color: var(--secondary); }
+a:hover { color: var(--primary); }
+
+code {
+  background: var(--surface);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9em;
+}
+
+/* =============================================
+   Table of Contents
+   ============================================= */
+.toc {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.toc h2 {
+  margin-top: 0;
+}
+
+.toc ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.toc li {
+  margin: 0.5rem 0;
+}
+
+.toc a {
+  text-decoration: none;
+  color: var(--secondary);
+}
+
+.toc a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* =============================================
+   Prompt Containers
+   ============================================= */
+.prompt-container {
+  background: var(--prompt-bg);
+  border: 2px solid var(--prompt-border);
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.prompt-header {
+  background: var(--prompt-border);
+  color: var(--text);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prompt-content {
+  padding: 1.5rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.prompt-block {
+  background: var(--prompt-bg-alt);
+  border-left: 4px solid var(--prompt-border-alt);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  font-family: 'Consolas', monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* =============================================
+   Code Blocks
+   ============================================= */
+.code-block {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 1.25rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.file-structure {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 1.5rem;
+  border-radius: 8px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* =============================================
+   Alert Boxes
+   ============================================= */
+.warning,
+.warning-box {
+  background: var(--warning-bg);
+  border-left: 4px solid var(--warning);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.warning-box strong {
+  color: var(--error);
+}
+
+.note,
+.note-box {
+  background: var(--info-bg);
+  border-left: 4px solid var(--info);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.success,
+.success-box {
+  background: var(--success-bg);
+  border-left: 4px solid var(--success);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* =============================================
+   Special Boxes
+   ============================================= */
+.checklist {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.checklist h4 {
+  margin-top: 0;
+}
+
+.moai-box {
+  background: var(--moai-bg);
+  border: 2px solid var(--moai-border);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+}
+
+.moai-box h4,
+.moai-box h5 {
+  color: var(--moai);
+  margin-top: 0;
+}
+
+/* =============================================
+   Tables
+   ============================================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.comparison-table th,
+.comparison-table td {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.comparison-table th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+.comparison-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* =============================================
+   Badges
+   ============================================= */
+.tool-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.badge-chat {
+  background: #e9d8fd;
+  color: #553c9a;
+}
+
+.badge-code {
+  background: #c6f6d5;
+  color: #276749;
+}
+
+.session-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.session-new {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.session-same {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.prompt-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* =============================================
+   Print Styles
+   ============================================= */
+@media print {
+  body {
+    max-width: none;
+    padding: 1rem;
+  }
+
+  .toc {
+    page-break-after: always;
+  }
+
+  h1 {
+    page-break-before: always;
+  }
+
+  h1:first-child {
+    page-break-before: avoid;
+  }
+}
+  </style>
+</head>
+<body>
+
+<h1>Phase 3: Architect</h1>
+<p style="font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem;">
+  Chapters 13-22: Solution Architecture, Database Design, Infrastructure Setup, and Build Contract
+</p>
+
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#chapter-13">Chapter 13: Stage 5.0 - Solution Architecture</a></li>
+    <li><a href="#chapter-14">Chapter 14: Database Schema Design</a></li>
+    <li><a href="#chapter-15">Chapter 15: GitHub Repository Setup</a></li>
+    <li><a href="#chapter-16">Chapter 16: Supabase Project Setup</a></li>
+    <li><a href="#chapter-17">Chapter 17: Vercel Project Setup</a></li>
+    <li><a href="#chapter-18">Chapter 18: Multi-Environment Configuration</a></li>
+    <li><a href="#chapter-19">Chapter 19: Build Contract Introduction</a></li>
+    <li><a href="#chapter-20">Chapter 20: Build Contract Structure</a></li>
+    <li><a href="#chapter-21">Chapter 21: Generating the Build Contract</a></li>
+    <li><a href="#chapter-22">Chapter 22: The Critical Transition</a></li>
+  </ul>
+</div>
+
+<article>
+
+<h1 id="chapter-13">Chapter 13: Stage 5.0 - Solution Architecture</h1>
+
+<p>In this chapter, you'll create the Solution Architecture document—the technical blueprint for your entire application. This document captures all the decisions about technology choices, system structure, and integration patterns before you write any code. By the end of this chapter, you'll have a comprehensive architecture document that Claude Code will reference throughout implementation.</p>
+
+<h2 id="section-13-1">13.1 Purpose</h2>
+
+<p>The Solution Architecture bridges your design artifacts (Design Brief, UX Package) with actual implementation. It translates product requirements into technical decisions: which technologies to use, how components interact, what the data model looks like, and how security is handled. Creating this document before coding prevents costly mid-project pivots and ensures all technical decisions are made deliberately rather than ad-hoc.</p>
+
+<p><strong>What you'll accomplish:</strong> Generate a complete architecture document covering system design, database schema, API routes, authentication, and project structure.</p>
+
+<h2 id="section-13-2">13.2 Architecture Prompt</h2>
+
+<p>This prompt generates a comprehensive architecture document using Claude Chat. The output covers all technical aspects of your application, from high-level system diagrams to specific folder structures. Start a fresh chat to give Claude full context for technical planning.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-new">New Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(start fresh for technical planning)</span>
+</div>
+<div class="prompt-block">Create a Solution Architecture document for [PRODUCT NAME].
+
+Technology Stack (recommended for AI SaaS):
+- Frontend: Next.js 14+ with App Router
+- Styling: Tailwind CSS
+- Database: Supabase (PostgreSQL + Auth + Storage)
+- AI: Claude API (Anthropic)
+- Payments: Stripe
+- Hosting: Vercel
+
+The Architecture document should include:
+1. System Overview (architecture diagram, component responsibilities)
+2. Database Schema (tables, columns, constraints, RLS policies)
+3. API Design (routes, methods, request/response schemas)
+4. Authentication and Authorization
+5. AI Integration (prompts, error handling, cost management)
+6. Third-Party Integrations
+7. Security Considerations
+8. Project Structure (folder organization, route groups, component folders)
+
+Output the complete document in markdown format, ready to save as docs/architecture.md.</div>
+
+<div class="note">
+  <h4>Customizing the Technology Stack</h4>
+  <p>The recommended stack (Next.js, Supabase, Stripe, Vercel) is optimized for AI SaaS applications. If you're using different technologies, modify the prompt accordingly. The architecture sections remain the same regardless of stack choices.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete architecture document (typically 2,000-4,000 words) in markdown format covering all eight sections.</p>
+  <p><strong>How to validate:</strong> The document should include: a system diagram (ASCII or description), at least 3-5 database tables with columns defined, API routes with methods, and a folder structure with route groups.</p>
+  <p><strong>Next:</strong> Save the architecture document to your project.</p>
+</div>
+
+<h2 id="section-13-3">13.3 Save the Architecture Document</h2>
+
+<p>The architecture document must be saved as a file in your project so Claude Code can access it during implementation. This is a critical step—without this file, Claude Code won't have the context needed to set up your project correctly.</p>
+
+<div class="warning">
+  <h4>Critical Step for Claude Code Integration</h4>
+  <p>The Architecture document will be referenced during implementation in Claude Code. Save it now so Claude Code can access it.</p>
+</div>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Create a <code>docs/</code> folder in your project directory (if it doesn't exist)</li>
+  <li>Copy the complete Architecture output from Claude Chat</li>
+  <li>Save as <code>docs/architecture.md</code></li>
+</ol>
+
+<p>This file becomes part of your project's context system. Claude Code will read it when initializing your project structure (Chapter 16) and reference it throughout the build phase.</p>
+
+<div class="checklist">
+  <h4>Architecture Document Validation</h4>
+  <ul>
+    <li><code>docs/architecture.md</code> exists with complete Architecture output</li>
+    <li>Project Structure section includes folder organization and route groups</li>
+    <li>Database Schema section lists all tables and relationships</li>
+    <li>API Design section defines routes and methods</li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/architecture.md</code> containing your complete architecture document.</p>
+  <p><strong>How to validate:</strong> Open the file and verify it contains all eight architecture sections. The file should be 100+ lines of markdown.</p>
+  <p><strong>Next:</strong> Chapter 14 — Generate the detailed database schema from your architecture.</p>
+</div>
+
+<h2 id="section-13-4">13.4 Chapter Summary</h2>
+
+<p>You've completed the Solution Architecture phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Generated a comprehensive technical architecture document</li>
+  <li>Defined your technology stack and system components</li>
+  <li>Outlined database tables, API routes, and security approach</li>
+  <li>Saved the architecture for Claude Code to reference</li>
+</ul>
+
+<p>Your technical blueprint is ready. In the next chapter, you'll generate the detailed, SQL-ready database schema based on this architecture.</p>
+
+<h1 id="chapter-14">Chapter 14: Database Schema Design</h1>
+
+<p>In this chapter, you'll generate the detailed, SQL-ready database schema from your architecture document. The output will be a complete migration file you can run directly in Supabase, including tables, relationships, indexes, and Row Level Security policies. By the end of this chapter, you'll have production-ready SQL that enforces your data model and security requirements.</p>
+
+<h2 id="section-14-1">14.1 Purpose</h2>
+
+<p>The architecture document outlines your data model conceptually. Now you need concrete SQL that Supabase can execute. This step translates table descriptions into CREATE TABLE statements, defines relationships through foreign keys, and implements security through RLS policies. Generating this schema before setting up infrastructure ensures your database design is complete and reviewed before any data is created.</p>
+
+<p><strong>What you'll accomplish:</strong> Generate a complete SQL migration file with tables, constraints, indexes, RLS policies, and triggers.</p>
+
+<h2 id="section-14-2">14.2 Database Schema Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you created the architecture. This gives Claude full context of your data model and relationships. The output will be a single SQL file you can run in Supabase's SQL Editor.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues from Architecture)</span>
+</div>
+<div class="prompt-block">Based on the Architecture document we just created, generate a complete database schema for Supabase.
+
+For each table, provide:
+1. **CREATE TABLE statement** with all columns, types, and constraints
+2. **RLS policies** for SELECT, INSERT, UPDATE, DELETE
+3. **Indexes** for frequently queried columns
+4. **Triggers** for updated_at timestamps
+
+Required tables based on our architecture:
+- user_profiles (extends auth.users)
+- [LIST YOUR DOMAIN TABLES FROM ARCHITECTURE]
+- subscriptions (Stripe sync)
+- usage_logs (if applicable)
+
+For each RLS policy, explain the security rationale.
+
+Output as a single SQL migration file that can be run in Supabase SQL Editor.</div>
+
+<div class="note">
+  <h4>Customize the Table List</h4>
+  <p>Replace <code>[LIST YOUR DOMAIN TABLES FROM ARCHITECTURE]</code> with the specific tables from your architecture document. For example: projects, documents, comments, or whatever domain entities your application needs.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete SQL migration file (typically 200-500 lines) with CREATE TABLE statements, RLS policies, indexes, and triggers.</p>
+  <p><strong>How to validate:</strong> The SQL should include: RLS enabled on every table, policies for all CRUD operations, foreign key constraints with ON DELETE behavior, and updated_at triggers.</p>
+  <p><strong>Next:</strong> Validate the schema and save it.</p>
+</div>
+
+<h2 id="section-14-3">14.3 Schema Validation</h2>
+
+<p>Before saving your schema, validate it against this checklist. These standards ensure your database is secure, maintainable, and follows Supabase best practices. Missing any of these items can lead to security vulnerabilities or application errors.</p>
+
+<div class="checklist">
+  <h4>Schema Validation Checklist</h4>
+  <ul>
+    <li>All tables have <code>id</code> (UUID), <code>created_at</code>, <code>updated_at</code></li>
+    <li>Foreign keys reference correct tables with ON DELETE behavior</li>
+    <li>RLS is enabled on ALL tables (no exceptions)</li>
+    <li>RLS policies cover all CRUD operations (SELECT, INSERT, UPDATE, DELETE)</li>
+    <li>Indexes exist for foreign keys and frequently filtered columns</li>
+    <li>No sensitive data exposed without proper policy checks</li>
+    <li><code>user_profiles</code> table links to <code>auth.users(id)</code> with ON DELETE CASCADE</li>
+  </ul>
+</div>
+
+<p>If any items are missing, ask Claude to add them before proceeding.</p>
+
+<h2 id="section-14-4">14.4 Save the Schema File</h2>
+
+<p>Save the generated SQL so it can be used during Supabase setup (Chapter 17) and tracked in version control. This file becomes your initial migration.</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Create <code>supabase/migrations/</code> folder in your project (if it doesn't exist)</li>
+  <li>Copy the complete SQL output from Claude Chat</li>
+  <li>Save as <code>supabase/migrations/00001_initial_schema.sql</code></li>
+</ol>
+
+<div class="note">
+  <h4>Migration Naming Convention</h4>
+  <p>Supabase migrations use timestamp or sequential prefixes. Using <code>00001_</code> ensures this runs first. Later migrations will use <code>00002_</code>, <code>00003_</code>, etc.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A SQL file at <code>supabase/migrations/00001_initial_schema.sql</code> containing your complete schema.</p>
+  <p><strong>How to validate:</strong> Open the file and verify it contains CREATE TABLE statements for all your domain tables, RLS policies, and indexes.</p>
+  <p><strong>Next:</strong> Chapter 15 — Set up your GitHub repository and initialize the project.</p>
+</div>
+
+<h2 id="section-14-5">14.5 Chapter Summary</h2>
+
+<p>You've completed the Database Schema Design phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Generated SQL-ready schema from your architecture document</li>
+  <li>Defined tables with proper columns, types, and constraints</li>
+  <li>Implemented Row Level Security policies for all tables</li>
+  <li>Created indexes for query performance</li>
+  <li>Saved the migration file for version control</li>
+</ul>
+
+<p>Your database design is complete and ready to apply. In the next chapter, you'll create your GitHub repository and initialize the project structure.</p>
+
+<h1 id="chapter-15">Chapter 15: GitHub Repository Setup</h1>
+
+<p>In this chapter, you'll create your GitHub repository and initialize the project structure using Claude Code. This is where your architecture and schema documents come together into an actual codebase. By the end of this chapter, you'll have a fully structured Next.js project connected to GitHub and ready for development.</p>
+
+<h2 id="section-15-1">15.1 Purpose</h2>
+
+<p>The GitHub repository is the foundation for all development work. It stores your code, tracks changes, and integrates with Vercel for automatic deployments. Setting it up correctly from the start—with proper folder structure, configuration files, and branching strategy—prevents organizational debt that's painful to fix later.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a GitHub repository, initialize a Next.js project with your architecture's folder structure, and establish a branching strategy.</p>
+
+<h2 id="section-15-2">15.2 Repository Creation</h2>
+
+<p>First, create an empty repository on GitHub. You'll initialize the actual project locally and push it to this remote. Creating the repo first ensures you have the remote URL ready for the initialization step.</p>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (GitHub Website) - Repository creation requires the GitHub interface.
+</div>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Go to <a href="https://github.com/new">github.com/new</a></li>
+  <li>Repository name: <code>[your-project-name]</code> (lowercase, hyphens, e.g., <code>my-saas-app</code>)</li>
+  <li>Visibility: <strong>Private</strong> (recommended until launch)</li>
+  <li>Initialize with README: <strong>No</strong> (we'll create our own)</li>
+  <li>Add .gitignore: <strong>None</strong> (Claude Code will create a comprehensive one)</li>
+  <li>Click "Create repository"</li>
+  <li>Copy the repository URL (e.g., <code>https://github.com/username/my-saas-app.git</code>)</li>
+</ol>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> An empty GitHub repository with the URL copied.</p>
+  <p><strong>How to validate:</strong> The GitHub page shows "Quick setup" instructions because the repository is empty.</p>
+  <p><strong>Next:</strong> Initialize the project using Claude Code.</p>
+</div>
+
+<h2 id="section-15-3">15.3 Project Initialization with Claude Code</h2>
+
+<p>Now you'll use Claude Code to create the actual project. This is your first time using Claude Code in this workflow. The prompt references your architecture document, so Claude Code will read it and set up the folder structure exactly as you designed it.</p>
+
+<div class="warning">
+  <h4>Prerequisites</h4>
+  <p>Before running this prompt, ensure <code>docs/architecture.md</code> exists in your project directory (created in Chapter 14). Claude Code will read this file to determine the folder structure.</p>
+</div>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-new">New Session</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(first time using Claude Code)</span>
+</div>
+<div class="prompt-block">Initialize a new Next.js project for [PROJECT_NAME].
+
+**Reference**: Read docs/architecture.md and use the Project Structure section.
+
+1. Create the project with:
+   - Next.js 14+ with App Router
+   - TypeScript (strict mode)
+   - Tailwind CSS
+   - ESLint
+
+2. Set up the folder structure as defined in docs/architecture.md, including:
+   - All route groups from the Architecture
+   - Feature-specific component folders for each domain entity
+   - Service integration folders (supabase/, stripe/, etc.)
+   - Any domain-specific lib/ folders
+
+3. Create a comprehensive .gitignore for Next.js + Supabase + env files
+
+4. Create initial README.md with project name and setup instructions
+
+5. Initialize git and make initial commit
+
+6. Connect to GitHub remote: [REPO_URL]</div>
+
+<div class="note">
+  <h4>Replace Placeholders</h4>
+  <p>Replace <code>[PROJECT_NAME]</code> with your project name and <code>[REPO_URL]</code> with the GitHub URL you copied in the previous step.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete Next.js project with your architecture's folder structure, connected to GitHub.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Run <code>npm run dev</code> — app starts at localhost:3000</li>
+    <li>Folder structure matches your architecture document</li>
+    <li><code>git remote -v</code> shows your GitHub repository</li>
+    <li>GitHub repository shows the initial commit</li>
+  </ul>
+  <p><strong>Next:</strong> Understand the branching strategy for development.</p>
+</div>
+
+<h2 id="section-15-4">15.4 Branch Strategy</h2>
+
+<p>A consistent branching strategy keeps your codebase organized and integrates cleanly with Vercel's deployment model. This strategy maps branch types to deployment environments.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Branch</th>
+    <th>Purpose</th>
+    <th>Deploys To</th>
+  </tr>
+  <tr>
+    <td><code>main</code></td>
+    <td>Production-ready code</td>
+    <td>Production (Vercel)</td>
+  </tr>
+  <tr>
+    <td><code>develop</code></td>
+    <td>Integration branch (optional)</td>
+    <td>Preview</td>
+  </tr>
+  <tr>
+    <td><code>feature/*</code></td>
+    <td>New features</td>
+    <td>Preview</td>
+  </tr>
+  <tr>
+    <td><code>fix/*</code></td>
+    <td>Bug fixes</td>
+    <td>Preview</td>
+  </tr>
+</table>
+
+<div class="note">
+  <h4>Solo Developer Simplification</h4>
+  <p>For solo development, you can skip the <code>develop</code> branch and merge feature branches directly to <code>main</code>. The key principle: <code>main</code> should always be deployable.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Understanding of how branches map to deployments.</p>
+  <p><strong>How to validate:</strong> You know that pushing to <code>main</code> deploys to production, and all other branches create preview deployments.</p>
+  <p><strong>Next:</strong> Chapter 16 — Set up your Supabase projects.</p>
+</div>
+
+<h2 id="section-15-5">15.5 Chapter Summary</h2>
+
+<p>You've completed the GitHub Repository Setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Created a GitHub repository for your project</li>
+  <li>Initialized a Next.js project with your architecture's folder structure</li>
+  <li>Set up TypeScript, Tailwind CSS, and ESLint</li>
+  <li>Connected local repository to GitHub remote</li>
+  <li>Understand the branching strategy for development</li>
+</ul>
+
+<p>Your codebase is initialized and version-controlled. In the next chapter, you'll set up Supabase projects for your development and production environments.</p>
+
+<h1 id="chapter-16">Chapter 16: Supabase Project Setup</h1>
+
+<p>In this chapter, you'll create and configure your Supabase cloud projects. Supabase provides your database, authentication, and backend services. By the end of this chapter, you'll have your Supabase infrastructure ready to connect to your Next.js application.</p>
+
+<div class="warning">
+  <h4>Supabase Free Tier Limitation</h4>
+  <p>The Supabase Free tier allows only <strong>2 active projects</strong> per organization. This handbook supports two environment configurations:</p>
+  <ul>
+    <li><strong>2-Environment Setup</strong> (Free tier compatible): Development + Production</li>
+    <li><strong>3-Environment Setup</strong> (requires Pro or additional org): Development + Staging + Production</li>
+  </ul>
+  <p>Chapter 18 covers both configurations in detail. For now, create the projects based on your chosen setup.</p>
+</div>
+
+<h2 id="section-16-1">16.1 Purpose</h2>
+
+<p>Before writing any code, you need cloud infrastructure to store data and handle authentication. Supabase projects are created through their web dashboard—this cannot be automated. Each environment (local development, staging, production) connects to its own isolated Supabase project to prevent test data from mixing with real user data.</p>
+
+<p><strong>What you'll accomplish:</strong> Create 2 or 3 Supabase projects (depending on your environment setup) and configure basic settings for each.</p>
+
+<h2 id="section-16-2">16.2 Create Projects</h2>
+
+<p>Each Supabase project is a complete backend instance with its own database, authentication, and API endpoints. Creating separate projects per environment ensures complete data isolation—your development experiments won't affect production users.</p>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (Supabase Dashboard) - These steps cannot be automated.
+</div>
+
+<h3>Instructions</h3>
+
+<p>Go to <a href="https://supabase.com/dashboard">supabase.com/dashboard</a> and create your projects:</p>
+
+<h4>For 2-Environment Setup (Free Tier)</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project Name</th>
+    <th>Purpose</th>
+    <th>Region</th>
+  </tr>
+  <tr>
+    <td><code>[project]-dev</code></td>
+    <td>Local development + Preview deployments</td>
+    <td>Closest to you</td>
+  </tr>
+  <tr>
+    <td><code>[project]-prod</code></td>
+    <td>Production users</td>
+    <td>Closest to your target users</td>
+  </tr>
+</table>
+
+<h4>For 3-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project Name</th>
+    <th>Purpose</th>
+    <th>Region</th>
+  </tr>
+  <tr>
+    <td><code>[project]-dev</code></td>
+    <td>Local development</td>
+    <td>Closest to you</td>
+  </tr>
+  <tr>
+    <td><code>[project]-staging</code></td>
+    <td>Preview deployments</td>
+    <td>Same as production</td>
+  </tr>
+  <tr>
+    <td><code>[project]-prod</code></td>
+    <td>Production users</td>
+    <td>Closest to your target users</td>
+  </tr>
+</table>
+
+<p>For each project:</p>
+<ol>
+  <li>Click "New Project"</li>
+  <li>Enter the project name following the naming convention above</li>
+  <li>Generate a strong database password and <strong>save it in your password manager</strong></li>
+  <li>Select the appropriate region</li>
+  <li>Click "Create new project" and wait ~2 minutes for provisioning</li>
+</ol>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> 2 or 3 projects visible in your Supabase dashboard, each showing a green "Active" status.</p>
+  <p><strong>How to validate:</strong> Click into each project—you should see the Project Dashboard with the Table Editor, Authentication, and other sections available in the sidebar.</p>
+  <p><strong>Next:</strong> Configure authentication URLs for each project.</p>
+</div>
+
+<h2 id="section-16-3">16.3 Configure Authentication</h2>
+
+<p>Supabase authentication requires knowing which URLs are legitimate for your application. Without proper URL configuration, login redirects will fail and users won't be able to sign in. Each project needs URLs matching the environment it serves.</p>
+
+<h3>Instructions</h3>
+
+<p>For each project, navigate to <strong>Authentication → URL Configuration</strong> in the sidebar and configure:</p>
+
+<h4>For 2-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Site URL</th>
+    <th>Redirect URLs</th>
+  </tr>
+  <tr>
+    <td><strong>Dev</strong></td>
+    <td><code>http://localhost:3000</code></td>
+    <td><code>http://localhost:3000/**</code><br><code>https://*-[username].vercel.app/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Prod</strong></td>
+    <td><code>https://[your-domain].com</code></td>
+    <td><code>https://[your-domain].com/**</code></td>
+  </tr>
+</table>
+
+<p><em>Note: In the 2-environment setup, the Dev project handles both local development and Vercel preview deployments.</em></p>
+
+<h4>For 3-Environment Setup</h4>
+<table class="comparison-table">
+  <tr>
+    <th>Project</th>
+    <th>Site URL</th>
+    <th>Redirect URLs</th>
+  </tr>
+  <tr>
+    <td><strong>Dev</strong></td>
+    <td><code>http://localhost:3000</code></td>
+    <td><code>http://localhost:3000/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Staging</strong></td>
+    <td><code>https://*-[username].vercel.app</code></td>
+    <td><code>https://*-[username].vercel.app/**</code></td>
+  </tr>
+  <tr>
+    <td><strong>Prod</strong></td>
+    <td><code>https://[your-domain].com</code></td>
+    <td><code>https://[your-domain].com/**</code></td>
+  </tr>
+</table>
+
+<div class="note">
+  <h4>About Redirect URLs</h4>
+  <p>The <code>/**</code> wildcard allows any path on your domain to receive auth callbacks. Replace <code>[username]</code> with your Vercel username and <code>[your-domain].com</code> with your actual production domain (you can update this later before launch).</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Each project's URL Configuration page showing your Site URL and Redirect URLs saved.</p>
+  <p><strong>How to validate:</strong> After saving, refresh the page and confirm the values persisted correctly.</p>
+  <p><strong>Next:</strong> Apply your database schema to the development project.</p>
+</div>
+
+<h2 id="section-16-4">16.4 Apply Schema Migration</h2>
+
+<p>Your database schema (designed in Chapter 14) needs to be applied to your Supabase projects. You'll use the Supabase CLI to manage migrations—this ensures your schema is version-controlled and can be consistently applied across all environments.</p>
+
+<p>Start by applying the schema to your development project. You'll migrate staging and production later when you're ready to deploy.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">Same Session</span>
+</div>
+<div class="prompt-block">Set up Supabase CLI and apply the initial schema migration.
+
+1. Initialize Supabase in the project:
+   supabase init
+
+2. Link to the development project:
+   supabase link --project-ref [DEV_PROJECT_REF]
+
+   (Find your project ref in Supabase Dashboard → Project Settings → General)
+
+3. Create a migration file from the schema we designed in Chapter 14:
+   supabase migration new initial_schema
+
+4. Apply the migration:
+   supabase db push
+
+5. Verify the tables were created correctly.</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Your database tables created in the Dev project, visible in the Supabase Table Editor.</p>
+  <p><strong>How to validate:</strong> In Supabase Dashboard, go to <strong>Table Editor</strong>. You should see all the tables defined in your schema. Click on a table to verify it has the expected columns.</p>
+  <p><strong>Next:</strong> Record your project credentials for use in your application.</p>
+</div>
+
+<h2 id="section-16-5">16.5 Record Credentials</h2>
+
+<p>Your Next.js application needs credentials to connect to Supabase. Each project has unique credentials that you'll configure as environment variables. Record these now—you'll need them in Chapter 17 when setting up Vercel.</p>
+
+<h3>Instructions</h3>
+
+<p>For each project, go to <strong>Settings → API</strong> and record:</p>
+<ul>
+  <li><strong>Project URL</strong> — The base URL for API requests (e.g., <code>https://xxxxx.supabase.co</code>)</li>
+  <li><strong>Anon (public) key</strong> — Safe to expose in browser, used for client-side operations</li>
+  <li><strong>Service role key</strong> — Full database access, server-side only, <strong>keep secret!</strong></li>
+</ul>
+
+<p>Create a secure note in your password manager with this structure:</p>
+
+<div class="file-structure">
+SUPABASE CREDENTIALS
+
+[project]-dev:
+  URL: https://xxxxx.supabase.co
+  ANON_KEY: eyJhbGc...
+  SERVICE_ROLE_KEY: eyJhbGc...
+
+[project]-prod:
+  URL: https://yyyyy.supabase.co
+  ANON_KEY: eyJhbGc...
+  SERVICE_ROLE_KEY: eyJhbGc...
+
+(Add staging section if using 3-environment setup)
+</div>
+
+<div class="warning">
+  <h4>Security</h4>
+  <p>The <strong>service role key</strong> bypasses Row Level Security and has full database access. Never expose it in client-side code or commit it to your repository. Treat it like a database password.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> 6 credential values (for 2-env) or 9 values (for 3-env) saved securely in your password manager.</p>
+  <p><strong>How to validate:</strong> Open your password manager and confirm you have URL, anon key, and service role key for each project.</p>
+  <p><strong>Next:</strong> Chapter 17 — Connect your Vercel deployment to these Supabase projects.</p>
+</div>
+
+<h2 id="section-16-6">16.6 Chapter Summary</h2>
+
+<p>You've completed the Supabase infrastructure setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Created isolated Supabase projects for each environment</li>
+  <li>Configured authentication URLs to allow sign-in from your application</li>
+  <li>Applied your database schema to the development project</li>
+  <li>Securely recorded credentials for application configuration</li>
+</ul>
+
+<p>Your Supabase backend is now ready. In the next chapter, you'll connect it to Vercel so your deployed application can access these services.</p>
+
+<h1 id="chapter-17">Chapter 17: Vercel Project Setup</h1>
+
+<p>In this chapter, you'll connect your Next.js application to Vercel for deployment. Vercel handles building, hosting, and serving your application with automatic deployments triggered by Git pushes. By the end of this chapter, your application will be deployed and connected to Supabase.</p>
+
+<h2 id="section-17-1">17.1 Purpose</h2>
+
+<p>Vercel provides three deployment environments that map to your Git workflow: Development (for local work), Preview (for pull request testing), and Production (for live users). Each environment can have its own set of environment variables, allowing you to connect different Supabase projects to different deployment contexts.</p>
+
+<p><strong>What you'll accomplish:</strong> Import your repository to Vercel, configure environment variables for each deployment scope, and verify your application deploys correctly.</p>
+
+<h2 id="section-17-2">17.2 Import Project</h2>
+
+<p>Vercel automatically detects Next.js projects and configures the build settings. The initial import creates the project and sets up the Git integration—any future pushes to your repository will trigger automatic deployments.</p>
+
+<div class="note">
+  <strong>Tool:</strong> Manual (Vercel Dashboard) - Initial setup requires the dashboard.
+</div>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Go to <a href="https://vercel.com/new">vercel.com/new</a></li>
+  <li>Click "Import" next to your GitHub repository</li>
+  <li>Verify the settings:
+    <ul>
+      <li>Framework Preset: <strong>Next.js</strong> (auto-detected)</li>
+      <li>Root Directory: <code>./</code></li>
+    </ul>
+  </li>
+  <li>Click "Deploy"</li>
+</ol>
+
+<div class="note">
+  <h4>Expected: Initial Deploy Will Fail</h4>
+  <p>The first deployment will fail because environment variables aren't configured yet. This is normal—you'll add them in the next section and redeploy.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A Vercel project created, visible in your Vercel dashboard, linked to your GitHub repository.</p>
+  <p><strong>How to validate:</strong> You should see your project in the Vercel dashboard with a failed deployment (red status). The Git integration should show your repository name.</p>
+  <p><strong>Next:</strong> Configure environment variables for each deployment scope.</p>
+</div>
+
+<h2 id="section-17-3">17.3 Environment Variables</h2>
+
+<p>Vercel environment variables have three scopes: Development (used with <code>vercel dev</code>), Preview (for branch/PR deployments), and Production (for your main branch). You'll configure each scope to connect to the appropriate Supabase project from Chapter 16.</p>
+
+<h3>Instructions</h3>
+
+<p>Go to <strong>Project Settings → Environment Variables</strong> and add the following variables. For each variable, select the appropriate checkboxes for which environments it applies to.</p>
+
+<h4>For 2-Environment Setup</h4>
+
+<p>In this setup, both Development and Preview scopes use the Dev Supabase project:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Variable</th>
+    <th>Development</th>
+    <th>Preview</th>
+    <th>Production</th>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_URL</code></td>
+    <td>Dev URL</td>
+    <td>Dev URL</td>
+    <td>Prod URL</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td>
+    <td>Dev key</td>
+    <td>Dev key</td>
+    <td>Prod key</td>
+  </tr>
+  <tr>
+    <td><code>SUPABASE_SERVICE_ROLE_KEY</code></td>
+    <td>Dev service key</td>
+    <td>Dev service key</td>
+    <td>Prod service key</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td>
+    <td>Test key</td>
+    <td>Test key</td>
+    <td>Live key</td>
+  </tr>
+  <tr>
+    <td><code>STRIPE_SECRET_KEY</code></td>
+    <td>Test secret</td>
+    <td>Test secret</td>
+    <td>Live secret</td>
+  </tr>
+</table>
+
+<p><em>Note: Preview deployments share the Dev database, so test data created during PR reviews will appear in your development environment.</em></p>
+
+<h4>For 3-Environment Setup</h4>
+
+<p>In this setup, each scope connects to its dedicated Supabase project:</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Variable</th>
+    <th>Development</th>
+    <th>Preview</th>
+    <th>Production</th>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_URL</code></td>
+    <td>Dev URL</td>
+    <td>Staging URL</td>
+    <td>Prod URL</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td>
+    <td>Dev key</td>
+    <td>Staging key</td>
+    <td>Prod key</td>
+  </tr>
+  <tr>
+    <td><code>SUPABASE_SERVICE_ROLE_KEY</code></td>
+    <td>Dev service key</td>
+    <td>Staging service key</td>
+    <td>Prod service key</td>
+  </tr>
+  <tr>
+    <td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td>
+    <td>Test key</td>
+    <td>Test key</td>
+    <td>Live key</td>
+  </tr>
+  <tr>
+    <td><code>STRIPE_SECRET_KEY</code></td>
+    <td>Test secret</td>
+    <td>Test secret</td>
+    <td>Live secret</td>
+  </tr>
+</table>
+
+<div class="note">
+  <h4>Adding Variables by Scope</h4>
+  <p>When adding a variable in Vercel, you can either: (1) add the same value for all environments by checking all three boxes, or (2) add the variable multiple times with different values and different scope checkboxes. For Supabase variables that differ per environment, use approach (2).</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> 5 environment variables configured, each with values for Development, Preview, and Production scopes.</p>
+  <p><strong>How to validate:</strong> In Project Settings → Environment Variables, you should see all variables listed. Click on each to verify the values per environment are correct.</p>
+  <p><strong>Next:</strong> Verify the deployment works with your new configuration.</p>
+</div>
+
+<h2 id="section-17-4">17.4 Verify Deployment</h2>
+
+<p>With environment variables configured, you need to trigger a new deployment and verify everything connects correctly. You'll also set up your local environment to use the same variables.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">Same Session</span>
+</div>
+<div class="prompt-block">Verify the Vercel deployment is working correctly.
+
+1. Trigger a redeployment in Vercel Dashboard:
+   - Go to Deployments tab
+   - Click the three dots on the failed deployment
+   - Select "Redeploy"
+
+2. While that deploys, pull environment variables for local development:
+   vercel link
+   vercel env pull .env.local
+
+3. Start the development server:
+   npm run dev
+
+4. Verify locally:
+   - App loads at localhost:3000
+   - No console errors about missing env vars
+   - Open browser DevTools → Network tab
+   - Look for requests to your Supabase URL (should return 200)
+
+5. Verify the Vercel deployment:
+   - Check the deployment completed successfully (green status)
+   - Click the deployment URL to open the preview
+   - Verify the app loads without errors</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A successful Vercel deployment (green status) and a working local development environment.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Vercel dashboard shows green "Ready" status on the latest deployment</li>
+    <li>Clicking the deployment URL loads your application</li>
+    <li>Local <code>npm run dev</code> runs without environment variable errors</li>
+    <li><code>.env.local</code> file exists in your project root with Supabase variables</li>
+  </ul>
+  <p><strong>Next:</strong> Configure your custom domain (optional until launch).</p>
+</div>
+
+<h2 id="section-17-5">17.5 Domain Configuration (Production)</h2>
+
+<p>Your production deployment is initially available at a <code>.vercel.app</code> subdomain. When you're ready to launch, you'll add your custom domain. This step is optional during development—you can complete it later before going live.</p>
+
+<h3>Instructions (When Ready for Launch)</h3>
+
+<ol>
+  <li>Go to <strong>Project Settings → Domains</strong></li>
+  <li>Enter your custom domain (e.g., <code>myapp.com</code>)</li>
+  <li>Vercel will display DNS configuration instructions:
+    <ul>
+      <li>For apex domains: Add an A record pointing to Vercel's IP</li>
+      <li>For subdomains: Add a CNAME record pointing to <code>cname.vercel-dns.com</code></li>
+    </ul>
+  </li>
+  <li>Update your domain's DNS settings at your registrar</li>
+  <li>Wait for DNS propagation (usually minutes, sometimes up to 48 hours)</li>
+  <li>Vercel automatically provisions an SSL certificate</li>
+</ol>
+
+<div class="note">
+  <h4>Remember to Update Supabase</h4>
+  <p>When you add a custom domain, go back to your Production Supabase project and update the Site URL and Redirect URLs in Authentication → URL Configuration to use your new domain.</p>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Your custom domain resolving to your Vercel deployment with HTTPS enabled.</p>
+  <p><strong>How to validate:</strong> Visit <code>https://yourdomain.com</code> in a browser. The page should load with a valid SSL certificate (padlock icon).</p>
+  <p><strong>Next:</strong> Chapter 18 covers advanced multi-environment configuration and workflows.</p>
+</div>
+
+<h2 id="section-17-6">17.6 Chapter Summary</h2>
+
+<p>You've completed the Vercel deployment setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Imported your GitHub repository to Vercel with automatic deployments</li>
+  <li>Configured environment variables for Development, Preview, and Production scopes</li>
+  <li>Verified both local development and cloud deployment work correctly</li>
+  <li>Learned how to add a custom domain when ready for launch</li>
+</ul>
+
+<p>Your application is now deployed and connected to Supabase. Chapter 18 provides detailed guidance on managing multiple environments, including database migrations, preview deployment workflows, and troubleshooting common issues.</p>
+
+<h1 id="chapter-18">Chapter 18: Multi-Environment Configuration</h1>
+
+<p>This chapter provides a comprehensive guide to configuring your development and deployment environments. You'll learn how to structure your environments for data isolation, configure services correctly, and establish workflows for testing and deployment. By the end of this chapter, you'll have a complete, professional environment setup.</p>
+
+<div class="note">
+  <h4>Choose Your Environment Setup</h4>
+  <p>This handbook supports two configurations based on your Supabase plan:</p>
+  <ul>
+    <li><strong>2-Environment Setup</strong> (Supabase Free tier): Development + Production — uses 2 Supabase projects</li>
+    <li><strong>3-Environment Setup</strong> (Supabase Pro or multiple orgs): Development + Staging + Production — uses 3 Supabase projects</li>
+  </ul>
+  <p>If you completed Chapters 16-17 and already created your Supabase projects, continue with the setup you chose. This chapter provides detailed guidance for both paths.</p>
+</div>
+
+<h2 id="section-18-1">18.1 Environment Strategy Overview</h2>
+
+<p>A proper multi-environment strategy isolates your development work from production users. This section explains both environment configurations, helps you choose the right one, and outlines the architecture for each.</p>
+
+<h3>Choosing Your Configuration</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Factor</th>
+    <th>2-Environment</th>
+    <th>3-Environment</th>
+  </tr>
+  <tr>
+    <td><strong>Supabase projects needed</strong></td>
+    <td>2 (Dev + Prod)</td>
+    <td>3 (Dev + Staging + Prod)</td>
+  </tr>
+  <tr>
+    <td><strong>Free tier compatible</strong></td>
+    <td>Yes</td>
+    <td>No (requires Pro or 2nd org)</td>
+  </tr>
+  <tr>
+    <td><strong>Preview deployment data</strong></td>
+    <td>Shares Dev database</td>
+    <td>Isolated Staging database</td>
+  </tr>
+  <tr>
+    <td><strong>Best for</strong></td>
+    <td>Solo developers, early stage</td>
+    <td>Teams, external testers, pre-launch</td>
+  </tr>
+  <tr>
+    <td><strong>Can upgrade later</strong></td>
+    <td>Yes → 3-env</td>
+    <td>N/A</td>
+  </tr>
+</table>
+
+<h3>2-Environment Architecture</h3>
+
+<div class="file-structure">
+Developer Machine                              Vercel Production
+      |                                              |
+      v                                              v
+[Next.js Dev Server]                         [Production Deploy]
+      |                                              |
+      +--- Vercel Preview Deploys ---+               |
+      |                              |               |
+      v                              v               v
+[Supabase DEV] <---- shared -----> [Supabase DEV]  [Supabase PROD]
+      |                                              |
+      v                                              v
+[Stripe TEST mode]                           [Stripe LIVE mode]
+</div>
+
+<p><em>In this setup, local development and Vercel preview deployments share the Dev Supabase project. Production is fully isolated.</em></p>
+
+<h3>3-Environment Architecture</h3>
+
+<div class="file-structure">
+Developer Machine          Vercel Preview           Vercel Production
+      |                         |                         |
+      v                         v                         v
+[Next.js Dev Server]    [Preview Deploy]          [Production Deploy]
+      |                         |                         |
+      v                         v                         v
+[Supabase DEV]          [Supabase STAGING]        [Supabase PROD]
+      |                         |                         |
+      v                         v                         v
+[Stripe TEST mode]      [Stripe TEST mode]        [Stripe LIVE mode]
+</div>
+
+<p><em>In this setup, each environment has its own isolated Supabase project. Preview testers don't affect development data.</em></p>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A clear understanding of which environment configuration fits your needs.</p>
+  <p><strong>Decision made:</strong> You've chosen either 2-environment or 3-environment setup based on your Supabase plan and collaboration needs.</p>
+  <p><strong>Next:</strong> Review your Supabase project configuration (if already created in Ch 16) or set up projects following the appropriate path below.</p>
+</div>
+
+<h2 id="section-18-2">18.2 Database Migration Workflow</h2>
+
+<p>Migrations are version-controlled SQL files that evolve your database schema. This section covers creating migrations, applying them across environments, and best practices for safe schema changes. Following this workflow ensures your database changes are reproducible and coordinated.</p>
+
+<h3>Setting Up Supabase CLI for Migrations</h3>
+
+<div class="code-block"># Initialize Supabase in your project (if not done)
+supabase init
+
+# Link to your Development project
+supabase link --project-ref [your-dev-project-ref]
+# Project ref is found in: supabase.com/dashboard/project/[ref]</div>
+
+<h3>Creating a New Migration</h3>
+
+<div class="code-block"># Create a new migration file
+supabase migration new add_user_profiles_table
+
+# This creates: supabase/migrations/[timestamp]_add_user_profiles_table.sql</div>
+
+<h3>Applying Migrations</h3>
+
+<h4>To Development (remote)</h4>
+
+<div class="code-block">supabase db push
+# Applies all pending migrations to your linked (Dev) project</div>
+
+<h3>Migration Best Practices</h3>
+
+<div class="checklist">
+  <h4>Migration Checklist</h4>
+  <ul>
+    <li>Each migration should be atomic (one logical change)</li>
+    <li>Consider rollback strategy for each migration</li>
+    <li>Always enable RLS on new tables</li>
+    <li>Test migration on Dev before Staging</li>
+    <li>Test migration on Staging before Production</li>
+    <li>Create production backup before applying</li>
+    <li>Commit migration files to version control</li>
+  </ul>
+</div>
+
+<h2 id="section-18-3">18.3 Troubleshooting Common Issues</h2>
+
+<p>This section covers common problems you may encounter with your multi-environment setup and how to resolve them. Keep this as a reference when debugging connection or configuration issues.</p>
+
+<h3>Issue: "Invalid API key" errors</h3>
+<ul>
+  <li><strong>Cause:</strong> Wrong Supabase environment variables</li>
+  <li><strong>Fix:</strong> Verify you're using the correct project's keys for each environment</li>
+  <li><strong>Check:</strong> Ensure <code>NEXT_PUBLIC_SUPABASE_URL</code> matches the expected project</li>
+</ul>
+
+<h3>Issue: Auth redirects to wrong URL</h3>
+<ul>
+  <li><strong>Cause:</strong> Site URL not configured in Supabase Auth settings</li>
+  <li><strong>Fix:</strong> Add the deployment URL to Supabase → Authentication → URL Configuration → Redirect URLs</li>
+  <li><strong>For Preview:</strong> Add wildcard pattern <code>https://*-[your-vercel-username].vercel.app/**</code></li>
+</ul>
+
+<h3>Issue: RLS blocking all queries</h3>
+<ul>
+  <li><strong>Cause:</strong> Missing or incorrect RLS policies</li>
+  <li><strong>Fix:</strong> Check policies in Supabase → Authentication → Policies</li>
+  <li><strong>Debug:</strong> Temporarily use service role key (server-side only) to verify data exists</li>
+</ul>
+
+<h3>Issue: Stripe webhooks failing</h3>
+<ul>
+  <li><strong>Cause:</strong> Wrong webhook secret or URL</li>
+  <li><strong>Fix:</strong> Verify <code>STRIPE_WEBHOOK_SECRET</code> matches the endpoint's signing secret</li>
+  <li><strong>Debug:</strong> Check Stripe Dashboard → Webhooks → Recent events for error details</li>
+</ul>
+
+<h3>Issue: Environment variables not updating</h3>
+<ul>
+  <li><strong>Cause:</strong> Vercel caches environment variables per deployment</li>
+  <li><strong>Fix:</strong> Trigger a new deployment after changing env vars</li>
+  <li><strong>Quick fix:</strong> Vercel Dashboard → Deployments → Redeploy</li>
+</ul>
+
+<h2 id="section-18-4">18.4 Chapter Summary</h2>
+
+<p>You've completed the multi-environment configuration. Here's what you accomplished:</p>
+
+<ul>
+  <li>Chose between 2-environment and 3-environment setups based on your needs</li>
+  <li>Configured Supabase projects with proper auth URLs and RLS</li>
+  <li>Set up local development connected to cloud infrastructure</li>
+  <li>Configured Vercel environment variables for each deployment scope</li>
+  <li>Learned how preview deployments work in your chosen setup</li>
+  <li>Established database migration workflows</li>
+  <li>Have troubleshooting knowledge for common issues</li>
+</ul>
+
+<p>Your development and deployment infrastructure is now professional-grade. You can develop locally, test via preview deployments, and deploy to production with confidence.</p>
+
+<h1 id="chapter-19">Chapter 19: Build Contract Introduction</h1>
+
+<p>In this chapter, you'll understand the purpose and value of the Build Contract—a bridge document that compresses your design artifacts into a structured reference optimized for implementation. By the end of this chapter, you'll understand why this document is essential and how it improves your development workflow.</p>
+
+<h2 id="section-19-1">19.1 What is the Build Contract?</h2>
+
+<p>The Build Contract is a bridge document that compresses your design artifacts (Design Brief, UX Package, UI System, Architecture) into a structured reference optimized for implementation. It extracts decisions from exploration-focused documents and organizes them for quick lookup during coding.</p>
+
+<div class="moai-box">
+  <h4>Why Build Contract?</h4>
+  <p>Design artifacts are optimized for exploration. But during implementation, you need quick reference to decisions made. The Build Contract extracts the "what" and organizes it for implementation lookup. SPECs reference Build Contract sections rather than hunting through multiple design documents.</p>
+</div>
+
+<h2 id="section-19-2">19.2 Benefits Comparison</h2>
+
+<p>The Build Contract significantly improves the implementation experience by providing a single, canonical reference:</p>
+
+<table class="comparison-table">
+  <tr><th>Without Build Contract</th><th>With Build Contract</th></tr>
+  <tr><td>SPECs reference multiple documents</td><td>SPECs reference single source</td></tr>
+  <tr><td>~15-20K tokens for design context</td><td>~2-5K tokens for relevant sections</td></tr>
+  <tr><td>Inconsistent terminology possible</td><td>Single canonical vocabulary</td></tr>
+</table>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The Build Contract serves as a compressed, implementation-ready reference that reduces context overhead and ensures consistency.</p>
+  <p><strong>Key insight:</strong> Design documents help you explore and decide. The Build Contract helps you implement what you decided.</p>
+  <p><strong>Next:</strong> Chapter 20 — Learn the seven standard sections of every Build Contract.</p>
+</div>
+
+<h2 id="section-19-3">19.3 Chapter Summary</h2>
+
+<p>You've learned the purpose of the Build Contract. Key takeaways:</p>
+
+<ul>
+  <li>The Build Contract bridges design exploration and implementation</li>
+  <li>It compresses multiple design artifacts into a single reference</li>
+  <li>SPECs reference Build Contract sections for efficient context lookup</li>
+  <li>Using a Build Contract reduces token overhead by 70-80%</li>
+</ul>
+
+<p>In the next chapter, you'll learn the seven standard sections that every Build Contract contains.</p>
+
+<h1 id="chapter-20">Chapter 20: Build Contract Structure</h1>
+
+<p>In this chapter, you'll learn the seven standard sections that every Build Contract contains. Understanding this structure helps you know what to expect and how to reference specific sections during implementation. By the end of this chapter, you'll know exactly what information each section provides.</p>
+
+<h2 id="section-20-1">20.1 The Seven Sections</h2>
+
+<p>Every Build Contract contains these seven standard sections, each serving a specific implementation purpose:</p>
+
+<ol>
+  <li><strong>Vocabulary</strong>: Canonical terms used throughout the product — ensures consistent naming in code</li>
+  <li><strong>User Model</strong>: User types, permissions, authentication, core flows — defines auth requirements</li>
+  <li><strong>Screen Inventory</strong>: Complete list of screens with routes — maps UI to file structure</li>
+  <li><strong>Component Specifications</strong>: Key component behaviors and states — guides component implementation</li>
+  <li><strong>Data Model</strong>: Database entities, columns, types, constraints — defines schema</li>
+  <li><strong>API Surface</strong>: All API routes with methods and auth requirements — specifies endpoints</li>
+  <li><strong>Quality Standards</strong>: Code structure, security, testing requirements — sets implementation bar</li>
+</ol>
+
+<h2 id="section-20-2">20.2 How SPECs Reference Sections</h2>
+
+<p>During implementation, SPECs reference specific Build Contract sections. For example:</p>
+
+<ul>
+  <li>"User authentication flow per Build Contract Section 2 (User Model)"</li>
+  <li>"Database schema per Build Contract Section 5 (Data Model)"</li>
+  <li>"API endpoint structure per Build Contract Section 6 (API Surface)"</li>
+</ul>
+
+<p>This targeted referencing keeps SPECs concise while maintaining full traceability to design decisions.</p>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The seven sections of a Build Contract and how each supports implementation work.</p>
+  <p><strong>How to validate:</strong> You can explain what information you'd find in each of the seven sections.</p>
+  <p><strong>Next:</strong> Chapter 21 — Generate your Build Contract from your design artifacts.</p>
+</div>
+
+<h2 id="section-20-3">20.3 Chapter Summary</h2>
+
+<p>You've learned the Build Contract structure. Key takeaways:</p>
+
+<ul>
+  <li>Seven standard sections cover all implementation needs</li>
+  <li>Each section extracts specific information from design artifacts</li>
+  <li>SPECs reference sections by number for efficient lookup</li>
+  <li>Consistent structure makes navigation predictable</li>
+</ul>
+
+<p>In the next chapter, you'll generate your Build Contract by prompting Claude Chat to synthesize your design artifacts.</p>
+
+<h1 id="chapter-21">Chapter 21: Generating the Build Contract</h1>
+
+<p>In this chapter, you'll generate your Build Contract by having Claude Chat synthesize your design artifacts into the seven-section structure. This is the final step before transitioning to Claude Code for implementation. By the end of this chapter, you'll have a complete Build Contract saved in your project's docs folder.</p>
+
+<h2 id="section-21-1">21.1 Build Contract Prompt</h2>
+
+<p>Start a fresh chat in Claude Chat for this synthesis task. A clean context ensures Claude focuses on extracting and organizing information rather than continuing previous discussions. Attach all four design artifacts so Claude can cross-reference them.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-new">New Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(fresh context for synthesis)</span>
+</div>
+<div class="prompt-block">I need you to generate a Build Contract from my design artifacts.
+
+Please analyze the attached design artifacts and create a Build Contract with these sections:
+
+1. **Vocabulary**: Extract all canonical terms from the Design Brief.
+   Format as table: | Term | Definition | Usage Context |
+
+2. **User Model**: Extract user types, auth, and flows from UX Package.
+
+3. **Screen Inventory**: Extract all screens with routes from UI System.
+   Format as table: | Screen | Route | Purpose | Key Components |
+
+4. **Component Specifications**: Extract key component behaviors from UI System.
+
+5. **Data Model**: Extract entities and relationships from Architecture.
+   Format as table: | Table | Columns | Constraints | RLS Policy |
+
+6. **API Surface**: Extract all API routes from Architecture.
+   Format as table: | Route | Method | Purpose | Auth Required |
+
+7. **Quality Standards**: Compile standards from all documents.
+
+[Attach: Design Brief, UX Package, UI System, Architecture Document]
+
+Output in markdown format, ready to save as docs/build-contract.md.</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete Build Contract document (typically 2,000-4,000 words) with all seven sections populated from your design artifacts.</p>
+  <p><strong>How to validate:</strong> Each section should have substantive content. Vocabulary should list 10+ terms. Screen Inventory should match your UX Package. Data Model should match your Architecture schema.</p>
+  <p><strong>Next:</strong> Save the Build Contract to your project.</p>
+</div>
+
+<h2 id="section-21-2">21.2 Save the Build Contract</h2>
+
+<p>The Build Contract must be saved in your project's docs folder so Claude Code can reference it during implementation. This is the critical bridge file between design and implementation phases.</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Copy the complete Build Contract output from Claude Chat</li>
+  <li>Save as <code>docs/build-contract.md</code></li>
+</ol>
+
+<div class="note">
+  <strong>Bridge Complete:</strong> With the Build Contract saved, you now have all design artifacts ready in your <code>docs/</code> folder. Claude Code will reference these during implementation.
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/build-contract.md</code> containing your complete Build Contract with all seven sections.</p>
+  <p><strong>How to validate:</strong> Open the file and verify all seven sections are present and populated. The file should be 150+ lines of structured markdown.</p>
+  <p><strong>Next:</strong> Chapter 22 — Set up your development environment for Claude Code implementation.</p>
+</div>
+
+<h2 id="section-21-3">21.3 Chapter Summary</h2>
+
+<p>You've completed the Build Contract phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Generated a Build Contract from your design artifacts</li>
+  <li>Synthesized vocabulary, user model, screens, components, data model, API surface, and quality standards</li>
+  <li>Saved the bridge document for Claude Code to reference</li>
+</ul>
+
+<p>The Build Contract is complete. You now have the bridge between design and implementation. In the next chapter, you'll set up your development environment and transition to Claude Code for the Build Phase.</p>
+
+<h1 id="chapter-22">Chapter 22: The Critical Transition</h1>
+
+<p>In this chapter, you'll transition from design exploration to implementation. This is the most important setup moment in the entire project—you'll configure your development environment, create the CLAUDE.md file, set up your documentation structure, and verify everything is ready for Claude Code. By the end of this chapter, you'll be ready to begin the Build Phase.</p>
+
+<p>You've completed all planning artifacts: Design Brief, UX Package, UI System, Architecture Document, and Build Contract. <strong>Now you're transitioning from exploration to implementation.</strong></p>
+
+<div class="warning">
+  <h4>Tool Transition Point</h4>
+  <p>Everything before this point was done in <strong>Claude Chat</strong> (web interface) — it's optimized for exploration, iteration, and document generation.</p>
+  <p>Everything after this point will be done in <strong>Claude Code</strong> (CLI tool) — it's optimized for implementation, file editing, and test execution.</p>
+  <p><strong>Do not skip this setup.</strong> Without proper environment configuration, Claude Code won't have the context it needs to implement your design correctly.</p>
+</div>
+
+<h2 id="section-22-1">22.1 What You Should Have Ready</h2>
+
+<p>Before proceeding with environment setup, verify you have all the artifacts from previous chapters. Missing artifacts will cause problems during implementation. Confirm you have these artifacts saved in your <code>docs/</code> folder:</p>
+
+<div class="checklist">
+  <h4>Pre-Implementation Checklist</h4>
+  <ul>
+    <li><code>docs/one-pager.md</code> — Business One-Pager (Chapter 6)</li>
+    <li><code>docs/design-brief.md</code> — Design Brief with Vocabulary section (Chapter 7)</li>
+    <li><code>docs/ux-package.md</code> — UX Package with user flows and screens (Chapters 9-10)</li>
+    <li><code>docs/ui-system.md</code> — UI System with component specs (Chapters 11-12)</li>
+    <li><code>docs/architecture.md</code> — Architecture with schema and API design (Chapter 13)</li>
+    <li><code>docs/build-contract.md</code> — Build Contract (Chapter 21)</li>
+  </ul>
+</div>
+
+<div class="code-block">docs/
+├── one-pager.md        # Business model and strategy
+├── design-brief.md     # Product vision and vocabulary
+├── ux-package.md       # User flows and screen inventory
+├── ui-system.md        # Visual design system
+├── architecture.md     # Technical architecture
+└── build-contract.md   # Implementation reference</div>
+
+<p>If any of these are missing or incomplete, go back to the relevant chapter and complete them. The Build Phase assumes all design decisions have been made.</p>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> All six design artifacts saved in your docs/ folder, ready to be referenced by Claude Code.</p>
+  <p><strong>How to validate:</strong> Run <code>ls docs/</code> in your project directory. You should see all six .md files listed.</p>
+  <p><strong>Next:</strong> Create the CLAUDE.md file that provides context to Claude Code.</p>
+</div>
+
+<h2 id="section-22-2">22.2 The CLAUDE.md File</h2>
+
+<p>In this section, you'll create the CLAUDE.md file—Claude Code's primary context file. This file tells Claude about your project's architecture, conventions, and quality standards. <strong>Without this file, every Claude Code session starts from scratch with no project knowledge.</strong></p>
+
+<h3>Why CLAUDE.md Matters</h3>
+
+<table class="comparison-table">
+  <tr><th>Without CLAUDE.md</th><th>With CLAUDE.md</th></tr>
+  <tr><td>Claude guesses at conventions</td><td>Claude follows your established patterns</td></tr>
+  <tr><td>You repeat context every session</td><td>Context persists across sessions</td></tr>
+  <tr><td>Inconsistent code style</td><td>Consistent with your standards</td></tr>
+  <tr><td>No awareness of your architecture</td><td>Knows your stack, schema, API patterns</td></tr>
+</table>
+
+<h3>Generate CLAUDE.md</h3>
+
+<p>Rather than manually creating CLAUDE.md, generate it from your design artifacts. This ensures consistency between your documentation and Claude Code's context.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-new">New Session</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(first Claude Code task)</span>
+</div>
+<div class="prompt-block">Generate a CLAUDE.md file for this project by reading the design artifacts in docs/.
+
+Read these files:
+- docs/design-brief.md (for vocabulary, user types, product overview)
+- docs/architecture.md (for tech stack, folder structure, API patterns, database conventions)
+- docs/build-contract.md (for quality standards, component specs)
+
+Generate CLAUDE.md at project root with these sections:
+
+1. **Project Overview**: Brief description from design-brief.md
+2. **Technology Stack**: Extract from architecture.md
+3. **Project Structure**: Folder layout from architecture.md Project Structure section
+4. **Code Standards**: Quality requirements from build-contract.md
+5. **Database Conventions**: Naming, RLS policies from architecture.md
+6. **API Conventions**: Route patterns, validation from architecture.md
+7. **Key Commands**: Standard npm scripts (dev, build, test, lint, type-check)
+8. **Vocabulary**: Canonical terms from design-brief.md Section 2
+9. **Current Sprint Focus**: Set to "M1 - Project Setup"
+10. **Project Artifacts**: List all docs/*.md files with descriptions
+11. **SPEC Convention**: Note that test files must include `// SPEC: SPEC-XXX-NNN` comment
+
+Keep the file concise (~2-5K tokens). Focus on actionable context, not prose.</div>
+
+<div class="note">
+  <strong>Keep CLAUDE.md Updated:</strong> As your project evolves, update this file. Add new patterns you establish, document decisions, and update the "Current Sprint Focus" section when you change milestones.
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A CLAUDE.md file at your project root containing project-specific context generated from your design artifacts.</p>
+  <p><strong>How to validate:</strong> Run <code>claude "Read CLAUDE.md and summarize the project"</code> — Claude should correctly describe your project's purpose, tech stack, and key terminology.</p>
+  <p><strong>Next:</strong> Complete the verification checklist to confirm everything is ready.</p>
+</div>
+
+<h2 id="section-22-3">22.3 Verification Checklist</h2>
+
+<p>In this section, you'll verify your entire environment setup is complete. Every item must pass before starting Milestone 1—skipping verification risks implementation problems that are hard to debug later. Verify your environment is ready:</p>
+
+<div class="checklist">
+  <h4>Environment Ready Checklist</h4>
+  <ul>
+    <li><strong>Project created</strong>: Next.js app with TypeScript, Tailwind, App Router</li>
+    <li><strong>Git initialized</strong>: At least one commit with clean working tree</li>
+    <li><strong>CLAUDE.md exists</strong>: At project root with your project details filled in</li>
+    <li><strong>TECH-DEBT.md exists</strong>: At project root for tracking technical debt</li>
+    <li><strong>docs/ folder exists</strong>: Contains build-contract.md at minimum</li>
+    <li><strong>docs/specs/ folder exists</strong>: Empty, ready for SPECs</li>
+    <li><strong>Claude Code installed</strong>: `claude --version` returns version number</li>
+    <li><strong>Test Claude Code</strong>: Run `claude "Read CLAUDE.md and summarize the project"` — it should correctly describe your project</li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Ready for Build Phase</h4>
+  <p>If all items are checked, you're ready to begin Milestone 1. Open your terminal in the project directory and start Claude Code. Your first task will be writing SPEC-SETUP-001 for project initialization.</p>
+</div>
+
+<h2 id="section-22-4">22.4 Chapter Summary</h2>
+
+<p>You've completed the Critical Transition and Development Environment Setup. Here's what you accomplished:</p>
+
+<ul>
+  <li>Verified all design artifacts are ready for implementation</li>
+  <li>Created the Next.js project with recommended stack</li>
+  <li>Generated CLAUDE.md to provide project context to Claude Code</li>
+  <li>Set up the documentation folder structure for artifacts and SPECs</li>
+  <li>Committed your foundation structure</li>
+  <li>Installed and configured Claude Code</li>
+  <li>Verified your environment passes all readiness checks</li>
+  <li>Learned how to integrate Claude Projects with Claude Code workflow</li>
+</ul>
+
+<p>Your development environment is fully configured. You're now ready to begin the Build Phase in Part 3, starting with Milestone 1: Project Setup and your first SPECs.</p>
+
+</article>
+
+</body>
+</html>

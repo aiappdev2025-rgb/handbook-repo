@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 2: Design - AI SaaS Handbook</title>
+  <style>
+/* AI SaaS Handbook - Shared Styles v3.0 */
+
+/* =============================================
+   CSS Variables
+   ============================================= */
+:root {
+  /* Primary colors */
+  --primary: #1a365d;
+  --secondary: #2c5282;
+  --accent: #2d3748;
+
+  /* Text colors */
+  --text: #1a202c;
+  --muted: #718096;
+
+  /* Backgrounds */
+  --bg: #ffffff;
+  --surface: #f7fafc;
+  --border: #e2e8f0;
+
+  /* Code blocks */
+  --code-bg: #1e1e1e;
+  --code-text: #d4d4d4;
+
+  /* Prompts */
+  --prompt-bg: #fefce8;
+  --prompt-border: #facc15;
+  --prompt-bg-alt: #fffbeb;
+  --prompt-border-alt: #d69e2e;
+
+  /* Status colors */
+  --success: #10b981;
+  --success-bg: #d1fae5;
+  --warning: #f59e0b;
+  --warning-bg: #fef3c7;
+  --error: #ef4444;
+  --error-bg: #fee2e2;
+  --info: #4299e1;
+  --info-bg: #bee3f8;
+
+  /* Special colors */
+  --moai: #7c3aed;
+  --moai-bg: #f3e8ff;
+  --moai-border: #9f7aea;
+  --checkpoint-bg: #ede9fe;
+  --checkpoint-border: #8b5cf6;
+  --admin-bg: #fdf4ff;
+  --admin-border: #d946ef;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --content-max-width: 950px;
+}
+
+/* =============================================
+   Reset & Base
+   ============================================= */
+* { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+}
+
+/* =============================================
+   Layout
+   ============================================= */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* =============================================
+   Typography
+   ============================================= */
+h1 {
+  color: var(--primary);
+  font-size: 2rem;
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+}
+
+h2 {
+  color: var(--secondary);
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--accent);
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+h4 {
+  color: var(--accent);
+  font-size: 1.1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+h5 {
+  color: var(--accent);
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+h6 {
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+p { margin: 1rem 0; }
+
+ul, ol {
+  margin: 1rem 0;
+  padding-left: 1.75rem;
+}
+
+li { margin: 0.4rem 0; }
+
+a { color: var(--secondary); }
+a:hover { color: var(--primary); }
+
+code {
+  background: var(--surface);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9em;
+}
+
+/* =============================================
+   Table of Contents
+   ============================================= */
+.toc {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+}
+
+.toc h2 {
+  margin-top: 0;
+}
+
+.toc ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.toc li {
+  margin: 0.75rem 0;
+}
+
+.toc a {
+  text-decoration: none;
+  color: var(--secondary);
+  font-weight: 500;
+}
+
+.toc a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* =============================================
+   Page Header
+   ============================================= */
+.page-header {
+  text-align: center;
+  padding: 3rem 0;
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  border: none;
+  margin: 0;
+  color: #be185d;
+}
+
+.page-header .subtitle {
+  font-size: 1.25rem;
+  color: #9f1239;
+  margin-top: 0.5rem;
+}
+
+/* =============================================
+   Chapter Sections
+   ============================================= */
+.chapter-section {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border);
+}
+
+.chapter-section:first-of-type {
+  border-top: none;
+  margin-top: 2rem;
+}
+
+/* =============================================
+   Prompt Containers
+   ============================================= */
+.prompt-container {
+  background: var(--prompt-bg);
+  border: 2px solid var(--prompt-border);
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.prompt-header {
+  background: var(--prompt-border);
+  color: var(--text);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prompt-header .copy-hint {
+  font-size: 0.8rem;
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+.prompt-content {
+  padding: 1.5rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.prompt-block {
+  background: var(--prompt-bg-alt);
+  border-left: 4px solid var(--prompt-border-alt);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  font-family: 'Consolas', monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* =============================================
+   Code Blocks
+   ============================================= */
+.code-block {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 1.25rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+/* =============================================
+   Alert Boxes
+   ============================================= */
+.warning,
+.warning-box {
+  background: var(--warning-bg);
+  border-left: 4px solid var(--warning);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.warning-box strong {
+  color: var(--error);
+}
+
+.note,
+.note-box {
+  background: var(--info-bg);
+  border-left: 4px solid var(--info);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.success,
+.success-box {
+  background: var(--success-bg);
+  border-left: 4px solid var(--success);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* =============================================
+   Special Boxes
+   ============================================= */
+.checklist {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.checklist h4 {
+  margin-top: 0;
+}
+
+.prerequisites {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1rem 0;
+}
+
+.prerequisites h4 {
+  margin-top: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* =============================================
+   Tables
+   ============================================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.comparison-table th,
+.comparison-table td {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.comparison-table th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+.comparison-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* =============================================
+   Badges
+   ============================================= */
+.tool-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.badge-chat {
+  background: #e9d8fd;
+  color: #553c9a;
+}
+
+.badge-code {
+  background: #c6f6d5;
+  color: #276749;
+}
+
+.session-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.session-new {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.session-same {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* =============================================
+   Prompt Indicator
+   ============================================= */
+.prompt-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* =============================================
+   Print Styles
+   ============================================= */
+@media print {
+  body {
+    max-width: none;
+  }
+
+  .toc {
+    break-after: page;
+  }
+
+  .chapter-section {
+    break-before: page;
+  }
+
+  h1 {
+    break-after: avoid;
+  }
+
+  h2, h3, h4 {
+    break-after: avoid;
+  }
+}
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Phase 2: Design</h1>
+    <p class="subtitle">Chapters 8-12 | AI SaaS Handbook</p>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#chapter-8">Chapter 8: Design Philosophy</a></li>
+      <li><a href="#chapter-9">Chapter 9: UX Package</a></li>
+      <li><a href="#chapter-10">Chapter 10: UX Critique and Validation</a></li>
+      <li><a href="#chapter-11">Chapter 11: UI System</a></li>
+      <li><a href="#chapter-12">Chapter 12: Visual Direction Options</a></li>
+    </ul>
+  </div>
+
+  <!-- Chapter 8: Design Philosophy -->
+  <div class="chapter-section">
+    <article>
+
+<h1 id="chapter-8">Chapter 8: Design Philosophy</h1>
+
+<p>In this chapter, you'll establish the design philosophy that guides all UX decisions throughout your product. These principles ensure consistency and quality across your entire application, preventing the "design by committee" feel that plagues many products. By the end of this chapter, you'll have a clear set of principles that inform every design decision.</p>
+
+<h2 id="section-8-1">8.1 Design Philosophy</h2>
+
+<p>Before diving into screen specifications, it's important to establish the design philosophy that guides all UX decisions. These principles ensure consistency and quality across your entire application.</p>
+
+<p>Good design is invisible. Users should accomplish their goals without thinking about the interface. Every screen should have a clear purpose, every element should earn its place, and every interaction should feel natural.</p>
+
+<h3>Core Principles</h3>
+<ul>
+  <li><strong>Clarity over Cleverness:</strong> Obvious is better than innovative. Users shouldn't have to think about how to use your product.</li>
+  <li><strong>Progressive Disclosure:</strong> Show what's needed, hide complexity. Don't overwhelm users with options they don't need yet.</li>
+  <li><strong>Consistent Patterns:</strong> Same action, same behavior everywhere. Users learn once, apply everywhere.</li>
+  <li><strong>Forgiving Design:</strong> Easy to recover from mistakes. Undo, confirm destructive actions, provide clear error messages.</li>
+  <li><strong>Performance as Feature:</strong> Fast feels professional. Every interaction should feel instant.</li>
+</ul>
+
+<h3>Applying the Principles</h3>
+
+<p>These principles should be applied at every design decision point:</p>
+
+<ul>
+  <li><strong>When adding a feature:</strong> Does it earn its place? Is it solving a real user need?</li>
+  <li><strong>When designing a flow:</strong> Is the path obvious? Are there unnecessary steps?</li>
+  <li><strong>When choosing copy:</strong> Is it clear? Does it help the user accomplish their goal?</li>
+  <li><strong>When defining states:</strong> What happens on error? What about empty states?</li>
+</ul>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The five core design principles and how they guide decision-making throughout UX design.</p>
+  <p><strong>What you should have:</strong> A clear philosophy to reference when making design decisions in subsequent chapters.</p>
+  <p><strong>Next:</strong> Chapter 9 — Create the UX Package that applies these principles to your specific product.</p>
+</div>
+
+<h2 id="section-8-2">8.2 Chapter Summary</h2>
+
+<p>You've established your design philosophy. Key principles:</p>
+
+<ul>
+  <li><strong>Clarity over Cleverness:</strong> Make the obvious choice</li>
+  <li><strong>Progressive Disclosure:</strong> Reveal complexity gradually</li>
+  <li><strong>Consistent Patterns:</strong> Build user expectations and meet them</li>
+  <li><strong>Forgiving Design:</strong> Make recovery easy</li>
+  <li><strong>Performance as Feature:</strong> Fast feels professional</li>
+</ul>
+
+<p>In the next chapter, you'll apply these principles to create a comprehensive UX Package for your product.</p>
+
+    </article>
+  </div>
+
+  <!-- Chapter 9: UX Package -->
+  <div class="chapter-section">
+    <article>
+
+<h1 id="chapter-9">Chapter 9: UX Package</h1>
+
+<p>In this chapter, you'll create the UX Package—a comprehensive document that defines every screen, flow, and interaction state in your application. This serves as the blueprint for UI design and development. By the end of this chapter, you'll have a complete user experience specification that answers every "what happens when..." question a developer might have.</p>
+
+<h2 id="section-9-1">9.1 UX Package Purpose</h2>
+
+<p>The UX Package defines the complete user experience: all screens, all flows, all states. It serves as the blueprint for UI design and development. This document answers every question a developer might have about "what happens when..." scenarios.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a comprehensive UX specification covering information architecture, screen inventory, user flows, component behaviors, and responsive behavior.</p>
+
+<h2 id="section-9-2">9.2 UX Package Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you created the Design Brief. This ensures the UX Package uses the exact vocabulary and flows defined in your brief. Claude will expand on the core flows to define every screen and state.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues from Design Brief)</span>
+</div>
+<div class="prompt-block">Create a UX Package for [PRODUCT NAME].
+
+**Design Brief**: [ATTACH OR REFERENCE]
+
+The UX Package should include:
+
+**SECTION 1: Information Architecture**
+- Site map showing all screens/routes
+- Navigation structure
+- User flow diagrams
+
+**SECTION 2: Screen Inventory**
+For each screen:
+- Screen name and route
+- Purpose (what user accomplishes)
+- Entry points (how user arrives)
+- Exit points (where user goes next)
+- Key components
+- Data displayed/collected
+- Actions available
+- Error states
+- Loading states
+- Empty states
+
+**SECTION 3: User Flows**
+For each core flow from Design Brief:
+- Step-by-step sequence
+- Decision points
+- Error recovery paths
+- Success confirmation
+
+**SECTION 4: Component Behaviors**
+- Form validation rules
+- Confirmation dialogs (when and what)
+- Notification patterns
+- Loading indicators
+
+**SECTION 5: Responsive Behavior**
+- Breakpoints
+- What changes at each breakpoint
+- Mobile-specific interactions
+
+Output in markdown format, ready to save as docs/ux-package.md.</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A comprehensive UX Package document (typically 2,000-4,000 words) covering all five sections: information architecture, screen inventory, user flows, component behaviors, and responsive behavior.</p>
+  <p><strong>How to validate:</strong> The Screen Inventory should list every screen in your app with all states defined (loading, empty, error). User Flows should trace complete paths from entry to success.</p>
+  <p><strong>Next:</strong> Save the UX Package, then critique it for issues.</p>
+</div>
+
+<h2 id="section-9-3">9.3 Save the UX Package</h2>
+
+<p>Save the initial UX Package before the critique phase. You'll update this same file after incorporating feedback from the critique.</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Copy the complete UX Package output from Claude Chat</li>
+  <li>Save as <code>docs/ux-package.md</code></li>
+</ol>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/ux-package.md</code> containing your initial UX Package.</p>
+  <p><strong>How to validate:</strong> Open the file and verify all five sections are present. Count the screens in your Screen Inventory—a typical MVP has 8-15 screens.</p>
+  <p><strong>Next:</strong> Chapter 10 — Run the UX Critique to identify issues before they become implementation problems.</p>
+</div>
+
+<h2 id="section-9-4">9.4 Chapter Summary</h2>
+
+<p>You've created your UX Package. What you accomplished:</p>
+
+<ul>
+  <li>Defined information architecture with site map and navigation</li>
+  <li>Created screen inventory with all states (loading, empty, error)</li>
+  <li>Documented complete user flows with error recovery paths</li>
+  <li>Specified component behaviors and responsive breakpoints</li>
+</ul>
+
+<p>In the next chapter, you'll critique this UX Package to catch issues before they become expensive implementation problems.</p>
+
+    </article>
+  </div>
+
+  <!-- Chapter 10: UX Critique and Validation -->
+  <div class="chapter-section">
+    <article>
+
+<h1 id="chapter-10">Chapter 10: UX Critique and Validation</h1>
+
+<p>In this chapter, you'll validate your UX Package through a structured critique process to catch usability issues before building. A 10-minute critique now saves hours of rework later. By the end of this chapter, you'll have a refined UX Package that's ready for UI design and implementation.</p>
+
+<h2 id="section-10-1">10.1 UX Critique</h2>
+
+<p>Before proceeding to UI design, the UX Package should be critiqued for usability issues, missing states, and flow problems. This step catches design flaws that are expensive to fix during implementation.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(critique in same chat)</span>
+</div>
+<div class="prompt-block">Review this UX Package as a UX expert. Identify:
+
+1. **Usability Issues**: Friction points, confusing flows, cognitive overload
+2. **Missing States**: Empty states, error states, loading states not defined
+3. **Edge Cases**: Scenarios not covered
+4. **Accessibility Gaps**: Issues for users with disabilities
+5. **Mobile Considerations**: Touch targets, thumb zones, scrolling
+
+For each issue, suggest a specific improvement.
+
+[ATTACH UX PACKAGE]</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A critique report identifying specific issues across the five categories: usability, missing states, edge cases, accessibility, and mobile considerations.</p>
+  <p><strong>How to validate:</strong> The critique should identify at least 5-10 issues with specific, actionable improvement suggestions for each.</p>
+  <p><strong>Next:</strong> Incorporate the feedback into your UX Package.</p>
+</div>
+
+<h2 id="section-10-2">10.2 Decision Framework</h2>
+
+<p>Not every critique item needs immediate action. Use this framework to systematically evaluate each finding and decide whether to fix now, defer to a future version, or reject as not applicable.</p>
+
+<h3>Decision Matrix</h3>
+
+<table class="comparison-table">
+  <thead>
+    <tr>
+      <th>Fix Now</th>
+      <th>Defer</th>
+      <th>Rationale</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Blocks core user flow</td>
+      <td>Nice-to-have enhancement</td>
+      <td>Core flows must work for MVP</td>
+    </tr>
+    <tr>
+      <td>Creates confusion in money path</td>
+      <td>Affects edge case only</td>
+      <td>Money path (signup → payment → value) is critical</td>
+    </tr>
+    <tr>
+      <td>Violates accessibility baseline</td>
+      <td>Requires significant rework</td>
+      <td>Accessibility is non-negotiable</td>
+    </tr>
+    <tr>
+      <td>Simple fix (&lt; 1 hour impact)</td>
+      <td>Complex fix (multi-day impact)</td>
+      <td>Time-box MVP scope</td>
+    </tr>
+    <tr>
+      <td>Affects &gt;50% of users</td>
+      <td>Affects &lt;10% of users</td>
+      <td>Prioritize by impact</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Decision Questions</h3>
+
+<p>For each critique item, ask yourself:</p>
+
+<ol>
+  <li><strong>Does this block the core user journey?</strong> → Fix now</li>
+  <li><strong>Does this affect the money path</strong> (signup → payment → value delivery)? → Fix now</li>
+  <li><strong>Is this an accessibility violation?</strong> → Fix now</li>
+  <li><strong>Can I fix this in under an hour of design work?</strong> → Probably fix now</li>
+  <li><strong>Is this a "would be nice" enhancement?</strong> → Likely defer to v1.1</li>
+</ol>
+
+<div class="note">
+  <strong>Why This Matters:</strong> The UX Package feeds directly into the UI System and Build Contract. Unresolved UX issues become implementation problems. Deferred items need documentation so they're not forgotten.
+</div>
+
+<h2 id="section-10-3">10.3 Critique Review Template</h2>
+
+<p>Before generating the revised UX Package, work through each critique item manually. This ensures you've made deliberate decisions rather than blindly accepting or rejecting feedback.</p>
+
+<div class="code-block">## UX Critique Review - [Product Name]
+
+### Items to Fix (incorporate into revised UX Package)
+
+| # | Issue | Section Affected | How to Fix |
+|---|-------|------------------|------------|
+| 1 | [Issue from critique] | [e.g., User Flow 2.3] | [Brief fix approach] |
+| 2 | | | |
+| 3 | | | |
+
+### Items to Defer (document for future)
+
+| # | Issue | Why Deferred | Revisit When |
+|---|-------|--------------|--------------|
+| 1 | [Issue from critique] | [Rationale] | [e.g., v1.1, post-launch] |
+| 2 | | | |
+
+### Items to Reject (not actual issues)
+
+| # | Issue | Why Rejected |
+|---|-------|--------------|
+| 1 | [Issue from critique] | [e.g., Critic misunderstood context] |</div>
+
+<div class="warning">
+  <strong>Don't Skip This Step:</strong> It's tempting to jump straight to the revision prompt. But without this review, you risk either accepting bad suggestions or missing legitimate issues. Take 10-15 minutes to complete the template.
+</div>
+
+<h2 id="section-10-4">10.4 UX Package Revision Prompt</h2>
+
+<p>After completing the review template, use this prompt to generate a revised UX Package that incorporates all your fixes while maintaining the original structure.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues UX work)</span>
+</div>
+<div class="prompt-block">[ROLE: UX DESIGNER — Revise the UX Package based on critique findings]
+
+CONTEXT: I have completed a UX Package for [PRODUCT NAME] and run it through a UX Critic review. I've decided which issues to fix now vs. defer. I need you to generate a revised UX Package that incorporates all the fixes while maintaining the original structure.
+
+ORIGINAL UX PACKAGE:
+&lt;&lt;&lt;
+[Paste your complete UX Package from Stage 3.0]
+&gt;&gt;&gt;
+
+UX CRITIQUE FINDINGS:
+&lt;&lt;&lt;
+[Paste the full output from Stage 3.1 UX Critic]
+&gt;&gt;&gt;
+
+MY DECISIONS ON EACH ISSUE:
+
+Items to FIX (incorporate these improvements):
+&lt;&lt;&lt;
+[Paste your "Items to Fix" table from the review template]
+&gt;&gt;&gt;
+
+Items DEFERRED (note these for future):
+&lt;&lt;&lt;
+[Paste your "Items to Defer" table from the review template]
+&gt;&gt;&gt;
+
+Items REJECTED (ignore these):
+&lt;&lt;&lt;
+[Paste your "Items to Reject" table, or "None"]
+&gt;&gt;&gt;
+
+INSTRUCTIONS:
+1. Generate a COMPLETE revised UX Package (not just the changes)
+2. For each "Fix" item, update the relevant section with the improvement
+3. Maintain the exact same structure as the original UX Package
+4. Add a new section at the end: "Known Limitations &amp; Future Improvements" listing all deferred items
+5. Add a "Revision Notes" section documenting what changed from the original
+
+OUTPUT FORMAT:
+
+# UX Package - [Product Name]
+## Revision 1.1 (Post-Critique)
+
+[Complete revised UX Package with same structure as original]
+
+---
+
+## Revision Notes
+
+### Changes from v1.0
+| Section | Change | Rationale |
+|---------|--------|-----------|
+| [Section #] | [What changed] | [Why, referencing critique item] |
+
+### Known Limitations &amp; Future Improvements
+| Item | Description | Target Version |
+|------|-------------|----------------|
+| [Deferred item] | [Brief description] | [v1.1 / Post-launch / etc.] |</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A complete revised UX Package that incorporates all fixes, documents deferred items, and includes revision notes explaining what changed.</p>
+  <p><strong>How to validate:</strong> Compare the revision notes against your "Items to Fix" table. Every fix item should appear in the revision notes with a corresponding section change.</p>
+</div>
+
+<h2 id="section-10-5">10.5 Verification Checklist</h2>
+
+<p>After generating the revised UX Package, verify the revision is complete and correct:</p>
+
+<div class="checklist">
+  <h4>Revision Verification</h4>
+  <ul>
+    <li><input type="checkbox"> All "Fix" items have been incorporated</li>
+    <li><input type="checkbox"> No sections were accidentally removed from original</li>
+    <li><input type="checkbox"> User flows still make logical sense after changes</li>
+    <li><input type="checkbox"> State diagrams updated if flows changed</li>
+    <li><input type="checkbox"> Edge cases section updated if new cases identified</li>
+    <li><input type="checkbox"> "Known Limitations" section includes all deferred items</li>
+    <li><input type="checkbox"> Revision notes clearly document what changed</li>
+  </ul>
+</div>
+
+<h2 id="section-10-6">10.6 When to Re-run the Critic</h2>
+
+<p>After significant revisions, consider running the UX Critique prompt (Section 10.1) again on the revised package. This catches any new issues introduced by your changes.</p>
+
+<h3>Re-run the critic if:</h3>
+<ul>
+  <li>You made changes to the core user flow</li>
+  <li>You restructured the information architecture</li>
+  <li>You added new screens or states</li>
+  <li>The original critique had 5+ "critical" severity items</li>
+</ul>
+
+<h3>Skip re-running if:</h3>
+<ul>
+  <li>Changes were limited to copy/microcopy improvements</li>
+  <li>You only addressed minor flow tweaks</li>
+  <li>The original critique found no critical issues</li>
+</ul>
+
+<div class="note">
+  <strong>Iterate as Needed:</strong> Some products require 2-3 critique cycles before the UX Package is solid. This is normal for complex flows. Always update the same file rather than creating separate versions.
+</div>
+
+<h2 id="section-10-7">10.7 Save the Revised Package</h2>
+
+<p>Save the revised UX Package to your project. You can either replace the original or keep both versions for reference.</p>
+
+<h3>Options</h3>
+<ul>
+  <li><strong>Replace original:</strong> Save as <code>docs/ux-package.md</code> (recommended for active projects)</li>
+  <li><strong>Keep history:</strong> Save as <code>docs/ux-package-v1.1.md</code> and keep the original</li>
+</ul>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> An updated <code>docs/ux-package.md</code> that addresses all identified issues and documents deferred improvements.</p>
+  <p><strong>How to validate:</strong> Open the file and verify it includes the "Revision Notes" and "Known Limitations" sections at the end.</p>
+  <p><strong>Next:</strong> Chapter 11 — Create the UI System that defines visual design.</p>
+</div>
+
+<h2 id="section-10-8">10.8 Chapter Summary</h2>
+
+<p>You've completed the UX validation and revision phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Critiqued UX Package for usability, accessibility, and completeness issues</li>
+  <li>Applied decision framework to evaluate each critique finding</li>
+  <li>Documented fix/defer/reject decisions in review template</li>
+  <li>Generated revised UX Package with improvements incorporated</li>
+  <li>Documented known limitations for future versions</li>
+  <li>Verified the revision is complete and correct</li>
+</ul>
+
+<p>Your user experience is now fully specified, validated, and refined. The revised UX Package is ready to feed into the UI System in the next chapter.</p>
+
+    </article>
+  </div>
+
+  <!-- Chapter 11: UI System -->
+  <div class="chapter-section">
+    <article>
+
+<h1 id="chapter-11">Chapter 11: UI System</h1>
+
+<p>In this chapter, you'll create the UI System—your application's visual design language. This document defines colors, typography, spacing, and component specifications that ensure visual consistency across every screen. By the end of this chapter, you'll have a complete design system ready to guide implementation.</p>
+
+<div class="prerequisites">
+  <h4>Prerequisites</h4>
+  <ul>
+    <li><strong>Revised UX Package</strong> — Complete Chapter 10 including the UX Critique and Revision workflow. The UI System should be based on your <em>revised</em> UX Package (post-critique), not the original draft.</li>
+    <li><strong>Design Brief</strong> — From Chapter 7, defining brand direction and target audience.</li>
+  </ul>
+</div>
+
+<h2 id="section-11-1">11.1 UI System Purpose</h2>
+
+<p>The UI System defines the visual language: colors, typography, spacing, components. It ensures visual consistency across the entire application. Without a defined system, each screen risks becoming visually inconsistent, making the product feel unprofessional.</p>
+
+<p><strong>What you'll accomplish:</strong> Create a comprehensive UI System covering design tokens, component library, layout system, and visual direction.</p>
+
+<h2 id="section-11-2">11.2 UI System Prompt</h2>
+
+<p>Continue in the same Claude Chat session where you created the UX Package. This ensures the UI components align with the screens and flows you've already defined. Claude will create visual specifications for every component your UX requires.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(continues UX/UI work)</span>
+</div>
+<div class="prompt-block">Create a UI System for [PRODUCT NAME].
+
+**Design Brief**: [ATTACH]
+**UX Package**: [ATTACH]
+
+The UI System should define:
+
+**SECTION 1: Design Tokens**
+- Color palette (primary, secondary, semantic, neutrals)
+- Typography scale (font families, sizes, weights, line heights)
+- Spacing scale (4px base recommended)
+- Border radius scale
+- Shadow scale
+
+**SECTION 2: Component Library**
+For each component:
+- Visual design (all states)
+- Variants (sizes, styles)
+- Behavior specifications
+- Accessibility requirements
+
+Components needed:
+- Button (primary, secondary, ghost, destructive)
+- Input (text, email, password, textarea)
+- Select
+- Checkbox, Radio
+- Card
+- Modal
+- Toast/Notification
+- Table
+- Form field (with label, error, helper text)
+
+**SECTION 3: Layout System**
+- Grid system
+- Container widths
+- Page layouts
+- Responsive breakpoints
+
+**SECTION 4: Visual Direction**
+- Overall aesthetic (minimal, bold, playful, professional)
+- Photography/illustration style
+- Icon style
+- Motion principles
+
+Output in markdown format, ready to save as docs/ui-system.md.</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A comprehensive UI System document (typically 1,500-3,000 words) covering all four sections: design tokens, component library, layout system, and visual direction.</p>
+  <p><strong>How to validate:</strong> Design tokens should include specific values (hex codes, pixel sizes). Component library should define all states for each component (default, hover, active, disabled, error).</p>
+  <p><strong>Next:</strong> Save the UI System to your project.</p>
+</div>
+
+<h2 id="section-11-3">11.3 Save the UI System</h2>
+
+<p>Save the UI System so it can be referenced during implementation. Developers will use these specifications to build components that match your design vision exactly.</p>
+
+<h3>Instructions</h3>
+
+<ol>
+  <li>Copy the complete UI System output from Claude Chat</li>
+  <li>Save as <code>docs/ui-system.md</code></li>
+</ol>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A file at <code>docs/ui-system.md</code> containing your complete UI System.</p>
+  <p><strong>How to validate:</strong> Open the file and verify all four sections are present. Design tokens should have copy-pasteable values (e.g., <code>#1a365d</code>, <code>16px</code>, <code>1.5rem</code>).</p>
+  <p><strong>Next:</strong> Chapter 12 — Optionally explore visual direction alternatives.</p>
+</div>
+
+<h2 id="section-11-4">11.4 Chapter Summary</h2>
+
+<p>You've created your UI System. What you accomplished:</p>
+
+<ul>
+  <li>Defined design tokens for colors, typography, spacing, and shadows</li>
+  <li>Created component library with specifications for all UI elements</li>
+  <li>Established layout system with grid and breakpoints</li>
+  <li>Set visual direction for overall aesthetic</li>
+</ul>
+
+<p>In the next chapter, you can optionally explore alternative visual directions before committing to a final design.</p>
+
+    </article>
+  </div>
+
+  <!-- Chapter 12: Visual Direction Options -->
+  <div class="chapter-section">
+    <article>
+
+<h1 id="chapter-12">Chapter 12: Visual Direction Options</h1>
+
+<p>In this optional chapter, you'll explore multiple visual directions before committing to a final design. This step is recommended for products where visual appeal is a key differentiator. By the end of this chapter, you'll have confidence that you've chosen the right aesthetic for your audience.</p>
+
+<h2 id="section-12-1">12.1 Visual Direction Options (Optional)</h2>
+
+<p>For important projects, exploring multiple visual directions before committing helps ensure you choose the right aesthetic for your audience. This step is optional but recommended for products where visual appeal is a key differentiator.</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-chat">Claude Chat</span>
+  <span class="session-badge session-same">Same Chat</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(optional exploration)</span>
+</div>
+<div class="prompt-block">Present 3 distinct visual directions for [PRODUCT NAME]:
+
+**Direction A**: [Description - e.g., "Minimal and Professional"]
+**Direction B**: [Description - e.g., "Bold and Modern"]
+**Direction C**: [Description - e.g., "Warm and Approachable"]
+
+For each direction, provide:
+- Color palette (with hex codes)
+- Typography choices
+- Sample component (button, card)
+- Mood/feeling conveyed
+- Best suited for which audience</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Three distinct visual direction options, each with color palettes, typography, and sample components.</p>
+  <p><strong>How to validate:</strong> Each direction should feel noticeably different. If they all look similar, ask Claude to make the differences more pronounced.</p>
+  <p><strong>Next:</strong> Choose a direction and regenerate your UI System, or keep the original if you're satisfied.</p>
+</div>
+
+<h2 id="section-12-2">12.2 Choosing and Applying a Direction</h2>
+
+<p>If you explore multiple directions and choose one, ask Claude to regenerate the UI System with the chosen direction. Then update <code>docs/ui-system.md</code> with the new version.</p>
+
+<h3>When to Explore Alternatives</h3>
+
+<ul>
+  <li><strong>Do explore:</strong> Consumer products, brand-driven products, products competing on design</li>
+  <li><strong>Skip:</strong> Internal tools, B2B utilities, time-constrained MVPs</li>
+</ul>
+
+<h3>Making the Choice</h3>
+
+<p>Consider these factors when choosing a visual direction:</p>
+
+<ul>
+  <li><strong>Target audience:</strong> What resonates with them?</li>
+  <li><strong>Competitive positioning:</strong> How do competitors look? Differentiate or align?</li>
+  <li><strong>Brand values:</strong> What does your brand stand for?</li>
+  <li><strong>Implementation effort:</strong> Some directions require more custom work</li>
+</ul>
+
+<h2 id="section-12-3">12.3 Part I Complete</h2>
+
+<p>You've now completed Part I: Strategy & Design. Here's what you've created:</p>
+
+<ul>
+  <li><strong>Research:</strong> Market validation and competitive analysis</li>
+  <li><strong>Business One-Pager:</strong> Business model and go-to-market strategy</li>
+  <li><strong>Design Brief:</strong> Product vision and canonical vocabulary</li>
+  <li><strong>UX Package:</strong> Complete screen and flow specifications</li>
+  <li><strong>UI System:</strong> Visual design language and component specifications</li>
+</ul>
+
+<p>These design artifacts form the foundation for technical implementation. In Part 2, you'll use these documents to create the technical architecture, set up infrastructure, and generate the Build Contract that bridges design to code.</p>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> All design artifacts saved in your <code>docs/</code> folder: one-pager.md, design-brief.md, ux-package.md, ui-system.md.</p>
+  <p><strong>What's next:</strong> Part 2 — Architecture & Setup. Create the technical architecture and configure your development infrastructure.</p>
+</div>
+
+<h2 id="section-12-4">12.4 Chapter Summary</h2>
+
+<p>You've completed the UI System phase. Here's what you accomplished:</p>
+
+<ul>
+  <li>Defined design tokens for colors, typography, spacing, and shadows</li>
+  <li>Created a component library with specifications for all UI elements</li>
+  <li>Established a layout system with grid and breakpoints</li>
+  <li>Set visual direction for the overall aesthetic</li>
+  <li>Optionally explored alternative visual directions</li>
+</ul>
+
+<p>Your design system is complete. You now have all the design artifacts needed to move into technical implementation: Research, Business One-Pager, Design Brief, UX Package, and UI System. In Part 2, you'll use these documents to create the technical architecture and set up your development infrastructure.</p>
+
+    </article>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,3967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 4: Build - AI SaaS Handbook</title>
+  <style>
+/* AI SaaS Handbook - Complete Embedded Styles */
+:root {
+  --primary: #1a365d; --secondary: #2c5282; --accent: #2d3748; --text: #1a202c; --muted: #718096;
+  --bg: #ffffff; --surface: #f7fafc; --border: #e2e8f0; --code-bg: #1e1e1e; --code-text: #d4d4d4;
+  --prompt-bg: #fefce8; --prompt-border: #facc15; --success: #10b981; --success-bg: #d1fae5;
+  --warning: #f59e0b; --warning-bg: #fef3c7; --info: #4299e1; --info-bg: #bee3f8;
+  --moai: #7c3aed; --moai-bg: #f3e8ff; --moai-border: #9f7aea;
+  --checkpoint-bg: #ede9fe; --checkpoint-border: #8b5cf6;
+}
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--text); background: var(--bg); margin: 0; padding: 2rem; max-width: 950px; margin: 0 auto; }
+h1 { color: var(--primary); font-size: 2rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; margin-top: 3rem; }
+h1:first-of-type { margin-top: 0; }
+h2 { color: var(--secondary); font-size: 1.5rem; margin-top: 2.5rem; }
+h3 { color: var(--accent); font-size: 1.25rem; margin-top: 1.5rem; }
+h4 { color: var(--accent); font-size: 1.1rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+p { margin: 1rem 0; }
+ul, ol { margin: 1rem 0; padding-left: 1.75rem; }
+li { margin: 0.4rem 0; }
+a { color: var(--secondary); text-decoration: none; }
+a:hover { color: var(--primary); text-decoration: underline; }
+code { background: var(--surface); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: 'SF Mono', monospace; font-size: 0.9em; }
+.code-block, .file-structure { background: var(--code-bg); color: var(--code-text); padding: 1.25rem; margin: 1rem 0; border-radius: 6px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; overflow-x: auto; white-space: pre-wrap; }
+.warning, .note, .success { padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+.warning { background: var(--warning-bg); border-left: 4px solid var(--warning); }
+.note { background: var(--info-bg); border-left: 4px solid var(--info); }
+.success { background: var(--success-bg); border-left: 4px solid var(--success); }
+.moai-box { background: var(--moai-bg); border: 2px solid var(--moai-border); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; }
+.moai-box h4, .moai-box h5 { color: var(--moai); margin-top: 0; }
+.checkpoint-box { background: var(--checkpoint-bg); border: 2px solid var(--checkpoint-border); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; }
+.checklist { background: var(--surface); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+.checklist h4 { margin-top: 0; }
+.prompt-box { background: var(--prompt-bg); border: 2px solid var(--prompt-border); border-radius: 8px; margin: 1.5rem 0; overflow: hidden; }
+.prompt-box h4 { background: var(--prompt-border); color: var(--text); padding: 0.75rem 1.25rem; margin: 0; font-weight: 600; }
+.prompt-box pre { padding: 1.5rem; margin: 0; font-family: monospace; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+th, td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; vertical-align: top; }
+th { background: var(--surface); font-weight: 600; }
+tr:nth-child(even) { background: #fafafa; }
+.tldr-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #7dd3fc; border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+.tldr-box h4 { margin-top: 0; margin-bottom: 0.5rem; color: #0369a1; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.when-to-use { background: #fefce8; border-left: 3px solid #eab308; padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.9rem; }
+.workflow-tip { background: #fef3c7; border-left: 3px solid #f59e0b; padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.9rem; }
+.milestone-info { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+.milestone-info p { margin: 0.4rem 0; }
+.expected-output { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+.expected-output h4 { margin-top: 0; color: #166534; }
+.gate-indicator { background: var(--checkpoint-bg); border: 2px solid var(--checkpoint-border); border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; font-weight: 600; }
+.phase-header { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; text-align: center; padding: 3rem 2rem; margin: 0 0 3rem 0; border-radius: 8px; }
+.phase-header h1 { color: white; border: none; margin: 0; font-size: 2.5rem; }
+.chapter-intro { font-size: 1.1rem; color: var(--secondary); font-weight: 500; }
+@media print { body { max-width: none; padding: 1rem; } h1 { break-before: page; } }
+  </style>
+</head>
+<body>
+
+<div class="phase-header">
+  <h1>Phase 4: Build</h1>
+  <p style="margin-top: 1rem; font-size: 1.2rem;">Complete Implementation Guide - All 21 Chapters</p>
+</div>
+
+
+<!-- CHAPTER-23-MOAI-OVERVIEW.HTML -->
+<article>
+<h1 id="chapter-23">Chapter 23: MOAI-ADK Overview</h1>
+
+<p>In this chapter, you'll learn the MOAI-ADK methodology—how design artifacts flow into implementation through SPECs and TDD. Understanding this flow is essential before executing any milestones. By the end of this chapter, you'll know how all the pieces connect.</p>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>Read for Understanding</strong> — This chapter explains the MOAI methodology. No action required yet. You'll apply these concepts when executing milestones in the Build Guide.
+</div>
+
+<h2 id="section-23-1">23.1 The Integration Flow</h2>
+
+<p>MOAI-ADK (Methodology for Organized AI-Driven Development Kit) structures AI-assisted implementation through SPEC-First Development, EARS Requirements, TDD Workflow, and Documentation Sync.</p>
+
+<div class="file-structure">
+HANDBOOK + MOAI INTEGRATION
+===========================
+
+Design Brief      ----+
+UX Package        ----|---> Build Contract ---> SPEC ---> TDD Cycle
+UI System         ----|                              |
+Architecture      ----+                              v
+                                              Tested Code + Docs
+</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <ol>
+    <li><strong>Create the Build Contract</strong> — Use the Build Contract prompt (Chapter 21) to synthesize your design artifacts into a single reference document</li>
+    <li><strong>Set up SPEC folder structure</strong> — Create <code>docs/specs/</code> in your project root</li>
+    <li><strong>Configure testing framework</strong> — Install Jest and React Testing Library:
+      <div class="code-block">npm install -D jest @testing-library/react @testing-library/jest-dom</div>
+    </li>
+    <li><strong>Create CLAUDE.md</strong> — Set up your AI context file following Chapter 22</li>
+  </ol>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> How design artifacts (Design Brief, UX Package, UI System, Architecture) flow through the Build Contract into SPECs and finally into tested code.</p>
+  <p><strong>What you should have ready:</strong> Build Contract created, docs/specs/ folder created, testing framework installed, CLAUDE.md configured.</p>
+  <p><strong>Next:</strong> Chapter 24 — Learn the SPEC-First Development approach and EARS requirements format.</p>
+</div>
+
+<h2 id="section-23-2">23.2 Chapter Summary</h2>
+
+<p>You've learned the MOAI-ADK integration methodology. Key takeaways:</p>
+
+<ul>
+  <li>Design artifacts feed into the Build Contract</li>
+  <li>Build Contract informs SPEC documents</li>
+  <li>SPECs drive TDD implementation</li>
+  <li>The result is tested, documented code</li>
+</ul>
+
+<p>In the next chapter, you'll learn the SPEC-First Development approach that ensures every feature starts with requirements and test cases.</p>
+</article>
+
+
+<!-- CHAPTER-24-SPEC-FIRST.HTML -->
+<article>
+<h1 id="chapter-24">Chapter 24: SPEC-First Development</h1>
+
+<p>In this chapter, you'll learn the SPEC-First Development approach—writing requirements and test cases before any code. You'll master the EARS requirements format and GIVEN-WHEN-THEN test case structure. By the end of this chapter, you'll be able to write clear, testable specifications.</p>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>Read for Understanding</strong> — Learn the EARS requirements format and test case structure. You'll write SPECs using these patterns for each feature before coding.
+</div>
+
+<h2 id="section-24-1">24.1 EARS Requirements Format</h2>
+
+<p>EARS (Easy Approach to Requirements Syntax) provides five patterns for writing unambiguous requirements. Using these patterns ensures your requirements are testable and clear.</p>
+
+<table class="comparison-table">
+  <tr><th>Type</th><th>Pattern</th><th>Example</th></tr>
+  <tr><td>Ubiquitous</td><td>The [system] shall [action]</td><td>The upload zone shall accept JPEG, PNG, and HEIC formats.</td></tr>
+  <tr><td>State-Driven</td><td>While [state], the [system] shall [action]</td><td>While uploading, the system shall display progress.</td></tr>
+  <tr><td>Event-Driven</td><td>When [event], the [system] shall [action]</td><td>When user clicks generate, the system shall call the AI API.</td></tr>
+  <tr><td>Optional</td><td>Where [condition], the [system] shall [action]</td><td>Where user is Pro tier, the system shall enable all styles.</td></tr>
+  <tr><td>Unwanted</td><td>The [system] shall not [action]</td><td>The system shall not store raw API keys.</td></tr>
+</table>
+
+<h2 id="section-24-2">24.2 Test Case Format</h2>
+
+<p>Test cases use the GIVEN-WHEN-THEN format, which clearly separates preconditions, actions, and expected outcomes. This format maps directly to test code structure.</p>
+
+<div class="code-block">### TC-PHOTO-001: Valid image upload
+
+**GIVEN** a user is on the create listing page
+  AND the user has selected a valid JPEG image
+**WHEN** the user drops the image on the upload zone
+**THEN** the system displays an upload progress indicator
+  AND the image appears in the preview grid after upload completes</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <ol>
+    <li><strong>Write SPECs before coding</strong> — For each feature, create a SPEC document in <code>docs/specs/</code> using the template in Appendix A</li>
+    <li><strong>Use EARS format for requirements</strong> — Every requirement must follow one of the five EARS patterns above</li>
+    <li><strong>Create test cases for each requirement</strong> — At minimum, one test case per requirement; complex requirements may need multiple</li>
+    <li><strong>Reference Build Contract sections</strong> — Each SPEC must cite the relevant Build Contract sections it implements</li>
+  </ol>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create a new SPEC file
+touch docs/specs/SPEC-AUTH-001.md
+
+# Copy the template from Appendix A and customize
+# Ensure all [PLACEHOLDER] values are replaced</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Create SPEC-AUTH-001 for user login using the template in docs/specs/
+Reference Build Contract section 2.3 for authentication requirements"</div>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The five EARS requirement patterns and how to write GIVEN-WHEN-THEN test cases that map to each requirement.</p>
+  <p><strong>What you should be able to do:</strong> Write a SPEC document with properly formatted requirements and test cases for any feature.</p>
+  <p><strong>Next:</strong> Chapter 25 — Learn the TDD workflow that implements your SPECs.</p>
+</div>
+
+<h2 id="section-24-3">24.3 Chapter Summary</h2>
+
+<p>You've learned SPEC-First Development. Key takeaways:</p>
+
+<ul>
+  <li>Write SPECs before any code—requirements and test cases first</li>
+  <li>Use EARS format for unambiguous, testable requirements</li>
+  <li>Use GIVEN-WHEN-THEN format for clear test cases</li>
+  <li>Every SPEC references relevant Build Contract sections</li>
+  <li>At minimum, one test case per requirement</li>
+</ul>
+
+<p>In the next chapter, you'll learn the TDD workflow that transforms your SPECs into tested, working code.</p>
+</article>
+
+
+<!-- CHAPTER-25-TDD-WORKFLOW.HTML -->
+<article>
+<h1 id="chapter-25">Chapter 25: TDD Workflow</h1>
+
+<p>In this chapter, you'll learn the TDD (Test-Driven Development) workflow—the RED → GREEN → REFACTOR cycle that ensures every feature is properly tested. This workflow is the core of MOAI implementation. By the end of this chapter, you'll know exactly how to transform SPECs into working code.</p>
+
+<div class="note" style="background: #f0fdf4; border-left-color: #22c55e;">
+  <strong>Read for Understanding</strong> — Understand the RED → GREEN → REFACTOR cycle. You'll follow this exact workflow for every feature during milestone execution.
+</div>
+
+<h2 id="section-25-1">25.1 The TDD Cycle</h2>
+
+<p>TDD follows a strict three-phase cycle. Each phase has a specific purpose and discipline.</p>
+
+<div class="file-structure">
+TDD CYCLE: RED --> GREEN --> REFACTOR --> DONE
+
+RED:      Write failing tests from SPEC test cases
+GREEN:    Write minimum code to pass tests
+REFACTOR: Improve code quality, tests still pass
+DONE:     All tests pass, quality gate passed
+</div>
+
+<div class="moai-box">
+  <h4>What You Need to Do</h4>
+  <p>For each feature, follow the TDD cycle strictly:</p>
+
+  <h5>RED Phase (Write Failing Tests)</h5>
+  <ol>
+    <li>Take test cases from your SPEC document</li>
+    <li>Create test file in <code>src/__tests__/</code> following naming convention: <code>[feature].test.ts</code></li>
+    <li>Write tests that describe expected behavior</li>
+    <li>Run tests — they should FAIL (this confirms you're testing the right thing)</li>
+  </ol>
+
+  <p><strong>Manual Steps:</strong></p>
+  <div class="code-block"># Create test file
+touch src/__tests__/auth.test.ts
+
+# Write tests based on SPEC test cases
+# Run tests to confirm failure
+npm test</div>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Write failing tests for SPEC-AUTH-001. Create src/__tests__/auth.test.ts
+Use the test cases defined in the SPEC. Do not write implementation yet."</div>
+
+  <h5>GREEN Phase (Make Tests Pass)</h5>
+  <ol>
+    <li>Write the minimum code needed to pass each test</li>
+    <li>Do not over-engineer — just make the test pass</li>
+    <li>Run tests after each change to verify progress</li>
+  </ol>
+
+  <p><strong>With Claude Code:</strong></p>
+  <div class="code-block">claude "Implement the minimum code to make auth.test.ts pass.
+Follow the requirements in SPEC-AUTH-001."</div>
+
+  <h5>REFACTOR Phase (Improve Code Quality)</h5>
+  <ol>
+    <li>Clean up code while keeping tests green</li>
+    <li>Extract reusable functions, improve naming, add types</li>
+    <li>Run tests after each refactor to ensure nothing breaks</li>
+  </ol>
+
+  <p><strong>Quality Gate Check:</strong></p>
+  <div class="code-block"># All tests must pass
+npm test
+
+# No TypeScript errors
+npm run build
+
+# No linting errors
+npm run lint</div>
+</div>
+
+<div class="note">
+<strong>Detailed TDD prompts and milestone guides are in the Build Phase Guide v3.</strong>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The RED → GREEN → REFACTOR cycle and how each phase contributes to code quality.</p>
+  <p><strong>What you should be able to do:</strong> Execute the TDD workflow for any SPEC—write failing tests, implement to pass, then refactor while keeping tests green.</p>
+  <p><strong>Next:</strong> Chapter 26 — Learn the Technical Debt Scoring Framework to monitor code health.</p>
+</div>
+
+<h2 id="section-25-2">25.2 Chapter Summary</h2>
+
+<p>You've learned the TDD workflow. Key takeaways:</p>
+
+<ul>
+  <li><strong>RED:</strong> Write failing tests from SPEC test cases first</li>
+  <li><strong>GREEN:</strong> Write minimum code to make tests pass</li>
+  <li><strong>REFACTOR:</strong> Improve code quality while tests stay green</li>
+  <li>Run tests after every change to verify progress</li>
+  <li>Quality gates ensure code meets standards before moving on</li>
+</ul>
+
+<p>In the next chapter, you'll learn how to measure and manage technical debt throughout the build phase.</p>
+</article>
+
+
+<!-- CHAPTER-26-TECH-DEBT.HTML -->
+<article>
+<h1 id="chapter-26">Chapter 26: Technical Debt Scoring Framework</h1>
+
+<p>In this chapter, you'll learn the Technical Debt Scoring Framework—a systematic way to measure and manage code quality degradation. Understanding technical debt helps you make informed decisions about when to incur debt and when to pay it down. By the end of this chapter, you'll have automated tools to track debt throughout your project.</p>
+
+<div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
+  <strong>Read + Setup</strong> — Understand the scoring methodology, then copy the automation templates to your project. You'll run debt audits at each checkpoint during the build phase.
+</div>
+
+<p>Technical debt is inevitable during rapid development. The difference between successful projects and troubled ones is not the absence of debt—it's the <strong>awareness and management</strong> of that debt. This framework provides objective measurement so you can make informed decisions about when to incur debt, when to pay it down, and when to stop and remediate.</p>
+
+<h2 id="section-26-1">26.1 Why Measure Technical Debt</h2>
+
+<p>Without measurement, debt accumulates invisibly until it blocks progress. Common symptoms of unmanaged debt:</p>
+
+<ul>
+  <li>Simple changes require touching many files</li>
+  <li>New developers take weeks to understand the codebase</li>
+  <li>Bugs keep appearing in the same areas</li>
+  <li>Fear of refactoring because "it might break something"</li>
+  <li>Test suite takes too long or provides false confidence</li>
+</ul>
+
+<p>The scoring framework makes debt visible and actionable. Run it at every checkpoint to catch problems early.</p>
+
+<h2 id="section-26-2">26.2 The Six Debt Categories</h2>
+
+<p>Technical debt is measured across six categories, each with a specific weight reflecting its impact on long-term maintainability.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Category</th>
+    <th>Weight</th>
+    <th>What It Measures</th>
+    <th>Automated?</th>
+  </tr>
+  <tr>
+    <td><strong>Code Complexity</strong></td>
+    <td>25%</td>
+    <td>Function length, nesting depth, cyclomatic complexity</td>
+    <td>Yes (ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Error Handling</strong></td>
+    <td>20%</td>
+    <td>No empty catches, consistent patterns, explicit handling</td>
+    <td>Yes (ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Type Safety</strong></td>
+    <td>20%</td>
+    <td>Zero <code>any</code> types, strict mode, explicit returns</td>
+    <td>Yes (TypeScript + ESLint)</td>
+  </tr>
+  <tr>
+    <td><strong>Test Coverage</strong></td>
+    <td>20%</td>
+    <td>Line coverage percentage for business logic</td>
+    <td>Yes (Jest/Vitest)</td>
+  </tr>
+  <tr>
+    <td><strong>Documentation Sync</strong></td>
+    <td>10%</td>
+    <td>CLAUDE.md current, SPECs match implementation</td>
+    <td>Partial</td>
+  </tr>
+  <tr>
+    <td><strong>Dependency Health</strong></td>
+    <td>5%</td>
+    <td>npm audit clean, dependencies up to date</td>
+    <td>Yes (npm audit)</td>
+  </tr>
+</table>
+
+<h2 id="section-26-3">26.3 Scoring Each Category (1-10 Scale)</h2>
+
+<p>Each category is scored on a 1-10 scale using automated tools where possible. Consistent scoring criteria ensure objective measurement across checkpoints.</p>
+
+<h3>Code Complexity Score</h3>
+<div class="code-block"># Run ESLint with complexity rules
+npm run lint
+
+# Scoring:
+# 10: Zero complexity violations
+# 8-9: Only warnings, no errors
+# 6-7: 1-5 complexity errors
+# 4-5: 6-15 complexity errors
+# 1-3: 16+ complexity errors or ignored rules</div>
+
+<h3>Type Safety Score</h3>
+<div class="code-block"># Check for any types
+grep -r ": any" src/ --include="*.ts" --include="*.tsx" | wc -l
+
+# Check TypeScript strict mode
+grep "strict" tsconfig.json
+
+# Scoring:
+# 10: Zero any types, strict mode enabled
+# 8-9: 1-3 any types with justification
+# 6-7: 4-10 any types
+# 4-5: 11-25 any types or strict mode disabled
+# 1-3: 26+ any types or no TypeScript</div>
+
+<h3>Test Coverage Score</h3>
+<div class="code-block"># Run tests with coverage
+npm test -- --coverage
+
+# Scoring:
+# 10: 90%+ coverage
+# 9: 80-89% coverage
+# 8: 70-79% coverage
+# 7: 60-69% coverage
+# 6: 50-59% coverage
+# 1-5: Below 50% coverage</div>
+
+<h2 id="section-26-4">26.4 Calculating the Overall Score</h2>
+
+<p>The weighted formula combines all category scores into a single number that represents overall code health.</p>
+
+<div class="code-block">Overall Score = (Complexity x 0.25) + (ErrorHandling x 0.20) +
+               (TypeSafety x 0.20) + (TestCoverage x 0.20) +
+               (DocSync x 0.10) + (Dependencies x 0.05)
+
+Example:
+  Complexity:    8 x 0.25 = 2.00
+  ErrorHandling: 7 x 0.20 = 1.40
+  TypeSafety:    9 x 0.20 = 1.80
+  TestCoverage:  8 x 0.20 = 1.60
+  DocSync:       6 x 0.10 = 0.60
+  Dependencies: 10 x 0.05 = 0.50
+  ----------------------------
+  Overall Score:         7.90</div>
+
+<h2 id="section-26-5">26.5 Score Thresholds and Actions</h2>
+
+<p>Knowing your score is only useful if you know what action to take. These thresholds define clear decision criteria for each checkpoint.</p>
+
+<table class="comparison-table">
+  <tr>
+    <th>Score</th>
+    <th>Rating</th>
+    <th>Action</th>
+  </tr>
+  <tr style="background: #d1fae5;">
+    <td><strong>>= 8.0</strong></td>
+    <td>Excellent</td>
+    <td>Proceed confidently. Debt is well-managed.</td>
+  </tr>
+  <tr style="background: #dbeafe;">
+    <td><strong>7.0 - 7.9</strong></td>
+    <td>Good</td>
+    <td>Minor debt exists. Document in TECH-DEBT.md and proceed.</td>
+  </tr>
+  <tr style="background: #fef3c7;">
+    <td><strong>6.0 - 6.9</strong></td>
+    <td>Acceptable</td>
+    <td>Create remediation plan. Proceed with awareness. Address before next checkpoint.</td>
+  </tr>
+  <tr style="background: #fed7aa;">
+    <td><strong>5.0 - 5.9</strong></td>
+    <td>Concerning</td>
+    <td>Address high-priority items before proceeding. Allocate time in next milestone.</td>
+  </tr>
+  <tr style="background: #fecaca;">
+    <td><strong>< 5.0</strong></td>
+    <td>Critical</td>
+    <td><strong>STOP.</strong> Do not proceed until score reaches 6.0+. Remediation is now the priority.</td>
+  </tr>
+</table>
+
+<div class="warning">
+  <strong>Checkpoint Gate:</strong> At Checkpoint A and B, a score below 6.0 is a hard stop. Do not proceed to the next milestone until debt is remediated to at least 6.0.
+</div>
+
+<h2 id="section-26-6">26.6 Generating TECH-DEBT.md</h2>
+
+<p>At each checkpoint, use Claude Code to run all debt checks and generate/update <code>TECH-DEBT.md</code>:</p>
+
+<div class="prompt-indicator">
+  <span class="tool-badge badge-code">Claude Code</span>
+  <span class="session-badge session-same">At Checkpoints</span>
+  <span style="color: var(--muted); font-size: 0.85rem;">(run at Checkpoint A, B, and C)</span>
+</div>
+<div class="prompt-block">Run a comprehensive technical debt audit and update TECH-DEBT.md.
+
+**Step 1: Run Automated Checks**
+Execute these commands and capture results:
+- `npm run lint -- --format json` (complexity, error handling, type safety)
+- `npm test -- --coverage` (test coverage percentage)
+- `npm audit --json` (security vulnerabilities)
+- `npm outdated --json` (dependency health)
+
+**Step 2: Calculate Scores**
+For each category (weights in parentheses):
+- Complexity (25%): Score based on ESLint violations
+- Error Handling (20%): Score based on empty catches, unhandled errors
+- Type Safety (20%): Score based on `any` types, strict mode
+- Test Coverage (20%): Score based on line coverage percentage
+- Documentation Sync (10%): Score from manual review
+- Dependencies (5%): Score based on audit + outdated
+
+**Step 3: Update TECH-DEBT.md**
+Generate/update TECH-DEBT.md at project root with:
+1. Current checkpoint name and date
+2. Overall score and category breakdown
+3. Comparison to previous checkpoint (if exists)
+4. Active debt items with severity (Critical/High/Medium/Low)
+5. Recommended actions for items below threshold
+
+Current checkpoint: [CHECKPOINT_A | CHECKPOINT_B | CHECKPOINT_C]</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The six debt categories, how to score each, and what actions to take at each threshold.</p>
+  <p><strong>What you should have:</strong> TECH-DEBT.md created in your project root, ESLint debt config installed.</p>
+  <p><strong>Next:</strong> Chapter 27 — Overview of Build Milestones and checkpoints.</p>
+</div>
+
+<h2 id="section-26-7">26.7 Chapter Summary</h2>
+
+<p>You've learned the Technical Debt Scoring Framework. Key takeaways:</p>
+
+<ul>
+  <li>Technical debt is inevitable—the key is awareness and management</li>
+  <li>Six categories measure different aspects of code health</li>
+  <li>Score 8.0+ is excellent, 6.0-7.9 is acceptable, below 6.0 requires action</li>
+  <li>Run debt audits at every checkpoint (A, B, C)</li>
+  <li>Automated tools catch problems early</li>
+</ul>
+
+<p>In the next chapter, you'll see an overview of all build milestones and checkpoints.</p>
+</article>
+
+
+<!-- CHAPTER-27-BUILD-MILESTONES.HTML -->
+<article>
+<h1 id="chapter-27">Chapter 27: Build Milestones</h1>
+
+<p>In this chapter, you'll see the complete milestone structure for building your SaaS product. This overview shows what gets built when and where quality checkpoints occur. By the end of this chapter, you'll understand the full build journey.</p>
+
+<div class="note" style="background: #fef3c7; border-left-color: #f59e0b;">
+  <strong>Reference</strong> — This is an overview of all milestones and checkpoints. For detailed prompts and step-by-step instructions, open the <a href="../../build-guide-v3.html">Build Phase Guide</a>.
+</div>
+
+<h2 id="section-27-1">27.1 Milestone Overview</h2>
+
+<p>The build phase is structured into 11 milestones with three quality checkpoints. Each milestone has clear deliverables, and checkpoints ensure you don't accumulate debt that will slow you down later.</p>
+
+<table class="comparison-table">
+  <tr><th>Milestone</th><th>Name</th><th>Focus</th><th>Deliverables</th></tr>
+  <tr><td><strong>M1</strong></td><td>Project Setup</td><td>Next.js, TypeScript, Tailwind, folder structure</td><td>Configured project</td></tr>
+  <tr><td><strong>M2</strong></td><td>Design System</td><td>shadcn/ui, design tokens, core components</td><td>Component library</td></tr>
+  <tr><td><strong>M3</strong></td><td>Database</td><td>Schema, RLS policies, indexes, admin tables</td><td>Secure data layer</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>CHECKPOINT A</strong> — Foundation Audit (security, RLS, schema review)</td></tr>
+  <tr><td><strong>M4</strong></td><td>Layouts</td><td>Root, marketing, app layouts, navigation</td><td>Page structure</td></tr>
+  <tr><td><strong>M5</strong></td><td>Authentication</td><td>Auth clients, login/signup, middleware, context</td><td>User sessions</td></tr>
+  <tr><td><strong>M6</strong></td><td>Core Feature</td><td>Data layer, server actions, UI, page assembly</td><td>Primary value</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>CHECKPOINT B</strong> — Feature Complete Audit (code quality, tests, debt score)</td></tr>
+  <tr><td><strong>M7</strong></td><td>Admin Console</td><td>Role access, user management, error logs</td><td>Operational control</td></tr>
+  <tr><td><strong>M8</strong></td><td>Supporting Features</td><td>Secondary features using M6 pattern</td><td>Extended functionality</td></tr>
+  <tr><td><strong>M9</strong></td><td>Payments</td><td>Stripe, webhooks, checkout, subscriptions</td><td>Revenue system</td></tr>
+  <tr><td><strong>M10</strong></td><td>Polish</td><td>Error boundaries, loading states, accessibility</td><td>Production quality</td></tr>
+  <tr style="background: #ede9fe;"><td colspan="4"><strong>CHECKPOINT C</strong> — Pre-Launch Audit (full security, performance, debt)</td></tr>
+  <tr><td><strong>M11</strong></td><td>Testing</td><td>E2E tests, unit tests, integration tests</td><td>Test coverage</td></tr>
+</table>
+
+<div class="moai-box">
+  <h4>How to Execute Each Milestone</h4>
+
+  <p><strong>Before Starting Any Milestone:</strong></p>
+  <ol>
+    <li>Review the milestone's requirements in Build Phase Guide v3</li>
+    <li>Create SPEC documents for each feature in the milestone</li>
+    <li>Verify previous milestone is complete and committed</li>
+  </ol>
+
+  <p><strong>During Each Milestone:</strong></p>
+  <ol>
+    <li>Follow TDD workflow for each feature (RED → GREEN → REFACTOR)</li>
+    <li>Run quality checks after each feature completion</li>
+    <li>Commit working code frequently with descriptive messages</li>
+  </ol>
+
+  <p><strong>At Checkpoints (A, B, C):</strong></p>
+  <ol>
+    <li>Run the Refactoring Audit prompt from Build Phase Guide v3</li>
+    <li>Address all critical issues before proceeding</li>
+    <li>Run full test suite and verify 100% pass rate</li>
+    <li>Create a git tag for the checkpoint: <code>git tag -a checkpoint-a -m "Checkpoint A complete"</code></li>
+  </ol>
+
+  <p><strong>Manual Verification:</strong></p>
+  <div class="code-block"># Run all quality checks
+npm run build && npm run lint && npm test
+
+# Check test coverage (aim for >= 80%)
+npm test -- --coverage
+
+# Tag checkpoint
+git tag -a checkpoint-a -m "Checkpoint A: Foundation complete"</div>
+</div>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should understand:</strong> The complete milestone structure (M1-M11) and when each checkpoint (A, B, C) occurs.</p>
+  <p><strong>What you should be ready for:</strong> Opening the Build Phase Guide and starting Milestone 1.</p>
+  <p><strong>Next:</strong> Open the Build Phase Guide and begin implementation!</p>
+</div>
+
+<h2 id="section-27-2">27.2 Chapter Summary</h2>
+
+<p>You've seen the complete Build Milestones overview. Key takeaways:</p>
+
+<ul>
+  <li>11 milestones from setup (M1) to testing (M11)</li>
+  <li>Three checkpoints for quality verification:
+    <ul>
+      <li><strong>Checkpoint A</strong> after M3 (Database) — Foundation security audit</li>
+      <li><strong>Checkpoint B</strong> after M6 (Core Feature) — Feature complete audit</li>
+      <li><strong>Checkpoint C</strong> after M10 (Polish) — Pre-launch audit</li>
+    </ul>
+  </li>
+  <li>Each milestone follows SPEC-First and TDD workflow</li>
+  <li>Build Phase Guide has detailed step-by-step instructions</li>
+</ul>
+
+<!-- TRANSITION TO BUILD GUIDE -->
+<div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; color: white;">
+  <h2 style="color: white; margin-top: 0; border: none;">Ready to Start Building</h2>
+
+  <p>You now understand the MOAI methodology:</p>
+  <ul style="margin-bottom: 1.5rem;">
+    <li><strong>SPEC-First</strong> — Define features with EARS requirements before coding</li>
+    <li><strong>TDD Workflow</strong> — RED → GREEN → REFACTOR for every feature</li>
+    <li><strong>Technical Debt</strong> — Measure and manage debt at each checkpoint</li>
+  </ul>
+
+  <p style="margin-bottom: 1.5rem;"><strong>Next Step:</strong> Open the Build Phase Guide and start Milestone 1. The Build Guide contains the detailed prompts, step-by-step instructions, and quality checks for all 11 milestones.</p>
+
+  <a href="../../build-guide-v3.html" style="display: inline-block; background: white; color: #7c3aed; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 0.5rem;">Open Build Phase Guide →</a>
+</div>
+</article>
+
+
+<!-- CHAPTER-28-M1-PROJECT-SETUP.HTML -->
+<article>
+<h1 id="chapter-28">Chapter 28: Milestone 1 - Project Setup</h1>
+
+<p class="chapter-intro">In this chapter, you'll set up your Next.js project with TypeScript strict mode, proper folder structure, and development tooling. By the end, you'll have a production-ready project foundation.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Before starting this milestone, review <a href="../workflow-guide-v1.html#context-management">Context Management</a> in the Workflow Reference for optimal Claude Code session structure.
+</div>
+
+<h2 id="section-28-1">28.1 Overview</h2>
+
+<p>A properly configured project foundation prevents cascading issues later. TypeScript strict mode catches bugs before they reach production, and consistent folder structure makes navigation intuitive for both you and Claude Code.</p>
+
+<div class="milestone-info">
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 1</p>
+  <p><strong>Deliverables:</strong> Configured project, folder structure, environment template, Git initialized.</p>
+</div>
+
+<h2 id="section-28-2">28.2 Project Scaffolding</h2>
+
+<p>Before running the main prompt, ensure you have a docs folder ready for your project documentation:</p>
+
+<div class="code-block">your-saas-project/
+├── CLAUDE.md                    # Project conventions for Claude Code
+├── docs/
+│   ├── specs/                   # SPEC documents
+│   │   └── SPEC-template.md
+│   ├── contracts/               # Build Contract
+│   │   └── build-contract.md
+│   ├── architecture/            # ADRs and diagrams
+│   │   └── decisions/
+│   └── checklists/              # Quality gate checklists
+│       ├── checkpoint-a.md
+│       ├── checkpoint-b.md
+│       └── checkpoint-c.md
+├── src/
+│   ├── app/
+│   ├── components/
+│   ├── lib/
+│   ├── types/
+│   └── hooks/
+└── ...</div>
+
+<h2 id="section-28-3">28.3 Implementation Prompt</h2>
+
+<p>Initialize Next.js 14+ with TypeScript strict mode, Tailwind CSS, ESLint, and folder structure. Create .env.local.example with Supabase variables.</p>
+
+<div class="prompt-box">
+<h4>Prompt 1.1: Project Initialization</h4>
+<pre>ROLE
+Full-Stack Developer setting up a new Next.js project.
+
+CONTEXT
+Project: {{productName}}
+Description: {{brief product description}}
+Stack: Next.js 14+, TypeScript strict, Tailwind CSS, Supabase.
+
+OBJECTIVE
+Initialize a production-ready Next.js project with proper configuration.
+
+REQUIREMENTS
+
+1. Create Next.js project with these options:
+   - TypeScript: Yes (strict mode enabled)
+   - ESLint: Yes (with recommended rules)
+   - Tailwind CSS: Yes
+   - App Router: Yes (src/ directory)
+   - Import alias: @/* for src/*
+
+2. Create folder structure inside src/:
+   - app/ (pages and layouts)
+   - components/ (UI components, organized by feature)
+   - lib/ (utilities, helpers, Supabase clients)
+   - types/ (TypeScript type definitions)
+   - hooks/ (custom React hooks)
+
+3. Configure TypeScript (tsconfig.json):
+   - strict: true
+   - noUncheckedIndexedAccess: true
+   - forceConsistentCasingInFileNames: true
+
+4. Create environment template (.env.local.example):
+   - NEXT_PUBLIC_SUPABASE_URL=
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY=
+   - SUPABASE_SERVICE_ROLE_KEY=
+   - Add .env.local to .gitignore
+
+5. Initialize Git and create initial commit:
+   - git init
+   - Create meaningful .gitignore
+   - Initial commit with message "Initial project setup"
+
+6. Create project docs folder structure:
+   - docs/specs/ (for SPEC documents)
+   - docs/contracts/ (for Build Contract)
+   - docs/architecture/decisions/ (for ADRs)
+   - docs/checklists/ (for quality gates)
+   - Copy SPEC template to docs/specs/
+
+VERIFICATION
+Run: npm run dev — app should start without errors on localhost:3000
+Run: npm run build — should complete with no TypeScript errors
+Run: npm run lint — should pass with no warnings</pre>
+</div>
+
+<h2 id="section-28-4">28.4 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> A Next.js 14+ project with TypeScript strict mode, Tailwind CSS, ESLint configured, and the standard folder structure (src/app, components, lib, types, hooks), plus a docs folder for project documentation.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li><code>npm run dev</code> starts without errors</li>
+    <li><code>npm run build</code> completes with no TypeScript errors</li>
+    <li><code>npm run lint</code> passes</li>
+    <li>docs/ folder exists with specs/, contracts/, architecture/, checklists/ subfolders</li>
+  </ul>
+</div>
+
+<h2 id="section-28-5">28.5 Chapter Summary</h2>
+
+<p>You've completed Milestone 1. Your project now has:</p>
+<ul>
+  <li>Next.js 14+ with App Router</li>
+  <li>TypeScript in strict mode</li>
+  <li>Tailwind CSS configured</li>
+  <li>Standard folder structure</li>
+  <li>Environment template</li>
+  <li>Git initialized</li>
+  <li>Project docs folder structure</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 29 (Milestone 2) - Configure your design system with shadcn/ui components.</p>
+</article>
+
+
+<!-- CHAPTER-29-M2-DESIGN-SYSTEM.HTML -->
+<article>
+<h1 id="chapter-29">Chapter 29: Milestone 2 - Design System</h1>
+
+<p class="chapter-intro">In this chapter, you'll configure shadcn/ui with design tokens and install core components. By the end, you'll have a consistent component library ready for building your UI.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> This milestone works well with Claude Code's agentic mode. See <a href="../workflow-guide-v1.html#agentic-patterns">Agentic Patterns</a> in the Workflow Reference.
+</div>
+
+<h2 id="section-29-1">29.1 Overview</h2>
+
+<p>Establishing a design system early ensures visual consistency throughout your application. shadcn/ui provides accessible, customizable components that integrate seamlessly with Tailwind CSS.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 1 complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 1</p>
+  <p><strong>Deliverables:</strong> Component library, design tokens, test page rendering correctly.</p>
+</div>
+
+<h2 id="section-29-2">29.2 Implementation Prompt</h2>
+
+<p>Configure shadcn/ui with design tokens. Install core components (button, card, input, label, form, toast, dropdown-menu, avatar, skeleton). Create test page to verify styling.</p>
+
+<div class="prompt-box">
+<h4>Prompt 2.1: Design System Setup</h4>
+<pre>ROLE
+Frontend Developer configuring the design system.
+
+CONTEXT
+Project: {{productName}}
+Next.js project initialized (Milestone 1 complete).
+Tailwind CSS already configured.
+
+OBJECTIVE
+Set up shadcn/ui component library with design tokens.
+
+REQUIREMENTS
+
+1. Initialize shadcn/ui:
+   - Run npx shadcn-ui@latest init
+   - Choose: TypeScript, Default style, CSS variables
+   - Configure components.json with @/components path
+
+2. Configure design tokens in globals.css:
+   - Primary color (brand color)
+   - Secondary color
+   - Accent color
+   - Background and foreground
+   - Muted colors for secondary text
+   - Destructive color for errors/warnings
+   - Border radius scale
+
+3. Install core components:
+   - button (primary actions)
+   - card (content containers)
+   - input, label (form fields)
+   - form (react-hook-form integration)
+   - toast (notifications)
+   - dropdown-menu (navigation, actions)
+   - avatar (user display)
+   - skeleton (loading states)
+
+4. Create test page (src/app/design-test/page.tsx):
+   - Display all installed components
+   - Show color palette with design tokens
+   - Test light/dark mode if applicable
+   - NOTE: Remove this page before production
+
+5. Add utility styles:
+   - cn() helper function (lib/utils.ts)
+   - Common spacing/layout utilities if needed
+
+VERIFICATION
+Visit /design-test — all components render correctly
+Colors match design tokens in CSS variables
+Run: npm run build — no TypeScript errors</pre>
+</div>
+
+<h2 id="section-29-3">29.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> shadcn/ui initialized with design tokens configured, core components installed (button, card, input, label, form, toast, dropdown-menu, avatar, skeleton), and a test page displaying all components.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Visit <code>/design-test</code> - all components render with correct colors and styling</li>
+    <li><code>npm run build</code> completes without errors</li>
+    <li>Design tokens visible in globals.css</li>
+  </ul>
+</div>
+
+<h2 id="section-29-4">29.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 2. Your project now has:</p>
+<ul>
+  <li>shadcn/ui initialized and configured</li>
+  <li>Design tokens defined in CSS variables</li>
+  <li>Core components installed</li>
+  <li>Test page verifying component rendering</li>
+  <li>cn() utility function</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 30 (Milestone 3) - Create your database schema with RLS policies.</p>
+</article>
+
+
+<!-- CHAPTER-30-M3-DATABASE.HTML -->
+<article>
+<h1 id="chapter-30">Chapter 30: Milestone 3 - Database</h1>
+
+<p class="chapter-intro">In this chapter, you'll create your database schema with Row Level Security (RLS) policies. By the end, you'll have a secure data layer that protects user data even if application-level checks fail.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Database work requires careful review. See <a href="../workflow-guide-v1.html#task-decomposition">Task Decomposition</a> for breaking this milestone into reviewable chunks.
+</div>
+
+<h2 id="section-30-1">30.1 Overview</h2>
+
+<p>Your database schema is the foundation of your application's data integrity. Row Level Security (RLS) policies are non-negotiable - they're your last line of defense against unauthorized data access, even if application-level checks fail.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 2 complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 2</p>
+  <p><strong>Deliverables:</strong> Database schema, RLS policies, indexes, migration files.</p>
+</div>
+
+<h2 id="section-30-2">30.2 Implementation Prompts</h2>
+
+<h3>Prompt 3.1: Core Database Schema</h3>
+
+<p>Create core schema with profiles table and main entities. Add indexes for query patterns.</p>
+
+<div class="prompt-box">
+<h4>Prompt 3.1: Core Database Schema</h4>
+<pre>ROLE
+Database Engineer designing the application schema.
+
+CONTEXT
+Project: {{productName}}
+Database: Supabase (PostgreSQL)
+Core feature: {{describe your main feature and data it needs}}
+
+OBJECTIVE
+Create the database schema with proper security.
+
+REQUIREMENTS
+
+1. Create profiles table (extends auth.users):
+   - id: uuid references auth.users(id) on delete cascade
+   - email: text not null
+   - full_name: text
+   - avatar_url: text
+   - created_at: timestamptz default now()
+   - updated_at: timestamptz default now()
+
+2. Create core entity tables for your feature:
+   - Define tables based on your product's data model
+   - Include user_id foreign key on user-owned data
+   - Add created_at, updated_at timestamps
+   - Use appropriate data types (uuid, text, jsonb, etc.)
+
+3. Create trigger for profile creation:
+   - Function: handle_new_user()
+   - Trigger: on auth.users insert, create profile
+
+4. Create updated_at trigger:
+   - Function: update_updated_at_column()
+   - Apply to all tables with updated_at
+
+5. Add indexes for common queries:
+   - Index on user_id for user-owned tables
+   - Index on commonly filtered/sorted columns
+   - Index on foreign keys
+
+OUTPUT
+Create migration file in supabase/migrations/
+Use descriptive filename: YYYYMMDDHHMMSS_create_core_schema.sql</pre>
+</div>
+
+<h3>Prompt 3.2: Row Level Security Policies</h3>
+
+<p>Enable RLS on every table with appropriate policies.</p>
+
+<div class="prompt-box">
+<h4>Prompt 3.2: Row Level Security Policies</h4>
+<pre>ROLE
+Security Engineer implementing database access control.
+
+CONTEXT
+Project: {{productName}}
+Schema created in Prompt 3.1.
+Need RLS policies for all tables.
+
+OBJECTIVE
+Implement Row Level Security on all tables.
+
+REQUIREMENTS
+
+1. Enable RLS on EVERY table:
+   - ALTER TABLE tablename ENABLE ROW LEVEL SECURITY;
+   - No exceptions — every table must have RLS enabled
+
+2. Profiles table policies:
+   - SELECT: Users can read their own profile
+   - UPDATE: Users can update their own profile
+   - INSERT: Handled by trigger (service role only)
+
+3. User-owned data policies:
+   - SELECT: WHERE user_id = auth.uid()
+   - INSERT: WITH CHECK user_id = auth.uid()
+   - UPDATE: WHERE user_id = auth.uid()
+   - DELETE: WHERE user_id = auth.uid()
+
+4. Shared/public data policies (if applicable):
+   - SELECT: Allow authenticated users to read
+   - INSERT/UPDATE/DELETE: Restrict to owners
+
+5. Create helper functions:
+   - is_admin(): Check if current user has admin role
+   - Use in admin policies created in M7
+
+SECURITY RULES
+NEVER use policies that allow anon access to sensitive data
+ALWAYS check auth.uid() in policies
+TEST policies by attempting unauthorized access
+
+OUTPUT
+Create migration file: YYYYMMDDHHMMSS_add_rls_policies.sql</pre>
+</div>
+
+<h2 id="section-30-3">30.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Complete database schema with profiles table, core entity tables, RLS enabled on all tables, security policies for each table, helper functions like is_admin(), and proper indexes.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Run migrations successfully</li>
+    <li>Test RLS by attempting unauthorized access (should fail)</li>
+    <li>Verify <code>SET LOCAL ROLE anon; SELECT * FROM profiles;</code> returns nothing</li>
+  </ul>
+</div>
+
+<div class="warning">
+  <h4>Security Critical</h4>
+  <p>After completing this milestone, you MUST complete <strong>Checkpoint A</strong> (next chapter) before proceeding to Milestone 4.</p>
+</div>
+
+<h2 id="section-30-4">30.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 3. Your project now has:</p>
+<ul>
+  <li>Profiles table extending auth.users</li>
+  <li>Core entity tables for your feature</li>
+  <li>Automatic profile creation trigger</li>
+  <li>Updated_at triggers on all tables</li>
+  <li>RLS enabled on ALL tables</li>
+  <li>Security policies for each access pattern</li>
+  <li>is_admin() helper function</li>
+  <li>Indexes for query optimization</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 31 (Checkpoint A) - Foundation security audit before proceeding.</p>
+</article>
+
+
+<!-- CHAPTER-31-CHECKPOINT-1-REWRITTEN.HTML -->
+<article>
+<h1 id="chapter-31">Chapter 31: Checkpoint 1 - Foundation Audit</h1>
+
+<p class="chapter-intro">This checkpoint verifies your foundation is solid before building features. Unlike traditional audits, this version auto-detects your architecture, adapts checks to your specific stack, and runs automatically via Claude Code prompts.</p>
+
+<div class="checkpoint-box" style="background: #ede9fe; border: 2px solid #8b5cf6; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+  <h2 style="color: #6d28d9; margin-top: 0;">Checkpoint 1: Foundation Audit</h2>
+  <p><strong>Time:</strong> 10-20 minutes (mostly automated)</p>
+  <p><strong>Prerequisites:</strong> M1-M4 complete</p>
+  <p><strong>Outcome:</strong> Verified foundation, git tagged <code>checkpoint-1</code></p>
+</div>
+
+<h2 id="section-31-1">31.1 TL;DR</h2>
+
+<p>You'll copy-paste prompts into Claude Code. It does the rest:</p>
+
+<ul>
+  <li><strong>Auto-detects</strong> your architecture (Supabase, file-based, local-only, etc.)</li>
+  <li><strong>Adapts checks</strong> to your specific stack</li>
+  <li><strong>Runs automatically</strong> - no manual configuration needed</li>
+  <li><strong>Generates a report</strong> you can review and commit</li>
+</ul>
+
+<h2 id="section-31-2">31.2 How To Use This Chapter</h2>
+
+<h3>The Easy Path (Recommended)</h3>
+
+<ol>
+  <li><strong>Run the Full Audit</strong> — Copy the prompt in Section 31.3, paste into Claude Code</li>
+  <li><strong>Review the Report</strong> — Check CHECKPOINT-1-REPORT.md it generates</li>
+  <li><strong>Fix Any Failures</strong> — Use the section-specific prompts if needed</li>
+  <li><strong>Tag the Checkpoint</strong> — Run the git commands</li>
+</ol>
+
+<h3>If You Prefer Step-by-Step</h3>
+
+<p>Each section below has:</p>
+<ul>
+  <li><strong>What it checks</strong> — explanation of the verification</li>
+  <li><strong>Claude Code Prompt</strong> — copy and paste this</li>
+  <li><strong>Manual Alternative</strong> — if you prefer to do it yourself</li>
+  <li><strong>Expected Output</strong> — what success looks like</li>
+</ul>
+
+<p>Most sections are fully automated. Sections marked 🔧 require some manual verification.</p>
+
+<h2 id="section-31-3">31.3 Full Audit — One Command</h2>
+
+<p>For most projects, this single prompt runs everything:</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Full Checkpoint 1 Audit</h4>
+<pre>Run Checkpoint 1: Foundation Audit
+
+1. Detect my architecture:
+   - Check package.json for database (supabase, prisma, sqlite, gray-matter/file-based, none)
+   - Check for auth packages (next-auth, @clerk, @supabase/auth, lucia, or none)
+   - Check folder structure for API style (app/api, server actions, tRPC, file operations)
+   - Check for deployment config (vercel.json, Dockerfile, railway.json, or localhost-only)
+   - Display results in a table and confirm with me before proceeding
+
+2. Run automated checks based on my architecture:
+   - npm run build (must pass)
+   - npm run lint (must pass)
+   - npx tsc --noEmit (must pass)
+   - npm audit (no critical vulnerabilities)
+
+3. Run architecture-specific checks:
+   - If Supabase: note RLS checks for manual verification, check client setup
+   - If file-based: verify data/ directory structure, check for Zod schemas, verify data/ not in public/, check for path validation patterns
+   - If local-only: verify no required cloud dependencies, check localhost binding
+   - If has auth: note auth flow for manual verification
+   - If no auth (local-only): skip auth checks
+
+4. Find my Build Contract (BUILD-CONTRACT.md, build-contract.md, or docs/build-contract.md):
+   - Extract MVP criteria
+   - Extract next steps
+   - Include in report
+
+5. Generate CHECKPOINT-1-REPORT.md with:
+   - Architecture detection results
+   - All check results (✅ Passed, ⚠️ Adapted, ⏭️ Skipped, ❌ Failed)
+   - Any manual checks I need to do
+   - Next steps from my Build Contract
+   - Git tag commands (if all critical checks pass)
+
+6. Tell me:
+   - Overall status (ready to tag or needs fixes)
+   - What manual checks remain (if any)
+   - The exact commands to run for git tagging</pre>
+</div>
+
+<h3>Expected Output</h3>
+
+<p>Claude Code will:</p>
+<ul>
+  <li>Show your detected architecture</li>
+  <li>Run all applicable checks</li>
+  <li>Create CHECKPOINT-1-REPORT.md</li>
+  <li>Tell you if you're ready to tag checkpoint-1</li>
+</ul>
+
+<div class="warning" style="background: var(--warning-bg); border-left: 4px solid var(--warning); padding: 1rem; margin: 1.5rem 0;">
+  <p><strong>If It Fails:</strong> Use the section-specific prompts below to debug individual areas.</p>
+</div>
+
+<h2 id="section-31-4">31.4 Step 1: Architecture Detection</h2>
+
+<p>Before running checks, we need to know your stack.</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Detect Architecture</h4>
+<pre>Analyze my project architecture:
+
+1. Read package.json and detect:
+   - Database: supabase | postgresql | sqlite | prisma | file-based (gray-matter) | none
+   - Auth: supabase-auth | nextauth | clerk | lucia | none-local
+   - API: rest-routes (app/api) | trpc | server-actions | file-ops
+   - Deployment: vercel | netlify | railway | docker | local-only
+   - Framework: nextjs-app | nextjs-pages | remix | astro
+
+2. Check for config files:
+   - vercel.json, netlify.toml, Dockerfile, railway.json
+   - .env files with localhost indicators
+
+3. Display results in a table:
+   | Component  | Detected     | Confidence | Notes |
+   |------------|--------------|------------|-------|
+   | Database   | ...          | High/Med   | ...   |
+   | Auth       | ...          | High/Med   | ...   |
+   | API        | ...          | High/Med   | ...   |
+   | Deployment | ...          | High/Med   | ...   |
+   | Framework  | ...          | High/Med   | ...   |
+
+4. Based on detection, tell me which checks will be:
+   - ✅ Run as-is
+   - ⚠️ Adapted (and to what)
+   - ⏭️ Skipped (and why)
+
+5. Ask me to confirm or correct before proceeding</pre>
+</div>
+
+<h3>Manual Alternative</h3>
+
+<p>Check your package.json dependencies manually and note your stack.</p>
+
+<h3>Override Detection</h3>
+
+<p>If auto-detection is wrong, create <code>.checkpoint-config.yaml</code> in your project root:</p>
+
+<div class="code-block">architecture:
+  database: file-based
+  auth: none-local
+  api: rest-routes
+  deployment: local-only
+  framework: nextjs-app</div>
+
+<h2 id="section-31-5">31.5 Step 2: Code Quality Checks (Universal)</h2>
+
+<p>These apply to ALL architectures.</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Run Code Quality Checks</h4>
+<pre>Run code quality checks for Checkpoint 1:
+
+1. Run build:
+   npm run build
+   - Must complete with no errors
+   - If it fails, show me the first 30 lines of errors
+
+2. Run linting:
+   npm run lint
+   - Must pass with no warnings
+   - If it fails, offer to run `npm run lint -- --fix`
+
+3. Run type check:
+   npx tsc --noEmit
+   - Must have no TypeScript errors
+   - If it fails, show me the errors grouped by file
+
+4. Run security audit:
+   npm audit
+   - No critical vulnerabilities allowed
+   - High vulnerabilities: warn but pass
+   - If critical found, show me which packages and suggest fixes
+
+5. Summarize results:
+   | Check      | Status | Notes |
+   |------------|--------|-------|
+   | Build      | ✅/❌  | ...   |
+   | Lint       | ✅/❌  | ...   |
+   | TypeScript | ✅/❌  | ...   |
+   | Audit      | ✅/❌  | ...   |</pre>
+</div>
+
+<h3>Manual Alternative</h3>
+
+<div class="code-block">npm run build
+npm run lint
+npx tsc --noEmit
+npm audit</div>
+
+<h3>Expected Output</h3>
+
+<p>All four checks should pass. If any fail, fix before proceeding.</p>
+
+<h2 id="section-31-6">31.6 Step 3: Security Verification (Conditional)</h2>
+
+<p>Checks vary by architecture.</p>
+
+<h3>If Supabase/PostgreSQL Database</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check Supabase Security</h4>
+<pre>Check Supabase security setup:
+
+1. Verify I have Supabase client configured:
+   - Check for @supabase/supabase-js in package.json
+   - Look for supabase client initialization in lib/ or utils/
+
+2. Generate the RLS verification queries I need to run manually:
+
+   Query 1 - Check RLS enabled:
+   SELECT schemaname, tablename, rowsecurity
+   FROM pg_tables
+   WHERE schemaname = 'public';
+
+   Query 2 - List policies:
+   SELECT tablename, policyname, cmd
+   FROM pg_policies
+   WHERE schemaname = 'public';
+
+3. Create a checklist for me to verify in Supabase dashboard:
+   - [ ] RLS enabled on ALL tables (rowsecurity = true)
+   - [ ] Each table has SELECT policy for authenticated users
+   - [ ] Each table has INSERT/UPDATE/DELETE policies with auth.uid() check
+   - [ ] No policies allow anon access to sensitive data
+   - [ ] is_admin() function exists (if using admin features)
+
+4. Note: These must be verified manually in Supabase SQL Editor</pre>
+</div>
+
+<h4>🔧 Manual Steps Required</h4>
+
+<ol>
+  <li>Go to Supabase Dashboard → SQL Editor</li>
+  <li>Run the queries above</li>
+  <li>Verify all tables show <code>rowsecurity = true</code></li>
+  <li>Check each policy restricts access to <code>auth.uid() = user_id</code></li>
+</ol>
+
+<h3>If File-Based Storage</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check File-Based Security</h4>
+<pre>Check file-based security:
+
+1. Verify Zod is installed:
+   - Check package.json for "zod"
+   - If missing, tell me to run: npm install zod
+
+2. Check for validation schemas:
+   - Look in lib/validation/, lib/schemas/, src/schemas/
+   - Verify schemas exist for: Project, Task, Idea, InboxItem (or whatever entities I have)
+   - Check that schemas use .required() for mandatory fields
+
+3. Check data directory security:
+   - Verify data/ directory exists
+   - Verify data/ is NOT inside public/ folder
+   - If data/ is in public/, this is a CRITICAL FAILURE
+
+4. Check for path traversal prevention:
+   - Search for slug validation patterns like /^[a-z0-9-]+$/
+   - Search for checks that reject ".." in paths
+   - If not found, flag as needs attention
+
+5. Check for input sanitization:
+   - Look for .parse() or .safeParse() calls in API routes
+   - Verify file operations validate input before using
+
+6. Report findings:
+   | Check                    | Status | Location/Notes |
+   |--------------------------|--------|----------------|
+   | Zod installed            | ✅/❌  | ...            |
+   | Schemas defined          | ✅/❌  | ...            |
+   | Data dir secure          | ✅/❌  | ...            |
+   | Path traversal blocked   | ✅/⚠️  | ...            |
+   | Input validation in APIs | ✅/⚠️  | ...            |</pre>
+</div>
+
+<h3>If No Database / Local-Only</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check Local-Only Security</h4>
+<pre>Check local-only security:
+
+1. Verify no required external services:
+   - Check package.json for cloud dependencies
+   - Flag if found: @supabase/supabase-js, firebase, @aws-sdk, stripe
+   - Note: It's OK if these exist but are optional
+
+2. Check localhost binding:
+   - Check package.json scripts.dev for host flags
+   - Check next.config.js for host configuration
+   - Verify app doesn't bind to 0.0.0.0 in production
+
+3. Check .env files:
+   - Look for localhost:3001 or similar
+   - Verify no production API keys are required for local dev
+
+4. Report:
+   | Check                  | Status | Notes |
+   |------------------------|--------|-------|
+   | No required cloud deps | ✅/⚠️  | ...   |
+   | Localhost binding      | ✅/⚠️  | ...   |
+   | Local-only .env        | ✅/⚠️  | ...   |</pre>
+</div>
+
+<h2 id="section-31-7">31.7 Step 4: Schema & Data Integrity (Conditional)</h2>
+
+<h3>If Supabase/PostgreSQL</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Generate Schema Integrity Checklist</h4>
+<pre>Generate schema integrity checklist:
+
+1. Create SQL query to check foreign keys:
+   SELECT
+     tc.table_name,
+     kcu.column_name,
+     ccu.table_name AS foreign_table,
+     rc.delete_rule
+   FROM information_schema.table_constraints tc
+   JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name
+   JOIN information_schema.constraint_column_usage ccu ON tc.constraint_name = ccu.constraint_name
+   JOIN information_schema.referential_constraints rc ON tc.constraint_name = rc.constraint_name
+   WHERE tc.constraint_type = 'FOREIGN KEY';
+
+2. Create checklist for manual verification:
+   - [ ] profiles table references auth.users with ON DELETE CASCADE
+   - [ ] All user-owned tables have user_id foreign key
+   - [ ] created_at exists on all tables
+   - [ ] updated_at exists on all tables
+   - [ ] updated_at trigger applied to relevant tables
+   - [ ] Indexes exist on foreign keys
+   - [ ] Indexes exist on commonly queried columns
+
+3. Note: Run query in Supabase SQL Editor and verify</pre>
+</div>
+
+<h4>🔧 Manual Steps Required</h4>
+
+<p>Run the SQL query in Supabase and verify the checklist.</p>
+
+<h3>If File-Based</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check File-Based Data Integrity</h4>
+<pre>Check file-based data integrity:
+
+1. Verify directory structure:
+   Expected:
+   data/
+   ├── projects/
+   ├── tasks/
+   ├── ideas/
+   └── inbox/
+
+   - Check each directory exists
+   - Create any missing directories
+
+2. Check Zod schemas include required fields:
+   - Look for schemas in lib/validation/ or similar
+   - Verify each entity schema has:
+     - id (string)
+     - createdAt (date/string)
+     - updatedAt (date/string)
+   - List any schemas missing these fields
+
+3. Check file naming convention:
+   - Look at any existing files in data/
+   - Verify they follow slug pattern (lowercase, hyphens, no spaces)
+
+4. Verify gray-matter is installed for YAML parsing:
+   - Check package.json for "gray-matter"
+   - If missing, tell me to run: npm install gray-matter
+
+5. Report:
+   | Check              | Status | Notes |
+   |--------------------|--------|-------|
+   | Directory structure | ✅/❌  | ...   |
+   | Zod schemas complete| ✅/⚠️  | ...   |
+   | File naming OK      | ✅/⚠️  | ...   |
+   | gray-matter installed| ✅/❌ | ...   |
+
+6. If directories missing, create them:
+   mkdir -p data/projects data/tasks data/ideas data/inbox</pre>
+</div>
+
+<h2 id="section-31-8">31.8 Step 5: API Layer Verification (Conditional)</h2>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check API Layer</h4>
+<pre>Check API layer:
+
+1. Find API routes:
+   - Check app/api/ for route handlers
+   - Check for 'use server' directives (server actions)
+   - Check for tRPC router (if using tRPC)
+
+2. For each API route/action found, check:
+   - Input validation: Look for .parse() or .safeParse() calls
+   - Error handling: Look for try/catch blocks
+   - Error responses: Verify they don't expose file paths or stack traces
+
+3. Check error response patterns:
+   - Search for patterns like: { error: ... } or NextResponse.json({ error: })
+   - Verify error messages are user-friendly, not technical
+   - Flag any that include: stack, __dirname, file path, or internal details
+
+4. Check TypeScript types:
+   - If Supabase: verify types are generated (database.types.ts or similar)
+   - If file-based: verify types are inferred from Zod schemas (z.infer<>)
+
+5. Report:
+   | Check                   | Status | Notes |
+   |-------------------------|--------|-------|
+   | API routes found        | ✅/❌  | X routes in app/api/ |
+   | Input validation        | ✅/⚠️  | X/Y routes validated |
+   | Error handling          | ✅/⚠️  | ... |
+   | No internal leaks       | ✅/⚠️  | ... |
+   | Types defined           | ✅/⚠️  | ... |</pre>
+</div>
+
+<h2 id="section-31-9">31.9 Step 6: UI Shell Verification (Universal with Conditions)</h2>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Check UI Shell</h4>
+<pre>Check UI shell:
+
+1. Check root layout (app/layout.tsx):
+   - Verify it exists
+   - Check for providers: ThemeProvider, Toaster, or similar
+   - Check for proper html/body structure
+
+2. Check for required UI components:
+   - Toast/notification system
+   - Theme support (if using dark mode)
+
+3. Check responsive setup:
+   - Look for Tailwind responsive classes (sm:, md:, lg:)
+   - Check for mobile navigation component
+
+4. Create manual test checklist:
+   - [ ] App loads without console errors
+   - [ ] Navigation works at 320px width (mobile)
+   - [ ] Navigation works at 768px width (tablet)
+   - [ ] Navigation works at 1024px+ width (desktop)
+   - [ ] Mobile menu opens and closes (if applicable)
+   - [ ] Dark mode toggles (if applicable)
+
+5. Architecture-specific:
+   - If has auth: [ ] Protected routes redirect to login
+   - If local-only: Skip auth redirect check
+   - If has marketing pages: [ ] Marketing layout has header/footer
+   - If no marketing pages: Skip marketing layout check
+
+6. Report:
+   | Check              | Status | Notes |
+   |--------------------|--------|-------|
+   | Root layout exists | ✅/❌  | ...   |
+   | Providers setup    | ✅/⚠️  | ...   |
+   | Responsive classes | ✅/⚠️  | ...   |</pre>
+</div>
+
+<h4>🔧 Manual Steps Required</h4>
+
+<p>Open your app in browser and test the checklist items at different viewport widths.</p>
+
+<h2 id="section-31-10">31.10 Step 7: Generate Report</h2>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Generate Checkpoint 1 Report</h4>
+<pre>Generate Checkpoint 1 Report:
+
+1. Create CHECKPOINT-1-REPORT.md with:
+
+# Checkpoint 1: Foundation Audit Report
+
+**Project:** [detect from package.json name]
+**Date:** [today's date]
+**Architecture:** [detected architecture profile]
+
+## Architecture
+
+| Component  | Detected     |
+|------------|--------------|
+| Database   | ...          |
+| Auth       | ...          |
+| API        | ...          |
+| Deployment | ...          |
+| Framework  | ...          |
+
+## Results Summary
+
+| Status | Count |
+|--------|-------|
+| ✅ Passed  | X |
+| ⚠️ Adapted | X |
+| ⏭️ Skipped | X |
+| ❌ Failed  | X |
+
+## Detailed Results
+
+### ✅ Passed
+[list all passed checks]
+
+### ⚠️ Adapted
+[list checks that were adapted, with what they were adapted to]
+
+### ⏭️ Skipped
+[list skipped checks with reason]
+
+### ❌ Failed
+[list failed checks with fix instructions]
+
+## Manual Checks Required
+[list any checks that need manual verification with instructions]
+
+## Next Steps
+[pull from BUILD-CONTRACT.md if found]
+
+## Git Tag
+
+[if all critical pass:]
+git add .
+git commit -m "Complete Checkpoint 1: Foundation verified"
+git tag -a checkpoint-1 -m "Checkpoint 1: Foundation audit complete"
+git push origin checkpoint-1
+
+[if failures:]
+⚠️ Fix failed checks before tagging
+
+2. Save to project root as CHECKPOINT-1-REPORT.md
+3. Show me a summary</pre>
+</div>
+
+<h2 id="section-31-11">31.11 Step 8: Tag the Checkpoint</h2>
+
+<p>Once all checks pass (or only non-critical items remain):</p>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt: Complete Checkpoint 1</h4>
+<pre>Complete Checkpoint 1:
+
+1. Check if there are uncommitted changes:
+   git status
+
+2. If changes exist, commit them:
+   git add .
+   git commit -m "Complete Checkpoint 1: Foundation verified"
+
+3. Create the checkpoint tag:
+   git tag -a checkpoint-1 -m "Checkpoint 1: Foundation audit complete - [architecture profile]"
+
+4. Show me the command to push (don't run it):
+   git push origin checkpoint-1
+
+5. Confirm checkpoint is complete</pre>
+</div>
+
+<h3>Why Tag?</h3>
+
+<p>The <code>checkpoint-1</code> tag creates a safe rollback point. If you encounter issues in later milestones, you can return to this verified state:</p>
+
+<div class="code-block">git checkout checkpoint-1</div>
+
+<h2 id="section-31-12">31.12 What's Next</h2>
+
+<p>Your foundation is verified. Based on your Build Contract, your next steps are:</p>
+
+<div class="info" style="background: var(--info-bg); border-left: 4px solid var(--info); padding: 1rem; margin: 1.5rem 0;">
+  <p><strong>Note:</strong> Claude Code will pull these from BUILD-CONTRACT.md</p>
+</div>
+
+<p>If no Build Contract found, typical next steps:</p>
+<ol>
+  <li>M5: Authentication (if applicable)</li>
+  <li>First feature implementation</li>
+  <li>Core CRUD operations</li>
+</ol>
+
+<h3>Continue to Next Chapter</h3>
+
+<ul>
+  <li>If has auth: <a href="chapter-33-m5-authentication.html">Chapter 33: M5 - Authentication</a></li>
+  <li>If local-only: <a href="chapter-34-m6-core-feature.html">Chapter 34: M6 - Core Features</a></li>
+</ul>
+
+<h2 id="section-31-13">31.13 Troubleshooting</h2>
+
+<h3>Architecture detection is wrong</h3>
+
+<p>Create <code>.checkpoint-config.yaml</code>:</p>
+
+<div class="code-block">architecture:
+  database: file-based  # or: supabase, postgresql, prisma, none
+  auth: none-local      # or: supabase-auth, nextauth, clerk
+  deployment: local-only # or: vercel, docker, railway</div>
+
+<h3>npm run build fails</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt</h4>
+<pre>My build is failing. Help me fix it:
+1. Run npm run build and capture the full error
+2. Identify the root cause
+3. Suggest specific fixes
+4. Apply the fix if it's safe</pre>
+</div>
+
+<h3>TypeScript errors</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt</h4>
+<pre>Fix my TypeScript errors:
+1. Run npx tsc --noEmit
+2. Group errors by file
+3. For each file, explain the error and fix it</pre>
+</div>
+
+<h3>npm audit found vulnerabilities</h3>
+
+<div class="prompt-box">
+<h4>Claude Code Prompt</h4>
+<pre>Fix security vulnerabilities:
+1. Run npm audit
+2. For critical/high issues, run npm audit fix
+3. If fix doesn't work, show me which packages and suggest alternatives
+4. For moderate/low, just note them</pre>
+</div>
+
+<div class="success" style="background: var(--success-bg); border-left: 4px solid var(--success); padding: 1rem; margin: 1.5rem 0;">
+  <h4>Checkpoint 1 Complete</h4>
+  <p>Your foundation is verified and architecture-aware. Proceed with confidence to feature development.</p>
+</div>
+</article>
+
+
+<!-- CHAPTER-32-M4-LAYOUTS.HTML -->
+<article>
+<h1 id="chapter-32">Chapter 32: Milestone 4 - Layouts</h1>
+
+<p class="chapter-intro">In this chapter, you'll create the layout architecture for your application. By the end, you'll have marketing and app layouts with responsive navigation.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Layouts involve multiple files. Use <a href="../workflow-guide-v1.html#context-management">Context Management</a> to keep Claude Code focused on related components.
+</div>
+
+<h2 id="section-32-1">32.1 Overview</h2>
+
+<p>Layouts define the visual structure that users experience on every page. Separating marketing and authenticated layouts ensures appropriate navigation and styling for each context while maintaining code reusability.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 2-3 complete, Checkpoint A passed</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 1</p>
+  <p><strong>Deliverables:</strong> Layout components, navigation, responsive design verified.</p>
+</div>
+
+<h2 id="section-32-2">32.2 Implementation Prompt</h2>
+
+<p>Create root layout, marketing layout (public pages), and app layout (authenticated pages). Build navigation components with responsive behavior.</p>
+
+<div class="prompt-box">
+<h4>Prompt 4.1: Application Layouts</h4>
+<pre>ROLE
+Frontend Developer creating the layout architecture.
+
+CONTEXT
+Project: {{productName}}
+Design system ready (Milestone 2 complete).
+Database schema ready (Milestone 3 complete).
+
+OBJECTIVE
+Create layout components for marketing and authenticated pages.
+
+REQUIREMENTS
+
+1. Root layout (src/app/layout.tsx):
+   - HTML lang attribute
+   - Meta tags for SEO
+   - Font configuration
+   - Toast provider (for notifications)
+   - Theme provider if using dark mode
+
+2. Marketing layout (src/app/(marketing)/layout.tsx):
+   - Header with logo and navigation
+   - Navigation links: Features, Pricing, Login, Sign Up
+   - Footer with links and copyright
+   - Max-width container for content
+
+3. App layout (src/app/(app)/layout.tsx):
+   - Sidebar navigation (collapsible on mobile)
+   - Header with user menu and notifications
+   - Main content area with proper padding
+   - Protected route wrapper (checks auth)
+
+4. Navigation components:
+   - MarketingNav: Public navigation bar
+   - AppNav: Authenticated sidebar/header
+   - UserMenu: Dropdown with profile, settings, logout
+   - MobileNav: Hamburger menu for mobile
+
+5. Responsive behavior:
+   - Mobile: Hamburger menu, stacked layout
+   - Tablet: Collapsible sidebar
+   - Desktop: Full sidebar, expanded navigation
+
+VERIFICATION
+Test at 320px, 768px, 1024px, 1440px widths
+Navigation works on mobile (tap, no hover)
+Run: npm run build — no errors</pre>
+</div>
+
+<h2 id="section-32-3">32.3 Verification</h2>
+
+<div class="success">
+  <h4>Expected Outcome</h4>
+  <p><strong>What you should have:</strong> Root layout with providers, marketing layout with header/footer, app layout with sidebar navigation, responsive navigation components working at all breakpoints.</p>
+  <p><strong>How to validate:</strong></p>
+  <ul>
+    <li>Test navigation at 320px, 768px, 1024px, and 1440px widths</li>
+    <li>Mobile navigation opens/closes properly</li>
+    <li>All layouts render without errors</li>
+    <li><code>npm run build</code> completes successfully</li>
+  </ul>
+</div>
+
+<h2 id="section-32-4">32.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 4. Your project now has:</p>
+<ul>
+  <li>Root layout with providers</li>
+  <li>Marketing layout with header/footer</li>
+  <li>App layout with sidebar navigation</li>
+  <li>Responsive navigation components</li>
+  <li>Mobile-friendly hamburger menu</li>
+  <li>User menu with dropdown</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 33 (Milestone 5) - Implement authentication with Supabase Auth.</p>
+</article>
+
+
+<!-- CHAPTER-33-M5-AUTHENTICATION.HTML -->
+<article>
+<h1 id="chapter-33">Chapter 33: Milestone 5 - Authentication</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Implement secure authentication with Supabase Auth: login, signup, protected routes, and session management using 2 prompts.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M4 (Layouts) is complete. Your app should have working layouts and navigation before adding authentication.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll implement authentication with Supabase Auth. By the end, you'll have secure login, signup, protected routes, and user session management.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Auth involves both client and server code. Review <a href="../workflow-guide-v1.html#agentic-patterns">Agentic Patterns</a> for handling multi-file changes.
+</div>
+
+<h2 id="section-33-1">33.1 Overview</h2>
+
+<p>Authentication is the gateway to your application. Proper implementation with Supabase Auth gives you secure sessions, token refresh, and protected routes - without building auth from scratch.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 4 (Layouts) complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 2</p>
+  <p><strong>Deliverables:</strong> Auth flows working, protected routes, user session management</p>
+</div>
+
+<h2 id="section-33-2">33.2 Implementation Prompts</h2>
+
+<h3>Prompt 5.1: Supabase Auth Configuration</h3>
+
+<div class="prompt-box">
+<h4>Prompt 5.1: Supabase Auth Configuration</h4>
+<pre>ROLE
+Full-Stack Developer implementing authentication.
+
+CONTEXT
+Project: {{productName}}
+Layouts complete (Milestone 4).
+Using Supabase Auth with email/password.
+
+OBJECTIVE
+Set up Supabase auth clients and middleware.
+
+REQUIREMENTS
+
+1. Install Supabase packages:
+   - @supabase/supabase-js
+   - @supabase/ssr
+
+2. Create Supabase clients (src/lib/supabase/):
+   - client.ts: Browser client for client components
+   - server.ts: Server client for server components/actions
+   - middleware.ts: Client for middleware (token refresh)
+
+3. Create middleware (src/middleware.ts):
+   - Refresh auth tokens on each request
+   - Protect /dashboard/* and /app/* routes
+   - Redirect unauthenticated users to /login
+   - Redirect authenticated users away from /login, /signup
+
+4. Create auth context provider (src/components/providers/):
+   - UserProvider: Wraps app with user context
+   - useUser hook: Access current user
+   - Subscribe to auth state changes
+
+5. Create auth utility functions (src/lib/auth.ts):
+   - getCurrentUser(): Get user from server
+   - requireUser(): Throw if not authenticated
+   - signOut(): Server action for logout
+
+VERIFICATION
+Protected routes redirect to login when not authenticated
+Auth routes redirect to dashboard when authenticated</pre>
+</div>
+
+<h3>Prompt 5.2: Login and Signup Pages</h3>
+
+<div class="prompt-box">
+<h4>Prompt 5.2: Login and Signup Pages</h4>
+<pre>ROLE
+Frontend Developer creating authentication UI.
+
+CONTEXT
+Project: {{productName}}
+Supabase auth configured (Prompt 5.1).
+Design system available.
+
+OBJECTIVE
+Create login and signup pages with proper validation.
+
+REQUIREMENTS
+
+1. Login page (src/app/(auth)/login/page.tsx):
+   - Email and password fields
+   - "Remember me" checkbox (optional)
+   - "Forgot password" link
+   - Link to signup page
+   - Loading state during submission
+   - Error display for invalid credentials
+
+2. Signup page (src/app/(auth)/signup/page.tsx):
+   - Email, password, confirm password fields
+   - Full name field (optional)
+   - Terms acceptance checkbox
+   - Link to login page
+   - Loading state during submission
+   - Success message (check email for verification)
+
+3. Form validation (using react-hook-form + zod):
+   - Email: Valid email format
+   - Password: Minimum 8 characters
+   - Confirm password: Must match password
+   - Show validation errors inline
+
+4. Server actions (src/app/(auth)/actions.ts):
+   - signInAction: Handle login form submission
+   - signUpAction: Handle signup form submission
+   - Return proper error messages
+
+5. Password reset flow (optional for MVP):
+   - Forgot password page with email input
+   - Reset password page (from email link)
+
+VERIFICATION
+Can create new account and receive verification email
+Can log in with valid credentials
+Validation errors display correctly
+Redirects to dashboard after successful login</pre>
+</div>
+
+<h2 id="section-33-3">33.3 Verification</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Supabase auth clients configured for browser and server</li>
+    <li>Login and signup pages with form validation</li>
+    <li>Middleware protecting authenticated routes</li>
+    <li>User context provider and useUser hook</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ul>
+    <li>Create new account (receive verification email)</li>
+    <li>Log in with valid credentials</li>
+    <li>Protected routes redirect to login when unauthenticated</li>
+    <li>Auth routes redirect to dashboard when logged in</li>
+    <li><code>npm run build</code> passes without errors</li>
+  </ul>
+</div>
+
+<h2 id="section-33-4">33.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 5. Your project now has:</p>
+<ul>
+  <li>Supabase auth clients (browser, server, middleware)</li>
+  <li>Middleware for route protection and token refresh</li>
+  <li>Login page with validation</li>
+  <li>Signup page with validation</li>
+  <li>User context provider and useUser hook</li>
+  <li>Auth utility functions</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 34 (Milestone 6) - Build your core feature using the four-prompt pattern.</p>
+</article>
+
+
+<!-- CHAPTER-34-M6-CORE-FEATURE.HTML -->
+<article>
+<h1 id="chapter-34">Chapter 34: Milestone 6 - Core Feature</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Build your product's main functionality using the four-prompt pattern: Data Layer → Server Actions → UI Components → Page Assembly.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M5 (Authentication) is working. Your users can now log in, so you can build the authenticated features they came for.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll build your primary feature using the four-prompt pattern. By the end, you'll have a complete user journey with data persistence, validation, and UI components.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> This is the largest milestone. Use <a href="../workflow-guide-v1.html#task-decomposition">Task Decomposition</a> to break it into focused sessions.
+</div>
+
+<h2 id="section-34-1">34.1 Overview</h2>
+
+<p>Your core feature is the primary value your application delivers. The four-prompt pattern (Data Layer → Server Actions → UI Components → Page Assembly) ensures clean architecture and separation of concerns that will scale with your application.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 5 (Authentication) complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 4</p>
+  <p><strong>Deliverables:</strong> Core feature complete, tests passing, user journey functional</p>
+</div>
+
+<h2 id="section-34-2">34.2 The Four-Prompt Pattern</h2>
+
+<p>Build your feature in layers, each building on the previous:</p>
+
+<div class="code-block">1. Data Layer    → Queries and mutations (src/lib/queries/, src/lib/mutations/)
+2. Server Actions → Business logic and validation (src/app/.../actions.ts)
+3. UI Components  → Reusable display components (src/components/{{feature}}/)
+4. Page Assembly  → Wire everything together (src/app/(app)/{{feature}}/)</div>
+
+<h2 id="section-34-3">34.3 Implementation Prompts</h2>
+
+<h3>Prompt 6.1: Data Layer</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.1: Data Layer</h4>
+<pre>ROLE
+Backend Developer creating the data access layer.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Database schema exists (Milestone 3).
+Auth working (Milestone 5).
+
+OBJECTIVE
+Create typed query and mutation functions for the core feature.
+
+REQUIREMENTS
+
+1. Create queries file (src/lib/queries/{{feature}}.ts):
+   - get{{Entity}}ById(id): Fetch single item
+   - get{{Entity}}List(options): Paginated list with filters
+   - search{{Entity}}(query): Search functionality
+   - get{{Entity}}Stats(): Aggregate data for dashboards
+
+2. Create mutations file (src/lib/mutations/{{feature}}.ts):
+   - create{{Entity}}(data): Insert new record
+   - update{{Entity}}(id, data): Update existing record
+   - delete{{Entity}}(id): Remove record
+
+3. TypeScript types (src/types/{{feature}}.ts):
+   - {{Entity}} type matching database schema
+   - Create{{Entity}}Input for creation
+   - Update{{Entity}}Input for updates
+   - {{Entity}}ListOptions for query params
+
+4. Query patterns:
+   - Use Supabase server client
+   - Return typed responses
+   - Handle errors with meaningful messages
+   - Include created_by/updated_by where appropriate
+
+VERIFICATION
+All functions compile without TypeScript errors
+Test each query/mutation manually with Supabase dashboard</pre>
+</div>
+
+<h3>Prompt 6.2: Server Actions</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.2: Server Actions</h4>
+<pre>ROLE
+Full-Stack Developer implementing business logic.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Data layer exists (Prompt 6.1).
+
+OBJECTIVE
+Create server actions with validation and business logic.
+
+REQUIREMENTS
+
+1. Create actions file (src/app/(app)/{{feature}}/actions.ts):
+   - 'use server' directive at top
+   - create{{Entity}}Action(formData)
+   - update{{Entity}}Action(id, formData)
+   - delete{{Entity}}Action(id)
+
+2. Input validation with Zod:
+   - Define schemas for each action input
+   - Parse and validate formData
+   - Return structured validation errors
+
+3. Authorization checks:
+   - Verify user is authenticated
+   - Verify user owns the resource (for updates/deletes)
+   - Check any feature-specific permissions
+
+4. Business logic:
+   - Apply any business rules before data operations
+   - Handle related data updates if needed
+   - Maintain data consistency
+
+5. Response handling:
+   - Return { success: true, data } on success
+   - Return { success: false, error } on failure
+   - revalidatePath after mutations
+
+VERIFICATION
+Actions reject invalid input with clear errors
+Unauthorized access attempts are blocked
+Successful operations update the UI (via revalidation)</pre>
+</div>
+
+<h3>Prompt 6.3: UI Components</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.3: UI Components</h4>
+<pre>ROLE
+Frontend Developer building feature components.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Design system available (Milestone 2).
+Server actions ready (Prompt 6.2).
+
+OBJECTIVE
+Create reusable UI components for the feature.
+
+REQUIREMENTS
+
+1. List component (src/components/{{feature}}/{{entity}}-list.tsx):
+   - Display items in cards or table format
+   - Pagination controls
+   - Empty state when no items
+   - Loading skeleton
+
+2. Card component (src/components/{{feature}}/{{entity}}-card.tsx):
+   - Display single item summary
+   - Action buttons (edit, delete)
+   - Link to detail view
+
+3. Form component (src/components/{{feature}}/{{entity}}-form.tsx):
+   - Works for both create and edit modes
+   - Uses react-hook-form with zod validation
+   - Loading state during submission
+   - Error display for validation/server errors
+   - Success feedback (toast or redirect)
+
+4. Detail component (src/components/{{feature}}/{{entity}}-detail.tsx):
+   - Full item information display
+   - Related data if applicable
+   - Actions (edit, delete, other)
+
+5. Delete confirmation:
+   - Modal or alert dialog for confirmation
+   - Loading state during deletion
+   - Error handling
+
+VERIFICATION
+Components render correctly with sample data
+Forms validate and submit properly
+Loading and error states display correctly</pre>
+</div>
+
+<h3>Prompt 6.4: Page Assembly</h3>
+
+<div class="prompt-box">
+<h4>Prompt 6.4: Page Assembly</h4>
+<pre>ROLE
+Full-Stack Developer assembling the feature pages.
+
+CONTEXT
+Project: {{productName}}
+Feature: {{describe your core feature}}
+Components ready (Prompt 6.3).
+
+OBJECTIVE
+Wire components together into complete pages.
+
+REQUIREMENTS
+
+1. List page (src/app/(app)/{{feature}}/page.tsx):
+   - Server Component fetching data
+   - Render list component with data
+   - "Create new" button linking to create page
+   - Search/filter controls if needed
+
+2. Create page (src/app/(app)/{{feature}}/new/page.tsx):
+   - Render form in create mode
+   - Pass create action to form
+   - Redirect to list or detail after success
+
+3. Detail page (src/app/(app)/{{feature}}/[id]/page.tsx):
+   - Server Component fetching single item
+   - Handle not found (notFound())
+   - Render detail component
+   - Edit and delete actions
+
+4. Edit page (src/app/(app)/{{feature}}/[id]/edit/page.tsx):
+   - Fetch existing data
+   - Render form in edit mode with data
+   - Pass update action to form
+   - Redirect after success
+
+5. Navigation integration:
+   - Add feature to sidebar navigation
+   - Breadcrumbs for nested pages
+   - Page titles and meta
+
+VERIFICATION
+Complete user journey works: Create → View → Edit → Delete
+Navigation flows are intuitive
+Run: npm run build — no errors
+Test with real data in development</pre>
+</div>
+
+<h2 id="section-34-4">34.4 Verification</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Complete data layer with typed queries and mutations</li>
+    <li>Server actions with validation and authorization</li>
+    <li>Reusable UI components (list, card, form, detail)</li>
+    <li>Fully assembled pages for list, create, detail, and edit views</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ul>
+    <li>Complete user journey works: Create → View → Edit → Delete</li>
+    <li>All operations persist to database</li>
+    <li>Navigation flows are intuitive</li>
+    <li><code>npm run build</code> passes without errors</li>
+    <li>Test with real data in development</li>
+  </ul>
+</div>
+
+<div class="gate-indicator">
+  <strong>GATE:</strong> You must complete Checkpoint B (next chapter) before proceeding to Milestone 7.
+</div>
+
+<h2 id="section-34-5">34.5 Chapter Summary</h2>
+
+<p>You've completed Milestone 6. Your project now has:</p>
+<ul>
+  <li>Data layer with typed queries and mutations</li>
+  <li>Server actions with validation and authorization</li>
+  <li>Reusable UI components (list, card, form, detail)</li>
+  <li>Complete pages for CRUD operations</li>
+  <li>Working user journey end-to-end</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 35 (Checkpoint B) - Feature complete audit before proceeding.</p>
+</article>
+
+
+<!-- CHAPTER-35-CHECKPOINT-B.HTML -->
+<article>
+<h1 id="chapter-35">Chapter 35: Checkpoint B - Feature Complete Audit</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Quality gate after completing M1-M6. Verify code quality, test coverage, and feature completeness before proceeding.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After completing Milestone 6 (Core Feature). This is a mandatory quality gate - do not skip.
+</div>
+
+<div class="gate-indicator">
+  <strong>GATE:</strong> M1-M6 must be complete before running this checkpoint.
+</div>
+
+<p class="chapter-intro">This checkpoint ensures your core features (M1-M6) are production-quality before building additional functionality. Skipping this risks accumulating technical debt that slows future development.</p>
+
+<div class="checkpoint-box">
+  <h2 style="color: #6d28d9; margin-top: 0;">Checkpoint B: Feature Complete Audit</h2>
+  <p><strong>When:</strong> After completing Milestone 6 (Core Feature)</p>
+  <p><strong>Purpose:</strong> Verify code quality, test coverage, and feature completeness</p>
+  <p><strong>Outcome:</strong> Git tag <code>checkpoint-b</code> marks verified core</p>
+</div>
+
+<h2 id="section-35-1">35.1 Technical Debt Assessment</h2>
+
+<p>Run the technical debt scoring to measure code quality. Target score: >= 7.0</p>
+
+<h3>Code Quality Metrics</h3>
+
+<div class="checklist">
+  <h4>Quality Checklist</h4>
+  <ul>
+    <li>Functions <= 30 lines (average)</li>
+    <li>Files <= 200 lines (most files)</li>
+    <li>Nesting depth <= 3 levels</li>
+    <li>No console.log statements in production code</li>
+    <li>No commented-out code blocks</li>
+    <li>TypeScript strict mode passing</li>
+  </ul>
+</div>
+
+<h2 id="section-35-2">35.2 Test Coverage Verification</h2>
+
+<div class="code-block"># Run test suite
+npm test
+
+# Generate coverage report
+npm test -- --coverage
+
+# Target: >= 80% coverage for new code</div>
+
+<div class="checklist">
+  <h4>Test Checklist</h4>
+  <ul>
+    <li>All tests pass (100% pass rate)</li>
+    <li>Test coverage >= 80% for core feature code</li>
+    <li>Critical user flows have integration tests</li>
+    <li>Edge cases covered (validation, errors)</li>
+  </ul>
+</div>
+
+<h2 id="section-35-3">35.3 Feature Completeness Review</h2>
+
+<div class="checklist">
+  <h4>Feature Checklist</h4>
+  <ul>
+    <li>Core feature fully functional end-to-end</li>
+    <li>User flows match UX Package specifications</li>
+    <li>All CRUD operations work correctly</li>
+    <li>Validation errors display properly</li>
+    <li>Loading states on all async operations</li>
+    <li>Error handling for failed operations</li>
+    <li>Navigation flows are intuitive</li>
+  </ul>
+</div>
+
+<h2 id="section-35-4">35.4 Performance Check</h2>
+
+<div class="code-block"># Build and analyze bundle
+npm run build
+
+# Run Lighthouse audit (target: >= 80)
+# Open Chrome DevTools → Lighthouse → Generate report</div>
+
+<div class="checklist">
+  <h4>Performance Checklist</h4>
+  <ul>
+    <li>Build completes with no errors</li>
+    <li>No critical bundle size issues</li>
+    <li>Lighthouse Performance >= 80</li>
+    <li>No layout shift on page load</li>
+  </ul>
+</div>
+
+<h2 id="section-35-5">35.5 Code Review</h2>
+
+<p>Review these areas before proceeding:</p>
+
+<div class="checklist">
+  <h4>Code Review Checklist</h4>
+  <ul>
+    <li>No hardcoded secrets or credentials</li>
+    <li>Proper error handling in server actions</li>
+    <li>Authorization checks in all mutations</li>
+    <li>Input validation on all user inputs</li>
+    <li>Code follows project conventions (CLAUDE.md)</li>
+    <li>TypeScript types properly defined</li>
+  </ul>
+</div>
+
+<h2 id="section-35-6">35.6 Tag the Checkpoint</h2>
+
+<p>Once all checks pass, tag this checkpoint in Git:</p>
+
+<div class="code-block"># Commit any pending changes
+git add .
+git commit -m "Complete Checkpoint B: Feature complete verified"
+
+# Tag the checkpoint
+git tag -a checkpoint-b -m "Checkpoint B: Feature complete audit - M1-M6 verified"
+
+# Push tag to remote
+git push origin checkpoint-b</div>
+
+<h2 id="section-35-7">35.7 Checkpoint Summary</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After passing this checkpoint, you should have:</p>
+  <ul>
+    <li>Technical debt score >= 7.0</li>
+    <li>Test coverage >= 80%</li>
+    <li>All features functional end-to-end</li>
+    <li>Performance within acceptable range</li>
+    <li>Code review passed with no critical issues</li>
+    <li>Git tag: <code>checkpoint-b</code></li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Checkpoint B Complete</h4>
+  <p>Your core features are verified and ready for additional development. You may now proceed to Milestone 7 (Admin Console).</p>
+</div>
+
+<p><strong>Next:</strong> Chapter 36 (Milestone 7) - Build your admin console.</p>
+</article>
+
+
+<!-- CHAPTER-36-M7-ADMIN-CONSOLE.HTML -->
+<article>
+<h1 id="chapter-36">Chapter 36: Milestone 7 - Admin Console</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Build an administrative interface for managing your SaaS: user management, subscription viewing, error logs, and audit logging.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M6 (Core Feature) and Checkpoint B. You now have real data to manage and need operational visibility.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll build an operational admin console for managing your SaaS. By the end, you'll have user management, subscription viewing, and error log access.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Admin features require careful access control. Review <a href="../workflow-guide-v1.html#context-management">Context Management</a> for maintaining security focus.
+</div>
+
+<h2 id="section-36-1">36.1 Overview</h2>
+
+<p>Building the admin console as Milestone 7 (after core feature, before additional features) is intentional. By this point, you have real data structures to manage and real functionality to monitor. Building it now means you have operational visibility while you're still actively developing.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 6 complete, Checkpoint B passed</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 5</p>
+  <p><strong>Deliverables:</strong> Admin role system, user management, subscription viewing, error logs</p>
+</div>
+
+<div class="note">
+  <strong>Phase 1 Admin Features (This Milestone):</strong> These are the essential features you need from day one. User management (list, search, view), subscription viewing, and error log integration. Everything else can wait until after launch.
+</div>
+
+<h2 id="section-36-2">36.2 Admin Database Setup</h2>
+
+<p>First, add admin-specific tables to your database. Create this migration:</p>
+
+<div class="prompt-box">
+<h4>Prompt 7.1: Admin Schema</h4>
+<pre>ROLE
+Database Engineer adding admin functionality.
+
+CONTEXT
+Project: {{productName}}
+Core schema exists (Milestone 3).
+Need admin role system and audit logging.
+
+OBJECTIVE
+Create database tables and functions for admin features.
+
+REQUIREMENTS
+
+1. Add role column to profiles table:
+   - role: text default 'user' check (role in ('user', 'admin', 'super_admin'))
+
+2. Create admin_audit_logs table:
+   - id, admin_user_id, action, target_type, target_id
+   - metadata (jsonb), created_at
+   - Enable RLS
+
+3. Create error_logs table:
+   - id, user_id (nullable), error_type, message
+   - stack_trace, url, user_agent, created_at
+   - Enable RLS
+
+4. Update is_admin() function:
+   - Check if current user has admin or super_admin role
+
+5. Create RLS policies:
+   - Admin audit logs: admins can read all, insert own
+   - Error logs: admins can read all, service role can insert
+
+OUTPUT
+Migration file: YYYYMMDDHHMMSS_add_admin_tables.sql</pre>
+</div>
+
+<h2 id="section-36-3">36.3 Implementation Prompts</h2>
+
+<h3>Prompt 7.2: Admin Layout and Access</h3>
+
+<div class="prompt-box">
+<h4>Prompt 7.2: Admin Layout and Access</h4>
+<pre>ROLE
+Full-Stack Developer implementing admin access control.
+
+CONTEXT
+Project: {{productName}}
+Admin schema created (Prompt 7.1).
+Need protected admin area.
+
+OBJECTIVE
+Create admin layout with role-based access.
+
+REQUIREMENTS
+
+1. Admin layout (src/app/(admin)/layout.tsx):
+   - Check user role before rendering
+   - Redirect non-admins to dashboard
+   - Admin navigation sidebar
+   - Different styling from main app
+
+2. Admin middleware update:
+   - Protect /admin/* routes
+   - Verify admin role from database
+   - Log admin page access
+
+3. Admin navigation:
+   - Dashboard (overview stats)
+   - Users (list, search, view)
+   - Subscriptions (view only)
+   - Error Logs (recent errors)
+   - Audit Log (admin actions)
+
+VERIFICATION
+Non-admin users redirected from /admin
+Admin sidebar shows all sections
+Role check happens server-side</pre>
+</div>
+
+<h3>Prompt 7.3: User Management</h3>
+
+<div class="prompt-box">
+<h4>Prompt 7.3: User Management</h4>
+<pre>ROLE
+Full-Stack Developer building user management.
+
+CONTEXT
+Project: {{productName}}
+Admin layout ready (Prompt 7.2).
+Need user list and detail views.
+
+OBJECTIVE
+Create user management interface for admins.
+
+REQUIREMENTS
+
+1. Users list page (src/app/(admin)/admin/users/page.tsx):
+   - Paginated user list
+   - Search by email, name
+   - Filter by role, status
+   - Sort by created_at, email
+
+2. User detail page (src/app/(admin)/admin/users/[id]/page.tsx):
+   - Profile information
+   - Subscription status
+   - Activity summary
+   - Related data overview
+
+3. User actions (admin only):
+   - View user details
+   - Change user role (with audit log)
+   - NOTE: No edit/delete of user data for privacy
+
+4. Audit logging:
+   - Log all admin views of user data
+   - Log role changes with before/after
+
+VERIFICATION
+User list loads with pagination
+Search and filters work
+User detail shows correct data
+Actions are logged</pre>
+</div>
+
+<h3>Prompt 7.4: Error Logs</h3>
+
+<div class="prompt-box">
+<h4>Prompt 7.4: Error Logs</h4>
+<pre>ROLE
+Full-Stack Developer implementing error logging.
+
+CONTEXT
+Project: {{productName}}
+Admin layout ready.
+Need error visibility for debugging.
+
+OBJECTIVE
+Create error logging and viewing system.
+
+REQUIREMENTS
+
+1. Error logging utility (src/lib/error-logger.ts):
+   - logError(error, context): Log to database
+   - Include: message, stack, url, user_id, user_agent
+   - Works in server components and API routes
+
+2. Global error handler:
+   - Catch unhandled errors
+   - Log to database automatically
+   - Show user-friendly error page
+
+3. Error logs page (src/app/(admin)/admin/errors/page.tsx):
+   - Recent errors list
+   - Filter by type, date range
+   - Error detail view with stack trace
+   - Mark as resolved
+
+4. Error alert (optional):
+   - Notification for critical errors
+   - Daily digest email
+
+VERIFICATION
+Errors logged to database
+Admin can view error list
+Stack traces visible in detail view</pre>
+</div>
+
+<h2 id="section-36-4">36.4 Verification</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Protected admin area with role-based access</li>
+    <li>User management with search and filtering</li>
+    <li>Subscription status viewing</li>
+    <li>Error log viewing and management</li>
+    <li>Audit logging of all admin actions</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ul>
+    <li>Non-admin users redirected from /admin</li>
+    <li>User list with search and pagination works</li>
+    <li>Admin actions are logged to audit log</li>
+    <li>Error logs show recent errors with details</li>
+    <li><code>npm run build</code> passes without errors</li>
+  </ul>
+</div>
+
+<h2 id="section-36-5">36.5 Chapter Summary</h2>
+
+<p>You've completed Milestone 7. Your project now has:</p>
+<ul>
+  <li>Admin role system in database</li>
+  <li>Protected admin area with layout</li>
+  <li>User management interface</li>
+  <li>Subscription viewing</li>
+  <li>Error logging and viewing</li>
+  <li>Audit logging of admin actions</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 37 (Milestone 8) - Build supporting features using the four-prompt pattern.</p>
+</article>
+
+
+<!-- CHAPTER-37-M8-SUPPORTING-FEATURES.HTML -->
+<article>
+<h1 id="chapter-37">Chapter 37: Milestone 8 - Supporting Features</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Add secondary features using the same four-prompt pattern from M6. Each supporting feature is a mini-M6.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M7 (Admin Console). You have your core feature and admin panel - now complete the feature set.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll build additional user-facing features using the same four-prompt pattern from M6. By the end, you'll have a complete feature set for your MVP.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Each supporting feature is a mini-M6. See <a href="../workflow-guide-v1.html#task-decomposition">Task Decomposition</a> for managing multiple features.
+</div>
+
+<h2 id="section-37-1">37.1 Overview</h2>
+
+<p>Supporting features complement your core value proposition. Using the same four-prompt pattern ensures consistency and maintainability across your entire feature set.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 7 (Admin Console) complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 4 prompts per feature</p>
+  <p><strong>Deliverables:</strong> Secondary features complete, tests passing, integrated with core feature</p>
+</div>
+
+<h2 id="section-37-2">37.2 Feature Planning</h2>
+
+<p>Before implementing each supporting feature, run this planning prompt:</p>
+
+<div class="prompt-box">
+<h4>Prompt 8.1: Feature Planning</h4>
+<pre>ROLE
+Product Developer planning the next feature.
+
+CONTEXT
+Project: {{productName}}
+Core feature complete (Milestone 6).
+Adding: {{name of supporting feature}}
+
+OBJECTIVE
+Plan the supporting feature before implementing.
+
+REQUIREMENTS
+
+1. Define the feature scope:
+   - What specific problem does this feature solve?
+   - What are the must-have vs nice-to-have capabilities?
+   - How does it integrate with the core feature?
+
+2. Identify data requirements:
+   - New tables needed (if any)
+   - Modifications to existing tables
+   - Relationships to existing data
+
+3. Define the user journey:
+   - Entry point (how user accesses feature)
+   - Core actions user can take
+   - Success states and feedback
+
+4. List the pages/components needed:
+   - Which pages in the four-prompt pattern?
+   - Any new shared components?
+   - Navigation additions
+
+OUTPUT
+Brief feature spec document
+Ready to execute Prompts 6.1-6.4 with feature substituted</pre>
+</div>
+
+<h2 id="section-37-3">37.3 Implementation Pattern</h2>
+
+<p>For each supporting feature, use the same four-prompt pattern from Chapter 34 (M6):</p>
+
+<ol>
+  <li><strong>Data Layer</strong> (Prompt 6.1) - Queries and mutations</li>
+  <li><strong>Server Actions</strong> (Prompt 6.2) - Business logic and validation</li>
+  <li><strong>UI Components</strong> (Prompt 6.3) - Reusable display components</li>
+  <li><strong>Page Assembly</strong> (Prompt 6.4) - Wire everything together</li>
+</ol>
+
+<p>Simply substitute your new feature name in place of the core feature placeholders.</p>
+
+<h2 id="section-37-4">37.4 Feature Checklist</h2>
+
+<div class="checklist">
+  <h4>Per-Feature Verification</h4>
+  <ul>
+    <li>Data layer compiles without TypeScript errors</li>
+    <li>Server actions have proper validation and authorization</li>
+    <li>UI components render correctly with sample data</li>
+    <li>Complete user journey works: Create → View → Edit → Delete</li>
+    <li>Feature integrates with navigation</li>
+    <li>Tests pass for new code</li>
+  </ul>
+</div>
+
+<h2 id="section-37-5">37.5 Verification</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>All supporting features implemented using four-prompt pattern</li>
+    <li>Features integrated with core feature</li>
+    <li>Proper navigation between features</li>
+    <li>Consistent UX patterns across all features</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ul>
+    <li>Each feature passes the same criteria as M6</li>
+    <li>Complete CRUD journey works for each feature</li>
+    <li>Data persists correctly to database</li>
+    <li>Navigation between features is intuitive</li>
+    <li><code>npm run build</code> passes without errors</li>
+  </ul>
+</div>
+
+<h2 id="section-37-6">37.6 Chapter Summary</h2>
+
+<p>You've completed Milestone 8. Your project now has:</p>
+<ul>
+  <li>All planned supporting features</li>
+  <li>Consistent implementation pattern across features</li>
+  <li>Integrated navigation</li>
+  <li>Tests for each feature</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 38 (Milestone 9) - Integrate Stripe for payment processing.</p>
+</article>
+
+
+<!-- CHAPTER-38-M9-PAYMENTS.HTML -->
+<article>
+<h1 id="chapter-38">Chapter 38: Milestone 9 - Payments</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Implement billing with Stripe: subscription plans, checkout flow, webhooks, and customer billing management.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M8 (Supporting Features). Your app is feature-complete and ready to monetize.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll integrate Stripe for subscription billing. By the end, you'll have a complete payment system with checkout, webhooks, and billing management.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Payment code requires extra security attention. See <a href="../workflow-guide-v1.html#context-management">Context Management</a> for focused security review.
+</div>
+
+<h2 id="section-38-1">38.1 Overview</h2>
+
+<p>Payment integration is where your SaaS becomes a business. Stripe handles the complexity of payment processing, but proper webhook handling and subscription state management are critical for reliable billing.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 8 (Supporting Features) complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 4</p>
+  <p><strong>Deliverables:</strong> Stripe integration, webhooks, checkout flow, billing UI, subscription management</p>
+</div>
+
+<h2 id="section-38-2">38.2 Implementation Prompts</h2>
+
+<h3>Prompt 9.1: Stripe Configuration</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.1: Stripe Configuration</h4>
+<pre>ROLE
+Full-Stack Developer setting up Stripe integration.
+
+CONTEXT
+Project: {{productName}}
+Core features complete (Milestone 6).
+Setting up Stripe for subscription billing.
+
+OBJECTIVE
+Configure Stripe SDK and database tables for payments.
+
+REQUIREMENTS
+
+1. Install Stripe packages:
+   - stripe (server SDK)
+   - @stripe/stripe-js (client SDK)
+
+2. Configure environment variables:
+   - STRIPE_SECRET_KEY (server only)
+   - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+   - STRIPE_WEBHOOK_SECRET
+
+3. Create Stripe client (src/lib/stripe.ts):
+   - Server-side Stripe instance
+   - Client-side loadStripe helper
+
+4. Create database tables (migration):
+   - subscriptions: user_id, stripe_customer_id, stripe_subscription_id,
+     status, plan, current_period_end
+   - prices: id, product_id, active, unit_amount, currency, interval
+   - Enable RLS on both tables
+
+5. Create Stripe helper functions:
+   - getOrCreateCustomer(userId, email)
+   - getSubscription(userId)
+   - syncSubscriptionFromStripe(subscriptionId)
+
+VERIFICATION
+Stripe SDK connects successfully (test mode)
+Database tables created with RLS</pre>
+</div>
+
+<h3>Prompt 9.2: Webhook Handler</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.2: Webhook Handler</h4>
+<pre>ROLE
+Backend Developer implementing Stripe webhooks.
+
+CONTEXT
+Project: {{productName}}
+Stripe configured (Prompt 9.1).
+Need webhook handler for subscription events.
+
+OBJECTIVE
+Create secure webhook endpoint for Stripe events.
+
+REQUIREMENTS
+
+1. Create webhook route (src/app/api/webhooks/stripe/route.ts):
+   - POST handler only
+   - Verify webhook signature (CRITICAL for security)
+   - Parse event from request body
+
+2. Handle subscription events:
+   - customer.subscription.created: Create subscription record
+   - customer.subscription.updated: Update status, plan, period
+   - customer.subscription.deleted: Mark as canceled
+   - invoice.payment_succeeded: Update current_period_end
+   - invoice.payment_failed: Mark status as past_due
+
+3. Handle checkout events:
+   - checkout.session.completed: Link customer to user
+
+4. Error handling:
+   - Log errors with context for debugging
+   - Return 200 even on errors (Stripe will retry)
+   - Idempotent handlers (safe to process same event twice)
+
+SECURITY
+ALWAYS verify webhook signature before processing
+NEVER trust event data without signature verification
+
+VERIFICATION
+Use Stripe CLI: stripe listen --forward-to localhost:3000/api/webhooks/stripe
+Trigger test events and verify database updates</pre>
+</div>
+
+<h3>Prompt 9.3: Checkout Flow</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.3: Checkout Flow</h4>
+<pre>ROLE
+Full-Stack Developer implementing the checkout flow.
+
+CONTEXT
+Project: {{productName}}
+Webhooks ready (Prompt 9.2).
+Plans: {{list your pricing plans}}
+
+OBJECTIVE
+Create pricing page and Stripe Checkout integration.
+
+REQUIREMENTS
+
+1. Pricing page (src/app/(marketing)/pricing/page.tsx):
+   - Display all available plans
+   - Feature comparison table
+   - Monthly/annual toggle if applicable
+   - CTA buttons for each plan
+
+2. Checkout API route (src/app/api/checkout/route.ts):
+   - POST: Create Stripe Checkout session
+   - Get or create Stripe customer
+   - Set success_url and cancel_url
+   - Return session URL for redirect
+
+3. Checkout action (src/lib/actions/checkout.ts):
+   - createCheckoutSession(priceId): Server action
+   - Verify user is authenticated
+   - Redirect to Stripe Checkout
+
+4. Success and cancel pages:
+   - /checkout/success: Thank you, redirect to dashboard
+   - /checkout/cancel: Return to pricing with message
+
+VERIFICATION
+Complete checkout in Stripe test mode
+Verify subscription created in database
+User redirected properly after checkout</pre>
+</div>
+
+<h3>Prompt 9.4: Billing Management</h3>
+
+<div class="prompt-box">
+<h4>Prompt 9.4: Billing Management</h4>
+<pre>ROLE
+Full-Stack Developer building billing management UI.
+
+CONTEXT
+Project: {{productName}}
+Checkout working (Prompt 9.3).
+Users need to manage their subscriptions.
+
+OBJECTIVE
+Create billing settings page for subscription management.
+
+REQUIREMENTS
+
+1. Billing page (src/app/(app)/settings/billing/page.tsx):
+   - Current plan display
+   - Next billing date
+   - Usage statistics if applicable
+   - Manage subscription button
+
+2. Customer portal integration:
+   - Create portal session API route
+   - Link to Stripe Customer Portal
+   - Portal handles: update payment, cancel, view invoices
+
+3. Subscription status handling:
+   - Active: Full access
+   - Past due: Show warning, allow limited access
+   - Canceled: Show reactivation option
+   - Trialing: Show trial end date
+
+4. Access control middleware:
+   - Check subscription status for premium features
+   - Graceful degradation for expired subscriptions
+   - Clear upgrade prompts
+
+VERIFICATION
+Billing page shows correct subscription status
+Customer portal opens and works
+Canceled users see appropriate messaging</pre>
+</div>
+
+<h2 id="section-38-3">38.3 Verification</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Stripe SDK configured with test mode</li>
+    <li>Webhook handler processing subscription events</li>
+    <li>Checkout flow creating subscriptions</li>
+    <li>Billing management page showing subscription status</li>
+    <li>Customer Portal integration for self-service</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ul>
+    <li>Complete checkout in Stripe test mode</li>
+    <li>Verify subscription created in database</li>
+    <li>Billing page shows correct subscription status</li>
+    <li>Customer Portal opens and allows management</li>
+    <li>Webhook events logged correctly</li>
+    <li><code>npm run build</code> passes without errors</li>
+  </ul>
+</div>
+
+<h2 id="section-38-4">38.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 9. Your project now has:</p>
+<ul>
+  <li>Stripe SDK configured</li>
+  <li>Webhook handler for subscription events</li>
+  <li>Pricing page with checkout</li>
+  <li>Billing management page</li>
+  <li>Customer Portal integration</li>
+  <li>Subscription access control</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 39 (Milestone 10) - Polish the application with error handling and accessibility.</p>
+</article>
+
+
+<!-- CHAPTER-39-M10-POLISH.HTML -->
+<article>
+<h1 id="chapter-39">Chapter 39: Milestone 10 - Polish</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Optimize performance and refine UX: error boundaries, loading states, empty states, and accessibility compliance.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M9 (Payments). All features complete - now make everything feel professional.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll polish your application with error handling, loading states, and accessibility improvements. By the end, your app will feel professional and production-ready.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Polish is systematic. Use <a href="../workflow-guide-v1.html#task-decomposition">Task Decomposition</a> to audit each area methodically.
+</div>
+
+<h2 id="section-39-1">39.1 Overview</h2>
+
+<p>Polish transforms a working app into a professional product. Error handling, loading states, and accessibility are what separate amateur projects from production-ready software.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 9 (Payments) complete</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 5</p>
+  <p><strong>Deliverables:</strong> Error boundaries, loading states, empty states, edge case handling, WCAG compliance</p>
+</div>
+
+<h2 id="section-39-2">39.2 Implementation Prompts</h2>
+
+<h3>Prompt 10.1: Error Boundaries</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.1: Error Boundaries</h4>
+<pre>ROLE
+Frontend Developer implementing error handling.
+
+CONTEXT
+Project: {{productName}}
+All features complete.
+Need graceful error handling throughout.
+
+OBJECTIVE
+Implement error boundaries and global error handling.
+
+REQUIREMENTS
+
+1. Global error boundary (src/components/error-boundary.tsx):
+   - Catch unhandled React errors
+   - Display user-friendly error message
+   - Option to retry or go home
+   - Log error to error logging service
+
+2. Page-level error handling (src/app/**/error.tsx):
+   - Error.tsx files for each route group
+   - Reset button to try again
+   - Link back to safe location
+
+3. Not found pages (src/app/**/not-found.tsx):
+   - Custom 404 pages for each section
+   - Helpful messaging
+   - Links to valid destinations
+
+4. API error responses:
+   - Consistent error format across all endpoints
+   - Meaningful error messages
+   - Proper HTTP status codes
+
+VERIFICATION
+Trigger error and see boundary catch it
+404 pages display for invalid routes
+API errors return consistent format</pre>
+</div>
+
+<h3>Prompt 10.2: Loading States</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.2: Loading States Audit</h4>
+<pre>ROLE
+Frontend Developer improving loading states.
+
+CONTEXT
+Project: {{productName}}
+Features working but loading states incomplete.
+
+OBJECTIVE
+Audit and improve loading states throughout.
+
+REQUIREMENTS
+
+1. Page loading states (src/app/**/loading.tsx):
+   - Skeleton screens for each page type
+   - Match actual content layout
+   - Smooth transition when content loads
+
+2. Component loading states:
+   - Button loading states (spinner + disabled)
+   - Form submission loading
+   - List loading skeletons
+
+3. Async operation feedback:
+   - Show loading during server actions
+   - Optimistic updates where appropriate
+   - Progress indicators for long operations
+
+4. Suspense boundaries:
+   - Wrap async components in Suspense
+   - Provide fallback UI
+
+VERIFICATION
+All pages show loading skeleton during fetch
+Buttons show loading during submission
+No "flash of empty content"</pre>
+</div>
+
+<h3>Prompt 10.3: Empty States</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.3: Empty States</h4>
+<pre>ROLE
+Frontend Developer improving empty states.
+
+CONTEXT
+Project: {{productName}}
+Need helpful empty states for new users.
+
+OBJECTIVE
+Create engaging empty states for all list/content areas.
+
+REQUIREMENTS
+
+1. List empty states:
+   - Friendly illustration or icon
+   - Helpful message explaining what goes here
+   - CTA to create first item
+
+2. Dashboard empty states:
+   - Getting started guide for new users
+   - Progress indicators
+   - Quick actions
+
+3. Search empty states:
+   - "No results" with suggestions
+   - Alternative actions
+
+4. Error recovery states:
+   - Failed to load with retry
+   - Offline state with cached data option
+
+VERIFICATION
+New user sees helpful empty states
+Empty states have clear CTAs
+No blank white screens</pre>
+</div>
+
+<h3>Prompt 10.4: Accessibility Audit</h3>
+
+<div class="prompt-box">
+<h4>Prompt 10.4: Accessibility Audit</h4>
+<pre>ROLE
+Frontend Developer improving accessibility.
+
+CONTEXT
+Project: {{productName}}
+Need WCAG 2.1 AA compliance.
+
+OBJECTIVE
+Audit and fix accessibility issues.
+
+REQUIREMENTS
+
+1. Keyboard navigation:
+   - All interactive elements focusable
+   - Visible focus indicators
+   - Logical tab order
+   - Escape closes modals
+
+2. Screen reader support:
+   - Semantic HTML structure
+   - ARIA labels on interactive elements
+   - Meaningful alt text on images
+   - Announce dynamic content changes
+
+3. Color and contrast:
+   - 4.5:1 contrast ratio for text
+   - Don't rely on color alone
+   - Focus indicators visible
+
+4. Form accessibility:
+   - Labels associated with inputs
+   - Error messages announced
+   - Required fields indicated
+
+5. Testing:
+   - Run axe DevTools
+   - Test with keyboard only
+   - Test with screen reader
+
+VERIFICATION
+axe DevTools reports no critical issues
+All features work keyboard-only
+Forms announce errors properly</pre>
+</div>
+
+<h2 id="section-39-3">39.3 Verification</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Error boundaries catching and displaying errors gracefully</li>
+    <li>Loading states on all async operations</li>
+    <li>Helpful empty states for new users</li>
+    <li>WCAG 2.1 AA accessibility compliance</li>
+    <li>Professional, polished user experience</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ul>
+    <li>Lighthouse accessibility score >= 90</li>
+    <li>axe DevTools shows no critical issues</li>
+    <li>All features work keyboard-only</li>
+    <li>Loading states visible during data fetches</li>
+    <li>Empty states have clear CTAs</li>
+    <li><code>npm run build</code> passes without errors</li>
+  </ul>
+</div>
+
+<div class="gate-indicator">
+  <strong>GATE:</strong> You must complete Checkpoint C (next chapter) before launching.
+</div>
+
+<h2 id="section-39-4">39.4 Chapter Summary</h2>
+
+<p>You've completed Milestone 10. Your project now has:</p>
+<ul>
+  <li>Error boundaries throughout</li>
+  <li>Loading states on all pages</li>
+  <li>Helpful empty states</li>
+  <li>Accessibility compliance</li>
+  <li>Professional polish</li>
+</ul>
+
+<p><strong>Next:</strong> Chapter 40 (Checkpoint C) - Pre-launch audit before going live.</p>
+</article>
+
+
+<!-- CHAPTER-40-CHECKPOINT-C.HTML -->
+<article>
+<h1 id="chapter-40">Chapter 40: Checkpoint C - Pre-Launch Audit</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Final quality gate before launch. Verify security, performance, and production readiness.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After completing Milestone 10 (Polish). This is the final gate before going live.
+</div>
+
+<div class="gate-indicator">
+  <strong>GATE:</strong> M1-M10 must be complete before running this checkpoint.
+</div>
+
+<p class="chapter-intro">This is the final checkpoint before launch. Verify security, performance, and completeness before going live with real users.</p>
+
+<div class="checkpoint-box">
+  <h2 style="color: #6d28d9; margin-top: 0;">Checkpoint C: Pre-Launch Audit</h2>
+  <p><strong>When:</strong> After completing Milestone 10 (Polish)</p>
+  <p><strong>Purpose:</strong> Final verification of security, performance, and production readiness</p>
+  <p><strong>Outcome:</strong> Git tag <code>checkpoint-c</code> marks launch-ready state</p>
+</div>
+
+<h2 id="section-40-1">40.1 Security Verification</h2>
+
+<div class="checklist">
+  <h4>Security Checklist</h4>
+  <ul>
+    <li>RLS enabled on ALL database tables</li>
+    <li>RLS policies tested with different user roles</li>
+    <li>No hardcoded secrets in code</li>
+    <li>Environment variables properly configured</li>
+    <li><code>npm audit</code> shows no critical vulnerabilities</li>
+    <li>Admin routes properly protected</li>
+    <li>Stripe webhooks verify signature</li>
+    <li>Input validation on all user inputs</li>
+    <li>CORS configured properly</li>
+    <li>Rate limiting on sensitive endpoints</li>
+  </ul>
+</div>
+
+<h2 id="section-40-2">40.2 Performance Verification</h2>
+
+<div class="code-block"># Run Lighthouse audit
+# Open Chrome DevTools → Lighthouse → Generate report
+
+# Target scores:
+# - Performance: >= 90
+# - Accessibility: >= 90
+# - Best Practices: >= 90
+# - SEO: >= 90</div>
+
+<div class="checklist">
+  <h4>Performance Checklist</h4>
+  <ul>
+    <li>Lighthouse Performance >= 90</li>
+    <li>Core Web Vitals passing</li>
+    <li>Bundle size analyzed and optimized</li>
+    <li>Images optimized (Next.js Image component)</li>
+    <li>No layout shift on page load</li>
+    <li>Database queries optimized (no N+1)</li>
+  </ul>
+</div>
+
+<h2 id="section-40-3">40.3 Functionality Verification</h2>
+
+<div class="checklist">
+  <h4>Functionality Checklist</h4>
+  <ul>
+    <li>All features complete and tested</li>
+    <li>Error boundaries catch errors gracefully</li>
+    <li>Loading states on all async operations</li>
+    <li>Empty states are helpful</li>
+    <li>Mobile responsive verified (320px to 1440px)</li>
+    <li>Payment flow tested end-to-end</li>
+    <li>Email notifications working</li>
+    <li>Admin console functioning</li>
+  </ul>
+</div>
+
+<h2 id="section-40-4">40.4 Accessibility Verification</h2>
+
+<div class="checklist">
+  <h4>Accessibility Checklist</h4>
+  <ul>
+    <li>WCAG 2.1 AA compliance verified</li>
+    <li>Keyboard navigation works throughout</li>
+    <li>Screen reader tested on key flows</li>
+    <li>Color contrast ratios passing</li>
+    <li>Focus indicators visible</li>
+    <li>axe DevTools shows no critical issues</li>
+  </ul>
+</div>
+
+<h2 id="section-40-5">40.5 Technical Debt Assessment</h2>
+
+<div class="checklist">
+  <h4>Technical Debt Checklist</h4>
+  <ul>
+    <li>Technical debt score >= 7.0</li>
+    <li>No critical bugs in backlog</li>
+    <li>Test coverage >= 80%</li>
+    <li>All tests passing</li>
+    <li>No TODO comments for launch-critical items</li>
+    <li>Documentation updated</li>
+  </ul>
+</div>
+
+<h2 id="section-40-6">40.6 Production Readiness</h2>
+
+<div class="checklist">
+  <h4>Production Checklist</h4>
+  <ul>
+    <li>Production environment configured</li>
+    <li>Environment variables set in production</li>
+    <li>Database migrations run in production</li>
+    <li>Stripe in live mode (when ready)</li>
+    <li>Error monitoring configured (Sentry, etc.)</li>
+    <li>Analytics configured</li>
+    <li>Backup strategy in place</li>
+    <li>SSL/HTTPS verified</li>
+  </ul>
+</div>
+
+<h2 id="section-40-7">40.7 Tag the Checkpoint</h2>
+
+<div class="code-block"># Commit any pending changes
+git add .
+git commit -m "Complete Checkpoint C: Pre-launch audit passed"
+
+# Tag the checkpoint
+git tag -a checkpoint-c -m "Checkpoint C: Pre-launch audit complete - ready for launch"
+
+# Push tag to remote
+git push origin checkpoint-c</div>
+
+<h2 id="section-40-8">40.8 Checkpoint Summary</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After passing this checkpoint, you should have:</p>
+  <ul>
+    <li>Security audit passed with no critical issues</li>
+    <li>Performance targets met (Lighthouse >= 90)</li>
+    <li>All features functional and tested</li>
+    <li>Accessibility compliant (WCAG 2.1 AA)</li>
+    <li>Technical debt acceptable (score >= 7.0)</li>
+    <li>Production environment configured</li>
+    <li>Git tag: <code>checkpoint-c</code></li>
+  </ul>
+</div>
+
+<div class="success">
+  <h4>Checkpoint C Complete - Ready to Launch</h4>
+  <p>Your application is verified for production. You may now proceed to Milestone 11 (Testing) for comprehensive test coverage before launch.</p>
+</div>
+
+<p><strong>Next:</strong> Chapter 41 (Milestone 11) - Comprehensive testing before launch.</p>
+</article>
+
+
+<!-- CHAPTER-41-M11-TESTING.HTML -->
+<article>
+<h1 id="chapter-41">Chapter 41: Milestone 11 - Testing</h1>
+
+<div class="tldr-box">
+  <h4>TL;DR</h4>
+  <p>Implement comprehensive testing: unit tests, integration tests, and E2E tests covering critical user flows.</p>
+</div>
+
+<div class="when-to-use">
+  <strong>When to use:</strong> After M10 (Polish) and Checkpoint C. Your app is launch-ready - now ensure it stays working.
+</div>
+
+<p class="chapter-intro">In this chapter, you'll implement comprehensive testing for your application. By the end, you'll have unit tests, integration tests, and end-to-end tests covering critical user flows.</p>
+
+<div class="workflow-tip">
+  <strong>Workflow Tip:</strong> Testing is iterative. See <a href="../workflow-guide-v1.html#agentic-patterns">Agentic Patterns</a> for efficient test generation.
+</div>
+
+<h2 id="section-41-1">41.1 Overview</h2>
+
+<p>Comprehensive testing ensures your application works correctly and continues to work as you make changes. Focus on testing critical user flows and business logic first.</p>
+
+<div class="milestone-info">
+  <p><strong>Prerequisites:</strong> Milestone 10 complete, Checkpoint C passed</p>
+  <p><strong>Tool:</strong> Claude Code CLI</p>
+  <p><strong>Prompts:</strong> 3</p>
+  <p><strong>Deliverables:</strong> Unit tests, integration tests, E2E tests, test coverage >= 80%</p>
+</div>
+
+<h2 id="section-41-2">41.2 Implementation Prompts</h2>
+
+<h3>Prompt 11.1: Unit Tests</h3>
+
+<div class="prompt-box">
+<h4>Prompt 11.1: Unit Tests</h4>
+<pre>ROLE
+Test Engineer implementing unit tests.
+
+CONTEXT
+Project: {{productName}}
+Testing framework: Vitest or Jest
+Need unit tests for utilities and business logic.
+
+OBJECTIVE
+Create unit tests for core utility functions and business logic.
+
+REQUIREMENTS
+
+1. Test setup:
+   - Configure Vitest or Jest
+   - Set up test utilities
+   - Configure coverage reporting
+
+2. Utility function tests:
+   - Test all helper functions in src/lib/
+   - Test validation schemas
+   - Test formatting functions
+
+3. Business logic tests:
+   - Test data transformation functions
+   - Test permission checks
+   - Test calculation logic
+
+4. Coverage target:
+   - >= 80% line coverage for utility code
+   - 100% coverage for critical business logic
+
+VERIFICATION
+npm test runs all tests
+Coverage report shows >= 80%
+All tests pass</pre>
+</div>
+
+<h3>Prompt 11.2: Integration Tests</h3>
+
+<div class="prompt-box">
+<h4>Prompt 11.2: Integration Tests</h4>
+<pre>ROLE
+Test Engineer implementing integration tests.
+
+CONTEXT
+Project: {{productName}}
+Unit tests complete (Prompt 11.1).
+Need integration tests for API and components.
+
+OBJECTIVE
+Create integration tests for server actions and components.
+
+REQUIREMENTS
+
+1. Server action tests:
+   - Test authentication required
+   - Test authorization (user can only access own data)
+   - Test validation errors
+   - Test successful operations
+
+2. Component tests:
+   - Test form submission flows
+   - Test error state rendering
+   - Test loading state rendering
+   - Use React Testing Library
+
+3. API route tests:
+   - Test webhook handlers
+   - Test checkout flow
+   - Test authentication endpoints
+
+4. Database tests:
+   - Use test database or mocks
+   - Test RLS policies work
+   - Reset state between tests
+
+VERIFICATION
+Integration tests cover critical paths
+Tests isolated (don't affect each other)
+All tests pass</pre>
+</div>
+
+<h3>Prompt 11.3: End-to-End Tests</h3>
+
+<div class="prompt-box">
+<h4>Prompt 11.3: End-to-End Tests</h4>
+<pre>ROLE
+Test Engineer implementing E2E tests.
+
+CONTEXT
+Project: {{productName}}
+Unit and integration tests complete.
+Need E2E tests for critical user flows.
+
+OBJECTIVE
+Create Playwright E2E tests for critical user journeys.
+
+REQUIREMENTS
+
+1. Test setup:
+   - Configure Playwright
+   - Set up test user accounts
+   - Configure for CI/CD
+
+2. Critical user flows to test:
+   - Sign up new user
+   - Login existing user
+   - Core feature CRUD (Create, Read, Update, Delete)
+   - Checkout flow (test mode)
+   - Settings update
+
+3. Test patterns:
+   - Use page object pattern
+   - Test across browsers (Chrome, Firefox, Safari)
+   - Test mobile viewport
+
+4. CI integration:
+   - Run on pull requests
+   - Screenshots on failure
+   - Parallel execution
+
+VERIFICATION
+All E2E tests pass
+Tests run in CI pipeline
+Critical flows covered</pre>
+</div>
+
+<h2 id="section-41-3">41.3 Test Coverage Summary</h2>
+
+<div class="code-block"># Run tests with coverage
+npm test -- --coverage
+
+# Run E2E tests
+npx playwright test
+
+# Generate coverage report
+npm test -- --coverage --reporter=html</div>
+
+<h2 id="section-41-4">41.4 Verification</h2>
+
+<div class="expected-output">
+  <h4>Expected Output</h4>
+  <p>After completing this milestone, you should have:</p>
+  <ul>
+    <li>Unit tests for utilities and business logic</li>
+    <li>Integration tests for server actions and components</li>
+    <li>E2E tests for critical user flows</li>
+    <li>CI pipeline running tests on pull requests</li>
+    <li>Test coverage >= 80% for new code</li>
+  </ul>
+</div>
+
+<div class="checklist">
+  <h4>Verification Checklist</h4>
+  <ul>
+    <li>Test coverage >= 80% for new code</li>
+    <li>All tests pass locally</li>
+    <li>Tests run in CI pipeline</li>
+    <li>E2E tests cover signup, login, core feature, checkout</li>
+    <li><code>npm run build</code> passes without errors</li>
+  </ul>
+</div>
+
+<h2 id="section-41-5">41.5 Chapter Summary</h2>
+
+<p>You've completed Milestone 11 and the Build Phase! Your project now has:</p>
+<ul>
+  <li>Unit tests for utilities and logic</li>
+  <li>Integration tests for actions and components</li>
+  <li>E2E tests for critical user flows</li>
+  <li>Test coverage >= 80%</li>
+  <li>CI pipeline integration</li>
+</ul>
+
+<div class="success" style="margin-top: 2rem;">
+  <h4>Build Phase Complete!</h4>
+  <p>Congratulations! You've completed all 11 milestones and 3 checkpoints. Your SaaS application is now:</p>
+  <ul>
+    <li>Fully functional with core and supporting features</li>
+    <li>Secure with RLS and proper authorization</li>
+    <li>Monetized with Stripe integration</li>
+    <li>Polished with error handling and accessibility</li>
+    <li>Tested with comprehensive test coverage</li>
+    <li>Ready for launch!</li>
+  </ul>
+</div>
+
+<p><strong>Next:</strong> Chapter 42 (Phase 5) - QA and Deployment for production launch.</p>
+</article>
+
+
+<!-- APPENDIX-A-SPEC-TEMPLATE.HTML -->
+<article>
+<h1 id="appendix-a">Appendix A: SPEC Template</h1>
+
+<p>Use this template for every SPEC document. Copy it to <code>docs/specs/SPEC-[PREFIX]-[NNN].md</code> and fill in the bracketed placeholders.</p>
+
+<h2>SPEC Document Template</h2>
+
+<div class="code-block"># SPEC-[PREFIX]-[NNN]: [Feature Name]
+
+**Status**: [Draft | Ready | In Progress | Review | Done]
+**Milestone**: [Number and Name]
+
+## Overview
+**Problem**: [What problem does this solve?]
+**Solution**: [How does this feature solve it?]
+
+## Source References
+- Build Contract Section [X.X]: [Name]
+
+## Requirements
+**REQ-001** [EARS-format requirement]
+
+## Test Cases
+### TC-[PREFIX]-001: [Name]
+**GIVEN** [precondition]
+**WHEN** [action]
+**THEN** [outcome]
+
+## Acceptance Criteria
+- [ ] All test cases pass
+- [ ] Code meets quality standards</div>
+
+<h2>Status Definitions</h2>
+
+<table class="comparison-table">
+  <tr><th>Status</th><th>Definition</th></tr>
+  <tr><td><strong>Draft</strong></td><td>Initial creation, requirements not finalized</td></tr>
+  <tr><td><strong>Ready</strong></td><td>Requirements complete, ready for implementation</td></tr>
+  <tr><td><strong>In Progress</strong></td><td>Currently being implemented</td></tr>
+  <tr><td><strong>Review</strong></td><td>Implementation complete, under review</td></tr>
+  <tr><td><strong>Done</strong></td><td>All acceptance criteria met, merged</td></tr>
+</table>
+
+<h2>PREFIX Conventions</h2>
+
+<table class="comparison-table">
+  <tr><th>Prefix</th><th>Domain</th><th>Example</th></tr>
+  <tr><td>AUTH</td><td>Authentication</td><td>SPEC-AUTH-001</td></tr>
+  <tr><td>USER</td><td>User Management</td><td>SPEC-USER-001</td></tr>
+  <tr><td>CORE</td><td>Core Feature</td><td>SPEC-CORE-001</td></tr>
+  <tr><td>PAY</td><td>Payments</td><td>SPEC-PAY-001</td></tr>
+  <tr><td>ADMIN</td><td>Admin Console</td><td>SPEC-ADMIN-001</td></tr>
+  <tr><td>UI</td><td>UI Components</td><td>SPEC-UI-001</td></tr>
+</table>
+
+<h2>EARS Requirements Reference</h2>
+
+<p>Every requirement must follow one of these EARS patterns:</p>
+
+<ul>
+  <li><strong>Ubiquitous</strong>: The [system] shall [action]</li>
+  <li><strong>State-Driven</strong>: While [state], the [system] shall [action]</li>
+  <li><strong>Event-Driven</strong>: When [event], the [system] shall [action]</li>
+  <li><strong>Optional</strong>: Where [condition], the [system] shall [action]</li>
+  <li><strong>Unwanted</strong>: The [system] shall not [action]</li>
+</ul>
+
+<h2>Test Case Reference</h2>
+
+<p>Test cases use GIVEN-WHEN-THEN format:</p>
+
+<div class="code-block">### TC-AUTH-001: Valid login
+**GIVEN** a registered user with email "test@example.com"
+  AND the user has password "ValidPass123"
+**WHEN** the user submits the login form
+**THEN** the user is redirected to /dashboard
+  AND the user session is established</div>
+
+<h2>Test File Linking Convention</h2>
+
+<p>Test files must include a comment linking to their SPEC:</p>
+
+<div class="code-block">// SPEC: SPEC-AUTH-001
+describe('User Authentication', () => {
+  // TC-001: User can log in with valid credentials
+  it('should authenticate user with valid email and password', () => {
+    // Test implementation
+  });
+});</div>
+
+<p>This linking enables automated verification that SPECs match implementation.</p>
+</article>
+
+
+<!-- APPENDIX-B-QUALITY-GATES.HTML -->
+<article>
+<h1 id="appendix-b">Appendix B: Quality Gate Checklists</h1>
+
+<p>Use these checklists at quality gates throughout the build phase. Every item must pass before proceeding.</p>
+
+<h2>SPEC Ready Gate</h2>
+
+<p>Before starting implementation, verify the SPEC meets these criteria:</p>
+
+<div class="checklist">
+  <h4>SPEC Ready Checklist</h4>
+  <ul>
+    <li>Overview section complete with Problem and Solution</li>
+    <li>Build Contract references included</li>
+    <li>At least one requirement (EARS format)</li>
+    <li>At least one test case per requirement</li>
+    <li>All placeholders replaced with actual values</li>
+    <li>Status set to "Ready"</li>
+  </ul>
+</div>
+
+<h2>Implementation Done Gate</h2>
+
+<p>Before marking a feature complete, verify these criteria:</p>
+
+<div class="checklist">
+  <h4>Implementation Done Checklist</h4>
+  <ul>
+    <li>All tests pass (npm test)</li>
+    <li>Test coverage >= 80% for new code</li>
+    <li>Functions <= 30 lines</li>
+    <li>Files <= 200 lines</li>
+    <li>Nesting depth <= 3</li>
+    <li>No TypeScript errors (npm run build)</li>
+    <li>No linting errors (npm run lint)</li>
+    <li>SPEC status updated to "Done"</li>
+  </ul>
+</div>
+
+<h2>Checkpoint A: Foundation Audit</h2>
+
+<p>After completing M3 (Database), verify:</p>
+
+<div class="checklist">
+  <h4>Checkpoint A Checklist</h4>
+  <ul>
+    <li>RLS enabled on ALL tables</li>
+    <li>RLS policies tested with different user roles</li>
+    <li>No security vulnerabilities (npm audit)</li>
+    <li>Schema matches architecture document</li>
+    <li>Technical debt score >= 6.0</li>
+    <li>All M1-M3 tests passing</li>
+    <li>Git tagged: checkpoint-a</li>
+  </ul>
+</div>
+
+<h2>Checkpoint B: Feature Complete Audit</h2>
+
+<p>After completing M6 (Core Feature), verify:</p>
+
+<div class="checklist">
+  <h4>Checkpoint B Checklist</h4>
+  <ul>
+    <li>Core feature fully functional</li>
+    <li>User flows match UX Package specifications</li>
+    <li>Test coverage >= 80%</li>
+    <li>Performance: Lighthouse >= 80</li>
+    <li>Technical debt score >= 6.0</li>
+    <li>No critical bugs in backlog</li>
+    <li>All M1-M6 tests passing</li>
+    <li>Git tagged: checkpoint-b</li>
+  </ul>
+</div>
+
+<h2>Checkpoint C: Pre-Launch Audit</h2>
+
+<p>After completing M10 (Polish), verify:</p>
+
+<div class="checklist">
+  <h4>Checkpoint C Checklist</h4>
+  <ul>
+    <li>All features complete and tested</li>
+    <li>Security verification complete (OWASP checks)</li>
+    <li>Performance: Lighthouse >= 90</li>
+    <li>Accessibility: WCAG 2.1 AA compliance</li>
+    <li>Technical debt score >= 7.0</li>
+    <li>Error boundaries in place</li>
+    <li>Loading states on all async operations</li>
+    <li>Mobile responsive verified</li>
+    <li>All M1-M10 tests passing</li>
+    <li>Git tagged: checkpoint-c</li>
+  </ul>
+</div>
+
+<h2>Code Review Gate</h2>
+
+<p>Before merging any PR, verify:</p>
+
+<div class="checklist">
+  <h4>Code Review Checklist</h4>
+  <ul>
+    <li>PR linked to relevant SPEC</li>
+    <li>Tests cover new functionality</li>
+    <li>No console.log statements</li>
+    <li>No hardcoded secrets or credentials</li>
+    <li>Error handling in place</li>
+    <li>TypeScript types properly defined</li>
+    <li>Code follows project conventions (CLAUDE.md)</li>
+    <li>Documentation updated if needed</li>
+  </ul>
+</div>
+
+<h2>Quality Score Thresholds</h2>
+
+<table class="comparison-table">
+  <tr>
+    <th>Score</th>
+    <th>Rating</th>
+    <th>Gate Decision</th>
+  </tr>
+  <tr style="background: #d1fae5;">
+    <td>>= 8.0</td>
+    <td>Excellent</td>
+    <td>PASS - Proceed</td>
+  </tr>
+  <tr style="background: #dbeafe;">
+    <td>7.0 - 7.9</td>
+    <td>Good</td>
+    <td>PASS - Document debt</td>
+  </tr>
+  <tr style="background: #fef3c7;">
+    <td>6.0 - 6.9</td>
+    <td>Acceptable</td>
+    <td>PASS - Create remediation plan</td>
+  </tr>
+  <tr style="background: #fed7aa;">
+    <td>5.0 - 5.9</td>
+    <td>Concerning</td>
+    <td>CONDITIONAL - Address before next milestone</td>
+  </tr>
+  <tr style="background: #fecaca;">
+    <td>< 5.0</td>
+    <td>Critical</td>
+    <td>BLOCK - Remediation required</td>
+  </tr>
+</table>
+
+<h2>Using These Checklists</h2>
+
+<p>Copy the relevant checklist into your SPEC or PR description and check off items as you verify them. This creates a documented audit trail and ensures nothing is missed.</p>
+
+<div class="note">
+  <strong>Automation Tip:</strong> Many of these checks can be automated via CI/CD. Set up GitHub Actions to run tests, linting, and type checks on every PR.
+</div>
+</article>
+
+
+</body>
+</html>
