@@ -1,116 +1,96 @@
-# AI SaaS Handbook Documentation System
+# AI SaaS Handbook
 
-A complete methodology for building production-quality SaaS products with AI-assisted development.
+A methodology for building production-quality SaaS products with Claude Code — and the
+plugin that lets you actually run it.
 
-## Current Version
-
-**v3.0 - MOAI Integration Edition** (January 2026)
-
-## Repository Structure
+Design artifacts compress into a Build Contract. The contract decomposes into SPECs.
+Each SPEC is implemented test-first. Milestones are gated by an audited checkpoint that
+scores technical debt and blocks on it.
 
 ```
-ai-saas-handbook/
-├── docs/                    # The actual handbook documents
-│   ├── index.html          # Landing page / navigation hub
-│   ├── handbook-v3.html    # Main handbook (strategic hub)
-│   ├── build-guide-v3.html # Build phase companion guide
-│   ├── workflow-guide-v1.html # Context management guide
-│   └── navigation-guide.html  # Quick reference
-├── archive/                 # Previous versions (for reference)
-│   └── v2.2/               # Archived v2.2 files
-├── templates/              # Reusable templates extracted from handbook
-│   ├── build-contract-template.md
-│   ├── spec-template.md
-│   └── quality-checklist.md
-├── CHANGELOG.md            # Version history and changes
-├── WORKFLOW.md             # How to maintain these docs (detailed)
-├── .gitignore
-└── README.md               # This file
+Design Brief ┐
+UX Package   ├─→ Build Contract ─→ SPEC ─→ RED/GREEN/REFACTOR ─→ tested code
+UI System    │                                    │
+Architecture ┘                                    └─→ checkpoint audit ─→ git tag
 ```
 
-## Quick Start
+## Install
 
-### Viewing the Documentation
-
-Open `docs/index.html` in your browser. All internal links work when served from the same directory.
-
-For the best experience, you can serve locally:
 ```bash
-cd docs
-python -m http.server 8000
-# Then open http://localhost:8000
+/plugin marketplace add ~/Projects/ai-saas-handbook
+/plugin install moai@moai-handbook
 ```
 
-### Making Updates
+Installed once, available in every project. Update with `git pull` then
+`/plugin marketplace update`.
 
-See [WORKFLOW.md](WORKFLOW.md) for the complete maintenance workflow, but here's the short version:
+## How to build an app with this
 
-1. **Start a conversation** in your Claude Project (which has these docs loaded)
-2. **Describe the changes** you want to make
-3. **Download the updated files** Claude produces
-4. **Replace files** in this repo's `docs/` folder
-5. **Commit with a descriptive message** following the convention below
-6. **Update CHANGELOG.md** for significant changes
-7. **Sync to Claude Project** by re-uploading to your project's knowledge base
+Start in the project you're building — not in this repo.
 
-## Commit Message Convention
-
-Follow this format for clear version history:
-
-```
-[type]: Brief description
-
-Longer explanation if needed.
+```bash
+cd ~/Projects/my-new-app && claude
 ```
 
-**Types:**
-- `docs`: Content changes to handbook (new sections, rewrites, corrections)
-- `fix`: Fixing errors, broken links, typos
-- `style`: Visual/formatting changes only
-- `structure`: Reorganizing content, moving sections
-- `version`: Version bumps (v3.0 → v3.1)
+**1 · Bootstrap.** `/moai:init` interviews you, scaffolds `docs/specs/`, `docs/adr/`,
+`docs/moai/`, copies the templates, writes a project `CLAUDE.md`, and creates the
+state file. Run it with `--dry-run` first to see the manifest.
 
-**Examples:**
-```
-docs: Add section on API rate limiting to Build Guide
+**2 · Design (Phases 1–3).** `/moai:artifact` with no argument lists the 18 artifacts
+and shows which are unblocked. Work down the chain — one-pager → design brief → UX
+package → UI system → architecture → **build contract**. The gating is real: it will
+refuse to write a UX package before the design brief exists, because doing that out of
+order guarantees a rewrite.
 
-fix: Correct broken link to SPEC template in handbook
-
-style: Update code block styling for better readability
-
-version: Bump to v3.1 with enhanced TDD section
-```
-
-## Version History
-
-See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
-
-| Version | Date | Highlights |
-|---------|------|------------|
-| v3.0 | Jan 2026 | MOAI-ADK integration, Build Contract, File Control System |
-| v2.2 | Dec 2025 | Multi-environment config, enhanced UX methodology |
-| v2.0 | Nov 2025 | Build Phase Guide separated, quality gates |
-
-## Claude Project Sync
-
-This repository is designed to stay in sync with a Claude Project. The workflow is:
+**3 · Build (Phase 4).** For each feature:
 
 ```
-┌─────────────────┐         ┌─────────────────┐
-│   Git Repo      │         │  Claude Project │
-│   (Source of    │ ◄─────► │  (Working       │
-│    Truth)       │  sync   │   Environment)  │
-└─────────────────┘         └─────────────────┘
-        │                           │
-        │                           │
-        ▼                           ▼
-   Version History            AI-Assisted Editing
-   Backup & Recovery          Context Awareness
-   Collaboration              Smart Updates
+/moai:spec  password reset flow     → docs/specs/SPEC-AUTH-003.md, self-verified
+/moai:tdd   SPEC-AUTH-003           → RED: failing tests, no implementation
+/moai:tdd                           → GREEN: minimum code to pass
+/moai:tdd                           → REFACTOR: full quality gate, SPEC marked Done
 ```
 
-**Git Repo** is authoritative for version history. **Claude Project** is where you do the actual editing work with AI assistance.
+Repeat until the milestone's SPECs are done, then gate:
 
-## License
+```
+/moai:checkpoint b
+```
 
-Personal use. Part of the AI SaaS methodology for bootstrapped founders.
+It detects your stack, runs build/lint/tsc/audit, dispatches three read-only audit
+subagents, scores debt against the weighted formula, writes
+`CHECKPOINT-B-REPORT.md`, and prints the `git tag` command — **only** if the score
+clears 6.0 with zero failures.
+
+**4 · Every session.** `/moai:session start` restores what the last one established;
+`/moai:session end` writes the log, memory and progress entries, then tells you to
+`/clear`. That ritual is what makes the method survive a context reset.
+
+`/moai:status` at any time shows the whole project on one screen.
+
+## What's here
+
+| Path | |
+| --- | --- |
+| [`method/`](method/README.md) | The handbook. 51 chapters across 5 phases, plus **Part 0** on operating Claude Code. Start with Part 0. |
+| [`prompts/`](prompts/INDEX.md) | 108 prompts, one file each, flat and greppable. |
+| `plugins/moai/` | The plugin: 8 skills, 3 audit subagents, 1 session hook, 11 templates. |
+| `tools/` | The converters that generate `method/` and `prompts/` from `archive/`, and the verifier. |
+| `archive/` | The original HTML and Docusaurus trees, frozen verbatim. |
+
+## Working on the handbook itself
+
+`method/` and `prompts/` are **generated**. Edit the converters, not the output:
+
+```bash
+nvm use 22
+npm ci
+npm run convert    # rebuild method/ and prompts/ from archive/
+npm run verify     # 7 checks, including byte-identity of every prompt body
+```
+
+The verifier is not decorative: it fails if any prompt body differs from its source by
+a single byte, if any element was dropped without a marker, or if any link is broken.
+
+See `CLAUDE.md` for standing rules and the canonical facts (milestone order, checkpoint
+naming, the debt formula) that earlier versions of this material contradicted.

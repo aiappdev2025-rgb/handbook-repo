@@ -1,0 +1,13 @@
+import { load } from 'cheerio'; import fs from 'node:fs';
+const [f,m]=process.argv.slice(2);
+const $=load(fs.readFileSync(f,'utf8'));
+$('nav, aside, script, style, .print-button, .milestone-info, .prompt-indicator, .prerequisites').remove();
+$('td,th,li,p,div,h1,h2,h3,h4').each((_,e)=>$(e).append(' '));
+const norm=s=>s.replace(/\s+/g,' ').trim().toLowerCase();
+const sents=s=>norm(s).split(/(?<=[.:!?])\s+/).map(x=>x.replace(/[^a-z0-9 ]/g,'').trim()).filter(x=>x.split(' ').length>4);
+const src=sents($('main.content article').first().text());
+let md=fs.readFileSync(m,'utf8').replace(/^---\n[\s\S]*?\n---\n/,'');
+const mdn=norm(md.replace(/[`*|>#\[\]]/g,' ')).replace(/[^a-z0-9 ]/g,'');
+const missing=src.filter(s=>!mdn.includes(s));
+console.log(`source sentences: ${src.length}  missing from markdown: ${missing.length}`);
+missing.slice(0,8).forEach(s=>console.log('  MISSING: '+s.slice(0,110)));

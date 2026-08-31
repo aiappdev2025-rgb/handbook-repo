@@ -1,0 +1,16 @@
+{
+  "description": "Injects MOAI project state at session start. Silent no-op outside MOAI projects.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/state-banner.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

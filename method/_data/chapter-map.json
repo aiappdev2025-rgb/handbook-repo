@@ -1,0 +1,583 @@
+[
+  {
+    "chapter": 1,
+    "title": "The Context Window Mental Model",
+    "method": "method/00-operating/01-the-context-window-mental-model.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 2,
+    "title": "Token Economics and Why Context Matters",
+    "method": "method/00-operating/02-token-economics-and-why-context-matters.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 3,
+    "title": "Filesystem as Persistent Memory",
+    "method": "method/00-operating/03-filesystem-as-persistent-memory.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 4,
+    "title": "The CLAUDE.md File",
+    "method": "method/00-operating/04-the-claude-md-file.md",
+    "mdx": "archive/docusaurus/docs/templates/claude-md.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 5,
+    "title": "Documentation File Structure",
+    "method": "method/00-operating/05-documentation-file-structure.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 6,
+    "title": "Skills vs CLAUDE.md",
+    "method": "method/00-operating/06-skills-vs-claude-md.md",
+    "mdx": "archive/docusaurus/docs/templates/claude-md.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 7,
+    "title": "Initial Project Scaffolding",
+    "method": "method/00-operating/07-initial-project-scaffolding.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 8,
+    "title": "Breaking Large Projects into Subtasks",
+    "method": "method/00-operating/08-breaking-large-projects-into-subtasks.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 9,
+    "title": "",
+    "method": "method/00-operating/09-the-one-verifiable-outcome-rule.md",
+    "mdx": "archive/docusaurus/docs/getting-started/quick-reference.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 10,
+    "title": "Task State Files",
+    "method": "method/00-operating/10-task-state-files.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 11,
+    "title": "Checkpoint and Recovery Strategy",
+    "method": "method/00-operating/11-checkpoint-and-recovery-strategy.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 12,
+    "title": "When and How to Use /clear",
+    "method": "method/00-operating/12-when-and-how-to-use-clear.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 13,
+    "title": "Configuration: Auto-Compact and Token Limits",
+    "method": "method/00-operating/13-configuration-auto-compact-and-token-limits.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 14,
+    "title": "The Session Rhythm",
+    "method": "method/00-operating/14-the-session-rhythm.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 15,
+    "title": "Context Recovery After Clearing",
+    "method": "method/00-operating/15-context-recovery-after-clearing.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 16,
+    "title": "Understanding Sub-Agents",
+    "method": "method/00-operating/16-understanding-sub-agents.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 17,
+    "title": "MCP Tools and Integration",
+    "method": "method/00-operating/17-mcp-tools-and-integration.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 18,
+    "title": "Memory Persistence Strategies",
+    "method": "method/00-operating/18-memory-persistence-strategies.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 19,
+    "title": "Multi-Session Project Continuity",
+    "method": "method/00-operating/19-multi-session-project-continuity.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 20,
+    "title": "Mapping Milestones to Sessions",
+    "method": "method/00-operating/20-mapping-milestones-to-sessions.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 21,
+    "title": "Prescriptive Git Workflow",
+    "method": "method/00-operating/21-prescriptive-git-workflow.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 22,
+    "title": "Quality Gates as Context Boundaries",
+    "method": "method/00-operating/22-quality-gates-as-context-boundaries.md",
+    "mdx": "archive/docusaurus/docs/phase-4-build/quality-gates.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 23,
+    "title": "Claude Code Timing by Phase",
+    "method": "method/00-operating/23-claude-code-timing-by-phase.md",
+    "mdx": "archive/docusaurus/docs/reference/claude-code-timing.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": null,
+    "title": "Starter CLAUDE.md Template",
+    "method": "method/00-operating/a-starter-claude-md-template.md",
+    "mdx": "archive/docusaurus/docs/templates/claude-md.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": null,
+    "title": "Task State File Templates",
+    "method": "method/00-operating/b-task-state-file-templates.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": null,
+    "title": "Session Checklist",
+    "method": "method/00-operating/c-session-checklist.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": null,
+    "title": "Troubleshooting Context Issues",
+    "method": "method/00-operating/d-troubleshooting-context-issues.md",
+    "mdx": "archive/docusaurus/docs/reference/troubleshooting.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": null,
+    "title": "Command Reference",
+    "method": "method/00-operating/e-command-reference.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 1,
+    "title": "Introduction and Philosophy",
+    "method": "method/01-validate/01-introduction.md",
+    "mdx": "archive/docusaurus/docs/phase-1-validate/introduction.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 2,
+    "title": "The Code Quality Crisis",
+    "method": "method/01-validate/02-quality-crisis.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 3,
+    "title": "The Quality Framework — Five Pillars",
+    "method": "method/01-validate/03-quality-framework.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 4,
+    "title": "Claude Tools Guide",
+    "method": "method/01-validate/04-claude-tools.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 5,
+    "title": "Stage 0.1 — Research and Opportunity Assessment",
+    "method": "method/01-validate/05-research.md",
+    "mdx": "archive/docusaurus/docs/phase-1-validate/opportunity-assessment.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 6,
+    "title": "Stage 1.0 — Business One-Pager",
+    "method": "method/01-validate/06-one-pager.md",
+    "mdx": "archive/docusaurus/docs/phase-1-validate/business-one-pager.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 7,
+    "title": "Stage 2.0 — Shared Design Brief",
+    "method": "method/01-validate/07-design-brief.md",
+    "mdx": "archive/docusaurus/docs/phase-1-validate/design-brief.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 44,
+    "title": "Competitive Analysis",
+    "method": "method/01-validate/44-competitive-analysis.md",
+    "mdx": "archive/docusaurus/docs/phase-1-validate/competitive-analysis.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 45,
+    "title": "MVP Scoping",
+    "method": "method/01-validate/45-mvp-scoping.md",
+    "mdx": "archive/docusaurus/docs/phase-1-validate/mvp-scoping.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 8,
+    "title": "Design Philosophy",
+    "method": "method/02-design/08-design-philosophy.md",
+    "mdx": "archive/docusaurus/docs/phase-2-design/design-philosophy.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 9,
+    "title": "UX Package",
+    "method": "method/02-design/09-ux-package.md",
+    "mdx": "archive/docusaurus/docs/phase-2-design/ux-package.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 10,
+    "title": "UX Critique and Validation",
+    "method": "method/02-design/10-ux-critique.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 11,
+    "title": "UI System",
+    "method": "method/02-design/11-ui-system.md",
+    "mdx": "archive/docusaurus/docs/phase-2-design/ui-system.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 12,
+    "title": "Visual Direction Options",
+    "method": "method/02-design/12-visual-direction.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 46,
+    "title": "User Flows & Wireframes",
+    "method": "method/02-design/46-user-flows.md",
+    "mdx": "archive/docusaurus/docs/phase-2-design/user-flows.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 47,
+    "title": "Component Library Spec",
+    "method": "method/02-design/47-component-library.md",
+    "mdx": "archive/docusaurus/docs/phase-2-design/component-library.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 13,
+    "title": "Stage 5.0 — Solution Architecture",
+    "method": "method/03-architect/13-architecture.md",
+    "mdx": "archive/docusaurus/docs/phase-3-architect/solution-architecture.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 14,
+    "title": "Database Schema Design",
+    "method": "method/03-architect/14-database-schema.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 15,
+    "title": "GitHub Repository Setup",
+    "method": "method/03-architect/15-github-setup.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 16,
+    "title": "Supabase Project Setup",
+    "method": "method/03-architect/16-supabase-setup.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 17,
+    "title": "Vercel Project Setup",
+    "method": "method/03-architect/17-vercel-setup.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 18,
+    "title": "Multi-Environment Configuration",
+    "method": "method/03-architect/18-multi-environment.md",
+    "mdx": "archive/docusaurus/docs/phase-3-architect/multi-environment.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 19,
+    "title": "Build Contract Introduction",
+    "method": "method/03-architect/19-build-contract-intro.md",
+    "mdx": "archive/docusaurus/docs/phase-1-validate/introduction.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 20,
+    "title": "Build Contract Structure",
+    "method": "method/03-architect/20-build-contract-structure.md",
+    "mdx": "archive/docusaurus/docs/phase-3-architect/build-contract.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 21,
+    "title": "Generating the Build Contract",
+    "method": "method/03-architect/21-generating-contract.md",
+    "mdx": "archive/docusaurus/docs/phase-3-architect/build-contract.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 22,
+    "title": "The Critical Transition",
+    "method": "method/03-architect/22-dev-environment.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 48,
+    "title": "API Specification",
+    "method": "method/03-architect/48-api-specification.md",
+    "mdx": "archive/docusaurus/docs/phase-3-architect/api-specification.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 49,
+    "title": "Security Architecture",
+    "method": "method/03-architect/49-security.md",
+    "mdx": "archive/docusaurus/docs/phase-3-architect/security.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 50,
+    "title": "Architecture Decision Records",
+    "method": "method/03-architect/50-adr-templates.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 51,
+    "title": "Test Strategy",
+    "method": "method/03-architect/51-test-strategy.md",
+    "mdx": "archive/docusaurus/docs/phase-3-architect/test-strategy.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 23,
+    "title": "MOAI-ADK Overview",
+    "method": "method/04-build/23-moai-overview.md",
+    "mdx": "archive/docusaurus/docs/phase-4-build/moai-overview.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 24,
+    "title": "SPEC-First Development",
+    "method": "method/04-build/24-spec-first.md",
+    "mdx": "archive/docusaurus/docs/phase-4-build/spec-first.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 25,
+    "title": "TDD Workflow",
+    "method": "method/04-build/25-tdd-workflow.md",
+    "mdx": "archive/docusaurus/docs/phase-4-build/tdd-workflow.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 26,
+    "title": "Technical Debt Scoring Framework",
+    "method": "method/04-build/26-tech-debt.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 27,
+    "title": "Build Milestones",
+    "method": "method/04-build/27-build-milestones.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 28,
+    "title": "Milestone 1 — Project Setup",
+    "method": "method/04-build/28-m1-project-setup.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 29,
+    "title": "Milestone 2 — Design System",
+    "method": "method/04-build/29-m2-design-system.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 30,
+    "title": "Milestone 3 — Database",
+    "method": "method/04-build/30-m3-database.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 31,
+    "title": "Checkpoint 1 — Foundation Audit",
+    "method": "method/04-build/31-checkpoint-a.md",
+    "mdx": "archive/docusaurus/docs/phase-4-build/checkpoint-1.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 32,
+    "title": "Milestone 4 — Layouts",
+    "method": "method/04-build/32-m4-layouts.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 33,
+    "title": "Milestone 5 — Authentication",
+    "method": "method/04-build/33-m5-authentication.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 34,
+    "title": "Milestone 6 — Core Feature",
+    "method": "method/04-build/34-m6-core-feature.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 35,
+    "title": "Checkpoint B — Feature Complete Audit",
+    "method": "method/04-build/35-checkpoint-b.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 36,
+    "title": "Milestone 7 — Admin Console",
+    "method": "method/04-build/36-m7-admin-console.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 37,
+    "title": "Milestone 8 — Supporting Features",
+    "method": "method/04-build/37-m8-supporting-features.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 38,
+    "title": "Milestone 9 — Payments",
+    "method": "method/04-build/38-m9-payments.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 39,
+    "title": "Milestone 10 — Polish",
+    "method": "method/04-build/39-m10-polish.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 40,
+    "title": "Checkpoint C — Pre-Launch Audit",
+    "method": "method/04-build/40-checkpoint-c.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 41,
+    "title": "Milestone 11 — Testing",
+    "method": "method/04-build/41-m11-testing.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": 42,
+    "title": "QA & Deployment",
+    "method": "method/05-launch/42-qa-deployment.md",
+    "mdx": "archive/docusaurus/docs/phase-5-launch/qa-deployment.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": 43,
+    "title": "Launch Checklist",
+    "method": "method/05-launch/43-launch-checklist.md",
+    "mdx": "archive/docusaurus/docs/phase-5-launch/launch-checklist.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": null,
+    "title": "SPEC Template",
+    "method": "method/99-appendix/a-spec-template.md",
+    "mdx": "archive/docusaurus/docs/templates/spec-template.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": null,
+    "title": "Quality Gate Checklists",
+    "method": "method/99-appendix/b-quality-gates.md",
+    "mdx": null,
+    "confidence": "none"
+  },
+  {
+    "chapter": null,
+    "title": "EARS Syntax",
+    "method": "method/99-appendix/d-ears-syntax.md",
+    "mdx": "archive/docusaurus/docs/reference/ears-syntax.mdx",
+    "confidence": "slug-match"
+  },
+  {
+    "chapter": null,
+    "title": "Troubleshooting",
+    "method": "method/99-appendix/e-troubleshooting.md",
+    "mdx": "archive/docusaurus/docs/reference/troubleshooting.mdx",
+    "confidence": "slug-match"
+  }
+]

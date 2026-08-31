@@ -1,0 +1,26 @@
+{
+  "name": "ai-saas-handbook",
+  "version": "1.0.0",
+  "description": "The AI SaaS Handbook methodology, as markdown plus a Claude Code plugin.",
+  "scripts": {
+    "convert": "node tools/build.mjs",
+    "verify": "node tools/verify-conversion.mjs",
+    "migrate": "bash tools/verify-migration.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aiappdev2025-rgb/handbook-repo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aiappdev2025-rgb/handbook-repo/issues"
+  },
+  "homepage": "https://github.com/aiappdev2025-rgb/handbook-repo#readme",
+  "devDependencies": {
+    "cheerio": "1.0.0-rc.12"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  }
+}

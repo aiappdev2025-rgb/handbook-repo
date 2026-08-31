@@ -1,0 +1,309 @@
+# GitHub Action: Technical Debt Check
+# AI SaaS Handbook v3.0 - Technical Debt Management
+#
+# This workflow runs on every PR to check for technical debt violations.
+# Copy this file to your project's .github/workflows/ directory.
+#
+# Features:
+# - Runs ESLint with debt detection rules
+# - Calculates debt score
+# - Blocks PR if score falls below threshold
+# - Posts debt report as PR comment
+
+name: Technical Debt Check
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+
+# Cancel in-progress runs for the same PR
+concurrency:
+  group: debt-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  # Minimum acceptable debt score (0-10 scale)
+  # Score below this threshold will block the PR
+  DEBT_THRESHOLD: 6.0
+
+jobs:
+  debt-check:
+    name: Technical Debt Analysis
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # -----------------------------------------------------------------------
+      # STEP 1: Run ESLint with debt detection rules
+      # -----------------------------------------------------------------------
+      - name: Run ESLint Debt Analysis
+        id: eslint
+        continue-on-error: true
+        run: |
+          # Run ESLint and capture output
+          npm run lint -- --format json --output-file eslint-report.json || true
+
+          # Count violations by category
+          COMPLEXITY_ERRORS=$(cat eslint-report.json | jq '[.[].messages[] | select(.ruleId | test("max-lines|max-depth|complexity|max-params|max-statements"))] | length')
+          ERROR_HANDLING=$(cat eslint-report.json | jq '[.[].messages[] | select(.ruleId | test("no-empty|callback|handle-callback"))] | length')
+          TYPE_SAFETY=$(cat eslint-report.json | jq '[.[].messages[] | select(.ruleId | test("any|unsafe|explicit"))] | length')
+          CODE_QUALITY=$(cat eslint-report.json | jq '[.[].messages[] | select(.ruleId | test("no-console|no-debugger|warning-comments|magic-numbers"))] | length')
+
+          echo "complexity_errors=$COMPLEXITY_ERRORS" >> $GITHUB_OUTPUT
+          echo "error_handling=$ERROR_HANDLING" >> $GITHUB_OUTPUT
+          echo "type_safety=$TYPE_SAFETY" >> $GITHUB_OUTPUT
+          echo "code_quality=$CODE_QUALITY" >> $GITHUB_OUTPUT
+
+      # -----------------------------------------------------------------------
+      # STEP 2: Check Test Coverage
+      # -----------------------------------------------------------------------
+      - name: Run Test Coverage
+        id: coverage
+        continue-on-error: true
+        run: |
+          # Run tests with coverage
+          npm run test:coverage -- --json --outputFile=coverage-report.json || true
+
+          # Extract coverage percentage
+          if [ -f coverage/coverage-summary.json ]; then
+            COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          else
+            COVERAGE=0
+          fi
+
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+
+      # -----------------------------------------------------------------------
+      # STEP 3: Check for outdated dependencies
+      # -----------------------------------------------------------------------
+      - name: Check Dependencies
+        id: deps
+        continue-on-error: true
+        run: |
+          # Count outdated packages
+          OUTDATED=$(npm outdated --json 2>/dev/null | jq 'length' || echo "0")
+          echo "outdated=$OUTDATED" >> $GITHUB_OUTPUT
+
+          # Run security audit
+          VULNERABILITIES=$(npm audit --json 2>/dev/null | jq '.metadata.vulnerabilities.total' || echo "0")
+          echo "vulnerabilities=$VULNERABILITIES" >> $GITHUB_OUTPUT
+
+      # -----------------------------------------------------------------------
+      # STEP 4: SPEC Verification (Documentation Sync)
+      # -----------------------------------------------------------------------
+      - name: Run SPEC Verification
+        id: specs
+        continue-on-error: true
+        run: |
+          # Copy spec-check script if not present
+          if [ ! -f "scripts/spec-check.sh" ]; then
+            echo "spec_score=10" >> $GITHUB_OUTPUT
+            echo "spec_issues=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          chmod +x scripts/spec-check.sh
+          RESULT=$(./scripts/spec-check.sh --json 2>/dev/null || echo '{"score": 5, "issues": []}')
+
+          SPEC_SCORE=$(echo "$RESULT" | jq '.score')
+          SPEC_ISSUES=$(echo "$RESULT" | jq '.issues | length')
+
+          echo "spec_score=$SPEC_SCORE" >> $GITHUB_OUTPUT
+          echo "spec_issues=$SPEC_ISSUES" >> $GITHUB_OUTPUT
+
+      # -----------------------------------------------------------------------
+      # STEP 5: Calculate Debt Score
+      # -----------------------------------------------------------------------
+      - name: Calculate Debt Score
+        id: score
+        run: |
+          # Category scores (0-10 scale)
+
+          # Complexity Score (25% weight)
+          COMPLEXITY=${{ steps.eslint.outputs.complexity_errors }}
+          if [ "$COMPLEXITY" -eq 0 ]; then COMPLEXITY_SCORE=10
+          elif [ "$COMPLEXITY" -le 5 ]; then COMPLEXITY_SCORE=8
+          elif [ "$COMPLEXITY" -le 10 ]; then COMPLEXITY_SCORE=6
+          elif [ "$COMPLEXITY" -le 20 ]; then COMPLEXITY_SCORE=4
+          else COMPLEXITY_SCORE=2
+          fi
+
+          # Error Handling Score (20% weight)
+          ERRORS=${{ steps.eslint.outputs.error_handling }}
+          if [ "$ERRORS" -eq 0 ]; then ERROR_SCORE=10
+          elif [ "$ERRORS" -le 3 ]; then ERROR_SCORE=7
+          elif [ "$ERRORS" -le 10 ]; then ERROR_SCORE=4
+          else ERROR_SCORE=2
+          fi
+
+          # Type Safety Score (20% weight)
+          TYPES=${{ steps.eslint.outputs.type_safety }}
+          if [ "$TYPES" -eq 0 ]; then TYPE_SCORE=10
+          elif [ "$TYPES" -le 5 ]; then TYPE_SCORE=7
+          elif [ "$TYPES" -le 15 ]; then TYPE_SCORE=4
+          else TYPE_SCORE=2
+          fi
+
+          # Test Coverage Score (20% weight)
+          COVERAGE=${{ steps.coverage.outputs.coverage }}
+          if (( $(echo "$COVERAGE >= 80" | bc -l) )); then COVERAGE_SCORE=10
+          elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then COVERAGE_SCORE=7
+          elif (( $(echo "$COVERAGE >= 40" | bc -l) )); then COVERAGE_SCORE=4
+          else COVERAGE_SCORE=2
+          fi
+
+          # Dependencies Score (5% weight)
+          OUTDATED=${{ steps.deps.outputs.outdated }}
+          VULNS=${{ steps.deps.outputs.vulnerabilities }}
+          if [ "$VULNS" -gt 0 ]; then DEP_SCORE=2
+          elif [ "$OUTDATED" -eq 0 ]; then DEP_SCORE=10
+          elif [ "$OUTDATED" -le 5 ]; then DEP_SCORE=7
+          else DEP_SCORE=4
+          fi
+
+          # Documentation Sync Score (10% weight) - from SPEC verification
+          DOC_SYNC_SCORE=${{ steps.specs.outputs.spec_score }}
+          if [ -z "$DOC_SYNC_SCORE" ] || [ "$DOC_SYNC_SCORE" == "null" ]; then
+            DOC_SYNC_SCORE=10  # Default if no SPECs yet
+          fi
+
+          # Calculate weighted score (updated weights to include Doc Sync)
+          # Complexity: 25%, Errors: 20%, Types: 20%, Coverage: 20%, Doc Sync: 10%, Deps: 5%
+          WEIGHTED_SCORE=$(echo "scale=2; ($COMPLEXITY_SCORE * 0.25) + ($ERROR_SCORE * 0.20) + ($TYPE_SCORE * 0.20) + ($COVERAGE_SCORE * 0.20) + ($DOC_SYNC_SCORE * 0.10) + ($DEP_SCORE * 0.05)" | bc)
+
+          echo "complexity_score=$COMPLEXITY_SCORE" >> $GITHUB_OUTPUT
+          echo "error_score=$ERROR_SCORE" >> $GITHUB_OUTPUT
+          echo "type_score=$TYPE_SCORE" >> $GITHUB_OUTPUT
+          echo "coverage_score=$COVERAGE_SCORE" >> $GITHUB_OUTPUT
+          echo "doc_sync_score=$DOC_SYNC_SCORE" >> $GITHUB_OUTPUT
+          echo "dep_score=$DEP_SCORE" >> $GITHUB_OUTPUT
+          echo "total_score=$WEIGHTED_SCORE" >> $GITHUB_OUTPUT
+
+          # Determine status emoji
+          if (( $(echo "$WEIGHTED_SCORE >= 8.0" | bc -l) )); then
+            echo "status=:white_check_mark: Excellent" >> $GITHUB_OUTPUT
+          elif (( $(echo "$WEIGHTED_SCORE >= 7.0" | bc -l) )); then
+            echo "status=:large_blue_circle: Good" >> $GITHUB_OUTPUT
+          elif (( $(echo "$WEIGHTED_SCORE >= 6.0" | bc -l) )); then
+            echo "status=:yellow_circle: Acceptable" >> $GITHUB_OUTPUT
+          elif (( $(echo "$WEIGHTED_SCORE >= 5.0" | bc -l) )); then
+            echo "status=:orange_circle: Concerning" >> $GITHUB_OUTPUT
+          else
+            echo "status=:red_circle: Critical" >> $GITHUB_OUTPUT
+          fi
+
+      # -----------------------------------------------------------------------
+      # STEP 5: Post PR Comment with Debt Report
+      # -----------------------------------------------------------------------
+      - name: Post Debt Report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const score = ${{ steps.score.outputs.total_score }};
+            const threshold = ${{ env.DEBT_THRESHOLD }};
+            const passed = score >= threshold;
+
+            const report = `## Technical Debt Report
+
+            ${{ steps.score.outputs.status }} **Overall Score: ${score}/10**
+
+            ${passed ? '> PR meets debt threshold requirements' : '> :warning: PR blocked: Score below minimum threshold of ' + threshold}
+
+            ### Category Breakdown
+
+            | Category | Score | Weight | Weighted |
+            |----------|-------|--------|----------|
+            | Complexity | ${{ steps.score.outputs.complexity_score }}/10 | 25% | ${(${{ steps.score.outputs.complexity_score }} * 0.25).toFixed(2)} |
+            | Error Handling | ${{ steps.score.outputs.error_score }}/10 | 20% | ${(${{ steps.score.outputs.error_score }} * 0.20).toFixed(2)} |
+            | Type Safety | ${{ steps.score.outputs.type_score }}/10 | 20% | ${(${{ steps.score.outputs.type_score }} * 0.20).toFixed(2)} |
+            | Test Coverage | ${{ steps.score.outputs.coverage_score }}/10 | 20% | ${(${{ steps.score.outputs.coverage_score }} * 0.20).toFixed(2)} |
+            | Doc Sync | ${{ steps.score.outputs.doc_sync_score }}/10 | 10% | ${(${{ steps.score.outputs.doc_sync_score }} * 0.10).toFixed(2)} |
+            | Dependencies | ${{ steps.score.outputs.dep_score }}/10 | 5% | ${(${{ steps.score.outputs.dep_score }} * 0.05).toFixed(2)} |
+
+            ### Violation Counts
+
+            - **Complexity violations:** ${{ steps.eslint.outputs.complexity_errors }}
+            - **Error handling issues:** ${{ steps.eslint.outputs.error_handling }}
+            - **Type safety issues:** ${{ steps.eslint.outputs.type_safety }}
+            - **Test coverage:** ${{ steps.coverage.outputs.coverage }}%
+            - **SPEC/Doc sync issues:** ${{ steps.specs.outputs.spec_issues }}
+            - **Outdated dependencies:** ${{ steps.deps.outputs.outdated }}
+            - **Security vulnerabilities:** ${{ steps.deps.outputs.vulnerabilities }}
+
+            ### Score Thresholds
+
+            | Range | Status | Action |
+            |-------|--------|--------|
+            | >= 8.0 | Excellent | Proceed |
+            | 7.0-7.9 | Good | Proceed |
+            | 6.0-6.9 | Acceptable | Proceed with caution |
+            | 5.0-5.9 | Concerning | Review required |
+            | < 5.0 | Critical | **PR Blocked** |
+
+            ---
+            *Generated by Technical Debt Check workflow*
+            *See AI SaaS Handbook Chapter 27 for scoring methodology*`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(c =>
+              c.user.login === 'github-actions[bot]' &&
+              c.body.includes('Technical Debt Report')
+            );
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: report,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: report,
+              });
+            }
+
+      # -----------------------------------------------------------------------
+      # STEP 6: Gate Check - Fail if below threshold
+      # -----------------------------------------------------------------------
+      - name: Check Debt Threshold
+        run: |
+          SCORE=${{ steps.score.outputs.total_score }}
+          THRESHOLD=${{ env.DEBT_THRESHOLD }}
+
+          echo "Debt Score: $SCORE"
+          echo "Threshold: $THRESHOLD"
+
+          if (( $(echo "$SCORE < $THRESHOLD" | bc -l) )); then
+            echo "::error::Technical debt score ($SCORE) is below the minimum threshold ($THRESHOLD)"
+            echo "Please address the debt violations before merging this PR."
+            echo "See the PR comment for detailed breakdown."
+            exit 1
+          fi
+
+          echo "::notice::Technical debt score ($SCORE) meets threshold ($THRESHOLD)"
