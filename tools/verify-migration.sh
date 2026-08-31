@@ -18,7 +18,11 @@ gate() { printf '\n%sGATE %s%s\n' "$B" "$1" "$X"; }
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT" || exit 1
-ICLOUD="/Users/gcerrada/Desktop/000 Saas Projects/AI Handbook"
+# The iCloud source this repo was migrated out of. Machine-specific: gate 2 is skipped
+# where it does not exist, so the script runs anywhere. Override to point elsewhere.
+ICLOUD="${MOAI_ICLOUD_SRC:-$HOME/Desktop/000 Saas Projects/AI Handbook}"
+# Timestamp the migration began; gate 2 asserts nothing under ICLOUD changed after it.
+MIGRATION_START="${MOAI_MIGRATION_START:-2026-08-31 13:14:33}"
 EXPECT_HEAD="189630170760e7c372940f4995f818538a4f390b"
 
 gate "1  clone fidelity"
@@ -33,12 +37,10 @@ loose=$(git count-objects -v | awk '/^count:/{print $2}')
 
 gate "2  iCloud source untouched"
 if [ -d "$ICLOUD" ]; then
-  # Nothing under the iCloud root may be newer than the newest file we created here.
-  newest_local=$(find method prompts tools plugins -type f -newermt '2026-08-31 00:00:00' 2>/dev/null | head -1)
-  modified=$(find "$ICLOUD" -type f -newermt "2026-08-31 13:14:33" 2>/dev/null | wc -l | tr -d ' ')
+  modified=$(find "$ICLOUD" -type f -newermt "$MIGRATION_START" 2>/dev/null | wc -l | tr -d ' ')
   [ "$modified" = "0" ] \
     && ok "no file under the iCloud folder modified since migration start" \
-    || { bad "$modified file(s) modified under the iCloud folder"; find "$ICLOUD" -type f -newermt "2026-08-31 13:14:33" 2>/dev/null | head -5; }
+    || { bad "$modified file(s) modified under the iCloud folder"; find "$ICLOUD" -type f -newermt "$MIGRATION_START" 2>/dev/null | head -5; }
 else
   warn "iCloud folder not present on this machine — nothing to check"
 fi
