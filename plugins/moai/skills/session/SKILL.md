@@ -2,7 +2,7 @@
 name: session
 description: The context-boundary ritual. `start` restores what the last session established; `end` writes the session log, memory and progress entries so the work survives /clear.
 argument-hint: "<start|end>"
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /moai:session

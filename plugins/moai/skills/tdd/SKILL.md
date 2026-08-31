@@ -2,7 +2,7 @@
 name: tdd
 description: Run one phase of the RED/GREEN/REFACTOR loop for a SPEC. RED writes failing tests only and never implementation; REFACTOR runs the full quality gate and marks the SPEC done.
 argument-hint: "<SPEC-ID> [red|green|refactor]"
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /moai:tdd

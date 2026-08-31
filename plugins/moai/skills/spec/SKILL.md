@@ -2,7 +2,7 @@
 name: spec
 description: Author or revise one SPEC using EARS requirements and GIVEN/WHEN/THEN test cases, then self-verify it against the SPEC Ready checklist before marking it ready.
 argument-hint: "<feature description | SPEC-ID>"
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /moai:spec

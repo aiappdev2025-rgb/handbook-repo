@@ -2,7 +2,7 @@
 name: checkpoint
 description: Run a milestone checkpoint audit — detect the stack, run the quality gates, dispatch the audit subagents, score technical debt, write the report and propose the git tag. Blocks on any failure.
 argument-hint: "[a|b|c] [--dry-run]"
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task]
 ---
 
 # /moai:checkpoint

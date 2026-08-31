@@ -2,7 +2,7 @@
 name: init
 description: Bootstrap a project into a MOAI-executable state — directories, templates, CLAUDE.md, and the state file. Interviews first, and supports --dry-run.
 argument-hint: "[project-name] [--dry-run]"
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /moai:init

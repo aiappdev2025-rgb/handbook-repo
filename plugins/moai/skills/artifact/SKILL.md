@@ -2,7 +2,7 @@
 name: artifact
 description: Produce any Phase 1-3 design artifact (one-pager, design brief, UX package, UI system, architecture, ADRs, test strategy, build contract) directly in Claude Code, with dependency gating.
 argument-hint: "[artifact-id] [--revise]"
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /moai:artifact

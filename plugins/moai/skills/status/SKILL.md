@@ -2,7 +2,7 @@
 name: status
 description: Show the whole MOAI project on one screen — phase, milestone, artifacts, SPECs, debt score and the single recommended next action. Read-only.
 argument-hint: ""
-allowed-tools: Read, Glob, Grep, Bash
+allowed-tools: [Read, Glob, Grep, Bash]
 ---
 
 # /moai:status

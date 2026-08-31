@@ -1,9 +1,9 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "moai-handbook",
-  "owner": { "name": "aiappdev2025-rgb" },
-  "metadata": {
-    "description": "The AI SaaS Handbook methodology, packaged as a Claude Code plugin.",
-    "version": "1.0.0"
+  "description": "The AI SaaS Handbook methodology, packaged as a Claude Code plugin.",
+  "owner": {
+    "name": "aiappdev2025-rgb"
   },
   "plugins": [
     {
