@@ -67,7 +67,8 @@
 
 ## Checkpoint A: Foundation Audit (After M3)
 
-> Use this after completing Authentication milestone, before starting Core Feature. This is a major gate—the foundation must be solid.
+> Use this after completing M3 (Database), before starting M4 (Layouts). This is a major
+> gate — the foundation must be solid before any feature work lands on it.
 
 ### Automated Checks
 - [ ] **All tests passing**: Full test suite green
@@ -76,14 +77,6 @@
 - [ ] **Linting clean**: No warnings or errors
 - [ ] **No security vulnerabilities**: `npm audit` shows no high/critical issues
 - [ ] **Bundle size reasonable**: Initial JS bundle <200KB
-
-### Authentication Verification
-- [ ] **Sign up flow works**: New user can create account
-- [ ] **Sign in flow works**: Existing user can log in
-- [ ] **Sign out flow works**: User can log out, session cleared
-- [ ] **Password reset works**: User can reset via email
-- [ ] **Protected routes redirect**: Unauthenticated users sent to login
-- [ ] **Session persists**: User stays logged in across page refreshes
 
 ### Database Verification
 - [ ] **Schema matches Build Contract**: Tables, columns, types all correct
@@ -101,7 +94,16 @@
 
 ## Checkpoint B: Feature Complete (After M6)
 
-> Use this after Core Feature milestone, before Admin features. The main value proposition must work flawlessly.
+> Use this after M6 (Core Feature), before M7 (Admin). The main value proposition must
+> work flawlessly.
+
+### Authentication Verification
+- [ ] **Sign up flow works**: New user can create account
+- [ ] **Sign in flow works**: Existing user can log in
+- [ ] **Sign out flow works**: User can log out, session cleared
+- [ ] **Password reset works**: User can reset via email
+- [ ] **Protected routes redirect**: Unauthenticated users sent to login
+- [ ] **Session persists**: User stays logged in across page refreshes
 
 ### Automated Checks
 - [ ] **All tests passing**: Including new core feature tests
@@ -126,6 +128,34 @@
 - [ ] **Feedback documented**: Notes on what worked, what confused
 - [ ] **Critical issues fixed**: Blocking problems resolved
 - [ ] **Nice-to-haves triaged**: Non-critical feedback logged for later
+
+---
+
+## Checkpoint C: Pre-Launch Audit (After M10)
+
+> Use this after M10 (Polish), before M11 (Testing). Last gate before the test sweep.
+
+### Automated Checks
+- [ ] **Build passes**: `npm run build` completes with no errors
+- [ ] **Lint passes**: `npm run lint` reports no warnings
+- [ ] **Types pass**: `npx tsc --noEmit` is clean
+- [ ] **Dependencies audited**: `npm audit` shows no high or critical findings
+
+### Security Verification
+- [ ] **Security audit passed**: no critical or high findings outstanding
+- [ ] **Secrets absent from the bundle**: no keys in client-side code
+- [ ] **Rate limiting present**: auth, password reset, and any endpoint that costs money
+- [ ] **Headers set**: HSTS, CSP, X-Frame-Options, referrer policy
+
+### Performance and Polish
+- [ ] **Error boundaries in place**: no unhandled crashes reach the user
+- [ ] **Loading and empty states**: every async view has both
+- [ ] **Accessibility pass**: keyboard navigation and screen-reader labels
+- [ ] **Debt score >= 6.0**: recorded in TECH-DEBT.md
+
+### Documentation Sync
+- [ ] **`bash scripts/spec-check.sh` passes**: every SPEC Done and linked to a test
+- [ ] **CLAUDE.md current**: stack, conventions and commands match reality
 
 ---
 

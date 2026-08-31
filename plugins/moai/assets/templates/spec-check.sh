@@ -13,8 +13,17 @@
 
 set -e
 
-SPECS_DIR="docs/specs"
-SRC_DIR="src"
+SPECS_DIR="${SPECS_DIR:-docs/specs}"
+# Overridable: the plugin advertises nextjs-app / nextjs-pages / remix / astro, and
+# the generated CLAUDE.md tells users to put tests in tests/. Hard-coding "src"
+# made every non-src layout score as if its tests did not exist.
+SRC_DIR="${SRC_DIR:-src}"
+
+# Test and source file patterns. Previously .ts/.tsx only, so a correctly marked
+# .test.js scored a false "No test file found".
+TEST_GLOBS=(--include="*.test.*" --include="*.spec.*" --include="*.test-*.*")
+SRC_GLOBS=(--include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+           --include="*.mjs" --include="*.cjs" --include="*.mts" --include="*.cts")
 JSON_OUTPUT=false
 SCORE=10
 ISSUES=()
@@ -66,6 +75,9 @@ check_spec_status() {
   local incomplete_count=0
   for spec_file in "$SPECS_DIR"/*.md; do
     [[ -f "$spec_file" ]] || continue
+    # _-prefixed files are templates/scaffolding, not SPECs. A POSIX glob skips
+    # dotfiles but not these, so an unfiltered loop scores the template itself.
+    case "$(basename "$spec_file")" in _*) continue;; esac
 
     # Check for a Done status, in either form the handbook uses:
     #   "Status: Done"              (prose form)
@@ -101,14 +113,24 @@ check_spec_test_links() {
     return
   fi
 
+  # Without this guard a missing source dir is indistinguishable from "no match":
+  # grep returns non-zero for both, so every SPEC reported a false error.
+  if [[ ! -d "$SRC_DIR" ]]; then
+    log_issue "warn" "No source directory found at $SRC_DIR (set SRC_DIR to override)"
+    return
+  fi
+
   local missing_count=0
   for spec_file in "$SPECS_DIR"/*.md; do
     [[ -f "$spec_file" ]] || continue
+    # _-prefixed files are templates/scaffolding, not SPECs. A POSIX glob skips
+    # dotfiles but not these, so an unfiltered loop scores the template itself.
+    case "$(basename "$spec_file")" in _*) continue;; esac
 
     spec_name=$(basename "$spec_file" .md)
 
     # Search for test files containing // SPEC: SPEC-NAME
-    if ! grep -rq "// SPEC: $spec_name" "$SRC_DIR" --include="*.test.ts" --include="*.test.tsx" --include="*.spec.ts" --include="*.spec.tsx" 2>/dev/null; then
+    if ! grep -rq "// SPEC: $spec_name" "$SRC_DIR" "${TEST_GLOBS[@]}" 2>/dev/null; then
       log_issue "error" "No test file found for: $spec_name (missing // SPEC: $spec_name comment)"
       missing_count=$((missing_count+1))
     fi
@@ -139,6 +161,9 @@ check_test_case_coverage() {
   local missing_tc_count=0
   for spec_file in "$SPECS_DIR"/*.md; do
     [[ -f "$spec_file" ]] || continue
+    # _-prefixed files are templates/scaffolding, not SPECs. A POSIX glob skips
+    # dotfiles but not these, so an unfiltered loop scores the template itself.
+    case "$(basename "$spec_file")" in _*) continue;; esac
 
     spec_name=$(basename "$spec_file" .md)
 
@@ -150,7 +175,7 @@ check_test_case_coverage() {
     fi
 
     # Find the linked test file
-    test_file=$(grep -rl "// SPEC: $spec_name" "$SRC_DIR" --include="*.test.ts" --include="*.test.tsx" --include="*.spec.ts" --include="*.spec.tsx" 2>/dev/null | head -1)
+    test_file=$(grep -rl "// SPEC: $spec_name" "$SRC_DIR" "${TEST_GLOBS[@]}" 2>/dev/null | head -1)
 
     if [[ -z "$test_file" ]]; then
       continue  # Already reported in check 2
@@ -202,7 +227,7 @@ check_orphaned_todos() {
       log_issue "warn" "TODO older than 7 days: $file:$line_num"
       old_todo_count=$((old_todo_count+1))
     fi
-  done < <(grep -rn "TODO" "$SRC_DIR" --include="*.ts" --include="*.tsx" 2>/dev/null || true)
+  done < <(grep -rn "TODO" "$SRC_DIR" "${SRC_GLOBS[@]}" 2>/dev/null || true)
 
   if [[ $old_todo_count -eq 0 ]]; then
     log_success "No orphaned TODOs older than 7 days"

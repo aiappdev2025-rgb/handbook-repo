@@ -1,6 +1,6 @@
 ---
 chapter: 31
-title: "Checkpoint 1 — Foundation Audit"
+title: "Checkpoint A — Foundation Audit"
 slug: "checkpoint-a"
 phase: 4
 phase_name: "Build"
@@ -17,7 +17,7 @@ gate: null
 source_html: "archive/html-v3/handbook/phase4/chapter-31-checkpoint-1-REWRITTEN.html"
 ---
 
-# Chapter 31: Checkpoint 1 — Foundation Audit
+# Chapter 31: Checkpoint A — Foundation Audit
 
 This checkpoint verifies your foundation is solid before building features. Unlike traditional audits, this version auto-detects your architecture, adapts checks to your specific stack, and runs automatically via Claude Code prompts.
 
@@ -26,7 +26,7 @@ This checkpoint verifies your foundation is solid before building features. Unli
 | | |
 | --- | --- |
 | **Time** | 10-20 minutes (mostly automated) |
-| **Prerequisites** | M1-M4 complete |
+| **Prerequisites** | M1-M3 complete |
 | **Outcome** | Verified foundation, git tagged `checkpoint-a` |
 
 ## 31.1 TL;DR
@@ -472,7 +472,7 @@ Check API layer:
    | Types defined           | ✅/⚠️  | ... |
 ```
 
-## 31.9 Step 6: UI Shell Verification (Universal with Conditions)
+## 31.9 Step 6: UI Shell Verification (only if M4 is already complete)
 
 ### Check UI Shell
 
@@ -640,8 +640,7 @@ If no Build Contract found, typical next steps:
 
 ### Continue to Next Chapter
 
-- If has auth: [Chapter 33: M5 - Authentication](33-m5-authentication.md)
-- If local-only: [Chapter 34: M6 - Core Features](34-m6-core-feature.md)
+- Next: [Chapter 32: M4 — Layouts](32-m4-layouts.md)
 
 ## 31.13 Troubleshooting
 

@@ -20,6 +20,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { auditOverrides } from './lib/overrides.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const STEPS = [
@@ -36,4 +37,20 @@ for (const s of STEPS) {
     cwd: ROOT, stdio: 'inherit', env: { ...process.env, NODE_NO_WARNINGS: '1' },
   });
 }
+// An override whose pattern no longer matches its source is a silent no-op: the
+// correction quietly stops being applied. Fail the build instead.
+const outFiles = [];
+(function walk(d) {
+  for (const e of fs.readdirSync(path.join(ROOT, d), { withFileTypes: true })) {
+    if (e.isDirectory()) walk(path.join(d, e.name));
+    else if (e.name.endsWith('.md')) outFiles.push(path.join(d, e.name));
+  }
+})('method');
+const stale = auditOverrides((rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8'), outFiles);
+if (stale.length) {
+  console.error(`\n\x1b[31mFATAL\x1b[0m ${stale.length} override(s) matched nothing:`);
+  stale.forEach((u) => console.error('  ' + u));
+  process.exit(1);
+}
+
 console.log('\n\x1b[32mbuild complete\x1b[0m — run `npm run verify` to check it\n');

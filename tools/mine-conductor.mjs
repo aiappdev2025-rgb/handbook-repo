@@ -115,3 +115,113 @@ try {
   const orphans = mdxFiles.filter((x) => !rows.some((r) => r.mdx === x));
   write('mdx-only.json', orphans, `${orphans.length} MDX pages with no HTML counterpart`);
 }
+
+/* ============================================================================
+ * Enrichment.
+ *
+ * The mined data is faithful to the retired app but not sufficient to drive
+ * /moai:artifact. Three things are added here rather than by hand, so they
+ * survive `npm run convert`:
+ *
+ *   chapterPath  the mined `chapter` field is a bare slug; five of the eighteen
+ *                match no file under any name test. /moai:artifact needs a real
+ *                path or it drafts from the one-line description.
+ *   requires     `prerequisites` in execution.json are English sentences. A gate
+ *                cannot be checked against prose, so the dependency graph is
+ *                declared explicitly.
+ *   contextFiles build-contract's was the prose string "All Phase 3 artifacts" —
+ *                the only one of 21 that is not a filename. It is the input set
+ *                for the hinge document of the whole method.
+ *
+ * Orphan override keys are dropped: m1-foundation / m2-database-schema /
+ * m4-ui-shell have no counterpart in artifactDefinitions, so /moai:artifact can
+ * never reach them, and two of the three encode the retired milestone numbering.
+ * ========================================================================== */
+
+const CHAPTER_PATH = {
+  'market-research': 'method/01-validate/05-research.md',
+  'opportunity-assessment': 'method/01-validate/05-research.md',
+  'business-one-pager': 'method/01-validate/06-one-pager.md',
+  'competitive-analysis': 'method/01-validate/44-competitive-analysis.md',
+  'mvp-scoping': 'method/01-validate/45-mvp-scoping.md',
+  'design-brief': 'method/01-validate/07-design-brief.md',
+  'design-philosophy': 'method/02-design/08-design-philosophy.md',
+  'ux-package': 'method/02-design/09-ux-package.md',
+  'user-flows': 'method/02-design/46-user-flows.md',
+  'ui-system': 'method/02-design/11-ui-system.md',
+  'component-library': 'method/02-design/47-component-library.md',
+  'solution-architecture': 'method/03-architect/13-architecture.md',
+  'data-model': 'method/03-architect/14-database-schema.md',
+  'api-specification': 'method/03-architect/48-api-specification.md',
+  security: 'method/03-architect/49-security.md',
+  'build-contract': 'method/03-architect/21-generating-contract.md',
+  'adr-templates': 'method/03-architect/50-adr-templates.md',
+  'test-strategy': 'method/03-architect/51-test-strategy.md',
+};
+
+/** Explicit dependency graph. [] means a valid starting point. */
+const REQUIRES = {
+  'market-research': [],
+  'opportunity-assessment': ['market-research'],
+  'competitive-analysis': ['market-research'],
+  'business-one-pager': ['opportunity-assessment'],
+  'mvp-scope': ['business-one-pager'],
+  'design-brief': ['business-one-pager'],
+  'design-philosophy': ['design-brief'],
+  'ux-package': ['design-brief'],
+  'user-flows': ['ux-package'],
+  'ui-system': ['design-brief', 'ux-package'],
+  'component-library': ['ui-system'],
+  'solution-architecture': ['design-brief', 'ux-package', 'ui-system'],
+  'data-model': ['solution-architecture'],
+  'api-spec': ['solution-architecture', 'data-model'],
+  'security-architecture': ['solution-architecture'],
+  'adr-templates': ['solution-architecture'],
+  'test-strategy': ['solution-architecture'],
+  'build-contract': [
+    'design-brief', 'ux-package', 'ui-system', 'solution-architecture',
+    'data-model', 'api-spec', 'security-architecture', 'adr-templates', 'test-strategy',
+  ],
+};
+
+{
+  const aPath = path.join(OUT, 'artifacts.json');
+  const ePath = path.join(OUT, 'execution.json');
+  const artifacts = JSON.parse(fs.readFileSync(aPath, 'utf8'));
+  const execution = JSON.parse(fs.readFileSync(ePath, 'utf8'));
+
+  let unmapped = 0, ungated = 0;
+  for (const [id, def] of Object.entries(artifacts)) {
+    const cp = CHAPTER_PATH[def.chapter];
+    if (cp && fs.existsSync(path.join(ROOT, cp))) def.chapterPath = cp;
+    else { def.chapterPath = null; unmapped++; console.error(`  ! no chapter for ${id} (${def.chapter})`); }
+    if (REQUIRES[id]) def.requires = REQUIRES[id];
+    else { def.requires = []; ungated++; console.error(`  ! no requires entry for ${id}`); }
+  }
+
+  // build-contract takes every Phase 3 artifact as input. Derived from the
+  // artifact definitions themselves so it cannot drift from their filenames.
+  if (execution.artifactExecutionOverrides?.['build-contract']) {
+    execution.artifactExecutionOverrides['build-contract'].contextFiles =
+      REQUIRES['build-contract'].map((dep) => artifacts[dep]?.filename).filter(Boolean);
+  }
+
+  // Drop overrides for artifacts that do not exist — unreachable, and two of the
+  // three encode the retired M1/M2/M4 numbering.
+  const orphans = Object.keys(execution.artifactExecutionOverrides ?? {})
+    .filter((k) => !artifacts[k]);
+  for (const k of orphans) delete execution.artifactExecutionOverrides[k];
+
+  fs.writeFileSync(aPath, JSON.stringify(artifacts, null, 2) + '\n');
+  fs.writeFileSync(ePath, JSON.stringify(execution, null, 2) + '\n');
+  console.log(`enrichment           ${Object.keys(artifacts).length - unmapped}/18 chapterPath, ${Object.keys(artifacts).length - ungated}/18 requires, ${orphans.length} orphan override(s) dropped`);
+}
+
+/* ---- sync the three reference files the plugin actually reads -------------- */
+{
+  const dest = path.join(ROOT, 'plugins/moai/skills/method/references');
+  fs.mkdirSync(dest, { recursive: true });
+  const files = ['artifacts.json', 'execution.json', 'placeholders.json'];
+  for (const f of files) fs.copyFileSync(path.join(OUT, f), path.join(dest, f));
+  console.log(`plugin references    ${files.length} file(s) synced from method/_data`);
+}

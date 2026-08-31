@@ -1,0 +1,97 @@
+---
+# MOAI project state. Machine-owned — commands write this, humans read it via
+# /moai:status. Do not hand-edit the frontmatter.
+#
+# The scalars below MUST stay flat and at column 0: scripts/state-banner.sh reads
+# them with a line-oriented parser at session start. Structured blocks (artifacts,
+# milestones, specs, debt, profile) come after and may nest freely.
+moai: 1
+project: PROJECT_SLUG
+productName: PROJECT_NAME
+createdAt: YYYY-MM-DD
+updatedAt: YYYY-MM-DD
+
+phase: 1
+milestone: null
+activeSpec: null
+tddPhase: null
+lastCheckpoint: null
+lastCheckpointScore: null
+nextCheckpoint: a
+
+# Detected by /moai:init. Every command reads its gate commands from here rather
+# than hardcoding npm — override for pnpm, bun, a monorepo, or a non-src layout.
+stack:
+  framework: null
+  database: null
+  auth: null
+  api: null
+  deployment: null
+  testRunner: null
+gates:
+  test: "npm test"
+  build: "npm run build"
+  lint: "npm run lint"
+  typecheck: "npx tsc --noEmit"
+  specCheck: "bash scripts/spec-check.sh --json"
+paths:
+  specs: "docs/specs"
+  src: "src"
+
+# All 18 artifact ids from references/artifacts.json.
+# status: empty | draft | complete
+artifacts:
+  market-research: { status: empty, file: null }
+  opportunity-assessment: { status: empty, file: null }
+  competitive-analysis: { status: empty, file: null }
+  business-one-pager: { status: empty, file: null }
+  mvp-scope: { status: empty, file: null }
+  design-brief: { status: empty, file: null }
+  design-philosophy: { status: empty, file: null }
+  ux-package: { status: empty, file: null }
+  user-flows: { status: empty, file: null }
+  ui-system: { status: empty, file: null }
+  component-library: { status: empty, file: null }
+  solution-architecture: { status: empty, file: null }
+  data-model: { status: empty, file: null }
+  api-spec: { status: empty, file: null }
+  security-architecture: { status: empty, file: null }
+  adr-templates: { status: empty, file: null }
+  test-strategy: { status: empty, file: null }
+  build-contract: { status: empty, file: null }
+
+# status: not-started | in-progress | done | blocked
+milestones:
+  M1: { status: not-started, name: "Project Setup" }
+  M2: { status: not-started, name: "Design System" }
+  M3: { status: not-started, name: "Database" }
+  M4: { status: not-started, name: "Layouts" }
+  M5: { status: not-started, name: "Authentication" }
+  M6: { status: not-started, name: "Core Feature" }
+  M7: { status: not-started, name: "Admin Console" }
+  M8: { status: not-started, name: "Supporting Features" }
+  M9: { status: not-started, name: "Payments" }
+  M10: { status: not-started, name: "Polish" }
+  M11: { status: not-started, name: "Testing" }
+
+# SPEC-<PREFIX>-<NNN>: { status, milestone, testFile, testCases }
+# status: draft | ready | in-progress | review | done
+specs: {}
+
+debt:
+  score: null
+  trend: null
+  items: []
+
+# Values extracted by /moai:artifact, at the verbatim extractFields paths.
+# These are what placeholders.json substitutes into prompts.
+profile: {}
+---
+
+# PROJECT_NAME — MOAI state
+
+Generated view. Run `/moai:status` for the current picture; edit nothing here by hand.
+
+**Phase 1 Validate** · no milestone yet · no active SPEC
+
+Next: `/moai:artifact market-research`

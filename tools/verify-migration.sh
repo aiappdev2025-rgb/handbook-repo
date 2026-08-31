@@ -117,8 +117,8 @@ grep -q 'M3 Database' plugins/moai/skills/method/SKILL.md \
   && ok "skill carries the canonical M1-M11 sequence" || bad "skill milestone sequence missing"
 # Body only: source_html legitimately names the chapter-31-checkpoint-1-REWRITTEN file.
 ck=0
-for f in $(grep -rl 'checkpoint-1' method --include='*.md' 2>/dev/null); do
-  awk 'BEGIN{n=0} /^---$/{n++;next} n>=2 && /checkpoint-1/{found=1} END{exit !found}' "$f" && ck=$((ck+1))
+for f in $(grep -rlE '[Cc]heckpoint[ -]1([^0-9]|$)' method --include='*.md' 2>/dev/null); do
+  awk 'BEGIN{n=0} /^---$/{n++;next} n>=2 && /[Cc]heckpoint[ -]1([^0-9]|$)/{found=1} END{exit !found}' "$f" && ck=$((ck+1))
 done
 [ "$ck" = "0" ] && ok "checkpoints named a/b/c throughout" || bad "checkpoint-1 survives in $ck file(s)"
 
@@ -136,6 +136,50 @@ na=$(find plugins/moai/agents -name '*.md' | wc -l | tr -d ' ')
 [ "$na" = "3" ] && ok "3 audit subagents present" || bad "$na subagents, expected 3"
 [ -z "$(cd /tmp && bash "$ROOT/plugins/moai/scripts/state-banner.sh")" ] \
   && ok "SessionStart hook is silent outside a MOAI project" || bad "hook prints noise in non-MOAI repos"
+
+gate "10 plugin surface integrity"
+# Every ${CLAUDE_PLUGIN_ROOT} path must resolve. This is the defect class that structural
+# checks miss: a skill instructing Claude to read a file that is not there.
+brk=0
+while IFS= read -r rel; do
+  [ -e "plugins/moai/$rel" ] || { bad "unresolved plugin path: $rel"; brk=$((brk+1)); }
+done < <(grep -rhoE '\$\{CLAUDE_PLUGIN_ROOT\}/[A-Za-z0-9_./-]+' plugins/moai | sed 's|\${CLAUDE_PLUGIN_ROOT}/||' | sort -u)
+[ "$brk" = "0" ] && ok "every \${CLAUDE_PLUGIN_ROOT} path resolves"
+
+# The plugin reads its own copy of the mined data; a stale copy is invisible at runtime.
+same=1
+for f in artifacts.json execution.json placeholders.json; do
+  cmp -s "method/_data/$f" "plugins/moai/skills/method/references/$f" || { bad "plugin copy of $f is stale — run npm run convert"; same=0; }
+done
+[ "$same" = "1" ] && ok "plugin references match method/_data"
+
+node -e '
+const fs=require("fs");
+const a=JSON.parse(fs.readFileSync("plugins/moai/skills/method/references/artifacts.json"));
+const e=JSON.parse(fs.readFileSync("plugins/moai/skills/method/references/execution.json"));
+const errs=[];
+for(const [id,d] of Object.entries(a)){
+  if(!d.chapterPath||!fs.existsSync(d.chapterPath)) errs.push(id+": chapterPath missing");
+  if(!Array.isArray(d.requires)) errs.push(id+": no requires array");
+  for(const r of (d.requires||[])) if(!a[r]) errs.push(id+": requires unknown artifact "+r);
+}
+for(const k of Object.keys(e.artifactExecutionOverrides||{})) if(!a[k]) errs.push("orphan override: "+k);
+const bc=e.artifactExecutionOverrides?.["build-contract"]?.contextFiles||[];
+if(bc.some(x=>!x.endsWith(".md"))) errs.push("build-contract contextFiles is not a filename list");
+if(errs.length){console.error(errs.join("\n"));process.exit(1)}' 2>/dev/null \
+  && ok "artifact registry: chapterPaths resolve, requires graph closed, no orphans" \
+  || { bad "artifact registry invalid:"; node -e '
+const fs=require("fs");
+const a=JSON.parse(fs.readFileSync("plugins/moai/skills/method/references/artifacts.json"));
+for(const [id,d] of Object.entries(a)){ if(!d.chapterPath||!fs.existsSync(d.chapterPath)) console.error("      "+id); }' 2>/dev/null; }
+
+# The quality checklist ships to every project; all five gates must be present and ordered.
+qc=plugins/moai/assets/templates/quality-checklist.md
+{ grep -q '^## Checkpoint A: Foundation Audit (After M3)' $qc \
+  && grep -q '^## Checkpoint B: Feature Complete (After M6)' $qc \
+  && grep -q '^## Checkpoint C: Pre-Launch Audit (After M10)' $qc; } \
+  && ok "shipped quality-checklist has all three checkpoints at M3/M6/M10" \
+  || bad "quality-checklist is missing a checkpoint section"
 
 printf '\n%s%s%s  %d passed, %d failed\n\n' \
   "$([ "$fail" -eq 0 ] && echo "$G" || echo "$R")" \

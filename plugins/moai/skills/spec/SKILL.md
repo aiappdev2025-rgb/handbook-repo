@@ -13,7 +13,7 @@ Build Contract.
 ## Steps
 
 1. Read `${CLAUDE_PLUGIN_ROOT}/assets/templates/spec-template.md`,
-   `${CLAUDE_PLUGIN_ROOT}/skills/method/references/quality-gates.md`, and
+   `${CLAUDE_PLUGIN_ROOT}/assets/templates/quality-checklist.md` (the SPEC Ready Checklist), and
    `docs/build-contract.md` (SPECs must cite its section numbers — that is the
    traceability link; if it is missing, say so and stop).
 2. Read `docs/moai/state.md` for the current milestone and the next free number in the

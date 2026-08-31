@@ -368,12 +368,17 @@ During Phase 4, you'll write tests for each milestone. Here's what to test per m
 
 | Milestone | What to Test |
 |-----------|--------------|
-| M1: Foundation | Project setup, environment config |
-| M2: Database | Schema validation, query functions |
-| M3: Auth | Login, signup, logout, session handling |
-| M4: UI Shell | Component rendering, navigation |
-| M5-M10 | Feature-specific business logic |
-| M11: Payments | Checkout flow, webhook handling |
+| M1: Project Setup | Project scaffolding, environment config, tooling |
+| M2: Design System | Component rendering, design tokens, theming |
+| M3: Database | Schema validation, query functions, RLS policies |
+| M4: Layouts | Layout composition, navigation, routing |
+| M5: Authentication | Login, signup, logout, session handling, protected routes |
+| M6: Core Feature | The primary value-proposition flow, end to end |
+| M7: Admin Console | Access control, user management, audit surfaces |
+| M8: Supporting Features | Secondary flows and their edge cases |
+| M9: Payments | Checkout flow, webhook handling, billing state |
+| M10: Polish | Error boundaries, loading and empty states, accessibility |
+| M11: Testing | Coverage sweep, integration and E2E suites |
 
 ---
 

@@ -250,50 +250,21 @@
       "platform": "claude-chat",
       "session": "new",
       "contextFiles": [
-        "All Phase 3 artifacts"
+        "design-brief.md",
+        "ux-package.md",
+        "ui-system.md",
+        "solution-architecture.md",
+        "data-model.md",
+        "api-spec.md",
+        "security-architecture.md",
+        "adrs.md",
+        "test-strategy.md"
       ],
       "prerequisites": [
         "All architecture docs complete"
       ],
       "tips": [
         "Creates the contract for Claude Code implementation"
-      ]
-    },
-    "m1-foundation": {
-      "platform": "claude-code",
-      "session": "dedicated-project",
-      "contextFiles": [
-        "build-contract.md",
-        "CLAUDE.md"
-      ],
-      "prerequisites": [
-        "Build contract ready",
-        "Repo initialized"
-      ],
-      "tips": [
-        "Run from project root",
-        "Claude Code will create files directly"
-      ]
-    },
-    "m2-database-schema": {
-      "platform": "claude-code",
-      "session": "continue",
-      "contextFiles": [
-        "data-model.md"
-      ],
-      "prerequisites": [
-        "M1 complete"
-      ]
-    },
-    "m4-ui-shell": {
-      "platform": "claude-code",
-      "session": "continue",
-      "contextFiles": [
-        "component-library.md",
-        "ui-system.md"
-      ],
-      "prerequisites": [
-        "M3 complete"
       ]
     }
   }

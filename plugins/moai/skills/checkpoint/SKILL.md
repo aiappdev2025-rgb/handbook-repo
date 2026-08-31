@@ -30,10 +30,16 @@ The gate between milestones. **Checkpoint A after M3, B after M6, C after M10.**
 
 5. **Read `docs/build-contract.md`** and check the milestone's deliverables against it.
 
-6. **Write `CHECKPOINT-<A|B|C>-REPORT.md`** with ✅ / ⚠️ / ⏭️ / ❌ per item, and append
+6. **Classify.** Each subagent returns findings with a `severity` of
+   `critical | high | medium | low`. Map them: **critical and high become ❌ and block**;
+   medium and low become ⚠️ and are recorded; a check that could not run is ⏭️ and never
+   blocks. The debt score cannot express a security finding — an auth bypass scores zero
+   across all six weighted categories — so ❌ is the only thing that stops a bad tag.
+
+7. **Write `CHECKPOINT-<A|B|C>-REPORT.md`** with ✅ / ⚠️ / ⏭️ / ❌ per item, and append
    the audit block to `TECH-DEBT.md` with the category table and any new `D-<NNN>` items.
 
-7. **Update state**: `lastCheckpoint`, `lastCheckpointScore`, `debt.*`, `milestones.*`.
+8. **Update state**: `lastCheckpoint`, `lastCheckpointScore`, `debt.*`, `milestones.*`.
 
 ## Gate
 
@@ -45,7 +51,7 @@ git push origin checkpoint-a     # run this yourself
 ```
 
 Never run `git push`. On failure, print the remediation prompt for each ❌ and stop —
-`prompts/A-refactor.md`, `A-security.md`, `A-debt-remediation.md` are written for this.
+`${CLAUDE_PLUGIN_ROOT}/../../prompts/A-refactor.md`, `A-security.md`, `A-debt-remediation.md` are written for this.
 
 `--dry-run` scores without writing the report or touching state — use it for a pulse
 check between checkpoints.

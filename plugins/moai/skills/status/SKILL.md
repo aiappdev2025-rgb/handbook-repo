@@ -2,7 +2,7 @@
 name: status
 description: Show the whole MOAI project on one screen — phase, milestone, artifacts, SPECs, debt score and the single recommended next action. Read-only.
 argument-hint: ""
-allowed-tools: [Read, Glob, Grep, Bash]
+allowed-tools: [Read, Glob, Grep, Bash(git:*), Bash(bash scripts/spec-check.sh:*)]
 ---
 
 # /moai:status
@@ -15,9 +15,15 @@ Render the project's current state. **Writes nothing.**
    suggest `/moai:init`.
 2. Run `bash scripts/spec-check.sh --json` if it exists (this is the Doc-Sync score).
 3. Read `git log --oneline -5`, `git tag -l 'checkpoint-*'`, `ls docs/specs`.
-4. **Reconcile.** Compare state against disk and report drift — SPEC files not in
-   state, a `checkpoint-b` tag with no `lastCheckpoint`, a `testFile` that no longer
-   exists. Offer to fix; do not silently mutate.
+4. **Reconcile.** Compare state against disk and report drift, then name the command
+   that owns the fix — this skill writes nothing itself:
+
+   | drift | say to run |
+   | --- | --- |
+   | a `checkpoint-*` git tag with no matching `lastCheckpoint` | `/moai:checkpoint <a\|b\|c>` |
+   | a SPEC file in `docs/specs/` not registered in state | `/moai:spec <ID>` |
+   | `specs.<id>.testFile` pointing at a file that no longer exists | `/moai:tdd <ID> red` |
+   | `artifacts.<id>.status: complete` with no file at its path | `/moai:artifact <id>` |
 
 ## Output shape
 

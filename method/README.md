@@ -85,7 +85,7 @@ Ship it. SPEC-first + TDD across milestones M1–M11 with checkpoints A/B/C.
 | 28 | [Milestone 1 — Project Setup](04-build/28-m1-project-setup.md) | claude-code | M1 |
 | 29 | [Milestone 2 — Design System](04-build/29-m2-design-system.md) | claude-code | M2 |
 | 30 | [Milestone 3 — Database](04-build/30-m3-database.md) | claude-code | M3 |
-| 31 | [Checkpoint 1 — Foundation Audit](04-build/31-checkpoint-a.md) |  |  |
+| 31 | [Checkpoint A — Foundation Audit](04-build/31-checkpoint-a.md) |  |  |
 | 32 | [Milestone 4 — Layouts](04-build/32-m4-layouts.md) | claude-code | M4 |
 | 33 | [Milestone 5 — Authentication](04-build/33-m5-authentication.md) | claude-code | M5 |
 | 34 | [Milestone 6 — Core Feature](04-build/34-m6-core-feature.md) ⛔ | claude-code | M6 |

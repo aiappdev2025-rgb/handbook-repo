@@ -463,10 +463,10 @@
   },
   {
     "chapter": 31,
-    "title": "Checkpoint 1 — Foundation Audit",
+    "title": "Checkpoint A — Foundation Audit",
     "method": "method/04-build/31-checkpoint-a.md",
-    "mdx": "archive/docusaurus/docs/phase-4-build/checkpoint-1.mdx",
-    "confidence": "slug-match"
+    "mdx": null,
+    "confidence": "none"
   },
   {
     "chapter": 32,

@@ -9,7 +9,9 @@
       "phase1.marketTAM",
       "phase1.marketSAM",
       "phase1.marketSOM"
-    ]
+    ],
+    "chapterPath": "method/01-validate/05-research.md",
+    "requires": []
   },
   "opportunity-assessment": {
     "phase": 1,
@@ -17,7 +19,11 @@
     "filename": "opportunity-assessment.md",
     "title": "Opportunity Assessment",
     "description": "Opportunity scoring and evaluation",
-    "extractFields": []
+    "extractFields": [],
+    "chapterPath": "method/01-validate/05-research.md",
+    "requires": [
+      "market-research"
+    ]
   },
   "business-one-pager": {
     "phase": 1,
@@ -29,6 +35,10 @@
       "phase1.productConcept",
       "phase1.problemStatement",
       "phase1.pricingModel"
+    ],
+    "chapterPath": "method/01-validate/06-one-pager.md",
+    "requires": [
+      "opportunity-assessment"
     ]
   },
   "competitive-analysis": {
@@ -39,6 +49,10 @@
     "description": "Competitor research and differentiation",
     "extractFields": [
       "phase1.competitors"
+    ],
+    "chapterPath": "method/01-validate/44-competitive-analysis.md",
+    "requires": [
+      "market-research"
     ]
   },
   "mvp-scope": {
@@ -50,6 +64,10 @@
     "extractFields": [
       "phase1.mvpFeatures",
       "phase1.outOfScope"
+    ],
+    "chapterPath": "method/01-validate/45-mvp-scoping.md",
+    "requires": [
+      "business-one-pager"
     ]
   },
   "design-brief": {
@@ -61,6 +79,10 @@
     "extractFields": [
       "phase2.coreFeatures",
       "phase2.userPersonas"
+    ],
+    "chapterPath": "method/01-validate/07-design-brief.md",
+    "requires": [
+      "business-one-pager"
     ]
   },
   "design-philosophy": {
@@ -71,6 +93,10 @@
     "description": "Design principles and visual direction",
     "extractFields": [
       "phase2.designPrinciples"
+    ],
+    "chapterPath": "method/02-design/08-design-philosophy.md",
+    "requires": [
+      "design-brief"
     ]
   },
   "ux-package": {
@@ -81,6 +107,10 @@
     "description": "Information architecture and user flows",
     "extractFields": [
       "phase2.keyUserFlows"
+    ],
+    "chapterPath": "method/02-design/09-ux-package.md",
+    "requires": [
+      "design-brief"
     ]
   },
   "user-flows": {
@@ -89,7 +119,11 @@
     "filename": "user-flows.md",
     "title": "User Flows",
     "description": "Detailed user journey documentation",
-    "extractFields": []
+    "extractFields": [],
+    "chapterPath": "method/02-design/46-user-flows.md",
+    "requires": [
+      "ux-package"
+    ]
   },
   "ui-system": {
     "phase": 2,
@@ -97,7 +131,12 @@
     "filename": "ui-system.md",
     "title": "UI System",
     "description": "Visual design system specification",
-    "extractFields": []
+    "extractFields": [],
+    "chapterPath": "method/02-design/11-ui-system.md",
+    "requires": [
+      "design-brief",
+      "ux-package"
+    ]
   },
   "component-library": {
     "phase": 2,
@@ -105,7 +144,11 @@
     "filename": "component-library.md",
     "title": "Component Library",
     "description": "UI component specifications",
-    "extractFields": []
+    "extractFields": [],
+    "chapterPath": "method/02-design/47-component-library.md",
+    "requires": [
+      "ui-system"
+    ]
   },
   "solution-architecture": {
     "phase": 3,
@@ -115,6 +158,12 @@
     "description": "System design and tech stack",
     "extractFields": [
       "phase3.techStack"
+    ],
+    "chapterPath": "method/03-architect/13-architecture.md",
+    "requires": [
+      "design-brief",
+      "ux-package",
+      "ui-system"
     ]
   },
   "data-model": {
@@ -125,6 +174,10 @@
     "description": "Database schema and entities",
     "extractFields": [
       "phase3.entities"
+    ],
+    "chapterPath": "method/03-architect/14-database-schema.md",
+    "requires": [
+      "solution-architecture"
     ]
   },
   "api-spec": {
@@ -135,6 +188,11 @@
     "description": "API endpoints and contracts",
     "extractFields": [
       "phase3.apiEndpoints"
+    ],
+    "chapterPath": "method/03-architect/48-api-specification.md",
+    "requires": [
+      "solution-architecture",
+      "data-model"
     ]
   },
   "security-architecture": {
@@ -145,6 +203,10 @@
     "description": "Auth and security design",
     "extractFields": [
       "phase3.authStrategy"
+    ],
+    "chapterPath": "method/03-architect/49-security.md",
+    "requires": [
+      "solution-architecture"
     ]
   },
   "build-contract": {
@@ -153,7 +215,19 @@
     "filename": "build-contract.md",
     "title": "Build Contract",
     "description": "Implementation roadmap for Claude Code",
-    "extractFields": []
+    "extractFields": [],
+    "chapterPath": "method/03-architect/21-generating-contract.md",
+    "requires": [
+      "design-brief",
+      "ux-package",
+      "ui-system",
+      "solution-architecture",
+      "data-model",
+      "api-spec",
+      "security-architecture",
+      "adr-templates",
+      "test-strategy"
+    ]
   },
   "adr-templates": {
     "phase": 3,
@@ -161,7 +235,11 @@
     "filename": "adrs.md",
     "title": "Architecture Decision Records",
     "description": "Technical decision documentation",
-    "extractFields": []
+    "extractFields": [],
+    "chapterPath": "method/03-architect/50-adr-templates.md",
+    "requires": [
+      "solution-architecture"
+    ]
   },
   "test-strategy": {
     "phase": 3,
@@ -169,6 +247,10 @@
     "filename": "test-strategy.md",
     "title": "Test Strategy",
     "description": "Testing approach and configuration",
-    "extractFields": []
+    "extractFields": [],
+    "chapterPath": "method/03-architect/51-test-strategy.md",
+    "requires": [
+      "solution-architecture"
+    ]
   }
 }

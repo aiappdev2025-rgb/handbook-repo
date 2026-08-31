@@ -26,3 +26,22 @@ land. Never edit.
 
 Return `{file, line, category, severity, description, refactor, churn}` sorted by
 priority, plus a one-paragraph summary of the codebase's overall structural health.
+
+## Severity contract
+
+Return `severity` as exactly one of `critical | high | medium | low`.
+
+`/moai:checkpoint` maps these onto its report symbols and its gate:
+
+| severity | symbol | effect |
+| --- | --- | --- |
+| critical | ❌ | **blocks the checkpoint** — no tag is proposed |
+| high | ❌ | **blocks the checkpoint** |
+| medium | ⚠️ | recorded in the report and TECH-DEBT.md, does not block |
+| low | ⚠️ | recorded, does not block |
+| (check could not run) | ⏭️ | skipped, stated explicitly, does not block |
+
+This matters because the debt score cannot express your findings: an auth bypass in
+the project's own code scores zero across all six weighted categories. ❌ is the only
+channel that stops a bad checkpoint, so classify deliberately — and never mark
+something critical or high that you could not write a concrete failure path for.

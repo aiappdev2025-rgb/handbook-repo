@@ -20,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { tidy, frontmatter, fence, chapterPaths } from './lib/emit.mjs';
 import { renderBlocks } from './lib/rules.mjs';
+import { normaliserFor } from './lib/overrides.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DRY = process.argv.includes('--dry-run');
@@ -77,16 +78,14 @@ for (const job of jobs) {
   const slug = job.outFile.replace(/^[a-z\d]+-/, '').replace(/\.md$/, '');
   const ckpt = checkpointOf(job.outFile.replace(/^\d+-/, '').replace(/\.md$/, ''));
 
-  // The rescued ch31 still says "Checkpoint 1" throughout; normalise to A (D2).
-  const norm = ckpt === 'A'
-    ? (s) => String(s).replace(/Checkpoint\s+1\b/g, 'Checkpoint A')
-        .replace(/CHECKPOINT-1-REPORT/g, 'CHECKPOINT-A-REPORT')
-        .replace(/checkpoint-1\b/g, 'checkpoint-a')
-    : (s) => s;
+  // Checkpoint naming plus any source-specific factual corrections (see
+  // tools/lib/overrides.mjs). archive/ is frozen and method/ is generated, so a
+  // correction has to live in the converter or it is lost on the next build.
+  const norm = normaliserFor(job.src, { checkpointNaming: ckpt === 'A' });
 
   const $ = load(fs.readFileSync(path.join(ROOT, job.src), 'utf8'));
   const article = $('main.content article').first().length ? $('main.content article').first() : $('body');
-  const rawTitle = tidy(article.find('h1').first().text());
+  const rawTitle = norm(tidy(article.find('h1').first().text()));
   const title = rawTitle.replace(/^Chapter\s+\d+:\s*/i, '').replace(/^Appendix\s+[A-Z]:\s*/i, '')
     .replace(/\s+-\s+/g, ' — ');
 

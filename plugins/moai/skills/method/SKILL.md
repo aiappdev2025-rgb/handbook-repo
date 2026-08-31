@@ -1,15 +1,16 @@
 ---
 name: method
 description: >
-  This skill should be used when working inside a SaaS project that follows the MOAI /
-  AI SaaS Handbook methodology, or when the user mentions a SPEC, EARS requirements, a
-  build contract, a milestone (M1-M11), a checkpoint (A/B/C), technical debt scoring,
-  the RED/GREEN/REFACTOR loop, TC-/REQ-/D- identifiers, a design brief, UX package, UI
-  system, or a one-pager. Also use it when a docs/moai/state.md file is present in the
-  project, when the project has a docs/specs/ directory, or when the user asks "what's
-  next", "am I ready to tag", or "write the tests first". Provides the phase and
-  milestone map, the EARS and GIVEN-WHEN-THEN formats, the TDD gate, the debt scoring
-  formula, and the state-file contract.
+  Use this skill whenever the user mentions any of these unambiguous MOAI terms, in any
+  project: a SPEC-/REQ-/TC-/D- identifier, EARS requirements, a Build Contract, a
+  milestone M1-M11, Checkpoint A/B/C, the MOAI method, or one of the /moai: commands.
+  ALSO use it for otherwise-generic requests — "what's next", "am I ready to tag",
+  "write the tests first", "run the checkpoint", "score the debt", "start the next
+  milestone" — but ONLY when the current project is a MOAI project, which is true if
+  docs/moai/state.md or docs/specs/ exists. Do not load it for generic phrasing in a
+  project with neither. Provides the phase and milestone map, the EARS and
+  GIVEN-WHEN-THEN formats, the TDD gate, the debt scoring formula, and the state
+  contract.
 version: 1.0.0
 ---
 
@@ -134,11 +135,11 @@ Load on demand — do not read these unless the task needs them.
 
 | File | When |
 | --- | --- |
-| `references/milestones.md` | planning or starting a milestone |
-| `references/checkpoints.md` | running a checkpoint audit |
-| `references/quality-gates.md` | SPEC Ready / Implementation Done checklists |
-| `references/artifacts.json` | artifact ids, filenames, dependency gating |
-| `references/execution.json` | per-artifact prerequisites, context files, timing |
-| `references/placeholders.json` | the `[TOKEN]` → state-field substitution map |
-| `../../../../method/` | the full handbook: 51 chapters + Part 0 |
-| `../../../../prompts/INDEX.md` | all 108 prompts, flat and greppable |
+| `${CLAUDE_PLUGIN_ROOT}/assets/templates/quality-checklist.md` | the SPEC Ready and Implementation Done checklists, and the per-checkpoint gates |
+| `${CLAUDE_PLUGIN_ROOT}/assets/templates/checkpoint-debt-audit.md` | running a checkpoint audit — the per-category worksheets |
+| `${CLAUDE_PLUGIN_ROOT}/skills/method/references/artifacts.json` | artifact ids, filenames, chapter paths, dependency gating |
+| `${CLAUDE_PLUGIN_ROOT}/skills/method/references/execution.json` | per-artifact prerequisites, context files, timing |
+| `${CLAUDE_PLUGIN_ROOT}/skills/method/references/placeholders.json` | the `[TOKEN]` → state-field substitution map |
+| `${CLAUDE_PLUGIN_ROOT}/../../method/04-build/27-build-milestones.md` | planning or starting a milestone |
+| `${CLAUDE_PLUGIN_ROOT}/../../method/README.md` | the full handbook: 51 chapters + Part 0 |
+| `${CLAUDE_PLUGIN_ROOT}/../../prompts/INDEX.md` | all 108 prompts, flat and greppable |

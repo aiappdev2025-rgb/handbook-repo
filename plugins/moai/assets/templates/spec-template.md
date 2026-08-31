@@ -136,7 +136,7 @@ Use these prefixes to organize SPECs by domain:
 
 **Example Test Cases**:
 
-### TC-PHOTO-001: Valid JPEG upload succeeds
+### TC-EXAMPLE-001: Valid JPEG upload succeeds
 
 **Covers**: REQ-001, REQ-002
 
@@ -149,7 +149,7 @@ Use these prefixes to organize SPECs by domain:
 
 ---
 
-### TC-PHOTO-002: Oversized file rejected
+### TC-EXAMPLE-002: Oversized file rejected
 
 **Covers**: REQ-005
 
@@ -162,7 +162,7 @@ Use these prefixes to organize SPECs by domain:
 
 ---
 
-### TC-PHOTO-003: Generate button disabled during upload
+### TC-EXAMPLE-003: Generate button disabled during upload
 
 **Covers**: REQ-003
 

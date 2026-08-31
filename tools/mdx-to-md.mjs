@@ -18,6 +18,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { frontmatter, fence, slugify } from './lib/emit.mjs';
+import { normaliserFor } from './lib/overrides.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SRC = 'archive/docusaurus/docs';
@@ -172,6 +173,8 @@ for (const [rel, dir, chapter, phase] of PORT) {
   body = body.replace(/<\/?[A-Z][A-Za-z]*[^>]*>/g, '');
   body = body.replace(/^#\s+.+$/m, '').replace(/\n{3,}/g, '\n\n').trim();
   body = fixRoutes(body);
+  // Source-specific factual corrections — see tools/lib/overrides.mjs
+  body = normaliserFor(`${SRC}/${rel}`)(body);
 
   const heading = chapter ? `# Chapter ${chapter}: ${title}` : `# Appendix ${fmData.appendix}: ${title}`;
   const out = `${frontmatter(fmData)}\n\n${heading}\n\n${[...lead, body].filter(Boolean).join('\n\n')}\n`;
