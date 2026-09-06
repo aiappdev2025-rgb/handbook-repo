@@ -10,17 +10,20 @@ repo is not an app and has no build, no dev server and no deploy target.
    holds standing rules only.
 2. Append a dated entry to `PROGRESS.md` as you go — not at the end.
 3. `method/` and `prompts/` are **generated**. Never hand-edit them. Change the
-   converter in `tools/`, then `npm run convert && npm run verify`.
+   converter in `tools/`, or write new chapters in `authored/`, then
+   `npm run convert && npm run verify`.
 4. `npm run verify` must be green before any commit that touches `tools/` or `archive/`.
 
 ## REPO LAYOUT
 
 ```
-method/          GENERATED. 51 chapters + Part 0 (23) + 4 appendices. The source of truth for content.
+method/          GENERATED. 51 chapters + Part 0 (24) + 5 appendices. The source of truth for content.
   _data/         GENERATED. artifacts.json, execution.json, placeholders.json — mined from the retired app.
 prompts/         GENERATED. 108 prompts, flat. INDEX.md is the catalogue.
 plugins/moai/    The Claude Code plugin: 8 skills, 3 agents, 1 hook, 11 templates.
 tools/           The converters and the verifier. The only hand-written code.
+authored/        Hand-written chapters that post-date the migration (Part 0 ch. 24, Appendix C).
+                 Same layout as method/; copy-authored.mjs copies them in on every build.
 archive/         FROZEN. The original HTML and Docusaurus trees, verbatim.
 ```
 
@@ -81,6 +84,8 @@ These were contradictory across the old trees. They are settled; do not "fix" th
   from it, promote it through a converter.
 - **`method/**` and `prompts/**` are generated.** Editing them by hand puts them out
   of sync with `archive/` and the next `npm run convert` silently discards your work.
+  New content goes in `authored/`; corrections to inherited content go in
+  `tools/lib/overrides.mjs`.
 - **`plugins/moai/assets/templates/spec-template.md`** and
   **`build-contract-template.md`** — every downstream project's SPECs are shaped by
   these. Changing a heading breaks `spec-check.sh` and every SPEC already written.

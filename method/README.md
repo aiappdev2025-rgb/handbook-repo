@@ -110,6 +110,7 @@ QA, deployment, launch checklist.
 
 - [SPEC Template](99-appendix/a-spec-template.md)
 - [Quality Gate Checklists](99-appendix/b-quality-gates.md)
+- [Glossary](99-appendix/c-glossary.md)
 - [EARS Syntax](99-appendix/d-ears-syntax.md)
 - [Troubleshooting](99-appendix/e-troubleshooting.md)
 

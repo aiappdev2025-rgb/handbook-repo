@@ -5,6 +5,56 @@ holds standing rules. Replaces the old `docs/ROADMAP.md` and `docs/TASKS.md`, bo
 which had drifted badly (11 of 24 roadmap rows were mis-stated; TASKS.md had zero
 genuinely open items and contradicted itself).
 
+## 2026-09-06 — Glossary and the cost chapter; `authored/` is born
+
+The two chapters the known-gaps list said were worth writing now exist. Neither could
+go into `method/` (generated) or `archive/` (frozen), so the repo gained a third source:
+**`authored/`**, hand-written, same layout as `method/`, copied in by
+`tools/copy-authored.mjs` on every build. The step stamps `source_authored:` (so the
+parity check skips the file), refuses to overwrite a generated file, and lists Part 0
+chapters in the Part 0 index before its Appendices block. `build-index` now counts
+Part 0 from disk instead of a literal.
+
+- **Part 0, chapter 24 — AI Cost and Session Management** (`PART VII: COST AND
+  LIMITS`). Written against a survey of Part 0: money, model choice, effort, caching,
+  batching, usage limits, plan mode and loop economics were entirely uncovered; the
+  200K window, the token bands and the clear triggers are saturated and are only
+  cross-referenced. Prices are the June 2026 API list rates and are dated in the text.
+- **Appendix C — Glossary**, 90 entries. Built from a sweep of every chapter, skill
+  and template. Where the handbook disagrees with itself the entry says which meaning
+  is *Settled* (from CLAUDE.md's canonical facts) or marks *Two senses*.
+
+**Side fix.** The Part 0 index rendered "Part Ii", "Part Iii", "Part Vi": the
+generator's title-case folded the Roman numerals. `titleCase` moved to
+`tools/lib/title-case.mjs`, shared by `split-guide` and `copy-authored`, and keeps
+numerals.
+
+**Vocabulary conflicts found by the sweep, not fixed** (review queue; each needs a
+decision, some are template changes with downstream blast radius):
+
+1. `checkpoint-debt-audit.md` carries three per-checkpoint rubrics, none the canonical
+   six-category formula, one summing to 95%; and still says "proceed to Milestone 2/3".
+2. Gate threshold: canonical 6.0 vs 7.0 in `99-appendix/b-quality-gates.md` (C) and
+   `04-build/35-checkpoint-b.md` (B target), plus a three-band scheme in the audit template.
+3. SPEC prefix sets differ between the shipped template and Appendix A.
+4. `REQ-` ids: prefixed in CLAUDE.md and `/moai:spec`, bare `REQ-001` in both templates.
+5. `D-` is both the Design prompt prefix and the debt-item prefix.
+6. `04-build/23-moai-overview.md` and `01-validate/01-introduction.md` attribute the
+   method to MOAI-ADK; a chapter reader never meets "Milestone-Oriented AI Integration".
+7. Two state files: Part 0's `docs/STATE.md` vs the plugin's `docs/moai/state.md`;
+   nothing says one replaces the other and init creates neither.
+8. Artifact filenames: chapters say `docs/one-pager.md` / `docs/architecture.md`, the
+   registry writes `business-one-pager.md` / `solution-architecture.md`; ch22's
+   pre-implementation checklist fails against a plugin-built project.
+9. ADR location: `docs/adrs/` (chapter) vs `docs/adr/` (init) vs `docs/adrs.md` (artifact).
+10. Test framework: Jest+RTL (ch23) vs Vitest+Playwright (test strategy) vs detected.
+11. Coverage bar: 80% vs 60/50 at Checkpoint B vs ch26's scale giving 8/10 at 70-79%.
+12. Phase naming: three schemes plus the orthogonal Stage 0.1-5.0 numbering in 21 titles.
+13. `S-` prefix missing from `prompts/INDEX.md`'s scheme table (8 files exist).
+14. Doc-Sync spelled four ways; ch26 still scores it "from manual review".
+15. `TECH-DEBT.md` footer points at Chapter 27 for scoring; it is Chapter 26.
+16. Appendix A's example test comment `// TC-001:` cannot match `spec-check.sh`'s regex.
+
 ## 2026-09-06 — first real run of the plugin: init → spec → tdd ×3 → status
 
 Executed end to end in a throwaway TypeScript library (vitest, eslint, tsc), one feature
