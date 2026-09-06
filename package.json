@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aiappdev2025-rgb/handbook-repo.git"
+    "url": "git+https://github.com/silverpepperlabsadmin-stack/handbook-repo.git"
   },
   "bugs": {
-    "url": "https://github.com/aiappdev2025-rgb/handbook-repo/issues"
+    "url": "https://github.com/silverpepperlabsadmin-stack/handbook-repo/issues"
   },
-  "homepage": "https://github.com/aiappdev2025-rgb/handbook-repo#readme",
+  "homepage": "https://github.com/silverpepperlabsadmin-stack/handbook-repo#readme",
   "devDependencies": {
     "cheerio": "1.0.0-rc.12"
   },

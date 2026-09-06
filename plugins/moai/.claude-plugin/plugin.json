@@ -2,6 +2,6 @@
   "name": "moai",
   "version": "1.0.0",
   "description": "Run the AI SaaS Handbook method from inside any project: SPEC-first authoring with EARS, a RED/GREEN/REFACTOR gate, milestone checkpoints with technical-debt scoring, and durable project state that survives /clear.",
-  "author": { "name": "aiappdev2025-rgb" },
+  "author": { "name": "silverpepperlabsadmin-stack" },
   "keywords": ["spec-driven", "tdd", "ears", "saas", "methodology", "checkpoints"]
 }

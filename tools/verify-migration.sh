@@ -23,7 +23,9 @@ cd "$ROOT" || exit 1
 ICLOUD="${MOAI_ICLOUD_SRC:-$HOME/Desktop/000 Saas Projects/AI Handbook}"
 # Timestamp the migration began; gate 2 asserts nothing under ICLOUD changed after it.
 MIGRATION_START="${MOAI_MIGRATION_START:-2026-08-31 13:14:33}"
-EXPECT_HEAD="189630170760e7c372940f4995f818538a4f390b"
+# 2026-09-06: history rewritten to Silver Pepper authorship; this is the rewritten hash of
+# the same upstream commit (was 189630170760e7c372940f4995f818538a4f390b).
+EXPECT_HEAD="b921728c6fc2e33e4ba70741edc7e4db40d604fa"
 
 gate "1  clone fidelity"
 head=$(git --no-optional-locks rev-parse "$EXPECT_HEAD^{commit}" 2>/dev/null)

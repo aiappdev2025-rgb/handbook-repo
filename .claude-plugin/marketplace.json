@@ -3,7 +3,7 @@
   "name": "moai-handbook",
   "description": "The AI SaaS Handbook methodology, packaged as a Claude Code plugin.",
   "owner": {
-    "name": "aiappdev2025-rgb"
+    "name": "silverpepperlabsadmin-stack"
   },
   "plugins": [
     {

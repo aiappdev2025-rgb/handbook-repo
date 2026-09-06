@@ -5,6 +5,28 @@ holds standing rules. Replaces the old `docs/ROADMAP.md` and `docs/TASKS.md`, bo
 which had drifted badly (11 of 24 roadmap rows were mis-stated; TASKS.md had zero
 genuinely open items and contradicted itself).
 
+## 2026-09-06 — ownership consolidated under silverpepperlabsadmin-stack
+
+The 2026-09-02 push was investigated and found correctly attributed: every commit in
+this repo had always been authored as `aiappdev2025-rgb`, and the repo was owned by that
+account. What was wrong was the machine: the global git identity was `aiappdev2025-rgb`,
+so it had leaked into two Silver Pepper repos (`silverpepperlabs-web`, `email-mass-app`).
+
+Decision (owner): everything under `silverpepperlabsadmin-stack`, nothing else. Applied:
+
+- Global git identity → `Silver Pepper <silverpepperlabs.admin@gmail.com>`; the
+  `aiappdev2025-rgb` login removed from `gh`.
+- **History rewritten** (author + committer) and force-pushed here and in the two
+  affected repos. Every hash before this entry changed; the upstream base commit
+  `1896301` is now `b921728`, and `tools/verify-migration.sh` gate 1 pins the new hash.
+- Repo transfer `aiappdev2025-rgb/handbook-repo → silverpepperlabsadmin-stack`
+  requested via the API; pending the owner's email acceptance. `origin` already points
+  at the new URL. `package.json`, `plugin.json` and `marketplace.json` owner fields
+  updated. `archive/` still carries the old org name in the retired Docusaurus config —
+  frozen provenance, left as is.
+
+Both verifiers green after the change: `npm run verify` 7/7, `verify-migration.sh` 46/46.
+
 ## 2026-08-31 (later) — plugin surface audited and repaired before first use
 
 A 47-agent adversarial audit of `plugins/moai/` — the part that had never been executed
