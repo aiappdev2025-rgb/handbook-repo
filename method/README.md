@@ -17,7 +17,7 @@ one file each, flat and greppable. Templates for the artifacts you produce live 
 How to drive the tool well: context budgeting, session boundaries, `CLAUDE.md` vs
 skills, when to `/clear`, carrying state across sessions.
 
-→ [**Part 0 index**](00-operating/README.md) · 23 chapters + 5 appendices
+→ [**Part 0 index**](00-operating/README.md) · 24 chapters + 5 appendices
 
 
 ## Phase 1 — Validate

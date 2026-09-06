@@ -16,6 +16,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { titleCase } from './lib/title-case.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SRC = path.join(ROOT, 'authored');
@@ -47,14 +48,19 @@ for (const src of files) {
   fs.writeFileSync(dest, txt);
   copied++;
 
-  // Part 0 chapters: append to the index split-guide wrote.
+  // Part 0 chapters: list in the index split-guide wrote, before its Appendices
+  // block, under the chapter's own section heading (same casing as the generator).
   if (rel.startsWith('00-operating/') && /^\d+$/.test(fmField(txt, 'chapter') ?? '')) {
     const readme = path.join(OUT, '00-operating', 'README.md');
-    let idx = fs.readFileSync(readme, 'utf8').replace(/\s+$/, '');
+    const idx = fs.readFileSync(readme, 'utf8');
+    const cut = idx.indexOf('\n### Appendices');
+    let head = (cut === -1 ? idx : idx.slice(0, cut)).replace(/\s+$/, '');
+    const tail = cut === -1 ? '' : idx.slice(cut);
     const section = fmField(txt, 'section');
-    if (section && !idx.includes(`### ${section}`)) idx += `\n\n### ${section}\n`;
-    idx += `\n- [${fmField(txt, 'chapter')}. ${fmField(txt, 'title')}](${path.basename(rel)})`;
-    fs.writeFileSync(readme, idx + '\n');
+    const heading = section ? `### ${titleCase(section)}` : null;
+    if (heading && !head.includes(heading)) head += `\n\n${heading}\n`;
+    head += `\n- [${fmField(txt, 'chapter')}. ${fmField(txt, 'title')}](${path.basename(rel)})`;
+    fs.writeFileSync(readme, head + '\n' + tail);
   }
 }
 console.log(`authored: ${copied} file(s) copied into method/`);

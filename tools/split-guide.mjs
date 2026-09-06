@@ -21,6 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { tidy, frontmatter, fence, part0File, PART0 } from './lib/emit.mjs';
 import { renderBlocks } from './lib/rules.mjs';
+import { titleCase } from './lib/title-case.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT = 'method/00-operating';
@@ -155,10 +156,6 @@ ${aps.map((a) => `- [Appendix ${a.n.toUpperCase()}: ${a.title}](${a.file})`).joi
 
 function slug(s) {
   return String(s).toLowerCase().replace(/['"’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-}
-function titleCase(s) {
-  return String(s).replace(/^PART\s+([IVX]+):\s*/i, 'Part $1 — ')
-    .replace(/\b([A-Z]{2,})\b/g, (m) => m[0] + m.slice(1).toLowerCase());
 }
 
 console.log(`part 0 chapters : ${chs.length}`);
