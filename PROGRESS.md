@@ -5,6 +5,38 @@ holds standing rules. Replaces the old `docs/ROADMAP.md` and `docs/TASKS.md`, bo
 which had drifted badly (11 of 24 roadmap rows were mis-stated; TASKS.md had zero
 genuinely open items and contradicted itself).
 
+## 2026-09-06 — first real run of the plugin: init → spec → tdd ×3 → status
+
+Executed end to end in a throwaway TypeScript library (vitest, eslint, tsc), one feature
+(`slugify`, SPEC-CORE-001, 7 EARS requirements, 8 test cases). Every command was
+invoked through the installed plugin, not by reading the skill files.
+
+**What held.** All four `/moai:init` success conditions, including the one never
+verified before: `bash scripts/spec-check.sh --json` → `{"score": 10, "issues": []}` on a
+fresh project. The banner parsed state at every phase. spec-check dropped to 8 mid-cycle
+(SPEC not Done, no test file) and returned to 10 on Done — the Doc-Sync score behaves as
+designed. RED failed on a missing module, then on assertions; GREEN 8/8; REFACTOR full
+gate green, coverage 100%. Six conventional commits, all authored as Silver Pepper.
+
+**What the run exposed** (fixed where cheap):
+
+- **A throw-only test is green in RED.** TC-CORE-007 (`toThrow(TypeError)`) passed
+  against the empty module, because calling a missing export also throws `TypeError`.
+  The `tdd` skill now says every test must fail in RED and how to make a throw test
+  honest.
+- **`/moai:status` reconciles only one direction.** A hand-written
+  `docs/build-contract.md` with `artifacts.build-contract: empty` in state is invisible
+  to it. Added the reverse row to the reconcile table.
+- **Nothing advances `phase`.** init writes `1`; spec and tdd leave it. A project in the
+  middle of M6 reports "Phase 1 Validate". Recorded as a known gap in the status skill;
+  the fix belongs in `/moai:artifact` (Phase 3 complete → 4) and needs a decision on
+  who owns the transition.
+- `/moai:init` and `/moai:spec` are interview-first and wait for confirmation, which an
+  autonomous run cannot give; both were answered from detected defaults.
+- Coverage ≥80% is an Implementation Done item, but a vitest project has no provider
+  by default; the loop had to install `@vitest/coverage-v8` to measure it. Worth a line
+  in the init manifest.
+
 ## 2026-09-06 — ownership consolidated under silverpepperlabsadmin-stack
 
 The 2026-09-02 push was investigated and found correctly attributed: every commit in

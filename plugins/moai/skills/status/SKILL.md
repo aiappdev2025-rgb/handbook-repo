@@ -24,6 +24,8 @@ Render the project's current state. **Writes nothing.**
    | a SPEC file in `docs/specs/` not registered in state | `/moai:spec <ID>` |
    | `specs.<id>.testFile` pointing at a file that no longer exists | `/moai:tdd <ID> red` |
    | `artifacts.<id>.status: complete` with no file at its path | `/moai:artifact <id>` |
+   | a file at an artifact's expected path while state says `empty` (hand-written, never registered) | `/moai:artifact <id>` to register it |
+   | `phase` still `1` while SPECs are `done` (no command advances `phase` yet) | say so; it is a known gap |
 
 ## Output shape
 

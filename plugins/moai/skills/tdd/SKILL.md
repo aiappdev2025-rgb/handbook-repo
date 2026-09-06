@@ -22,6 +22,11 @@ Run the test command. Success is: tests **fail**, and they fail for the right re
 (an assertion, not an import error). If they fail on a missing module, create only the
 empty file the import needs — nothing more.
 
+**Every test must fail in RED.** A test whose only assertion is `toThrow(TypeError)`
+passes against that empty module, because calling a missing export throws `TypeError`
+too. Assert `typeof fn === "function"` first, or match the error message. A test that
+is green in RED proves nothing.
+
 Then: `tddPhase: red`, record `testFile`, commit `test(<scope>): failing tests for <ID>`.
 
 ## GREEN
