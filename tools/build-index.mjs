@@ -34,6 +34,12 @@ const section = (dir) => fs.readdirSync(path.join(M, dir))
   .sort()
   .map((f) => ({ f, ...fm(path.join(M, dir, f)) }));
 
+const p0files = fs.readdirSync(path.join(M, '00-operating')).filter((f) => f.endsWith('.md'));
+const p0 = {
+  chapters: p0files.filter((f) => /^\d\d-/.test(f)).length,
+  appendices: p0files.filter((f) => /^[a-z]-/.test(f)).length,
+};
+
 let out = `---
 title: "AI SaaS Handbook — the method"
 slug: "method"
@@ -53,7 +59,7 @@ one file each, flat and greppable. Templates for the artifacts you produce live 
 How to drive the tool well: context budgeting, session boundaries, \`CLAUDE.md\` vs
 skills, when to \`/clear\`, carrying state across sessions.
 
-→ [**Part 0 index**](00-operating/README.md) · 23 chapters + 5 appendices
+→ [**Part 0 index**](00-operating/README.md) · ${p0.chapters} chapters + ${p0.appendices} appendices
 
 `;
 
